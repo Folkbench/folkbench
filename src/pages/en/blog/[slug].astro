@@ -1,0 +1,36 @@
+---
+import { render } from 'astro:content'
+import ArticleDetail from '../../../components/ArticleDetail.astro'
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { getArticle, getArticles, getTranslation } from '../../../lib/content'
+import { articleJsonLd } from '../../../lib/seo'
+import { absoluteUrl } from '../../../lib/site'
+
+export async function getStaticPaths() {
+  const entries = await getArticles('en')
+  return entries.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }))
+}
+
+const entry = Astro.props.entry ?? await getArticle('en', Astro.params.slug ?? '')
+if (!entry) throw new Error(`Article not found: ${Astro.params.slug ?? ''}`)
+const translation = await getTranslation(entry)
+const { Content } = await render(entry)
+const jsonLd = articleJsonLd(entry, 'en')
+---
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  locale="en"
+  pathname={`/blog/${entry.data.slug}`}
+  alternatePathname={translation ? `/blog/${translation.data.slug}` : `/blog/${entry.data.slug}`}
+  type="article"
+  jsonLd={jsonLd}
+  publishedAt={`${entry.data.publishedAt}T00:00:00Z`}
+  updatedAt={`${entry.data.updatedAt}T00:00:00Z`}
+  author="Folkbench Editorial Desk"
+  image={absoluteUrl(`/covers/${entry.data.translationKey}.webp`)}
+>
+  <ArticleDetail entry={entry} locale="en" translation={translation}>
+    <Content />
+  </ArticleDetail>
+</BaseLayout>

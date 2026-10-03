@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -eu
+
+runtime="${FOLKBENCH_BLOG_BUN_RUNTIME:-bun}"
+if ! command -v "${runtime}" >/dev/null 2>&1; then
+  printf '%s\n' "博客仓库提交检查需要 Bun：${runtime}" >&2
+  exit 1
+fi
+
+"${runtime}" run check

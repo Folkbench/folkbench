@@ -1,0 +1,10 @@
+---
+import { getArticles } from '../../lib/content'
+
+export async function getStaticPaths() {
+  const entries = await getArticles('zh-CN')
+  return entries.map((entry) => ({ params: { slug: entry.data.slug } }))
+}
+
+return Astro.redirect(`/blog/${Astro.params.slug ?? ''}/`, 301)
+---

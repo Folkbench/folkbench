@@ -1,0 +1,21 @@
+{
+  "name": "folkbench-blog",
+  "version": "0.1.0",
+  "private": false,
+  "repository": "git+https://github.com/Folkbench/folkbench-blog.git",
+  "homepage": "https://folkbench.com/blog",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host --port 8341",
+    "build": "astro build",
+    "preview": "astro preview --host --port 8341",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "^7.2.10"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

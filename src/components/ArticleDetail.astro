@@ -1,0 +1,48 @@
+---
+import SourceList from './SourceList.astro'
+import { getPersona } from '../data/authors'
+import type { ArticleEntry } from '../lib/content'
+import { localePath, type BlogLocale } from '../lib/site'
+
+type Props = {
+  entry: ArticleEntry
+  locale: BlogLocale
+  translation?: ArticleEntry
+}
+
+const { entry, locale, translation } = Astro.props
+const persona = getPersona(entry.data.authorId)
+const isEnglish = locale === 'en'
+---
+<main>
+  <article>
+    <header class="article-head article-shell">
+      <p class="article-kind">{entry.data.category}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="article-description">{entry.data.description}</p>
+      <div class="article-meta">
+        {entry.data.contributor ? (
+          <>
+            <span class="article-persona"><strong>{entry.data.contributor}</strong></span>
+            <span>{isEnglish ? 'Reader submission' : '用户投稿'}</span>
+            <span>{isEnglish ? "The contributor's own views" : '非本站观点'}</span>
+          </>
+        ) : (
+          <>
+            <span class="article-persona"><span class="article-persona-avatar">{persona.initials}</span><strong>{persona.name}</strong></span>
+            <span>{persona.role[locale]}</span>
+          </>
+        )}
+        <time datetime={entry.data.updatedAt}>{isEnglish ? 'Updated' : '更新于'} {entry.data.updatedAt}</time>
+        {translation && <a href={localePath(translation.data.locale, `/blog/${translation.data.slug}`)}>{isEnglish ? '中文版本 →' : 'English version →'}</a>}
+      </div>
+      <figure class="article-cover">
+        <img src={`/covers/${entry.data.translationKey}.webp`} alt="" loading="eager" decoding="async" />
+      </figure>
+    </header>
+    <div class="article-body article-shell">
+      <slot />
+      <SourceList sources={entry.data.sources} locale={locale} />
+    </div>
+  </article>
+</main>

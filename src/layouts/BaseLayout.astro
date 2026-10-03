@@ -1,0 +1,118 @@
+---
+import '../styles/global.css'
+import { absoluteUrl, FOLKBENCH_ORIGIN, localePath, otherLocale, SITE_ORIGIN, type BlogLocale } from '../lib/site'
+
+type Props = {
+  title: string
+  description: string
+  locale: BlogLocale
+  pathname: string
+  alternatePathname?: string
+  type?: 'website' | 'article'
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[]
+  robots?: string
+  publishedAt?: string
+  updatedAt?: string
+  author?: string
+  image?: string
+}
+
+const {
+  title,
+  description,
+  locale,
+  pathname,
+  alternatePathname = pathname,
+  type = 'website',
+  jsonLd,
+  robots = 'index,follow',
+  publishedAt,
+  updatedAt,
+  author,
+  image = absoluteUrl('/brand/folkbench-og.png'),
+} = Astro.props
+const canonical = absoluteUrl(localePath(locale, pathname))
+const alternate = absoluteUrl(localePath(otherLocale(locale), alternatePathname))
+const socialImageIsCover = image.includes('/covers/')
+const siteDescription = locale === 'en'
+  ? 'Folkbench bilingual articles about models, API relays, reliability, and benchmark evidence.'
+  : 'Folkbench 关于模型、中转站、可靠性和 Benchmark 证据的双语文章。'
+const graphItems = [
+  {
+    '@type': 'Organization',
+    '@id': `${FOLKBENCH_ORIGIN}/#organization`,
+    name: 'Folkbench',
+    url: FOLKBENCH_ORIGIN,
+    logo: `${FOLKBENCH_ORIGIN}/brand/folkbench-icon-512.png`,
+  },
+  {
+    '@type': 'WebSite',
+    '@id': `${SITE_ORIGIN}/#website`,
+    url: SITE_ORIGIN,
+    name: 'Folkbench Blog',
+    description: siteDescription,
+    inLanguage: locale,
+    publisher: { '@id': `${FOLKBENCH_ORIGIN}/#organization` },
+  },
+  ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []),
+]
+const schema = { '@context': 'https://schema.org', '@graph': graphItems }
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="author" content={author ?? 'Folkbench'} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#f6f6f3" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale === 'en' ? 'en' : 'zh-CN'} href={canonical} />
+    <link rel="alternate" hreflang={locale === 'en' ? 'zh-CN' : 'en'} href={alternate} />
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl('/')} />
+    <link rel="alternate" type="application/rss+xml" title="Folkbench Blog RSS" href={absoluteUrl('/rss.xml')} />
+    <link rel="icon" type="image/svg+xml" href="/brand/folkbench-logo-only.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/brand/folkbench-icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/brand/folkbench-icon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:site_name" content="Folkbench" />
+    <meta property="og:type" content={type === 'article' ? 'article' : 'website'} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content={socialImageIsCover ? '1600' : '1200'} />
+    <meta property="og:image:height" content={socialImageIsCover ? '900' : '630'} />
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'zh_CN'} />
+    <meta property="og:locale:alternate" content={locale === 'en' ? 'zh_CN' : 'en_US'} />
+    {type === 'article' && publishedAt ? <meta property="article:published_time" content={publishedAt} /> : null}
+    {type === 'article' && updatedAt ? <meta property="article:modified_time" content={updatedAt} /> : null}
+    {type === 'article' && author ? <meta property="article:author" content={author} /> : null}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema).replaceAll('</', '<\\/')} />
+    <title>{title} · Folkbench</title>
+  </head>
+  <body>
+    <div id="blog-embed-root"><slot /></div>
+    <script is:inline>
+      (() => {
+        if (window.parent === window || typeof ResizeObserver === 'undefined') return
+        const publishHeight = () => {
+          window.parent.postMessage({
+            type: 'folkbench-blog:resize',
+            height: Math.ceil(document.documentElement.scrollHeight),
+          }, '*')
+        }
+        const observer = new ResizeObserver(publishHeight)
+        observer.observe(document.documentElement)
+        window.addEventListener('load', publishHeight)
+        publishHeight()
+      })()
+    </script>
+  </body>
+</html>

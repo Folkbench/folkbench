@@ -1,0 +1,454 @@
+{
+  "meta": {
+    "name": "Folkbench Editorial Research Desk v0.1",
+    "description": "A Folkbench visual profile for a bilingual article list and a set of independently addressable article pages. The site keeps Folkbench's own neutral surfaces, evidence colors, restrained motion, shared logo language, and public snapshot boundaries while using static Markdown output that search engines and readers can access directly.",
+    "source_references": [
+      "https://huggingface.co/models",
+      "https://huggingface.co/",
+      "https://openrouter.ai/rankings",
+      "https://github.com/lobehub/lobe-icons/tree/a94750e3f5f8fc33757b839d85030e742284e43a",
+      "https://vercel.com/",
+      "https://vercel.com/design/guidelines",
+      "https://vercel.com/geist/colors",
+      "https://vercel.com/geist/materials",
+      "https://stripe.com/payments",
+      "https://stripe.com/",
+      "https://stripe.com/newsroom/information",
+      "https://docs.stripe.com/",
+      "https://docs.stripe.com/dashboard/basics",
+      "https://docs.stripe.com/stripe-apps/style",
+      "https://docs.stripe.com/stripe-apps/design",
+      "https://docs.stripe.com/elements/appearance-api?platform=web",
+      "https://base-ui.com/react/overview/accessibility",
+      "https://base-ui.com/react/handbook/animation",
+      "https://gsap.com/docs/v3/GSAP/gsap.matchMedia()",
+      "https://modelflare.dev/",
+      "https://github.com/Folkbench/folkbench-blog"
+    ],
+    "created_at": "2026-10-02"
+  },
+  "design_system": {
+    "color": {
+      "palette_type": "Folkbench public-shell neutral structure with the shared #f6f6f3 page, near-black actions, compact chrome, cool keylines, green evidence signals, amber warnings, and a fixed dark footer",
+      "primary": {
+        "hex": "#171717",
+        "role": "body foreground, primary buttons, active rules, and the strongest navigation emphasis"
+      },
+      "secondary": {
+        "hex": "#425466",
+        "role": "body copy, navigation labels, secondary controls, and explanatory text"
+      },
+      "accent": {
+        "hex": "#151615",
+        "role": "primary action, active navigation, article emphasis, and the shared Folkbench shell"
+      },
+      "neutral": {
+        "scale": [
+          "#FFFFFF",
+          "#FBFCFE",
+          "#F7F9FC",
+          "#F1F4F8",
+          "#E9EDF3",
+          "#E3E8EE",
+          "#DAE1E9",
+          "#C5CFDB",
+          "#D4DEE9",
+          "#B9C2CC",
+          "#87909F",
+          "#697386",
+          "#425466",
+          "#1A1F36",
+          "#171717",
+          "#0A2540"
+        ],
+        "usage": "white page, #F7F9FC recessed fills, #F1F4F8 resting controls, #E3E8EE inner hairlines, #DAE1E9 default keylines, #C5CFDB strong outlines, #425466 copy, #697386 metadata, #1A1F36 code surfaces, and #171717 headings, actions, landing evidence bands, closing CTA, and footer"
+      },
+      "chart_palette": {
+        "primary": "#533AFD",
+        "periwinkle": "#7389FF",
+        "teal": "#29B9BB",
+        "warm": "#FF6118",
+        "track": "#E5EDF5",
+        "usage": "Ranking charts only: blurple for evidence and privacy, periwinkle for latency, teal for availability and stability, warm orange for value, and the cool track for missing or unfilled ranges. Left-side ranking navigation remains black, white, and neutral gray with no colored fills."
+      },
+      "semantic": {
+        "success": "#1F7A4D",
+        "warning": "#B7791F",
+        "error": "#C9372C",
+        "info": "#5469D4",
+        "compact_status_indicators": {
+          "success": "#3D9970",
+          "warning": "#C98B2E",
+          "error": "#D65A52",
+          "unknown": "#CBD5E1",
+          "usage": "Small status-history segments only; semantic text continues to use the stronger accessible foreground colors on soft labeled surfaces."
+        }
+      },
+      "surface": {
+        "background": "#FFFFFF",
+        "card": "#FFFFFF with a #DAE1E9 keyline and the base material shadow",
+        "elevated": "#FFFFFF with a 12px radius and a two-layer ambient/direct shadow",
+        "dark": "#171717 with low-contrast vertical rules for landing evidence, closing, and footer phases"
+      },
+      "contrast_strategy": "light-only canvas; #171717 for headings and black actions, #425466 for copy, #697386 for metadata at 4.5:1 or better, #533AFD for interactive emphasis, #635BFF focus, labeled semantic states use accessible text on soft surfaces, and saturated chart colors remain confined to non-text ranking marks on a #E5EDF5 track"
+    },
+    "typography": {
+      "type_scale": {
+        "display": {
+          "size": "52-64px desktop / 36-37px mobile with fallback-stable line wrapping",
+          "weight": 600,
+          "line_height": "0.98 desktop / 1 mobile",
+          "tracking": "-0.03em"
+        },
+        "heading_1": {
+          "size": "35.2px marketing, 32px detail, 26px reading, or 20px catalog by archetype",
+          "weight": 700,
+          "line_height": 1.5,
+          "tracking": "-0.02em"
+        },
+        "heading_2": {
+          "size": "20px",
+          "weight": 600,
+          "line_height": 1.3,
+          "tracking": "-0.015em"
+        },
+        "heading_3": {
+          "size": "15px",
+          "weight": 600,
+          "line_height": 1.4,
+          "tracking": "0"
+        },
+        "body": {
+          "size": "14px",
+          "weight": 400,
+          "line_height": 1.5,
+          "tracking": "0"
+        },
+        "body_small": {
+          "size": "0.8125rem",
+          "weight": 400,
+          "line_height": 1.55,
+          "tracking": "0"
+        },
+        "caption": {
+          "size": "12px",
+          "weight": 500,
+          "line_height": 1.5,
+          "tracking": "0"
+        },
+        "overline": {
+          "size": "11px",
+          "weight": 600,
+          "line_height": 1.5,
+          "tracking": "0.10em"
+        }
+      },
+      "font_families": {
+        "heading": "Inter Variable, Noto Sans SC Variable, Inter, Noto Sans SC, system-ui, sans-serif",
+        "body": "Inter Variable, Noto Sans SC Variable, Inter, Noto Sans SC, system-ui, sans-serif",
+        "mono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Noto Sans SC Variable, monospace"
+      },
+      "font_style_notes": "Inter is used for headings, body, navigation, and controls; self-hosted Noto Sans SC supplies Chinese glyphs. Monospace is reserved for model IDs, versions, prices, dates, code, and compact metrics."
+    },
+    "spacing": {
+      "base_unit": "4px",
+      "scale": [
+        "4px",
+        "8px",
+        "12px",
+        "16px",
+        "24px",
+        "32px",
+        "48px",
+        "64px",
+        "80px"
+      ],
+      "content_density": "compact data regions with comfortable shell chrome; 12-20px material padding, 7-11px table cells, and 14px control text with 16px mobile inputs",
+      "section_rhythm": "88px desktop and 64px mobile Hero lead-in, 104px desktop and 72px mobile landing sections, 48-64px section gaps elsewhere, 16-32px product-UI groups, one-pixel rules between records, and environment safe-area insets around viewport chrome"
+    },
+    "layout": {
+      "grid_system": "measured shells: a 1392px maximum header and landing frame with 24px viewport rails, 1200px landing content and tool, 1400px catalog, 1280px ranking, 960px general, 1392px footer, 820px detail, and 720px reading; the ranking shell reserves a 172px section rail and 32px gutter before the fluid evidence board",
+      "max_content_width": "87.5rem catalog / 87rem header and footer / 75rem landing content",
+      "columns": "220px filter rail plus fluid table at 1360px and above; collapsible full-width filters below 1360px so the result table keeps its readable width; 172px sticky ranking section rail plus a fluid board above 1100px, horizontal section navigation below it, dense overall table above 900px, readable fact cards at 900px and below, and paired ranking columns that collapse to one column at the same threshold. Landing uses a centered display hierarchy, a 1200px three-column interactive comparison workbench, a six-field context strip, an equal-weight model-family grid, a sticky 288px framework narrative beside six alternating evidence panels, full-width Top 5 rows, a light Quick Test band, a continuous dark methodology and independence band, a dotted pathway band, and a dark closing/footer sequence; all collapse without horizontal page overflow.",
+      "gutter": "20-24px page gutter merged with env(safe-area-inset-*), 12-16px component gap, and 32px large-section gap",
+      "breakpoints": {
+        "mobile": "0-767px",
+        "tablet": "768-1024px",
+        "desktop": "1025-1439px; Folkbench navigation links collapse through 1279px so the 240px header search, separated auth actions, and longer localized labels never overlap",
+        "wide": "1440px+"
+      },
+      "alignment_tendency": "centered framed landing Hero and closing CTA; sticky left narrative with alternating right-side product panels; left-anchored catalog, ranking, detail, document, tool, and console content"
+    },
+    "shape": {
+      "border_radius": {
+        "small": "4-6px inputs, tabs, and compact controls; 10px public action buttons matching header Sign in / Register",
+        "medium": "8px base cards and grouped tables",
+        "large": "12px dialogs, login cards, menus, and floating materials",
+        "pill": "999px"
+      },
+      "border_usage": "one-pixel structural borders use a three-step light ladder (#E3E8EE hairline, #DAE1E9 default, #C5CFDB strong) and a two-step inverse ladder (rgb(105 115 134 / 0.36) and 0.48); page-local color-mix percentages are forbidden; selected controls use a #C7C2FF boundary plus a two-pixel blurple focus ring",
+      "divider_style": "opaque #E3E8EE hairlines inside framed surfaces; semantic red or green borders appear only on verdict and validation panels"
+    },
+    "elevation": {
+      "shadow_style": "Vercel-style material hierarchy tuned with Stripe's cool keyline shadows: compact control inset, subtle base depth, and stronger ambient/direct shadows only on floating surfaces",
+      "levels": {
+        "low": "0 1px 2px rgb(16 24 40 / 0.045), 0 0 0 1px rgb(66 84 102 / 0.04)",
+        "medium": "0 14px 32px -12px rgb(50 50 93 / 0.22), 0 3px 8px -2px rgb(16 24 40 / 0.10), 0 0 0 1px rgb(66 84 102 / 0.045)",
+        "high": "0 28px 56px -18px rgb(50 50 93 / 0.30), 0 12px 24px -12px rgb(16 24 40 / 0.16), 0 0 0 1px rgb(66 84 102 / 0.05)"
+      },
+      "depth_cues": "#F7F9FC versus white surfaces, cool keylines, translucent header and product veils, low ambient product shadows, pre-rendered interface depth, and elevated popover shadows"
+    },
+    "iconography": {
+      "style": "small monochrome outline icons, compact provider marks, status dots, and Folkbench's own cube-like evidence glyph",
+      "stroke_weight": "1.5-1.8px",
+      "size_scale": "12px metadata, 14-16px controls, 18px navigation, 20-24px brand",
+      "preferred_set": "the existing @folkbench/ui icon registry; no decorative icon mixing"
+    },
+    "motion": {
+      "easing": "GSAP power2.out for coordinated entrances; cubic-bezier(0.2, 0.8, 0.2, 1) for interruptible component feedback",
+      "duration_scale": {
+        "micro": "120ms",
+        "normal": "160-180ms",
+        "macro": "340-420ms page transitions / 420-540ms viewport wrapper reveals / 320-520ms evidence-image resolve and hover"
+      },
+      "entrance_pattern": "After the first server paint, GSAP reveals client-navigation page wrappers by 6-8px. Landing sections reveal once near the viewport with 8-12px opacity movement and a 35-50ms stagger so semantic content remains in the accessibility tree. Conceptual evidence images resolve as one intact asset without animating internal geometry. Base UI popups use state-aware 4px fade-and-scale transitions.",
+      "exit_pattern": "interruptible opacity and transform return; Base UI waits for popup transition completion before unmounting",
+      "philosophy": "restrained functional choreography; animate wrappers and intact explanatory images, never image internals, evidence values, or layout properties, never loop landing visuals, and skip all nonessential motion under prefers-reduced-motion"
+    },
+    "components": {
+      "button_style": "Base UI-backed 34-40px controls with a shared 10px radius matching header Sign in / Register; near-black primary, white keylined secondary, separated desktop Sign in and Register actions, and 44px mobile hit targets",
+      "input_style": "34-40px white input with a #DAE1E9 keyline, 6px radius, compact inset shadow outside global chrome, explicit label, blurple focus halo, and 16px mobile text; the 240px frosted header search uses dedicated icon, fluid text, and keyboard-hint slots so adornments never overlap the value",
+      "select_style": "Base UI-backed trigger with a truncating value slot and rotating chevron; 6px trigger radius, 12px collision-aware popup, compact inset depth, soft blurple selected row, plain check indicator, direction-aware enter/exit motion, and 44px popup rows on mobile",
+      "card_style": "white 8-12px product frames with a low-opacity one-pixel boundary, internal row dividers, and concentric child radii; Landing uses a frosted framed workbench with one bounded low ambient shadow and connected narrative panels instead of independent floating cards",
+      "navigation_pattern": "64px desktop and 56px mobile safe-area-aware frosted header aligned to the 1392px landing frame, 78% light or dark surface veil, 18px background blur, a translucent 240px search control, fill-free active navigation at 1280px and above, outlined Sign in plus near-black Register on desktop, compact Sign in on mobile, responsive light/dark section tone, and a low-shadow Base UI navigation popover",
+      "modal_style": "white 12px panel with #C5CFDB boundary, Stripe-tinted layered shadow, viewport collision padding, and Base UI focus management",
+      "list_style": "labeled dense rows for wide catalog views; the public rankings home is a discovery summary with three visible board choices (overall, stability, and value), while /rankings/board is the full filterable leaderboard with metric tabs, minimum-score and sort controls, search, paginated rows, and direct station-detail links; the legacy privacy wire field remains compatibility-only; mobile uses one readable fact card per row instead of horizontal table scrolling; status history uses a quiet neutral track; provenance and missing values remain visible",
+      "component_notes": "Landing, ranking, detail, document, probe-style tool, authentication, and console preserve the existing Folkbench information grammar. The landing Hero uses existing localized methodology and live snapshot facts inside a real DOM comparison workbench: four selectable requirement lenses, one current conceptual evidence image, catalog-backed model-family marks, and current model, route, and evidence facts. Six documented generated interface dioramas explain field logic with layered product panes, glass, perspective, and ambient occlusion without representing measurements or replacing snapshot facts. A sticky framework introduction and six connected alternating evidence panels create the long-form scroll narrative. Methodology and independence form one dark evidence-system band; the closing CTA and footer form another continuous dark sequence. The ranking and station-detail owners retain their data contracts and responsive behavior; the former Directory route is only a compatibility redirect. Ranking charts use only the bounded Stripe-derived role palette, and the ranking rail remains fill-free neutral UI. Header search, shared selects, language choice, and model picker share one control geometry and focus vocabulary. OpenRouter informs information density and ranking navigation; Hugging Face informs measured layout and resource indexing; Folkbench keeps its own product grammar and content boundaries."
+    }
+  },
+  "design_style": {
+    "aesthetic": {
+      "mood": [
+        "precise",
+        "spacious",
+        "technical",
+        "polished",
+        "quiet"
+      ],
+      "visual_metaphor": "a framed research instrument that lets a user choose a requirement lens, inspect the comparison method, and descend from model coverage into rankings and evidence-system rules",
+      "era_influence": "OpenRouter ranking information grammar, Hugging Face layout discipline, Vercel Geist structural discipline, Stripe Dashboard and Docs color hierarchy, Base UI accessibility primitives, and contemporary developer tooling",
+      "genre": "developer infrastructure catalog / API documentation / compact operations tool",
+      "personality_traits": [
+        "direct",
+        "efficient",
+        "confident",
+        "technical",
+        "approachable"
+      ],
+      "adjectives": [
+        "clean",
+        "structured",
+        "polished",
+        "spacious",
+        "measured",
+        "distinct"
+      ]
+    },
+    "visual_language": {
+      "complexity": "minimal surface styling with deliberate shifts between spacious narrative frames and compact product-native evidence modules",
+      "ornamentation": "bounded line, dot, and ambient-light fields, small icons, cool keylines, blurple interaction accents, semantic states, a visibly frosted tone-switching header, and a coherent set of six layered conceptual evidence dioramas; no free-floating visual effect",
+      "whitespace_usage": "large 64-104px pauses around narrative claims and section transitions; compact 8-20px rhythm remains inside workbenches, tables, and evidence modules",
+      "visual_weight_distribution": "centered Hero and closing claims, a large product workbench as primary proof, sticky left narrative beside alternating panels, then denser ranking and evidence systems",
+      "focal_strategy": "typographic promise and paired actions first, interactive requirement-to-model workbench second, snapshot context and model coverage third, sticky comparison narrative fourth, then ranking proof, dark evidence rules, pathways, and closing CTA",
+      "contrast_level": "high for primary action and heading, medium for body, low for provenance, explicit semantic contrast for warnings and failures",
+      "texture_usage": "pale periwinkle vertical lines behind the Hero workbench, sparse dot matrices behind bounded explanatory and pathway stages, and low-contrast vertical rules inside dark landing bands; dense table cells remain texture-free"
+    },
+    "composition": {
+      "hierarchy_method": "display scale, framed negative space, one-pixel grid grouping, product-native proof, light-to-dark phase change, then bounded semantic color",
+      "balance_type": "centered Hero and CTA, asymmetric sticky narrative, alternating product panels, strict grids for catalogs, rankings, details, documents, and tools",
+      "flow_direction": "top-to-bottom narrative phases with left-to-right requirement, explanation, and snapshot facts inside the Hero workbench",
+      "grouping_strategy": "24px outer frame rails, 8-12px product frames, 6-10px controls, connected panel rows, sticky narrative columns, internal hairlines, and large quiet section gaps",
+      "negative_space_role": "marks narrative phase changes, holds sticky context in place, and prevents dense evidence modules from becoming a continuous card wall"
+    },
+    "imagery": {
+      "photo_treatment": "no generic stock photography; future verified assets use neutral grading and may not substitute for evidence",
+      "illustration_style": "real DOM product workbenches, data-native charts, status bars, six cool-white three-quarter-view interface dioramas with layered frosted panes and protected center crops, equal-size catalog-backed AI model marks, and the Folkbench product glyph",
+      "graphic_elements": "interactive requirement tabs, current snapshot facts, low-opacity one-pixel frame rails, equal-weight model-family marks, bounded Stripe-derived ranking marks, semantic status dots, progress tracks, source matrices, and compact numbered rows",
+      "pattern_usage": "bounded vertical-line stages and sparse dot matrices only; no full-page decorative grid behind dense data",
+      "image_shape": "product-native framed DOM surfaces remain primary; the six active 1600x728 WebP evidence dioramas are documented, locally served, center-safe, locale-neutral, and explicitly never substitute for evidence"
+    },
+    "interaction_feel": {
+      "feedback_style": "neutral surface tint, stronger keyline, #635BFF focus halo, selected requirement state, link underline, header tone transition, or restrained opacity and transform change",
+      "hover_behavior": "Hero requirement rows change the visible methodology explanation on hover, focus, or click without changing evidence facts. Ranking navigation uses near-black and neutral-gray text/rule feedback without filled blocks; ranking rows retain a quiet surface tint and neutral inset keyline. Connected landing panels do not lift or cast new shadows.",
+      "transition_personality": "smooth, interruptible, and precise",
+      "loading_style": "cool-white bounded panel with plain language or a compact spinner; layout footprint stays stable",
+      "microinteraction_density": "low on reading surfaces, medium in the Hero workbench, sticky landing narrative, Base UI filters, rows, menus, popovers, and operational tools"
+    },
+    "brand_voice_in_ui": {
+      "tone": "plain, evidence-aware, useful, and confident without implying unverified capability",
+      "formality": "professional conversational",
+      "cta_style": "specific verb-first actions tied to the next task",
+      "empty_state_approach": "state what is absent, preserve the boundary, and offer the nearest valid next action",
+      "error_tone": "calm, precise, recoverable where possible, and explicit about what did not complete"
+    }
+  },
+  "visual_effects": {
+    "overview": {
+      "effect_intensity": "subtle landing choreography with bounded section transitions",
+      "performance_tier": "lightweight",
+      "fallback_strategy": "GSAP matchMedia skips coordinated wrapper entrances under prefers-reduced-motion or missing IntersectionObserver support; CSS sticky layout, static evidence images, and readable light/dark surfaces preserve the complete hierarchy and evidence meaning",
+      "primary_technology": "CSS line and dot textures, CSS sticky positioning, a requestAnimationFrame-throttled section-tone observer, GSAP core plus IntersectionObserver for one-shot wrapper reveals, Base UI transition states, data-driven DOM, and locally served Next Image assets"
+    },
+    "background_effects": {
+      "type": "bounded vertical-line and dot-matrix textures with continuous dark landing bands",
+      "description": "Pale periwinkle vertical lines sit only behind the Hero workbench, sparse neutral dots identify explanatory pauses, and low-contrast vertical rules organize dark evidence and closing sections. Dense data rows remain on solid surfaces.",
+      "technology": "CSS repeating-linear-gradient and radial-gradient using semantic tokens and bounded section backgrounds",
+      "params": {
+        "color_palette": [
+          "#F7F9FC",
+          "#FFFFFF",
+          "#533AFD",
+          "#7389FF",
+          "#171717"
+        ],
+        "speed": "static",
+        "density": "12px Hero line rhythm, 12px dot matrix, and 64px dark-section line rhythm",
+        "opacity": "0.09-0.46 depending on the bounded stage",
+        "blend_mode": "normal"
+      }
+    },
+    "particle_systems": {
+      "enabled": false,
+      "type": "none",
+      "description": "Particle fields would compete with evidence and are not part of the system.",
+      "technology": "none",
+      "params": {
+        "count": 0,
+        "shape": "none",
+        "size_range": "none",
+        "movement_pattern": "none",
+        "color_behavior": "none",
+        "interaction": "none",
+        "spawn_area": "none"
+      }
+    },
+    "3d_elements": {
+      "enabled": false,
+      "type": "none",
+      "description": "The product does not require a 3D scene to explain comparisons or provenance.",
+      "technology": "none",
+      "params": {
+        "renderer": "none",
+        "lighting": "none",
+        "camera": "none",
+        "materials": "none",
+        "geometry": "none",
+        "post_processing": "none",
+        "interaction_model": "none"
+      }
+    },
+    "shader_effects": {
+      "enabled": false,
+      "type": "none",
+      "description": "No shader effect is used because it would not improve the interpretation of public evidence.",
+      "technology": "none",
+      "params": {
+        "uniforms": "none",
+        "vertex_manipulation": "none",
+        "fragment_output": "none",
+        "noise_type": "none",
+        "distortion": "none"
+      }
+    },
+    "scroll_effects": {
+      "parallax": {
+        "enabled": false,
+        "layers": "none",
+        "depth_range": "none",
+        "speed_curve": "none"
+      },
+      "scroll_triggered_animations": {
+        "enabled": true,
+        "trigger_points": "IntersectionObserver threshold 0.08 with a 10% lower viewport inset for one-shot reveals; landing scroll and resize events are requestAnimationFrame-throttled only to determine whether the sticky header overlaps a declared dark section",
+        "animation_type": "GSAP opacity plus 8-12px y reveal for labeled section items, an IntersectionObserver-driven sticky framework index, intact inset evidence-image resolve, CSS sticky framework context, and a 160-180ms light/dark header tone transition",
+        "scrub_behavior": "reveals trigger once and the header tone follows section boundaries; evidence values, scores, and charts are never scrubbed"
+      },
+      "scroll_morphing": {
+        "enabled": false,
+        "description": "Landing and long documents use sticky context and section-tone changes instead of morphing content."
+      }
+    },
+    "text_effects": {
+      "type": "none",
+      "description": "Typography relies on scale, weight, measure, and contrast rather than animated lettering.",
+      "technology": "none",
+      "params": {
+        "split_strategy": "none",
+        "animation_per_unit": "none",
+        "stagger": "none",
+        "effect_style": "none"
+      }
+    },
+    "cursor_effects": {
+      "enabled": false,
+      "type": "none",
+      "description": "Native cursors preserve expected behavior on dense tools and tables.",
+      "params": {
+        "shape": "native",
+        "size": "native",
+        "blend_mode": "normal",
+        "trail": "none",
+        "interaction_zone": "none"
+      }
+    },
+    "image_effects": {
+      "type": "bounded conceptual evidence images and model-logo treatment",
+      "description": "Six documented, locally served conceptual WebP dioramas explain availability, latency, consistency, comparable price, provenance, and missingness in the Hero workbench and framework panels. Each uses an original layered product shell, shallow three-quarter perspective, frosted panes, ambient occlusion, and center-safe composition rather than flat icon geometry. They contain no text, numbers, axes, logos, or claimed measurements. Catalog-backed model-family marks retain equal frames and display their local official color assets without changing family order or prominence.",
+      "technology": "Next Image for optimized local WebP illustrations and local model SVGs, CSS filters, and the shared GSAP wrapper reveal",
+      "params": {
+        "evidence_assets": "active v2 series at 1600x728 WebP, 36-52KB each, eager only in the active Hero method panel and lazy in lower framework panels; v1 remains an unloaded local rollback",
+        "evidence_motion": "320ms whole-image resolve and fine-pointer 520ms scale to 1.01 with slight filter clarification; motion disabled under prefers-reduced-motion",
+        "filter_pipeline": "model marks use the locally vendored official color asset at rest; hover changes only the equal frame border and a restrained 1.04 scale",
+        "hover_transform": "translateY(-1.6px) scale(1.04) for the equal-size model frame only",
+        "reveal_animation": "model marks use the shared GSAP autoAlpha and y stagger when the catalog-backed list becomes available",
+        "distortion_type": "none"
+      }
+    },
+    "glassmorphism_neumorphism": {
+      "enabled": true,
+      "style": "restrained frosted header only",
+      "params": {
+        "blur_radius": "18px navigation veil, 16px Hero workbench, 8-10px nested header controls",
+        "transparency": "78% current light or dark navigation surface, 88% Hero workbench, and 72-76% nested header controls",
+        "border_treatment": "one-pixel aligned cool keyline plus subtle upper inner highlight",
+        "shadow_type": "very low navigation and Hero product ambience; stronger shadows remain reserved for popups",
+        "light_source_angle": "ambient"
+      }
+    },
+    "canvas_drawings": {
+      "enabled": false,
+      "type": "none",
+      "description": "Charts remain data-driven SVG or HTML; decorative canvas rendering is not part of the reference language.",
+      "technology": "none",
+      "params": {
+        "draw_method": "none",
+        "animation_loop": "none",
+        "color_scheme": "none",
+        "responsiveness": "none",
+        "interaction": "none"
+      }
+    },
+    "svg_animations": {
+      "enabled": false,
+      "type": "none",
+      "description": "Landing explanation visuals are reviewed WebP assets and do not draw or animate SVG paths. Data-native SVGs elsewhere remain static evidence surfaces.",
+      "params": {
+        "animation_method": "none",
+        "path_morphing": "none",
+        "stroke_animation": "none",
+        "filter_effects": "none"
+      }
+    },
+    "composite_notes": "Precision Spectrum stays lightweight while the landing page gains OpenRouter-informed information density and Hugging Face-style spatial discipline. A 1392px framed canvas, 1200px inner workbench, 24px desktop rails, large typographic pauses, connected panels, sticky framework context, bounded line/dot/light fields, a continuous dark evidence band, and a dark closing/footer sequence replace the former uniform card cadence. The navigation keeps its existing information architecture and alignment while moving to a more visible 78% surface veil with 18px blur, an aligned lower highlight, and low ambient shadow. The Hero remains a real DOM requirement-to-method-to-model workbench populated only by existing localized methodology and current public snapshot facts. Six coherent, prompt-documented v2 images now explain field logic as original layered interface dioramas with product shells, glass panes, perspective, and ambient occlusion; they are decorative companions to localized copy, contain no claimed values, and never substitute for snapshot evidence. The sticky header transitions between light and dark only when its lower edge overlaps declared dark landing sections. Desktop visitors get separate outlined Sign in and dark Register actions; mobile retains a compact Sign in path without duplicating an auth issuer. Model logos remain equally sized, catalog-gated, locally served, and explicitly non-endorsing. Ranking structure and its bounded Stripe role palette remain unchanged. Folkbench does not copy any reference site UI, assets, copy, customer marks, metrics, testimonials, or branded effects. No WebGL, Canvas decoration, parallax, particles, evidence-value animation, looping visual, floating logo simulation, or custom cursor is permitted."
+  }
+}

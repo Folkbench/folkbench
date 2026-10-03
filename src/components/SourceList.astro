@@ -1,0 +1,24 @@
+---
+import type { ArticleEntry } from '../lib/content'
+import type { BlogLocale } from '../lib/site'
+
+type Props = {
+  sources: ArticleEntry['data']['sources']
+  locale: BlogLocale
+}
+
+const { sources, locale } = Astro.props
+---
+{sources.length > 0 && (
+  <section class="article-sources" aria-labelledby="sources-heading">
+    <h2 id="sources-heading">{locale === 'en' ? 'Sources and scope' : '来源与范围'}</h2>
+    <ul>
+      {sources.map((source) => (
+        <li>
+          <a href={source.url} rel="noreferrer" target="_blank">{source.label}</a>
+          <span> · {source.checkedAt} · {source.claimScope}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

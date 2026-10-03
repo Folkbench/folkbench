@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const locale = 'zh-CN' as const
+---
+<BaseLayout
+  title="页面不存在"
+  description="Folkbench 页面不存在。"
+  locale={locale}
+  pathname="/404"
+  alternatePathname="/"
+  robots="noindex,nofollow"
+>
+  <main>
+    <section class="page-content">
+      <div class="page-shell empty-note">
+        <h1>页面不存在</h1>
+        <p>这个地址没有对应的公开内容。</p>
+        <a href="/blog/api-relay-reliability-checks">回到最新文章 →</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
