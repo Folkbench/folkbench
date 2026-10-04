@@ -31,30 +31,30 @@ The following sites are listed in the current display order. Click a site name t
 
 ### [🌟 Modelflare](https://folkbench.com/en/services/modelflare-a3165b)
 
-**Editorial note:** A good fit for developers, AI tools, and agent teams that need one place to access multiple current models. The published profile covers a broad model set and presents pricing, usage, and request status clearly; Folkbench’s published profile records strong results for basic requests, Function Calling, and structured output. Low-cost groups and individual channels still differ, so check the ranking for the model you plan to use.
+The site currently offers special access tiers. A single US$20 top-up unlocks the GPT discount group; after unlocking it, GPT-5.6-Sol is priced at about ¥0.51 input / ¥3.01 output per million tokens, and the site’s support team says there is no usage cap. A single US$50 top-up unlocks the Claude discount group. The site is operated by the US LLC Havenbyte LLC and supports GPT, Claude, Gemini, Grok, common compatible protocols, and more than 40 image and video models. API keys can be configured with ordered fallback, while request records show tokens, latency, status, and actual cost. Cache compensation is another notable feature: selected OpenAI priority, stable, and advanced groups provide daily cache-hit guarantees of 65%, 75%, and 85%; when an eligible request misses its target, the platform says it compensates the difference, which can be viewed in the usage dashboard after settlement.
 
 ### [CheapAI](https://folkbench.com/en/services/cheapai-92f59e)
 
-**Editorial note:** Focused on low-cost, direct GPT/API access, with a broad published model directory for users who want to compare prices and try several models quickly. Published information puts OpenAI-side model consistency at about 90%–91.7%, while long-context reliability still needs observation; this is a newer site, so test the target model before using it for important work.
+CheapAI has an interesting dynamic-multiplier grouping feature. The prices observed so far are very low; its support team explains that prices are adjusted dynamically according to the real-time account pool to balance stability and availability. As its name suggests, the site focuses on low prices and value. Users seeking the best price can choose the special-offer group with a favorable discount multiplier; users prioritizing stability can choose the stable or Pro group, while the official-key group covers another set of use cases. The site also supports several payment methods, which can be checked directly on its website.
 
 ### [Apiporter](https://folkbench.com/en/services/apiporter-892d3f)
 
-**Editorial note:** Oriented toward domestic business users and multi-channel access. The minimum top-up is low at ¥5, any amount can be invoiced, and support is available through online customer service and Enterprise WeChat. The current profile still lists Claude stability as an area for improvement and has no recent user-experience data; it is most relevant for users who value invoicing and low-cost trials, with the target channel checked first.
+Oriented toward domestic business users and multi-channel access. The minimum top-up is low at ¥5, any amount can be invoiced, and support is available through online customer service and Enterprise WeChat. The current profile still lists Claude stability as an area for improvement and has no recent user-experience data; it is most relevant for users who value invoicing and low-cost trials, with the target channel checked first.
 
 ### [Cloudbridge](https://folkbench.com/en/services/cloudbridge-a61e04)
 
-**Editorial note:** Its main features are multi-channel access, an overseas site, multilingual support, and USD billing, with a $1 minimum top-up and published coverage for GPT, Claude, Grok, DeepSeek, and other models. Folkbench currently marks it as a newly opened site, so reliability and response speed need more data; it is useful for comparing overseas settlement and domestic-model pricing, while stability should be verified separately.
+Its main features are multi-channel access, an overseas site, multilingual support, and USD billing, with a $1 minimum top-up and published coverage for GPT, Claude, Grok, DeepSeek, and other models. Folkbench currently marks it as a newly opened site, so reliability and response speed need more data; it is useful for comparing overseas settlement and domestic-model pricing, while stability should be verified separately.
 
 ### [IKunCode](https://folkbench.com/en/services/ikuncode-b8db6d)
 
-**Editorial note:** Operating history and after-sales support are its clearest selling points. The published profile says it has operated for more than a year; its current directory includes Claude and GPT routes, supports Alipay and WeChat Pay, and records positive recharge and refund experience. The current price groups and public model range are relatively limited, so confirm that the model you need is listed before topping up.
+Operating history and after-sales support are its clearest selling points. The published profile says it has operated for more than a year; its current directory includes Claude and GPT routes, supports Alipay and WeChat Pay, and records positive recharge and refund experience. The current price groups and public model range are relatively limited, so confirm that the model you need is listed before topping up.
 
 ### [境Ai](https://folkbench.com/en/services/ai-fc2350)
 
-**Editorial note:** A unified API aggregation platform for developers and teams, with published coverage for GPT, Claude, Grok, Gemini, and selected domestic models. Pay-as-you-go billing, packages, and balance top-ups are all documented. It is a newer site with limited independent evaluation data, so stability and scheduling should not be inferred from the site’s own description; start with a small trial for the model you need.
+A unified API aggregation platform for developers and teams, with published coverage for GPT, Claude, Grok, Gemini, and selected domestic models. Pay-as-you-go billing, packages, and balance top-ups are all documented. It is a newer site with limited independent evaluation data, so stability and scheduling should not be inferred from the site’s own description; start with a small trial for the model you need.
 
 ### [智流 FluxLane](https://folkbench.com/en/services/fluxlane-728138)
 
-**Editorial note:** Its published directory is large, covering a wide range of international and domestic models across multiple channels. Support for enterprise and university procurement, invoices, and related documents is a clear use-case advantage. The current profile still lacks enough independent experience and rating fields, so verify the site’s low-multiplier, stability, and TTFT claims against the model-specific rankings and current routes.
+Its published directory is large, covering a wide range of international and domestic models across multiple channels. Support for enterprise and university procurement, invoices, and related documents is a clear use-case advantage. The current profile still lacks enough independent experience and rating fields, so verify the site’s low-multiplier, stability, and TTFT claims against the model-specific rankings and current routes.
 
 Prices, available models, protocol support, and routes can change, so check each site’s current documentation, pricing page, and terms before use.
