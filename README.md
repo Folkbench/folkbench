@@ -6,8 +6,6 @@
 
 Folkbench 帮助个人和团队从模型出发比较中转站。站点运营方可以通过 Folkbench 主站提交资料申请入驻；入驻资料与独立评价分开处理。每条结果都标注统计窗口、方法版本和来源，让选择建立在可核对的事实和明确的限制上。
 
-主站只读取已经发布的结果；商业展示与实测表现分开处理。模型详情、榜单、指南和博客文章可以互相链接，但每种内容仍保留自己的事实来源和发布边界。
-
 ## 三个总榜单
 
 如果你想先从整体维度比较中转站，可以直接打开以下三个总榜单：
@@ -27,32 +25,36 @@ Folkbench 帮助个人和团队从模型出发比较中转站。站点运营方�
 - [DeepSeek V4.1 Flash 中转站榜单](https://folkbench.com/rankings/deepseek-v4-1-flash)
 - [打开完整榜单并筛选](https://folkbench.com/rankings/board)
 
-榜单以 Folkbench 已发布快照为准，页面会标注数据窗口、方法版本和缺失字段。使用前仍应核对中转站自己的最新价格、线路和服务条款。
-
-## 公开结果怎么读
-
-landing page 使用三组信号帮助读懂一张榜单：
-
-1. **可靠性**：可用率绑定具体模型、中转站和统计窗口；一次成功请求不能代表长期在线。
-2. **响应速度**：优先看 P95 完整响应耗时，而不是最快的一次；样本不足时继续显示缺失。
-3. **价格与来源**：币种、计价单位和更新时间需要可比；平台测量、商家资料、用户反馈和公开记录分开标记。
-
-每条公开结果还应回答四个问题：事实来自哪里、覆盖多长时间、使用哪个方法版本、哪些结论不能从它推出。一次异常只能说明当时看到了什么，不能单独证明原因，也不能代替长期稳定承诺、审计或认证。
-
-排名只依据公开规则和可追溯事实，不依据 Logo 或商业关系。缺失、过期、样本不足和不可比较的字段保持可见，不用另一个模型或中转站的数据填补。
-
 ## 当前已入驻站点
 
-下表只列出当前已经公开发布的入驻站点。运营顺序编号会在确认后补充；站点页可以查看该站点的公开资料和可用模型。
+下面按当前展示顺序列出已经公开发布的入驻站点。点击站点名称进入 Folkbench 站点页；每段评价是我们结合已发布资料整理的人工摘要。
 
-| 站点 | 官方入口 | Folkbench 站点页 |
-| --- | --- | --- |
-| 🌟 Modelflare | [modelflare.dev](https://modelflare.dev/) | [查看 Modelflare](https://folkbench.com/services/modelflare-a3165b) |
-| CheapAI | [cheapai.info](https://cheapai.info/) | [查看 CheapAI](https://folkbench.com/services/cheapai-92f59e) |
-| Apiporter | [apiporter.com](https://apiporter.com/) | [查看 Apiporter](https://folkbench.com/services/apiporter-892d3f) |
-| Cloudbridge | [cbapi.ai](https://cbapi.ai/) | [查看 Cloudbridge](https://folkbench.com/services/cloudbridge-a61e04) |
-| IKunCode | [api.ikuncode.ai](https://api.ikuncode.ai/) | [查看 IKunCode](https://folkbench.com/services/ikuncode-b8db6d) |
-| 境Ai | [jingai.cc](https://jingai.cc/) | [查看 境Ai](https://folkbench.com/services/ai-fc2350) |
-| 智流 FluxLane | [fluxlane.cn](https://fluxlane.cn/) | [查看 智流 FluxLane](https://folkbench.com/services/fluxlane-728138) |
+### [🌟 Modelflare](https://folkbench.com/services/modelflare-a3165b)
+
+**人工评价：** 适合需要统一接入多类前沿模型的开发者、AI 工具和 Agent 团队。当前公开资料的模型覆盖较广，价格、用量和请求状态展示比较清晰；Folkbench 资料记录的基础请求、Function Calling 与结构化输出表现较好。低价组和具体渠道仍有差异，使用前建议按目标模型查看榜单。
+
+### [CheapAI](https://folkbench.com/services/cheapai-92f59e)
+
+**人工评价：** 主打低价、直接的 GPT/API 接入，公开目录覆盖模型较多，适合希望先比较价格、快速试用多种模型的用户。已发布资料显示 OpenAI 侧模型一致性约为 90%–91.7%，但长上下文可靠性仍需观察；这是较新的站点，重要业务应先按目标模型实测。
+
+### [Apiporter](https://folkbench.com/services/apiporter-892d3f)
+
+**人工评价：** 定位偏国内企业用户和多渠道聚合。起充门槛低（¥5），支持任意金额开票，并提供在线客服和企业微信。当前资料对 Claude 稳定性仍有改进项，近期用户体验数据暂缺；适合看重开票和低额试用的用户，使用前应单独核对目标渠道。
+
+### [Cloudbridge](https://folkbench.com/services/cloudbridge-a61e04)
+
+**人工评价：** 多渠道、海外站点、多语言和美元计费是主要特点，起充 1 USD，公开资料覆盖 GPT、Claude、Grok、DeepSeek 等模型。Folkbench 目前将其标注为新开站点，可靠性与响应速度仍待更多数据；适合先比较海外结算和国产模型价格，不宜只按站点自述判断稳定性。
+
+### [IKunCode](https://folkbench.com/services/ikuncode-b8db6d)
+
+**人工评价：** 运营时间和售后是主要卖点；公开资料称已稳定运营一年以上，当前发布目录包含 Claude 与 GPT 线路，支持支付宝和微信，充值与退款体验评价较好。现有价格分组和公开模型范围相对有限，选择前应确认具体模型是否在当前目录中。
+
+### [境Ai](https://folkbench.com/services/ai-fc2350)
+
+**人工评价：** 面向开发者和团队的统一 API 聚合平台，当前公开资料覆盖 GPT、Claude、Grok、Gemini 和部分国产模型，按量计费、套餐、余额充值等入口比较完整。它属于较新的站点，独立检测样本仍少，稳定性和调度能力不能只按站点自述判断；适合先做小额、目标模型试用。
+
+### [智流 FluxLane](https://folkbench.com/services/fluxlane-728138)
+
+**人工评价：** 公开目录规模较大，覆盖多类国际与国产模型，并提供多条渠道；企业和高校采购、发票、合同等支持是比较明确的场景优势。当前资料还缺少足够独立体验和评分字段，站点自述的低倍率、稳定性与 TTFT 需要回到具体模型榜单和最新线路核对。
 
 价格、可用模型、协议支持和线路可能变化，实际使用前请以站点自己的最新文档、价格页和服务条款为准。
