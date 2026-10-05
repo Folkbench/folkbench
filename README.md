@@ -13,9 +13,9 @@ Folkbench 为你提供的是：**你要用什么模型，就拉出谁在提供�
 - [稳定性榜](https://folkbench.com/rankings/board?metric=availability) -死磕真实可用率，随叫随到，绝不突然掉链子
 - [性价比榜](https://folkbench.com/rankings/board?metric=price) -预算敏感首选，放心随便蹬
 
-## 具体模型榜单
+## 热门模型一键直达
 
-如果你已经确定要使用哪个模型，建议直接打开对应的模型榜单，查看当前中转站的可用率、稳定性、价格与证据状态：
+如果你已经确定要使用哪个模型，直接打开对应的模型榜单，立刻查看模型在各个中转站的可用率、稳定性、价格：
 
 - [GPT 6 Sol 中转站榜单](https://folkbench.com/rankings/gpt-6-sol)
 - [GPT 6 Astra 中转站榜单](https://folkbench.com/rankings/gpt-6-astra)
