@@ -126,7 +126,7 @@ a:hover { color: var(--fb-content-primary); }
   border-radius: 0.5rem;
   color: var(--fb-content-on-dark);
   background: var(--fb-surface-dark);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   font-weight: 500;
 }
 
@@ -199,7 +199,7 @@ a:hover { color: var(--fb-content-primary); }
   color: var(--fb-content-primary);
   background: var(--fb-surface-secondary);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: .88em;
+  font-size: max(.88em, 0.6875rem);
 }
 
 .article-body pre {
@@ -217,6 +217,23 @@ a:hover { color: var(--fb-content-primary); }
   border: 0;
   color: inherit;
   background: transparent;
+}
+
+.article-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.75rem 0;
+  border: 1px solid var(--fb-line-default);
+  border-radius: 0.75rem;
+  background: var(--fb-surface-secondary);
+}
+
+.article-body .footnotes {
+  margin-top: 2.5rem;
+  color: var(--fb-content-secondary);
+  font-size: 0.8125rem;
+  line-height: 1.7;
 }
 
 .article-body table {
