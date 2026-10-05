@@ -3,15 +3,15 @@
 > 先定模型，再找中转站。给你展示真实的可用率、P95 耗时、价格区间，以及测试覆盖的具体时间段，让全部中转站被揭开底裤。
 [访问 Folkbench 主站](https://folkbench.com/) · [English README](README.en.md)
 
-Folkbench 为你提供的是：你要用什么模型，就拉出谁在提供，再看硬数据对比。 我们按模型聚合服务商，实时追踪可用率、P95 完整响应耗时与单价。我们目前接受运营方申请入驻，但测试流程与商业资料之间将是彻底解耦——真正做到让用户买服务不看吹嘘，看真实的基准测试。
+Folkbench 为你提供的是：**你要用什么模型，就拉出谁在提供，再看硬数据对比。** 我们将会按模型聚合服务商，实时追踪可用率、P95 完整响应耗时与单价。我们目前接受运营方申请入驻，但测试流程与商业资料之间将是彻底解耦——真正做到让用户买服务不看吹嘘，看真实的基准测试。
 
 ## 三个总榜单
 
-如果你想先从整体维度比较中转站，可以直接打开以下三个总榜单：
+每个人选服务商都有不同的需求：跑核心业务怕断连，批量刷脚本图便宜。我们不搞糊弄人的黑盒综合分，直接按维度拆开来给每个人个性化选择：
 
-- [总榜](https://folkbench.com/rankings/board)
-- [稳定性榜](https://folkbench.com/rankings/board?metric=availability)
-- [性价比榜](https://folkbench.com/rankings/board?metric=price)
+- [总榜](https://folkbench.com/rankings/board)-各项表现均衡，挑不出大毛病的主力默认通道
+- [稳定性榜](https://folkbench.com/rankings/board?metric=availability) -死磕真实可用率，随叫随到，绝不突然掉链子
+- [性价比榜](https://folkbench.com/rankings/board?metric=price) -预算敏感首选，放心随便蹬
 
 ## 具体模型榜单
 
