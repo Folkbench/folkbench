@@ -9,7 +9,7 @@
     "dev": "astro dev --host --port 8341",
     "build": "astro build",
     "preview": "astro preview --host --port 8341",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit && node scripts/check-article-locales.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",
