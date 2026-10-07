@@ -1,22 +1,21 @@
 # Folkbench - 帮你找到最好用的模型
 
-> 先选模型，再比较提供该模型的中转站。每家都单独列出可用率、P95 完整响应耗时、价格，以及这些数字覆盖的时间。
-
+> 先定模型，再找中转站。给你展示真实的可用率、P95 耗时、价格区间，以及测试覆盖的具体时间段，让全部中转站被揭开底裤。
 [访问 Folkbench 主站](https://folkbench.com/) · [English README](README.en.md)
 
-Folkbench 帮助个人和团队从模型出发比较中转站。站点运营方可以通过 Folkbench 主站提交资料申请入驻；入驻资料与独立评价分开处理。每条结果都标注统计窗口、方法版本和来源，让选择建立在可核对的事实和明确的限制上。
+Folkbench 为你提供的是：**你要用什么模型，就拉出谁在提供，再看硬数据对比。** 我们将会按模型聚合服务商，实时追踪可用率、P95 完整响应耗时与单价。我们目前接受运营方申请入驻，但测试流程与商业资料之间将是彻底解耦——真正做到让用户买服务不看吹嘘，看真实的基准测试。
 
 ## 三个总榜单
 
-如果你想先从整体维度比较中转站，可以直接打开以下三个总榜单：
+每个人选服务商都有不同的需求：跑核心业务怕断连，批量刷脚本图便宜。我们不搞糊弄人的黑盒综合分，直接按维度拆开来给每个人个性化选择：
 
-- [总榜](https://folkbench.com/rankings/board)
-- [稳定性榜](https://folkbench.com/rankings/board?metric=availability)
-- [性价比榜](https://folkbench.com/rankings/board?metric=price)
+- [总榜](https://folkbench.com/rankings/board)-各项表现均衡，挑不出大毛病的主力默认通道
+- [稳定性榜](https://folkbench.com/rankings/board?metric=availability) -死磕真实可用率，随叫随到，绝不突然掉链子
+- [性价比榜](https://folkbench.com/rankings/board?metric=price) -预算敏感首选，放心随便蹬
 
-## 具体模型榜单
+## 热门模型一键直达
 
-如果你已经确定要使用哪个模型，建议直接打开对应的模型榜单，查看当前中转站的可用率、稳定性、价格与证据状态：
+如果你已经确定要使用哪个模型，直接打开对应的模型榜单，立刻查看模型在各个中转站的可用率、稳定性、价格：
 
 - [GPT 6 Sol 中转站榜单](https://folkbench.com/rankings/gpt-6-sol)
 - [GPT 6 Astra 中转站榜单](https://folkbench.com/rankings/gpt-6-astra)
@@ -31,38 +30,37 @@ Folkbench 帮助个人和团队从模型出发比较中转站。站点运营方�
 
 <h3><a href="https://folkbench.com/services/modelflare" target="_blank" rel="noopener noreferrer">🌟 Modelflare</a></h3>
 
-这家站有特惠活动：单笔充值 US$20 后可解锁 GPT 特惠分组，解锁后 GPT-5.6-Sol 的价格大约是 ¥0.51（输入）/ ¥3.01（输出）/每百万 Token；站点客服表示没有使用上限限制。单笔充值 US$50 后可解锁 Claude 特惠分组。
+Modelflare站点是由美国 Havenbyte LLC 运营，支持 GPT、Claude、Gemini、Grok 等主流模型和常用兼容协议，同时也支持 40 多种图片及视频模型。API Key 可以配置有序回退，一把 API Key 可以调用多个模型，Key 还可以设置备用分组，并且从请求日志里能看到状态、延迟、Token 和实际费用。
 
-站点由美国 LLC 主体 Havenbyte LLC 运营，支持 GPT、Claude、Gemini、Grok 等主流模型和常用兼容协议，也支持 40 多种图片及视频模型。API Key 可以配置有序回退，调用记录可以查看 Token、延迟、状态和实际成本。
+缓存补偿是这个站的另一个亮点：部分 OpenAI 价格优先、稳定和高级分组分别提供每日 65%、75%、85% 的缓存命中率保障，对于符合条件的api请求如果未达到缓存命中率，平台会给予对应补充。
 
-缓存补偿是另一个亮点：部分 OpenAI 价格优先、稳定和高级分组提供每日 65%、75%、85% 的缓存命中率保障；符合条件的请求如果未达到目标，平台会补偿差额，结算后可在用量看板查看。
+站点目前也有首次充值解锁特惠分组的活动，单笔充值 US$20 后可解锁 GPT 特惠分组，解锁后 GPT-5.6-Sol 的价格大约是 ¥0.51（输入）/ ¥3.01（输出）/每百万 Token，并且没有使用上限限制。
 
 <h3><a href="https://folkbench.com/services/cheapai" target="_blank" rel="noopener noreferrer">CheapAI</a></h3>
 
-CheapAI 有一个很有意思的功能是动态倍率分组。目前观测到的价格非常便宜，客服介绍说会根据实时号池情况动态调节价格，以兼顾稳定性和可用率。整体定位就像它的名字一样追求低价和性价比。
+CheapAI字如其名，主打一个便宜，可以重点看特惠分组，价格确实压得很低。而且还有一个很有意思的动态倍率分组。按客服的介绍，这个分组会根据实时号池情况调整倍率。资源充足的时候价格可以更低，资源紧张时则会相应调整，在价格和可用性之间实时做一个平衡。
 
-追求性价比的用户可以选择折扣倍率较好的特惠分组，追求稳定的用户可以选择稳定分组或 Pro 分组，站点也提供官 key 分组，能够覆盖不同使用需求。
-
-充值支持的支付方式也比较多，可以直接前往站点查看。
+对于追求性价比的用户可以选择它们家折扣倍率较好的特惠分组，而对于追求稳定的用户可以选择稳定分组或 Pro 分组，站点也提供官 key 分组，能够覆盖不同使用需求。
 
 <h3><a href="https://folkbench.com/services/apiporter" target="_blank" rel="noopener noreferrer">Apiporter</a></h3>
 
-定位偏国内企业用户和多渠道聚合。起充门槛低（¥5），支持任意金额开票，并提供在线客服和企业微信。当前资料对 Claude 稳定性仍有改进项，近期用户体验数据暂缺；适合看重开票和低额试用的用户，使用前应单独核对目标渠道。
+ApiPorter的定位偏国内企业用户和多渠道聚合，超级适合看重开票和低额试用的用户。起充门槛只有¥5，支持小额开票，还有在线客服和企业微信，想先充一点试线路的话成本不高。支持任意金额开票，并提供在线客服和企业微信。
 
+它本身做了多个渠道分组，不同分组在价格和稳定性上取向不一样，API Key也可以单独设置额度和有效期，在团队内部使用或者在不同项目中分开用会比较方便。
 <h3><a href="https://folkbench.com/services/cloudbridge" target="_blank" rel="noopener noreferrer">Cloudbridge</a></h3>
 
-多渠道、海外站点、多语言和美元计费是主要特点，起充 1 USD，公开资料覆盖 GPT、Claude、Grok、DeepSeek 等模型。Folkbench 目前将其标注为新开站点，可靠性与响应速度仍待更多数据；适合先比较海外结算和国产模型价格，不宜只按站点自述判断稳定性。
+Cloudbridge 比较偏海外使用场景，支持美元计费和多语言，起充门槛也不高。目前公开的模型里有 GPT、Claude、Grok、DeepSeek 等，想用美元结算的话会比较顺手。
+
+它还是一个相对比较新的站，能参考的长期数据没有一些老站那么多。不过现在 Folkbench 已经开始有实际测试记录，部分线路的可用率表现也不错。
 
 <h3><a href="https://folkbench.com/services/ikuncode" target="_blank" rel="noopener noreferrer">IKunCode</a></h3>
 
-运营时间和售后是主要卖点；公开资料称已稳定运营一年以上，当前发布目录包含 Claude 与 GPT 线路，支持支付宝和微信，充值与退款体验评价较好。现有价格分组和公开模型范围相对有限，选择前应确认具体模型是否在当前目录中。
+IKunCode对于各个编程工具接入的支持比较好，Claude Code、Codex 和 Gemini CLI 都有单独支持，售后以及咨询渠道渠道做得比较全，官网公开了客服邮箱、QQ 群和 Telegram，人工客服服务贴心，很适合新手上路
 
 <h3><a href="https://folkbench.com/services/jingai" target="_blank" rel="noopener noreferrer">境Ai</a></h3>
 
-面向开发者和团队的统一 API 聚合平台，当前公开资料覆盖 GPT、Claude、Grok、Gemini 和部分国产模型，按量计费、套餐、余额充值等入口比较完整。它属于较新的站点，独立检测样本仍少，稳定性和调度能力不能只按站点自述判断；适合先做小额、目标模型试用。
+境Ai主要做多模型统一接入，当前的公开资料显示该站点覆盖 GPT、Claude、Grok、Gemini 和部分国产模型，按量计费、套餐、余额充值等入口比较完整。它属于较新的站点，建议先确定自己要用的模型，再去folkbench看对应线路最近的可用率、延迟和价格。
 
 <h3><a href="https://folkbench.com/services/fluxlane" target="_blank" rel="noopener noreferrer">智流 FluxLane</a></h3>
 
-公开目录规模较大，覆盖多类国际与国产模型，并提供多条渠道；企业和高校采购、发票、合同等支持是比较明确的场景优势。当前资料还缺少足够独立体验和评分字段，站点自述的低倍率、稳定性与 TTFT 需要回到具体模型榜单和最新线路核对。
-
-价格、可用模型、协议支持和线路可能变化，实际使用前请以站点自己的最新文档、价格页和服务条款为准。
+智流 FluxLane 的模型和线路比较多，国内外模型都有，接入方式也比较统一，直接兼容 OpenAI SDK。除了模型和线路比较全，它还把路由、用量、成本和延迟这些东西都做进了平台里，比较适合开发者和团队长期接入。对于企业和高校采购这方面是比较明显的优势，可以提供发票、合同、采购单。
