@@ -3,7 +3,8 @@ import { glob } from 'astro/loaders'
 
 const articles = defineCollection({
   loader: glob({
-    // Spanish copies stay on disk for the main site. This collection publishes zh-CN and en.
+    // zh-CN, en, and es files are all required. This collection publishes zh-CN and en;
+    // the main site reads the Spanish copies, and check-article-locales rejects a missing locale.
     pattern: '{zh-CN,en}/**/*.md',
     base: './src/content/articles',
     generateId: ({ entry }) => entry.replace(/\.md$/u, ''),
