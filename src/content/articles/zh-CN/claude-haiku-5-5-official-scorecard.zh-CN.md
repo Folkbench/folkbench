@@ -30,7 +30,7 @@ sources:
 
 > Claude Haiku 5.5 的官方跑分已经出来了。把它和 Haiku 4.5、GPT-6 Luna、Sonnet 5.5 放在一起看，真正值得讨论的问题不是它有没有赢下每一项，而是它把“小模型”的能力边界推进到了哪里。
 
-先校正一个名称：Anthropic 官方发布的模型是 **Claude Haiku 5.5**，不是“Claude Hiya 5.5”。模型 ID 为 `claude-haiku-5-5`，发布时间是 2026 年 10 月 7 日。
+Anthropic 官方发布的模型是 **Claude Haiku 5.5**。模型 ID 为 `claude-haiku-5-5`，发布时间是 2026 年 10 月 7 日。
 
 Anthropic 对 Haiku 5.5 的定位很直接：它是目前最快、最便宜、能力最强的小模型，面向高并发、低延迟和成本敏感的任务。官方给出的典型场景包括分类、信息抽取、摘要、上下文压缩、数据库查询、浏览器操作，以及作为 Sonnet 5.5 或 Opus 5.5 的子代理。
 

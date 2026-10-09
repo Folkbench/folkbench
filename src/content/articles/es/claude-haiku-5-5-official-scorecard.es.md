@@ -30,7 +30,7 @@ sources:
 
 > Ya están las puntuaciones oficiales de Claude Haiku 5.5. Puestas junto a Haiku 4.5, GPT-6 Luna y Sonnet 5.5, la pregunta que de verdad merece discutirse no es si ganó cada partida. Es hasta dónde empujó el límite de lo que puede hacer un modelo pequeño.
 
-Primero hay que corregir un nombre. El modelo que publicó Anthropic es **Claude Haiku 5.5**, no “Claude Hiya 5.5”. El ID del modelo es `claude-haiku-5-5`. La fecha de publicación es el 7 de octubre de 2026.
+El modelo que publicó Anthropic es **Claude Haiku 5.5**. El ID del modelo es `claude-haiku-5-5`. La fecha de publicación es el 7 de octubre de 2026.
 
 Anthropic lo sitúa sin rodeos. Es su modelo pequeño más rápido, más barato y más capaz hasta ahora, pensado para tareas de mucho volumen, baja latencia y coste sensible. Los usos típicos que nombra son la clasificación, la extracción de información, el resumen, la compactación de contexto, las consultas a bases de datos, el uso del navegador y el papel de subagente de Sonnet 5.5 o de Opus 5.5.
 
