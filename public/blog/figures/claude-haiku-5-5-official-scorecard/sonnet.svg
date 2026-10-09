@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 840" fill="none">
+  <rect width="1080" height="840" fill="#f6f4ef"/>
+  <rect x="40" y="37" width="14" height="14" rx="3" fill="#c6a15a"/>
+<text x="62" y="48" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Haiku 5.5</text>
+<rect x="165.60000000000002" y="37" width="14" height="14" rx="3" fill="#2a312e"/>
+<text x="187.60000000000002" y="48" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Sonnet 5.5</text>
+  <text x="36" y="102" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">GDPval-AA v2.1</text>
+  <rect x="300" y="114" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="114" width="493.0" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="126" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">1620</text>
+  <rect x="300" y="136" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="136" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="148" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">1840</text>
+  <text x="36" y="192" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">AA-Briefcase v1.1</text>
+  <rect x="300" y="204" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="204" width="484.5" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="216" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">1578</text>
+  <rect x="300" y="226" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="226" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="238" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">1824</text>
+  <text x="36" y="282" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">OSWorld 2.1</text>
+  <rect x="300" y="294" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="294" width="483.2" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="306" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">72.4%</text>
+  <rect x="300" y="316" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="316" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="328" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">83.9%</text>
+  <text x="36" y="372" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">HLE, no tools</text>
+  <rect x="300" y="384" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="384" width="451.7" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="396" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">45.9%</text>
+  <rect x="300" y="406" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="406" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="418" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">56.9%</text>
+  <text x="36" y="462" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">HLE, with tools</text>
+  <rect x="300" y="474" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="474" width="498.4" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="486" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">57.4%</text>
+  <rect x="300" y="496" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="496" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="508" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">64.5%</text>
+  <text x="36" y="552" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">Terminal-Bench 4.0</text>
+  <rect x="300" y="564" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="564" width="310.9" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="576" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">39.2%</text>
+  <rect x="300" y="586" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="586" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="598" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">70.6%</text>
+  <text x="36" y="642" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">FrontierCode 1.1</text>
+  <rect x="300" y="654" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="654" width="498.7" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="666" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">46.4%</text>
+  <rect x="300" y="676" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="676" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="688" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">52.1%</text>
+  <text x="36" y="732" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" text-anchor="start">Chartography</text>
+  <rect x="300" y="744" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="744" width="421.8" height="14" rx="3" fill="#c6a15a"/>
+  <text x="874" y="756" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">46.4%</text>
+  <rect x="300" y="766" width="560" height="14" rx="3" fill="#ece8e0"/>
+  <rect x="300" y="766" width="560.0" height="14" rx="3" fill="#2a312e"/>
+  <text x="874" y="778" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15" font-weight="550" text-anchor="start">61.6%</text>
+  <text x="36" y="810" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="13" font-weight="500" text-anchor="start">Anthropic · 2026-10-07</text>
+</svg>

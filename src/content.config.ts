@@ -3,16 +3,15 @@ import { glob } from 'astro/loaders'
 
 const articles = defineCollection({
   loader: glob({
-    // zh-CN, en, and es files are all required. This collection publishes zh-CN and en;
-    // the main site reads the Spanish copies, and check-article-locales rejects a missing locale.
-    pattern: '{zh-CN,en}/**/*.md',
+    // zh-CN, en, and es are one published set. check-article-locales rejects a missing locale.
+    pattern: '{zh-CN,en,es}/**/*.md',
     base: './src/content/articles',
     generateId: ({ entry }) => entry.replace(/\.md$/u, ''),
   }),
   schema: z.object({
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u),
     translationKey: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u),
-    locale: z.enum(['zh-CN', 'en']),
+    locale: z.enum(['zh-CN', 'en', 'es']),
     kind: z.enum(['article', 'benchmark-review']),
     title: z.string().min(1),
     description: z.string().min(1).max(400),

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 340" fill="none">
+  <rect width="1080" height="340" fill="#f6f4ef"/>
+  <rect x="28" y="24" width="498" height="248" rx="16" fill="#fffdf8" stroke="#e4e0d6"/>
+  <text x="56" y="64" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="18" font-weight="650" text-anchor="start">Up to 100K tokens</text>
+  <line x1="56" y1="84" x2="498" y2="84" stroke="#e4e0d6"/>
+  <text x="56" y="148" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="32" font-weight="650" text-anchor="start">$0.10</text>
+  <text x="56" y="180" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Input</text>
+  <text x="56" y="204" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="14" font-weight="500" text-anchor="start">/ MTok</text>
+  <text x="212" y="148" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="32" font-weight="650" text-anchor="start">$0.50</text>
+  <text x="212" y="180" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Output</text>
+  <text x="212" y="204" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="14" font-weight="500" text-anchor="start">/ MTok</text>
+  <text x="368" y="148" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="32" font-weight="650" text-anchor="start">$0.01</text>
+  <text x="368" y="180" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Cache read</text>
+  <text x="368" y="204" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="14" font-weight="500" text-anchor="start">/ MTok</text>
+  <rect x="554" y="24" width="498" height="248" rx="16" fill="#fffdf8" stroke="#e4e0d6"/>
+  <text x="582" y="64" fill="#171816" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="18" font-weight="650" text-anchor="start">Over 100K tokens</text>
+  <line x1="582" y1="84" x2="1024" y2="84" stroke="#e4e0d6"/>
+  <text x="582" y="148" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="32" font-weight="650" text-anchor="start">$0.50</text>
+  <text x="582" y="180" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Input</text>
+  <text x="582" y="204" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="14" font-weight="500" text-anchor="start">/ MTok</text>
+  <text x="738" y="148" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="32" font-weight="650" text-anchor="start">$2.50</text>
+  <text x="738" y="180" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Output</text>
+  <text x="738" y="204" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="14" font-weight="500" text-anchor="start">/ MTok</text>
+  <text x="894" y="148" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="32" font-weight="650" text-anchor="start">$0.05</text>
+  <text x="894" y="180" fill="#6d7168" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif" font-size="15" font-weight="500" text-anchor="start">Cache read</text>
+  <text x="894" y="204" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="14" font-weight="500" text-anchor="start">/ MTok</text>
+  <text x="36" y="308" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="13" font-weight="500" text-anchor="start">Anthropic · 2026-10-07</text>
+</svg>

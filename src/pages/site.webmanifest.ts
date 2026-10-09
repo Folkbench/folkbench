@@ -4,7 +4,7 @@ export const GET: APIRoute = () => {
   const body = JSON.stringify({
     name: 'Folkbench Blog',
     short_name: 'Folkbench',
-    description: 'Folkbench bilingual articles about models, relays, reliability, and benchmark evidence.',
+    description: 'Folkbench articles in Chinese, English, and Spanish about models, relays, reliability, and benchmark evidence.',
     start_url: '/',
     display: 'standalone',
     background_color: '#f7f9fc',

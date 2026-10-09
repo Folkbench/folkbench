@@ -1,11 +1,11 @@
 export const SITE_ORIGIN = 'https://folkbench.com'
 export const FOLKBENCH_ORIGIN = 'https://folkbench.com'
 export const DEFAULT_LOCALE = 'zh-CN' as const
-export const SUPPORTED_LOCALES = ['zh-CN', 'en'] as const
+export const SUPPORTED_LOCALES = ['zh-CN', 'en', 'es'] as const
 export type BlogLocale = (typeof SUPPORTED_LOCALES)[number]
 
 export function localePrefix(locale: BlogLocale): string {
-  return locale === DEFAULT_LOCALE ? '' : '/en'
+  return locale === DEFAULT_LOCALE ? '' : `/${locale}`
 }
 
 export function localePath(locale: BlogLocale, path: string): string {
@@ -17,10 +17,14 @@ export function absoluteUrl(path: string): string {
   return new URL(path, SITE_ORIGIN).toString()
 }
 
-export function otherLocale(locale: BlogLocale): BlogLocale {
-  return locale === 'en' ? 'zh-CN' : 'en'
+export function localeLabel(locale: BlogLocale): string {
+  if (locale === 'en') return 'English'
+  if (locale === 'es') return 'Español'
+  return '简体中文'
 }
 
-export function localeLabel(locale: BlogLocale): string {
-  return locale === 'en' ? 'English' : '简体中文'
+export function openGraphLocale(locale: BlogLocale): string {
+  if (locale === 'en') return 'en_US'
+  if (locale === 'es') return 'es_ES'
+  return 'zh_CN'
 }

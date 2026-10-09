@@ -1,12 +1,9 @@
 import type { APIRoute } from 'astro'
-import { getArticles } from '../lib/content'
+import { getPublishedArticles } from '../lib/content'
 import { BLOG_MANIFEST_SCHEMA_VERSION, manifestItem } from '../lib/manifest'
 
 export const GET: APIRoute = async () => {
-  const entries = (await Promise.all([
-    getArticles('zh-CN'),
-    getArticles('en'),
-  ])).flat()
+  const entries = await getPublishedArticles()
   const items = entries
     .map(manifestItem)
     .sort((left, right) => `${left.locale}:${left.slug}`.localeCompare(`${right.locale}:${right.slug}`))

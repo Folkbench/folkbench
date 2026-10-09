@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro'
-import { getArticles } from '../lib/content'
+import { getPublishedArticles } from '../lib/content'
 import { absoluteUrl, localePath } from '../lib/site'
 
 export const GET: APIRoute = async () => {
-  const articles = [...await getArticles('zh-CN'), ...await getArticles('en')]
+  const articles = await getPublishedArticles()
   const sections: string[] = [
     '# Folkbench Blog — full article content',
     '',
