@@ -1,13 +1,13 @@
 ---
 import '../styles/global.css'
-import { absoluteUrl, FOLKBENCH_ORIGIN, localePath, otherLocale, SITE_ORIGIN, type BlogLocale } from '../lib/site'
+import { absoluteUrl, FOLKBENCH_ORIGIN, localePath, openGraphLocale, SITE_ORIGIN, SUPPORTED_LOCALES, type BlogLocale } from '../lib/site'
 
 type Props = {
   title: string
   description: string
   locale: BlogLocale
   pathname: string
-  alternatePathname?: string
+  localizedAlternates?: boolean
   type?: 'website' | 'article'
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
   robots?: string
@@ -22,7 +22,7 @@ const {
   description,
   locale,
   pathname,
-  alternatePathname = pathname,
+  localizedAlternates = true,
   type = 'website',
   jsonLd,
   robots = 'index,follow',
@@ -32,11 +32,15 @@ const {
   image = absoluteUrl('/brand/folkbench-og.png'),
 } = Astro.props
 const canonical = absoluteUrl(localePath(locale, pathname))
-const alternate = absoluteUrl(localePath(otherLocale(locale), alternatePathname))
+const alternates = localizedAlternates
+  ? SUPPORTED_LOCALES.map((item) => ({ locale: item, href: absoluteUrl(localePath(item, pathname)) }))
+  : [{ locale, href: canonical }]
 const socialImageIsCover = image.includes('/covers/')
 const siteDescription = locale === 'en'
-  ? 'Folkbench bilingual articles about models, API relays, reliability, and benchmark evidence.'
-  : 'Folkbench 关于模型、中转站、可靠性和 Benchmark 证据的双语文章。'
+  ? 'Folkbench articles in Chinese, English, and Spanish about models, API relays, reliability, and benchmark evidence.'
+  : locale === 'es'
+    ? 'Artículos de Folkbench en chino, inglés y español sobre modelos, relays de API, fiabilidad y evidencia de benchmarks.'
+    : 'Folkbench 关于模型、中转站、可靠性和 Benchmark 证据的中文、英文和西班牙文文章。'
 const graphItems = [
   {
     '@type': 'Organization',
@@ -68,9 +72,8 @@ const schema = { '@context': 'https://schema.org', '@graph': graphItems }
     <meta name="robots" content={robots} />
     <meta name="theme-color" content="#f6f6f3" />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={locale === 'en' ? 'en' : 'zh-CN'} href={canonical} />
-    <link rel="alternate" hreflang={locale === 'en' ? 'zh-CN' : 'en'} href={alternate} />
-    <link rel="alternate" hreflang="x-default" href={absoluteUrl('/')} />
+    {alternates.map((item) => <link rel="alternate" hreflang={item.locale} href={item.href} />)}
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl(localePath('zh-CN', pathname))} />
     <link rel="alternate" type="application/rss+xml" title="Folkbench Blog RSS" href={absoluteUrl('/rss.xml')} />
     <link rel="icon" type="image/svg+xml" href="/brand/folkbench-logo-only.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/brand/folkbench-icon-192.png" />
@@ -85,8 +88,10 @@ const schema = { '@context': 'https://schema.org', '@graph': graphItems }
     <meta property="og:image" content={image} />
     <meta property="og:image:width" content={socialImageIsCover ? '1600' : '1200'} />
     <meta property="og:image:height" content={socialImageIsCover ? '900' : '630'} />
-    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'zh_CN'} />
-    <meta property="og:locale:alternate" content={locale === 'en' ? 'zh_CN' : 'en_US'} />
+    <meta property="og:locale" content={openGraphLocale(locale)} />
+    {alternates.filter((item) => item.locale !== locale).map((item) => (
+      <meta property="og:locale:alternate" content={openGraphLocale(item.locale)} />
+    ))}
     {type === 'article' && publishedAt ? <meta property="article:published_time" content={publishedAt} /> : null}
     {type === 'article' && updatedAt ? <meta property="article:modified_time" content={updatedAt} /> : null}
     {type === 'article' && author ? <meta property="article:author" content={author} /> : null}

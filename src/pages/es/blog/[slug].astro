@@ -7,20 +7,20 @@ import { articleJsonLd } from '../../../lib/seo'
 import { absoluteUrl } from '../../../lib/site'
 
 export async function getStaticPaths() {
-  const entries = await getArticles('en')
+  const entries = await getArticles('es')
   return entries.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }))
 }
 
-const entry = Astro.props.entry ?? await getArticle('en', Astro.params.slug ?? '')
+const entry = Astro.props.entry ?? await getArticle('es', Astro.params.slug ?? '')
 if (!entry) throw new Error(`Article not found: ${Astro.params.slug ?? ''}`)
 const translations = await getTranslations(entry)
 const { Content } = await render(entry)
-const jsonLd = articleJsonLd(entry, 'en')
+const jsonLd = articleJsonLd(entry, 'es')
 ---
 <BaseLayout
   title={entry.data.title}
   description={entry.data.description}
-  locale="en"
+  locale="es"
   pathname={`/blog/${entry.data.slug}`}
   type="article"
   jsonLd={jsonLd}
@@ -29,7 +29,7 @@ const jsonLd = articleJsonLd(entry, 'en')
   author="Folkbench Editorial Desk"
   image={absoluteUrl(`/covers/${entry.data.translationKey}.webp`)}
 >
-  <ArticleDetail entry={entry} locale="en" translations={translations}>
+  <ArticleDetail entry={entry} locale="es" translations={translations}>
     <Content />
   </ArticleDetail>
 </BaseLayout>

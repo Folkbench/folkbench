@@ -1,0 +1,7 @@
+---
+import { getArticles } from '../../../lib/content'
+
+const entries = await getArticles('es')
+const latest = entries[0]
+return Astro.redirect(latest ? `/es/blog/${latest.data.slug}/` : '/es/', 302)
+---

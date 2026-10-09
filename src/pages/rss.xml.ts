@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { getArticles } from '../lib/content'
+import { getPublishedArticles } from '../lib/content'
 import { absoluteUrl, localePath } from '../lib/site'
 
 function escapeXml(value: string): string {
@@ -7,7 +7,7 @@ function escapeXml(value: string): string {
 }
 
 export const GET: APIRoute = async () => {
-  const articles = [...await getArticles('zh-CN'), ...await getArticles('en')]
+  const articles = await getPublishedArticles()
   const items = articles.map((entry) => {
     const url = absoluteUrl(localePath(entry.data.locale, `/blog/${entry.data.slug}`))
     return [
@@ -20,6 +20,6 @@ export const GET: APIRoute = async () => {
       '</item>',
     ].join('')
   }).join('')
-  const xml = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Folkbench Blog</title><description>Bilingual Folkbench articles.</description><link>${absoluteUrl('/')}</link>${items}</channel></rss>`
+  const xml = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Folkbench Blog</title><description>Folkbench articles in Chinese, English, and Spanish.</description><link>${absoluteUrl('/')}</link>${items}</channel></rss>`
   return new Response(xml, { headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' } })
 }

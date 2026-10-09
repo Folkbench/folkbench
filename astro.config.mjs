@@ -9,6 +9,7 @@ export default defineConfig({
       const pathname = new URL(page).pathname
       return pathname !== '/'
         && pathname !== '/en/'
+        && pathname !== '/es/'
         && !pathname.endsWith('/blog/')
         && !pathname.includes('/articles/')
     },
@@ -17,6 +18,7 @@ export default defineConfig({
       locales: {
         'zh-CN': 'zh-CN',
         en: 'en',
+        es: 'es',
       },
     },
   })],

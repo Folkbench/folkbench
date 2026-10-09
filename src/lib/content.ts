@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
-import type { BlogLocale } from './site'
+import { SUPPORTED_LOCALES, type BlogLocale } from './site'
 
 export type ArticleEntry = CollectionEntry<'articles'>
 
@@ -16,10 +16,16 @@ export async function getArticle(locale: BlogLocale, slug: string): Promise<Arti
   return entries[0]
 }
 
-export async function getTranslation(entry: ArticleEntry): Promise<ArticleEntry | undefined> {
-  const targetLocale = entry.data.locale === 'en' ? 'zh-CN' : 'en'
-  const entries = await getCollection('articles', ({ data }) => data.locale === targetLocale && data.translationKey === entry.data.translationKey)
-  return entries[0]
+export async function getPublishedArticles(): Promise<ArticleEntry[]> {
+  const groups = await Promise.all(SUPPORTED_LOCALES.map((locale) => getArticles(locale)))
+  return groups.flat()
+}
+
+export async function getTranslations(entry: ArticleEntry): Promise<ArticleEntry[]> {
+  const entries = await getCollection('articles', ({ data }) => (
+    data.translationKey === entry.data.translationKey && data.locale !== entry.data.locale
+  ))
+  return entries.sort((left, right) => left.data.locale.localeCompare(right.data.locale))
 }
 
 export function kindLabel(kind: ArticleEntry['data']['kind'], locale: BlogLocale): string {
@@ -31,6 +37,10 @@ export function kindLabel(kind: ArticleEntry['data']['kind'], locale: BlogLocale
     en: {
       article: 'Article',
       'benchmark-review': 'Benchmark review',
+    },
+    es: {
+      article: 'Artículo',
+      'benchmark-review': 'Revisión de benchmark',
     },
   } as const
   return labels[locale][kind]

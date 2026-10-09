@@ -2,17 +2,21 @@
 import SourceList from './SourceList.astro'
 import { getPersona } from '../data/authors'
 import type { ArticleEntry } from '../lib/content'
-import { localePath, type BlogLocale } from '../lib/site'
+import { localeLabel, localePath, type BlogLocale } from '../lib/site'
 
 type Props = {
   entry: ArticleEntry
   locale: BlogLocale
-  translation?: ArticleEntry
+  translations?: ArticleEntry[]
 }
 
-const { entry, locale, translation } = Astro.props
+const { entry, locale, translations = [] } = Astro.props
 const persona = getPersona(entry.data.authorId)
-const isEnglish = locale === 'en'
+const copy = {
+  'zh-CN': { reader: '用户投稿', views: '非本站观点', updated: '更新于' },
+  en: { reader: 'Reader submission', views: "The contributor's own views", updated: 'Updated' },
+  es: { reader: 'Aportación de lectores', views: 'Opiniones de quien escribe', updated: 'Actualizado' },
+}[locale]
 ---
 <main>
   <article>
@@ -24,8 +28,8 @@ const isEnglish = locale === 'en'
         {entry.data.contributor ? (
           <>
             <span class="article-persona"><strong>{entry.data.contributor}</strong></span>
-            <span>{isEnglish ? 'Reader submission' : '用户投稿'}</span>
-            <span>{isEnglish ? "The contributor's own views" : '非本站观点'}</span>
+            <span>{copy.reader}</span>
+            <span>{copy.views}</span>
           </>
         ) : (
           <>
@@ -33,8 +37,10 @@ const isEnglish = locale === 'en'
             <span>{persona.role[locale]}</span>
           </>
         )}
-        <time datetime={entry.data.updatedAt}>{isEnglish ? 'Updated' : '更新于'} {entry.data.updatedAt}</time>
-        {translation && <a href={localePath(translation.data.locale, `/blog/${translation.data.slug}`)}>{isEnglish ? '中文版本 →' : 'English version →'}</a>}
+        <time datetime={entry.data.updatedAt}>{copy.updated} {entry.data.updatedAt}</time>
+        {translations.map((translation) => (
+          <a href={localePath(translation.data.locale, `/blog/${translation.data.slug}`)} key={translation.data.locale}>{localeLabel(translation.data.locale)} →</a>
+        ))}
       </div>
       <figure class="article-cover">
         <img src={`/covers/${entry.data.translationKey}.webp`} alt="" loading="eager" decoding="async" />

@@ -29,7 +29,7 @@ export function articleJsonLd(entry: ArticleEntry, locale: BlogLocale): Record<s
       '@type': 'BreadcrumbList',
       '@id': `${canonical}#breadcrumb`,
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Articles' : '文章', item: absoluteUrl(localePath(locale, '/blog')) },
+        { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Articles' : locale === 'es' ? 'Artículos' : '文章', item: absoluteUrl(localePath(locale, '/blog')) },
         { '@type': 'ListItem', position: 2, name: entry.data.title, item: canonical },
       ],
     },
