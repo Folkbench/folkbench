@@ -82,6 +82,17 @@ export function installerEnvironment(source, { macOS, notarize }) {
   return env
 }
 
+export function installerBuildArguments({ runnerOS, target, bundle }) {
+  const targets = {
+    'macOS:aarch64-apple-darwin': 'dmg',
+    'macOS:x86_64-apple-darwin': 'dmg',
+    'Windows:x86_64-pc-windows-msvc': 'nsis',
+  }
+  if (!targets[`${runnerOS}:${target}`] || targets[`${runnerOS}:${target}`] !== bundle) throw new Error('Unexpected installer target or bundle.')
+  // A dmg-only build removes its intermediate .app; retain it for signing checks.
+  return ['run', 'tauri', 'build', '--target', target, '--bundles', runnerOS === 'macOS' ? 'app,dmg' : bundle]
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
     if (process.argv[2] === 'prepare') {
@@ -97,14 +108,9 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       console.log('Prepared owner-only temporary Apple signing files; no credential contents are printed.')
     } else if (process.argv[2] === 'build') {
       if (!['macOS', 'Windows'].includes(process.env.RUNNER_OS) || !['true', 'false'].includes(process.env.NOTARIZE)) throw new Error('Invalid installer platform or notarization mode.')
-      const targets = {
-        'macOS:aarch64-apple-darwin': 'dmg',
-        'macOS:x86_64-apple-darwin': 'dmg',
-        'Windows:x86_64-pc-windows-msvc': 'nsis',
-      }
-      if (targets[`${process.env.RUNNER_OS}:${process.env.TARGET}`] !== process.env.BUNDLE) throw new Error('Unexpected installer target or bundle.')
+      const args = installerBuildArguments({ runnerOS: process.env.RUNNER_OS, target: process.env.TARGET, bundle: process.env.BUNDLE })
       const env = installerEnvironment(process.env, { macOS: process.env.RUNNER_OS === 'macOS', notarize: process.env.NOTARIZE === 'true' })
-      const child = spawnSync(process.platform === 'win32' ? 'bun.exe' : 'bun', ['run', 'tauri', 'build', '--target', process.env.TARGET, '--bundles', process.env.BUNDLE], { env, stdio: 'inherit' })
+      const child = spawnSync(process.platform === 'win32' ? 'bun.exe' : 'bun', args, { env, stdio: 'inherit' })
       if (child.error) throw new Error('Unable to start the installer build.')
       process.exitCode = child.status ?? 1
     } else throw new Error('Usage: apple-ci.mjs prepare | build')
