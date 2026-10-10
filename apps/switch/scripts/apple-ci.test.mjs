@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { installerEnvironment, prepareAppleFiles, requiredAppleSecrets, validateAppleCredentials } from './apple-ci.mjs'
+import { installerBuildArguments, installerEnvironment, prepareAppleFiles, requiredAppleSecrets, validateAppleCredentials } from './apple-ci.mjs'
 
 function fixture() {
   const { privateKey } = generateKeyPairSync('ec', { namedCurve: 'prime256v1', privateKeyEncoding: { format: 'pem', type: 'pkcs8' }, publicKeyEncoding: { format: 'pem', type: 'spki' } })
@@ -95,4 +95,21 @@ test('signed macOS passes API Key ID, issuer and path, never raw PEM or Apple lo
     assert.equal(env[name], source[name])
     assert.throws(() => installerEnvironment({ ...source, [name]: '' }, { macOS: true, notarize: true }))
   }
+})
+
+test('macOS retains app and dmg bundles for post-build signature and notarization checks', () => {
+  for (const target of ['aarch64-apple-darwin', 'x86_64-apple-darwin']) {
+    assert.deepEqual(installerBuildArguments({ runnerOS: 'macOS', target, bundle: 'dmg' }), ['run', 'tauri', 'build', '--target', target, '--bundles', 'app,dmg'])
+  }
+})
+
+test('Windows retains its nsis-only build and unexpected target combinations are refused', () => {
+  assert.deepEqual(installerBuildArguments({ runnerOS: 'Windows', target: 'x86_64-pc-windows-msvc', bundle: 'nsis' }), ['run', 'tauri', 'build', '--target', 'x86_64-pc-windows-msvc', '--bundles', 'nsis'])
+  for (const input of [
+    { runnerOS: 'macOS', target: 'x86_64-pc-windows-msvc', bundle: 'nsis' },
+    { runnerOS: 'macOS', target: 'aarch64-apple-darwin', bundle: 'app' },
+    { runnerOS: 'Windows', target: 'x86_64-pc-windows-msvc', bundle: 'dmg' },
+    { runnerOS: 'Linux', target: 'aarch64-apple-darwin', bundle: 'dmg' },
+    {},
+  ]) assert.throws(() => installerBuildArguments(input))
 })
