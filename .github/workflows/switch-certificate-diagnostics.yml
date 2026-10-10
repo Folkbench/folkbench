@@ -1,0 +1,104 @@
+name: Switch certificate diagnostics
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    environment: switch-beta
+    timeout-minutes: 10
+    steps:
+      - name: Check certificate and import behavior without exposing credentials
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { mkdtemp, chmod, writeFile, rm } from 'node:fs/promises'
+          import { join } from 'node:path'
+          import { spawnSync } from 'node:child_process'
+          import { createPrivateKey, createPublicKey, randomBytes, X509Certificate } from 'node:crypto'
+          const report = {}
+          const run = (command, args) => spawnSync(command, args, { stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 32 * 1024 * 1024 })
+          const reason = result => {
+            const text = (result.stderr || Buffer.alloc(0)).toString('utf8').toLowerCase()
+            if (result.status === 0) return 'success'
+            if (/mac verify|mac verification/.test(text)) return 'pkcs12_integrity_or_password_check_failed'
+            if (/wrong tag|asn1|not enough data|header too long|unknown format/.test(text)) return 'container_format_or_data_rejected'
+            if (/unsupported|unknown cipher/.test(text)) return 'crypto_algorithm_not_supported'
+            if (/locked|interaction is not allowed/.test(text)) return 'keychain_access_rejected'
+            if (/no such file|not found/.test(text)) return 'file_or_tool_not_found'
+            return 'unclassified_failure'
+          }
+          let directory
+          const keychains = []
+          try {
+            const encoded = (process.env.APPLE_CERTIFICATE || '').replace(/\s/g, '')
+            const bytes = Buffer.from(encoded, 'base64')
+            report.base64_valid = bytes.length > 0 && bytes.length <= 16 * 1024 * 1024 && bytes.toString('base64') === encoded
+            report.password_present = Boolean(process.env.APPLE_CERTIFICATE_PASSWORD?.length)
+            if (!report.base64_valid || !report.password_present) throw new Error()
+            directory = await mkdtemp(join(process.env.RUNNER_TEMP, 'folkbench-certificate-diagnostics-'))
+            await chmod(directory, 0o700)
+            const certificate = join(directory, 'certificate.p12')
+            await writeFile(certificate, bytes, { flag: 'wx', mode: 0o600 })
+            bytes.fill(0)
+            const prefix = run('brew', ['--prefix', 'openssl@3'])
+            if (prefix.status !== 0) throw new Error()
+            const openssl = join(prefix.stdout.toString('utf8').trim(), 'bin/openssl')
+            const args = ['pkcs12', '-in', certificate, '-passin', 'env:APPLE_CERTIFICATE_PASSWORD', '-noenc']
+            let parsed = run(openssl, args)
+            report.openssl_default = { exit_code: parsed.status, reason: reason(parsed) }
+            if (parsed.status !== 0) {
+              parsed.stdout?.fill(0)
+              parsed.stderr?.fill(0)
+              parsed = run(openssl, [...args, '-legacy'])
+              report.openssl_legacy_reader = { exit_code: parsed.status, reason: reason(parsed) }
+            }
+            if (parsed.status === 0) {
+              // OpenSSL output contains credentials: consume only in memory, never print it.
+              const pem = parsed.stdout.toString('utf8')
+              const certificates = pem.match(/-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g) || []
+              const keys = pem.match(/-----BEGIN (?:RSA |EC )?PRIVATE KEY-----[\s\S]*?-----END (?:RSA |EC )?PRIVATE KEY-----/g) || []
+              report.has_certificate = certificates.length > 0
+              report.has_private_key = keys.length > 0
+              report.certificate_private_key_match = certificates.some(cert => keys.some(key => {
+                const publicKey = createPublicKey(createPrivateKey(key)).export({ type: 'spki', format: 'der' })
+                return new X509Certificate(cert).publicKey.export({ type: 'spki', format: 'der' }).equals(publicKey)
+              }))
+            }
+            parsed.stdout?.fill(0)
+            parsed.stderr?.fill(0)
+            for (const explicit of [false, true]) {
+              const name = explicit ? 'explicit_pkcs12' : 'implicit_format'
+              const keychain = join(directory, `${name}.keychain-db`)
+              keychains.push(keychain)
+              const password = randomBytes(24).toString('hex')
+              const stages = [
+                ['create', ['create-keychain', '-p', password, keychain]],
+                ['unlock', ['unlock-keychain', '-p', password, keychain]],
+                ['settings', ['set-keychain-settings', '-lut', '21600', keychain]],
+                ['import', ['import', certificate, '-k', keychain, '-P', process.env.APPLE_CERTIFICATE_PASSWORD, '-T', '/usr/bin/codesign', ...(explicit ? ['-f', 'pkcs12', '-t', 'cert'] : [])]],
+              ]
+              report[name] = {}
+              for (const [stage, commandArgs] of stages) {
+                const result = run('/usr/bin/security', commandArgs)
+                report[name][stage] = { exit_code: result.status, reason: reason(result) }
+                result.stdout?.fill(0)
+                result.stderr?.fill(0)
+                if (result.status !== 0) break
+              }
+            }
+          } catch {
+            report.probe_error = true
+          } finally {
+            for (const keychain of keychains) run('/usr/bin/security', ['delete-keychain', keychain])
+            if (directory) await rm(directory, { recursive: true, force: true })
+          }
+          // Only allowlisted booleans, exit codes and constant categories reach Actions logs.
+          console.log(JSON.stringify(report, null, 2))
+          if (report.probe_error || !report.certificate_private_key_match || report.explicit_pkcs12?.import?.exit_code !== 0) process.exitCode = 1
+          NODE
