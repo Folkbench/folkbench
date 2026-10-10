@@ -1,0 +1,112 @@
+{
+  "usage": {
+    "byTool": {
+      "title": "工具"
+    },
+    "failed": "读取失败",
+    "empty": "还没有会话记录。",
+    "files": "{{value}} 个文件",
+    "listPrice": {
+      "amount": "${{amount}}",
+      "missing": "部分模型没有钉死的官方价。",
+      "none": "无官方价",
+      "partial": "{{count}} 轮没有匹配到参考价格，估算金额未包含这部分。"
+    },
+    "overview": {
+      "cache": "缓存 Token",
+      "estimate": "官方价",
+      "input": "输入 Token",
+      "output": "输出 Token",
+      "title": "本机概览",
+      "tokens": "Token 合计",
+      "turns": "轮次"
+    },
+    "trend": {
+      "chartLabel": "{{tool}} 今天的本机 Token 用量（{{grain}}）",
+      "grainDay": "按天",
+      "grainHalfDay": "每半天",
+      "grainHour": "按小时",
+      "grainSixHours": "每 6 小时",
+      "dayTooltip": "{{date}} · {{tokens}} Token（{{exact}}）",
+      "empty": "今天没有可按小时绘制的本机会话记录。",
+      "hoverTotal": "{{exact}} Token",
+      "unknownModel": "未知模型",
+      "incomplete": "部分记录缺少时间或参考价格，图表与估算金额可能不完整。",
+      "period": "{{tool}} · 最近 {{days}} 天",
+      "referenceValue": "官方参考价等值 · 非实际支出",
+      "scope": "包含该工具的官方直连和中转会话，不能按所选服务拆账。",
+      "sevenDaysAgo": "7 天前",
+      "share": "预览分享卡",
+      "title": "本机今日用量",
+      "today": "今天",
+      "tokenBasis": "本机可读取会话的输入＋输出＋缓存",
+      "unsupported": "这一版尚未扫描该工具的本地使用记录，不会把无数据画成零消耗。",
+      "viewAll": "查看全部用量"
+    },
+    "share": {
+      "copied": "分享文案已复制。",
+      "copy": "复制分享文案",
+      "copyImage": "复制图片",
+      "copyImageDone": "图片已复制。",
+      "copyTokensOnly": "我在这台电脑今天通过 {{tool}} 使用了 {{tokens}} Token。",
+      "copyUnavailable": "无法自动复制，请手动复制卡片内容。",
+      "copyWithEstimate": "我在这台电脑今天通过 {{tool}} 使用了 {{tokens}} Token，约 ${{amount}}。",
+      "eyebrow": "最近 {{days}} 天 · 按天",
+      "eyebrowHalfDay": "{{start}}–{{end}} · 每半天",
+      "eyebrowHour": "{{date}} · 按小时",
+      "eyebrowSixHours": "{{start}}–{{end}} · 每 6 小时",
+      "guestName": "本机用户",
+      "imageUnavailable": "无法生成分享图。",
+      "posterLabel": "{{tool}} 今天的用量分享图（{{grain}}）",
+      "saveImage": "保存图片",
+      "saveImageDone": "图片已保存到下载文件夹。",
+      "title": "分享"
+    },
+    "range": {
+      "custom": "自定义",
+      "day": "1 天",
+      "days": "{{count}} 天",
+      "label": "范围",
+      "nextMonth": "下个月",
+      "previousMonth": "上个月"
+    },
+    "scope": {
+      "all": "全部工具",
+      "label": "统计工具",
+      "noData": "本机没有 {{tool}} 的可读取用量记录。",
+      "noUsage": "所选时间范围内没有 {{tool}} 的本机会话用量。"
+    },
+    "split": {
+      "cache": "缓存",
+      "input": "输入",
+      "output": "输出"
+    },
+    "title": "本机用量",
+    "tokens": {
+      "cache": "缓存 {{value}}",
+      "input": "输入 {{value}}",
+      "output": "输出 {{value}}",
+      "unit": "Token"
+    },
+    "turns": "{{value}} 轮",
+    "unavailable": "无法扫描会话文件。",
+    "summary": {
+      "tokens": "合计 Token",
+      "estimate": "官方价估算",
+      "vsPrevious": "较上期",
+      "vsPreviousValue": "{{value}}",
+      "unavailable": "—"
+    },
+    "actions": {
+      "configure": "配置"
+    },
+    "models": {
+      "title": "模型构成",
+      "share": "{{value}}%",
+      "rest": "其余 {{count}} 个"
+    },
+    "selected": {
+      "clear": "清除 {{name}} 筛选"
+    }
+  }
+}

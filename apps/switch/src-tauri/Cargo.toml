@@ -1,0 +1,54 @@
+[package]
+name = "folkbench-switch"
+version = "0.1.0-beta.1"
+description = "Folkbench desktop client for API service configuration and public route data"
+authors = ["Folkbench contributors"]
+license = "Apache-2.0"
+repository = "https://github.com/Folkbench/folkbench"
+homepage = "https://folkbench.com"
+edition = "2024"
+rust-version = "1.88"
+
+[workspace]
+members = ["crates/contract"]
+
+[lib]
+name = "folkbench_switch_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "folkbench-switch"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+base64 = "=0.22.1"
+chrono = "=0.4.45"
+folkbench-switch-contract = { version = "0.0.1", path = "crates/contract" }
+json5 = "0.4.1"
+reqwest = { version = "=0.13.4", default-features = false, features = ["blocking", "json", "rustls"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+rusqlite = { version = "=0.37.0", features = ["bundled"] }
+zstd = "0.13"
+serde_yaml = "=0.9.34"
+sha2 = "=0.10.9"
+tauri = { version = "2.11.5", features = [] }
+tauri-plugin-deep-link = "2"
+tauri-plugin-opener = "2.5.5"
+toml_edit = "0.22.27"
+url = "=2.5.8"
+uuid = { version = "=1.26.0", features = ["v4"] }
+arboard = "=3.6.1"
+png = "=0.17.16"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = {
+    version = "=0.61.2",
+    features = ["Win32_Storage_FileSystem"],
+}
+
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-single-instance = { version = "=2.4.5", features = ["deep-link"] }

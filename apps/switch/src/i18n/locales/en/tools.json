@@ -1,0 +1,45 @@
+{
+  "tools": {
+    "configuration": {
+      "actions": {
+        "configure": "Configure",
+        "inspect": "Inspect"
+      },
+      "apply": {
+        "success": "Configuration applied."
+      },
+      "preview": {
+        "description": "Review every redacted change before writing.",
+        "title": "Preview changes"
+      },
+      "steps": {
+        "apply": "Apply",
+        "inspect": "Inspect",
+        "preview": "Preview",
+        "receipt": "Receipt",
+        "select": "Select Key/Profile",
+        "verify": "Verify"
+      },
+      "verify": {
+        "success": "Configuration verified."
+      }
+    },
+    "description": "Real configuration read/write is available for 13 tools. Changes hot-reload or take effect after restart according to each tool's native behavior.",
+    "effect": {
+      "hotReload": "Takes effect in the current session after switch.",
+      "notImplemented": "This version cannot write this tool's configuration yet.",
+      "requiresRestart": "Restart the tool after writing configuration."
+    },
+    "search": {
+      "placeholder": "Search tools"
+    },
+    "status": {
+      "configured": "Configured",
+      "detected": "Detected",
+      "needsAttention": "Needs attention",
+      "notConfigured": "Not configured",
+      "notDetected": "Not detected"
+    },
+    "title": "Tools"
+  }
+}

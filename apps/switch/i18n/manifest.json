@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 2,
+  "defaultLocale": "en",
+  "fallbackLocale": "en",
+  "requiredLocales": ["en", "zh"],
+  "supportedLocales": ["en", "zh"],
+  "locales": [
+    { "code": "en", "label": "English" },
+    { "code": "zh", "label": "简体中文" }
+  ]
+}

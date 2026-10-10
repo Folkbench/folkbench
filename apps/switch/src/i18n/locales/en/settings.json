@@ -1,0 +1,70 @@
+{
+  "settings": {
+    "about": {
+      "title": "About",
+      "version": "Version",
+      "channel": "Release channel",
+      "beta": "Beta",
+      "commit": "Build commit",
+      "unavailable": "Version information is unavailable. Reopen Settings to try again."
+    },
+    "account": {
+      "checking": "Checking account…",
+      "dialog": {
+        "description": "Folkbench opens in your system browser. Sign in or create an account there, then return to Switch automatically.",
+        "privacy": "The client stores a separate session only. Relay Keys, tool configuration, and local usage are not uploaded.",
+        "title": "Sign in or create a Folkbench account"
+      },
+      "guest": "Using Switch locally",
+      "localOnly": "Account sign-in is optional. Saved Keys stay here.",
+      "signIn": "Sign in or register",
+      "signOut": "Sign out",
+      "signOutFailed": "Could not sign out. Please try again when connected.",
+      "title": "Folkbench account",
+      "signInShort": "Sign in"
+    },
+    "appearance": {
+      "theme": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System",
+        "title": "Theme"
+      },
+      "title": "Appearance",
+      "description": "Pages, charts, menus, and dialogs share the same theme.",
+      "switchToLight": "Switch to light mode",
+      "switchToDark": "Switch to dark mode",
+      "saveFailed": "Could not save the appearance. Try again."
+    },
+    "description": "Adjust appearance, language, and privacy.",
+    "general": {
+      "title": "General"
+    },
+    "language": {
+      "description": "English is the default and fallback language.",
+      "options": {
+        "en": "English",
+        "zh": "简体中文"
+      },
+      "saved": "Language preference saved.",
+      "switchTo": "Switch to {{language}}",
+      "title": "Language"
+    },
+    "privacy": {
+      "body": "No telemetry. Config and Keys are stored locally, not uploaded to Folkbench. Local usage extracts model and token counts from session files without uploading conversation content.",
+      "telemetry": {
+        "description": "Folkbench Switch does not send telemetry in this version.",
+        "title": "Telemetry"
+      },
+      "title": "Privacy"
+    },
+    "title": "Settings",
+    "updates": {
+      "channel": {
+        "beta": "Beta",
+        "title": "Update channel"
+      },
+      "title": "Updates"
+    }
+  }
+}

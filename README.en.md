@@ -1,35 +1,55 @@
-# Folkbench - Helping you find the best model
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/folkbench-logo-only-inverse.svg">
+    <img src="public/brand/folkbench-logo-only.svg" width="80" height="80" alt="Folkbench">
+  </picture>
+</p>
 
-> Choose a model first, then compare the relays that offer it. For each relay, Folkbench lists availability, P95 complete-response latency, price, and the period covered by those figures.
+<h1 align="center">Folkbench</h1>
+<p align="center"><strong>Choose your AI API relay with data, not guesswork.</strong></p>
+<p align="center">API route measurements · Service recommendations · Open-source tool configuration</p>
+<p align="center">
+  <a href="https://folkbench.com/en?utm_source=github&utm_campaign=folkbench-blog">Visit Folkbench</a> ·
+  <a href="https://folkbench.com/en/rankings/board?utm_source=github&utm_campaign=folkbench-blog">Rankings</a> ·
+  <a href="#service-recommendations">Recommendations</a> ·
+  <a href="#folkbench-switch">Folkbench Switch</a> ·
+  <a href="README.md">简体中文</a>
+</p>
 
-[Visit Folkbench](https://folkbench.com/?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) · [中文 README](README.md)
+Start with the model you need, then compare the relays offering it. Folkbench brings together models, channels and measurement windows so you can compare availability, 24-hour status, P95 complete-response duration and prices.
 
-Folkbench helps people and teams compare relays starting from the model they need. Service operators can submit information through Folkbench to apply for inclusion; submitted information is kept separate from independent evaluation. Every result carries its observation window, method version, and source, so a decision can be checked against evidence and explicit limits.
+**The website helps you choose a service. Switch connects it to your coding tools.**
 
-## Three overall boards
+## Start here
 
-If you want to compare relays from an overall perspective first, open one of these three overall boards:
+| What you want to do | Destination |
+| --- | --- |
+| Compare overall relay performance | [Overall board](https://folkbench.com/en/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| Prioritize availability | [Stability board](https://folkbench.com/en/rankings/board?metric=availability&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| Compare prices and usage costs | [Value board](https://folkbench.com/en/rankings/board?metric=price&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| Learn about API access and evaluation | [Articles and guides](https://folkbench.com/en/blog?utm_source=github&utm_campaign=folkbench-blog) |
+| Manage local tool configurations | [Folkbench Switch](#folkbench-switch) |
 
-- [Overall ranking](https://folkbench.com/en/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-- [Stability ranking](https://folkbench.com/en/rankings/board?metric=availability&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-- [Value ranking](https://folkbench.com/en/rankings/board?metric=price&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
+Compare the model, channel, sample size, observation window and evidence status together. P95 here measures complete-response duration.
 
-## Model-specific rankings
+## Service recommendations
 
-If you already know which model you want to use, open its model-specific ranking to compare relay availability, stability, price, and evidence status:
+| Service | What to explore | Destination |
+| --- | --- | --- |
+| Modelflare | Multi-model access, ordered fallback, request and cost records | [Official sign-up](https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
+| CheapAI | Price-focused options and groups for comparing route costs | [Official sign-up](https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
+| Apiporter | Small trials, domestic business purchasing and invoice information | [Official sign-up](https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
+| Cloudbridge | Overseas use, multilingual access and USD billing | [Official sign-up](https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
+| IKunCode | Coding-tool setup and customer support information | [Official sign-up](https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
+| 境Ai | Multi-model aggregation, usage billing and packages | [Site profile](https://folkbench.com/en/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| 智流 FluxLane | Route options, team purchasing and procurement documentation | [Site profile](https://folkbench.com/en/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
 
-- [GPT 6 Sol relay ranking](https://folkbench.com/en/rankings/gpt-6-sol?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-- [GPT 6 Astra relay ranking](https://folkbench.com/en/rankings/gpt-6-astra?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-- [Claude Fable 5.1 relay ranking](https://folkbench.com/en/rankings/claude-fable-5-1?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-- [Grok 4.7 relay ranking](https://folkbench.com/en/rankings/grok-4-7?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-- [DeepSeek V4.1 Flash relay ranking](https://folkbench.com/en/rankings/deepseek-v4-1-flash?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-- [Open the full ranking board and filters](https://folkbench.com/en/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
+Some links include referral parameters. Service descriptions are separate from measured rankings; check providers' websites for current prices, promotions and terms.
 
-## Current onboarded sites
+<details open>
+<summary><strong>Full seven-service introductions and promotion notes</strong></summary>
 
-The following sites are listed in the current display order. Click a site name to open its official registration page; each note is an editorial summary written from the currently published site information.
-
-<h3><a href="https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">🌟 Modelflare</a></h3>
+<h3><a href="https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">Modelflare</a></h3>
 
 The site currently offers special access tiers. A single US$20 top-up unlocks the GPT discount group; after unlocking it, GPT-5.6-Sol is priced at about ¥0.51 input / ¥3.01 output per million tokens, and the site’s support team says there is no usage cap. A single US$50 top-up unlocks the Claude discount group.
 
@@ -66,3 +86,70 @@ A unified API aggregation platform for developers and teams, with published cove
 Its published directory is large, covering a wide range of international and domestic models across multiple channels. Support for enterprise and university procurement, invoices, and related documents is a clear use-case advantage. The current profile still lacks enough independent experience and rating fields, so verify the site’s low-multiplier, stability, and TTFT claims against the model-specific rankings and current routes.
 
 Prices, available models, protocol support, and routes can change, so check each site’s current documentation, pricing page, and terms before use.
+
+</details>
+
+## Folkbench Switch
+
+**Move from choosing a route to using it, with less manual configuration.**
+
+Switch is Folkbench's open-source desktop client. Save services, preview configurations and switch coding tools while viewing public route measurements and your local usage trend.
+
+| Capability | How it helps |
+| --- | --- |
+| Service management | Save Base URLs and API Keys; manage preferred and backup services |
+| Tool configuration | Preview and write tool-specific protocols, with failure recovery and single-instance operation |
+| Public route data | View published model/channel availability, status, prices and measurement windows |
+| Local usage trends | Review local model and Token counts, plus public reference-price estimates |
+| Optional account login | Authorize in your system browser; local service management works independently |
+
+Configuration adapters include Claude Code, Codex, Gemini CLI, OpenCode and other tools. See the [Beta release guide](docs/switch/RELEASE.md) for platform and tool-version validation.
+
+### Beta and trying the client
+
+The current source version is `0.1.0-beta.1`. The first release phase is Beta only. **No public installer has been released yet.** Installers will be available in this repository's [Releases](https://github.com/Folkbench/folkbench/releases) after signing and platform validation.
+
+Once installers are released: choose a tool → add or import a service → enter the provider's Base URL and Key → preview → enable.
+
+For source development, follow the [development guide](docs/development.md). Version and distribution rules are in the [release guide](docs/switch/RELEASE.md).
+
+## Model-specific rankings
+
+| Model | Destination |
+| --- | --- |
+| GPT 6 Sol | [Compare relays](https://folkbench.com/en/rankings/gpt-6-sol?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| GPT 6 Astra | [Compare relays](https://folkbench.com/en/rankings/gpt-6-astra?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| Claude Fable 5.1 | [Compare relays](https://folkbench.com/en/rankings/claude-fable-5-1?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| Grok 4.7 | [Compare relays](https://folkbench.com/en/rankings/grok-4-7?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| DeepSeek V4.1 Flash | [Compare relays](https://folkbench.com/en/rankings/deepseek-v4-1-flash?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+
+For more models and filters, open the [full ranking board](https://folkbench.com/en/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog).
+
+## Feedback and development
+
+Use [Issues](https://github.com/Folkbench/folkbench/issues) for usability feedback, tool compatibility and feature suggestions. Report vulnerabilities privately as described in the [security policy](SECURITY.md).
+
+<details open>
+<summary>Repository layout and developer documentation</summary>
+
+```text
+src/                  Astro blog and three-language content
+apps/switch/          Tauri / React desktop client
+docs/switch/          Beta changelog and release documentation
+.github/workflows/    Component checks, candidate builds and release workflows
+```
+
+Blog and client dependencies and versions remain separate. This repository contains public blog content and Switch source; production backend code and runtime data are separate.
+
+- [Development and validation](docs/development.md)
+- [Beta changelog](docs/switch/CHANGELOG.md)
+- [Version and release process](docs/switch/RELEASE.md)
+- [Full service information](docs/services/README.en.md)
+
+</details>
+
+## Privacy and licensing
+
+Switch stores configuration, model Keys and login tokens locally, currently in files. Model Keys are used for the services selected by the user; local usage does not upload conversation content. Reference-price estimates are separate from actual provider charges. See the [security policy](SECURITY.md) for details.
+
+Switch code uses Apache-2.0. Brand assets, blog content and third-party resources have their own terms; see [licensing scope](LICENSE.md). Keep Keys, full configuration, prompts and raw logs out of public reports.

@@ -8,5 +8,4 @@ if ! command -v "${runtime}" >/dev/null 2>&1; then
   exit 1
 fi
 
-"${runtime}" run check
-"${runtime}" run build
+FOLKBENCH_BLOG_BUN_RUNTIME="${runtime}" node scripts/check-changes.mjs --all --build

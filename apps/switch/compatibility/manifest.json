@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-24",
+  "supportDefinition": "A catalog entry is not a support claim. A tool is supported only after its real configuration can be inspected, safely written, verified, and restored on the target operating system.",
+  "phaseOnePlatforms": ["macos", "windows"],
+  "deferredPlatforms": ["wsl", "linux"],
+  "platformPriority": ["macos", "windows"],
+  "tools": [
+    {
+      "id": "claude-code",
+      "displayName": "Claude Code",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "anthropic-messages",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "claude-desktop",
+      "displayName": "Claude Desktop",
+      "maturity": "planned",
+      "configurationMode": "direct",
+      "protocol": "anthropic-messages",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "codex",
+      "displayName": "Codex",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "responses",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": ["1.0.34"],
+      "lastVerifiedAt": "2026-09-24"
+    },
+    {
+      "id": "gemini-cli",
+      "displayName": "Gemini CLI",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "gemini",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "grok-build",
+      "displayName": "Grok Build",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "responses",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "opencode",
+      "displayName": "OpenCode",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "openai-completions",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "openclaw",
+      "displayName": "OpenClaw",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "hermes",
+      "displayName": "Hermes",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "pi",
+      "displayName": "Pi",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "minimax-code",
+      "displayName": "MiniMax Code",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "dsh",
+      "displayName": "DeepSeek Harness",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "qwen-code",
+      "displayName": "Qwen Code",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "kimi-cli",
+      "displayName": "Kimi CLI",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    },
+    {
+      "id": "aider",
+      "displayName": "Aider",
+      "maturity": "experimental",
+      "configurationMode": "direct",
+      "protocol": "provider-defined",
+      "targetPlatforms": ["macos", "windows"],
+      "verifiedVersions": [],
+      "lastVerifiedAt": null
+    }
+  ]
+}

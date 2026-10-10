@@ -1,0 +1,112 @@
+{
+  "usage": {
+    "byTool": {
+      "title": "Tools"
+    },
+    "failed": "Failed",
+    "empty": "No session files yet.",
+    "files": "{{value}} files",
+    "listPrice": {
+      "amount": "${{amount}}",
+      "missing": "Some models have no pinned list price.",
+      "none": "No price",
+      "partial": "{{count}} turns have no matching reference price and are excluded from the estimate."
+    },
+    "overview": {
+      "cache": "Cache tokens",
+      "estimate": "List price",
+      "input": "Input tokens",
+      "output": "Output tokens",
+      "title": "Local overview",
+      "tokens": "Tokens",
+      "turns": "Turns"
+    },
+    "trend": {
+      "chartLabel": "Today's local token usage in {{tool}} ({{grain}})",
+      "grainDay": "by day",
+      "grainHalfDay": "by half day",
+      "grainHour": "by hour",
+      "grainSixHours": "every 6 hours",
+      "dayTooltip": "{{date}} · {{tokens}} tokens ({{exact}})",
+      "empty": "No dated local session usage was found for today.",
+      "hoverTotal": "{{exact}} tokens",
+      "unknownModel": "Unknown model",
+      "incomplete": "Some records have no date or reference price, so the chart or estimate may be incomplete.",
+      "period": "{{tool}} · last {{days}} days",
+      "referenceValue": "Published-list equivalent · not actual spend",
+      "scope": "Includes official and relay sessions for this tool; it cannot attribute charges to the selected service.",
+      "sevenDaysAgo": "7 days ago",
+      "share": "Preview share card",
+      "title": "Today's local usage",
+      "today": "Today",
+      "tokenBasis": "Input + output + cache tokens from readable local sessions",
+      "unsupported": "This tool's local usage is not scanned in this version. Missing data is not shown as zero consumption.",
+      "viewAll": "View all usage"
+    },
+    "share": {
+      "copied": "Share text copied.",
+      "copy": "Copy share text",
+      "copyImage": "Copy image",
+      "copyImageDone": "Image copied.",
+      "copyTokensOnly": "I used {{tokens}} tokens with {{tool}} on this computer today.",
+      "copyUnavailable": "Could not copy automatically. Copy the card text manually.",
+      "copyWithEstimate": "I used {{tokens}} tokens with {{tool}} on this computer today, about ${{amount}}.",
+      "eyebrow": "Last {{days}} days · By day",
+      "eyebrowHalfDay": "{{start}}–{{end}} · Half days",
+      "eyebrowHour": "{{date}} · Hourly",
+      "eyebrowSixHours": "{{start}}–{{end}} · Every 6 hours",
+      "imageUnavailable": "Could not prepare the share image.",
+      "posterLabel": "Share image of {{tool}} usage today ({{grain}})",
+      "saveImage": "Save image",
+      "saveImageDone": "Image saved to Downloads.",
+      "title": "Share",
+      "guestName": "Local user"
+    },
+    "range": {
+      "custom": "Custom",
+      "day": "1 day",
+      "days": "{{count}} days",
+      "label": "Range",
+      "nextMonth": "Next month",
+      "previousMonth": "Previous month"
+    },
+    "scope": {
+      "all": "All tools",
+      "label": "Usage for",
+      "noData": "No readable local usage records for {{tool}}.",
+      "noUsage": "No local session usage for {{tool}} in this date range."
+    },
+    "split": {
+      "cache": "Cache",
+      "input": "Input",
+      "output": "Output"
+    },
+    "title": "Local usage",
+    "tokens": {
+      "cache": "Cache {{value}}",
+      "input": "In {{value}}",
+      "output": "Out {{value}}",
+      "unit": "tokens"
+    },
+    "turns": "{{value}} turns",
+    "unavailable": "Session files could not be scanned.",
+    "summary": {
+      "tokens": "Total tokens",
+      "estimate": "List-price estimate",
+      "vsPrevious": "vs prior",
+      "vsPreviousValue": "{{value}}",
+      "unavailable": "—"
+    },
+    "actions": {
+      "configure": "Configure"
+    },
+    "models": {
+      "title": "Models",
+      "share": "{{value}}%",
+      "rest": "{{count}} more"
+    },
+    "selected": {
+      "clear": "Clear {{name}} filter"
+    }
+  }
+}

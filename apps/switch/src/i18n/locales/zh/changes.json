@@ -1,0 +1,34 @@
+{
+  "changes": {
+    "description": "查看脱敏的本地配置事务及其回滚资格。",
+    "details": {
+      "afterHash": "结果哈希",
+      "beforeHash": "原始哈希",
+      "target": "目标",
+      "verification": "验证结果"
+    },
+    "empty": {
+      "description": "应用过的配置事务会显示在这里。",
+      "title": "暂无本地变更"
+    },
+    "rollback": {
+      "confirm": {
+        "description": "仅当文件在应用后没有变化时，才能恢复上一版配置。",
+        "title": "恢复上一版配置？"
+      },
+      "success": "已恢复上一版配置。",
+      "unavailable": {
+        "concurrentModification": "文件在应用后发生了变化，当前无法回滚。"
+      }
+    },
+    "table": {
+      "columns": {
+        "action": "操作",
+        "status": "状态",
+        "time": "时间",
+        "tool": "工具"
+      }
+    },
+    "title": "变更历史"
+  }
+}

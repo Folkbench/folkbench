@@ -1,0 +1,106 @@
+{
+  "signIn": {
+    "browser": {
+      "action": "Sign in or create an account",
+      "cancel": "Cancel sign-in",
+      "description": "Sign in or create an account in your browser. Your saved service Keys stay on this computer.",
+      "failed": "Sign-in did not finish. Please try again.",
+      "pending": "Waiting for browser sign-in…",
+      "unavailable": "Account sign-in is not available right now. You can keep using Switch locally."
+    },
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "name@example.com"
+      },
+      "password": {
+        "forgot": "Forgot password?",
+        "hide": "Hide password",
+        "label": "Password",
+        "placeholder": "Enter password",
+        "show": "Show password"
+      },
+      "submit": "Sign in"
+    },
+    "providers": {
+      "divider": "Or continue with",
+      "github": "Continue with GitHub",
+      "google": "Continue with Google",
+      "line": "Continue with LINE",
+      "linuxdo": "Continue with LinuxDO"
+    },
+    "signUp": {
+      "action": "Sign up",
+      "prompt": "Don't have an account?"
+    },
+    "showcase": {
+      "account": {
+        "balance": "Account",
+        "description": "Sign in optionally; your saved services stay on this computer.",
+        "eyebrow": "Account",
+        "keys": "API Keys",
+        "status": "Optional",
+        "title": "Use Switch with or without an account",
+        "usage": "Local usage"
+      },
+      "apiKeys": {
+        "description": "Save relay Keys locally and use them only for explicit tool switches.",
+        "eyebrow": "API Keys",
+        "masked": "Masked",
+        "status": "Local",
+        "title": "Your relay Keys stay on this device"
+      },
+      "history": {
+        "applied": "Configuration applied",
+        "description": "Review redacted local receipts and verification results.",
+        "eyebrow": "Change history",
+        "inspected": "Target inspected",
+        "status": "Recorded",
+        "title": "Every local change has a record",
+        "verified": "Result verified"
+      },
+      "preview": {
+        "description": "See the exact owned fields before anything is written.",
+        "eyebrow": "Change preview",
+        "preserved": "unrelated fields preserved",
+        "status": "Before apply",
+        "title": "Preview every configuration change"
+      },
+      "privacy": {
+        "description": "Configuration stays local and prompt content is not collected.",
+        "eyebrow": "Local first",
+        "local": "Local configuration",
+        "noPrompts": "No prompt history",
+        "status": "Private",
+        "title": "Your workspace stays yours"
+      },
+      "rollback": {
+        "description": "Restore the previous state without overwriting later changes.",
+        "eyebrow": "Rollback",
+        "inspect": "Inspect",
+        "preview": "Preview",
+        "restore": "Restore",
+        "status": "Reversible",
+        "title": "Return safely when plans change"
+      },
+      "tools": {
+        "description": "Set up supported coding clients without hand-editing config files.",
+        "eyebrow": "Client setup",
+        "status": "One click",
+        "title": "Configure supported clients in one place"
+      },
+      "usage": {
+        "cost": "Estimate",
+        "description": "View local session token totals and a labeled cost estimate.",
+        "eyebrow": "Usage",
+        "requests": "Sessions",
+        "status": "Visible",
+        "title": "See local session usage",
+        "tokens": "Tokens"
+      }
+    },
+    "skipToCatalog": "Use local mode first",
+    "subtitle": "Use Folkbench public evidence to manage and switch local AI services.",
+    "title": "Get started with Folkbench Switch"
+  }
+}

@@ -1,0 +1,445 @@
+{
+  "meta": {
+    "name": "Folkbench Switch Desktop",
+    "description": "Compact, route-comparison desktop design for Folkbench Switch. System UI typography, a light lilac-gray or near-black canvas, quiet static grid, stepped surfaces, and restrained purple signals. Only sign-in uses continuous product lanes.",
+    "source_references": [
+      "Folkbench Switch accepted line-comparison interaction and theme review dated 2026-10-06",
+      "Folkbench Switch desktop assistant decisions ADR 0013 and ADR 0020"
+    ],
+    "created_at": "2026-09-01"
+  },
+  "design_system": {
+    "color": {
+      "palette_type": "neutral lilac-gray / near-black semantic pair",
+      "primary": {
+        "hex": "#24222D",
+        "role": "Primary light-theme ink, headings, and strong text"
+      },
+      "secondary": {
+        "hex": "#F6F5F9",
+        "role": "Default light-theme application canvas behind grouped lists"
+      },
+      "accent": {
+        "hex": "#6543D4",
+        "role": "Sparse action and focus signal; dark mode uses #A799FF."
+      },
+      "neutral": {
+        "scale": [
+          "#FFFFFF",
+          "#F7F7F5",
+          "#F3F3F1",
+          "#E5E5E2",
+          "#CECECA",
+          "#AAAAAA",
+          "#62625F",
+          "#242424",
+          "#181818",
+          "#151515",
+          "#101010",
+          "#080808"
+        ],
+        "usage": "Low-chroma gray canvas, white or stepped near-black surfaces, graphite text, muted metadata, and one-pixel hairlines"
+      },
+      "semantic": {
+        "success": "#247B56",
+        "warning": "#92621F",
+        "error": "#B53E55",
+        "info": "#6543D4"
+      },
+      "surface": {
+        "background": "#F6F5F9",
+        "card": "#FFFFFF",
+        "elevated": "#FFFFFF"
+      },
+      "contrast_strategy": "Theme-resolved semantic tokens across all pages, menus, charts, and overlays. Status uses a numeric or textual label as well as color.",
+      "theme_tokens": {
+        "light": {
+          "background": "#F6F5F9",
+          "foreground": "#24232D",
+          "chrome": "#FDFCFE",
+          "card": "#FFFFFF",
+          "popover": "#FFFFFF",
+          "muted": "#F6F5F9",
+          "secondary": "#ECEAF2",
+          "muted_foreground": "#696779",
+          "border": "#E7E5ED",
+          "input": "#CFCCD9",
+          "signal": "#6543D4",
+          "signal_soft": "#F0EAFF",
+          "success": "#247B56",
+          "warning": "#92621F",
+          "error": "#B53E55",
+          "primary": "#24222D",
+          "primary_foreground": "#FFFFFF",
+          "grid": "rgb(83 58 253 / 6%)",
+          "scrim": "rgb(25 22 35 / 32%)"
+        },
+        "dark": {
+          "background": "#09090C",
+          "foreground": "#EFEFF5",
+          "chrome": "#0F0F13",
+          "card": "#15151B",
+          "popover": "#15151B",
+          "muted": "#1B1B23",
+          "secondary": "#22222C",
+          "muted_foreground": "#9999AB",
+          "border": "#292932",
+          "input": "#3C3B49",
+          "signal": "#A799FF",
+          "signal_soft": "#252039",
+          "success": "#68D9A7",
+          "warning": "#F0BD6D",
+          "error": "#FF929F",
+          "primary": "#F0EFF8",
+          "primary_foreground": "#19171E",
+          "grid": "rgb(225 222 255 / 5.5%)",
+          "scrim": "rgb(0 0 0 / 66%)"
+        }
+      }
+    },
+    "typography": {
+      "type_scale": {
+        "display": {
+          "size": "clamp(2.75rem, 6vw, 4.5rem)",
+          "weight": "500",
+          "line_height": "0.95",
+          "tracking": "-0.052em"
+        },
+        "heading_1": {
+          "size": "1.5rem",
+          "weight": "600",
+          "line_height": "1.1",
+          "tracking": "-0.03em"
+        },
+        "heading_2": {
+          "size": "1.25rem",
+          "weight": "600",
+          "line_height": "1.2",
+          "tracking": "-0.02em"
+        },
+        "heading_3": {
+          "size": "1rem",
+          "weight": "600",
+          "line_height": "1.35",
+          "tracking": "-0.01em"
+        },
+        "body": {
+          "size": "0.875rem",
+          "weight": "400",
+          "line_height": "1.5",
+          "tracking": "0"
+        },
+        "body_small": {
+          "size": "0.8125rem",
+          "weight": "400",
+          "line_height": "1.45",
+          "tracking": "0"
+        },
+        "caption": {
+          "size": "0.75rem",
+          "weight": "500",
+          "line_height": "1.35",
+          "tracking": "0.025em"
+        },
+        "overline": {
+          "size": "0.6875rem",
+          "weight": "600",
+          "line_height": "1.2",
+          "tracking": "0.08em"
+        }
+      },
+      "font_families": {
+        "heading": "-apple-system, BlinkMacSystemFont, Segoe UI Variable, Segoe UI, PingFang SC, Microsoft YaHei UI, ui-sans-serif, system-ui, sans-serif",
+        "body": "-apple-system, BlinkMacSystemFont, Segoe UI Variable, Segoe UI, PingFang SC, Microsoft YaHei UI, ui-sans-serif, system-ui, sans-serif",
+        "mono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace"
+      },
+      "font_style_notes": "UI type is the operating-system interface face: San Francisco and PingFang SC on macOS, Segoe UI and Microsoft YaHei UI on Windows. Do not insert Inter, Noto Sans SC, or SF-only weights such as 590. ui-monospace is reserved for URLs, versions, amounts, request identifiers, config diffs, and system labels."
+    },
+    "spacing": {
+      "base_unit": "4px",
+      "scale": [
+        "4px",
+        "8px",
+        "12px",
+        "16px",
+        "20px",
+        "24px",
+        "28px",
+        "32px",
+        "40px",
+        "48px",
+        "56px"
+      ],
+      "content_density": "Compact controls and tables inside comfortably separated product sections",
+      "section_rhythm": "16-28px component gaps, 24-40px feature groups, and 32-56px page sections depending on window width"
+    },
+    "layout": {
+      "grid_system": "Native title bar, compact 64px top navigation, home tool selector, 60/40 current-route and local-usage highlights, then a bounded comparison scroll region",
+      "max_content_width": "70rem including responsive gutters",
+      "columns": "Home highlights: 60/40 current route and 7-day local curve at 228px tall. At 850px+ width and 650px+ height home is window-bounded, with a single comparison scroll region. Narrow or short windows retain full page scrolling.",
+      "gutter": "clamp(16px, 2.5vw, 28px)",
+      "breakpoints": ["700px", "900px"],
+      "alignment_tendency": "Left-aligned task content; navigation remains compact and never consumes a sidebar column."
+    },
+    "shape": {
+      "border_radius": {
+        "small": "6px",
+        "medium": "8px",
+        "large": "14px",
+        "pill": "9999px"
+      },
+      "border_usage": "One-pixel semantic boundaries for tables, panels, menus, and the compact header.",
+      "divider_style": "Stable table rows and section gaps; no nested decorative rails."
+    },
+    "elevation": {
+      "shadow_style": "Very soft, low-opacity product elevation; public onboarding remains visually flat",
+      "levels": {
+        "low": "0 1px 2px rgb(24 24 24 / 5%), 0 8px 24px -20px rgb(24 24 24 / 28%)",
+        "medium": "0 1px 2px rgb(24 24 24 / 7%), 0 14px 34px -24px rgb(24 24 24 / 36%)",
+        "high": "var(--shadow-overlay)"
+      },
+      "depth_cues": "Stepped surfaces, explicit borders, restrained shadow, active rails, and popover separation"
+    },
+    "iconography": {
+      "style": "Monoline technical icons with consistent optical boxes",
+      "stroke_weight": "1.5px to 2px",
+      "size_scale": ["14px", "16px", "18px", "20px", "24px"],
+      "preferred_set": "Hugeicons"
+    },
+    "motion": {
+      "easing": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+      "duration_scale": {
+        "micro": "150-160ms",
+        "normal": "180-240ms",
+        "macro": "560ms maximum for finite onboarding sequencing",
+        "ambient": "54s upper and 68s lower loop, sign-in showcase only"
+      },
+      "entrance_pattern": "Product overlays use short opacity and 4-8px settle; sign-in may place a slow ambient product showcase behind the fixed authentication content",
+      "exit_pattern": "Faster opacity and 2-4px retreat with no bounce",
+      "philosophy": "Motion explains state change and hierarchy. The only continuous ambient motion is the sign-in product showcase; it remains visually subordinate to authentication and becomes static under prefers-reduced-motion."
+    },
+    "components": {
+      "button_style": "36px standard control, 32px compact text action, semantic primary ink/inverse, and quiet outline or ghost actions",
+      "input_style": "36px field, 8px radius, semantic input border and focus ring; custom Base UI selector",
+      "card_style": "14px grouped panel with semantic hairline and opaque stepped surface",
+      "navigation_pattern": "Native title bar with compact top links for My routes, Discover services, Local usage. Settings and account are utilities. Tool selector belongs to home, not discovery.",
+      "modal_style": "Base UI dialog/sheet/menu with theme-resolved opaque popover, scrim, and overlay shadow. No native selector or clipped in-list menu.",
+      "list_style": "The current route is pinned as the comparison baseline. Saved services can switch; published-only routes enter the existing connect flow. More than three backups remain manageable in a dialog.",
+      "component_notes": "Use shadcn base-nova generated from the official registry, Base UI composition APIs, Hugeicons, semantic CSS tokens, and wrapper components for MF-specific workflows."
+    }
+  },
+  "design_style": {
+    "aesthetic": {
+      "mood": ["precise", "calm", "technical", "trustworthy", "purposeful"],
+      "visual_metaphor": "A routing control room and configuration field manual",
+      "era_influence": "Contemporary developer tooling with restrained neo-brutalist rules and modern product ergonomics",
+      "genre": "Developer infrastructure desktop application",
+      "personality_traits": [
+        "meticulous",
+        "direct",
+        "competent",
+        "transparent",
+        "restrained"
+      ],
+      "adjectives": [
+        "graphite",
+        "indexed",
+        "compact",
+        "structured",
+        "high-contrast",
+        "quiet"
+      ]
+    },
+    "visual_language": {
+      "complexity": "Moderate information density with simple surfaces",
+      "ornamentation": "Quiet static masked grid and subtle signal glow. No daily scrolling background.",
+      "whitespace_usage": "Comfortable between feature groups and compact within tables, forms, and configuration plans",
+      "visual_weight_distribution": "Navigation and page heading establish orientation; primary work panel dominates; status and metadata remain lighter",
+      "focal_strategy": "Current route and alternatives compared before a deliberate manual switch.",
+      "contrast_level": "High for primary actions and readable data; low-to-medium for metadata, disabled state, and dividers",
+      "texture_usage": "Static theme-resolved grid across the product canvas; continuous product lanes are sign-in-only."
+    },
+    "composition": {
+      "hierarchy_method": "Compact navigation, tool selector, side-by-side current service and personal usage, then internally scrolling route comparison.",
+      "balance_type": "Current-route and local-use highlights balanced above a full-width comparison list",
+      "flow_direction": "Left-to-right orientation and top-to-bottom task completion",
+      "grouping_strategy": "Hairline frames, section headers, compact gaps, and explicit transactional stages",
+      "negative_space_role": "Separates decisions and risk boundaries without making the product feel sparse"
+    },
+    "imagery": {
+      "photo_treatment": "No stock photography in the application",
+      "illustration_style": "Monochrome or graphite technical diagrams with one Folkbench blurple signal",
+      "graphic_elements": "Route lines, numbered stages, config diff markers, status dots, system bars, and sparse orthogonal grid",
+      "pattern_usage": "68px static product grid fading below 36rem; sign-in retains its masked-grid treatment.",
+      "image_shape": "4-8px framed diagrams and screenshots aligned to the application grid"
+    },
+    "interaction_feel": {
+      "feedback_style": "Immediate, explicit, and reversible",
+      "hover_behavior": "Small surface or border shift; selected tool segment fills white; no large scale transforms",
+      "transition_personality": "Snappy and tool-like with soft deceleration",
+      "loading_style": "Stable geometry with restrained skeleton blocks; no perpetual shimmer in reduced-motion mode",
+      "microinteraction_density": "Low to moderate and concentrated around state changes"
+    },
+    "brand_voice_in_ui": {
+      "tone": "Practical expert guidance",
+      "formality": "Professional, plain-spoken, and concise",
+      "cta_style": "Direct verbs such as Connect, Inspect, Preview changes, Apply, Verify, and Restore",
+      "empty_state_approach": "Explain why the state is empty, what is safe to do next, and offer one primary action",
+      "error_tone": "State what failed, what was changed or not changed, whether retry is safe, and the next recovery action"
+    }
+  },
+  "visual_effects": {
+    "overview": {
+      "effect_intensity": "subtle-accent",
+      "performance_tier": "lightweight",
+      "fallback_strategy": "Static fully readable UI; disable ambient and entrance motion under prefers-reduced-motion",
+      "primary_technology": "CSS transitions, transform-only motion, and static SVG"
+    },
+    "background_effects": {
+      "type": "contextual masked grid with a sign-in product showcase",
+      "description": "Daily screens share a stationary, low-contrast masked grid. Only the sign-in page runs two ambient product-fragment lanes.",
+      "technology": "CSS linear-gradient, mask-image, semantic HTML, and transform-only marquee tracks",
+      "params": {
+        "color_palette": ["rgb(83 58 253 / 6%)", "rgb(225 222 255 / 5.5%)"],
+        "speed": "static grid; 54s upper and 68s lower right-to-left showcase loops",
+        "density": "80px desktop and 56px narrow",
+        "opacity": "grid 0.18 to 0.42; showcase lanes 0.44 to 0.60",
+        "blur": "0.55px upper lane and 0.95px lower lane",
+        "focus_protection": "32rem to 44rem central radial quiet zone",
+        "interaction": "no on-screen motion control; hidden below 700px and static under prefers-reduced-motion",
+        "blend_mode": "normal"
+      }
+    },
+    "particle_systems": {
+      "enabled": false,
+      "type": "none",
+      "description": "Particles conflict with the product's stable configuration focus.",
+      "technology": "none",
+      "params": {
+        "count": 0,
+        "shape": "none",
+        "size_range": "0",
+        "movement_pattern": "none",
+        "color_behavior": "none",
+        "interaction": "none",
+        "spawn_area": "none"
+      }
+    },
+    "3d_elements": {
+      "enabled": false,
+      "type": "none",
+      "description": "No 3D elements are part of the desktop product foundation.",
+      "technology": "none",
+      "params": {
+        "renderer": "none",
+        "lighting": "none",
+        "camera": "none",
+        "materials": "none",
+        "geometry": "none",
+        "post_processing": "none",
+        "interaction_model": "none"
+      }
+    },
+    "shader_effects": {
+      "enabled": false,
+      "type": "none",
+      "description": "Shaders add no value to account or configuration workflows.",
+      "technology": "none",
+      "params": {
+        "uniforms": "none",
+        "vertex_manipulation": "none",
+        "fragment_output": "none",
+        "noise_type": "none",
+        "distortion": "none"
+      }
+    },
+    "scroll_effects": {
+      "parallax": {
+        "enabled": false,
+        "layers": 0,
+        "depth_range": "0",
+        "speed_curve": "none"
+      },
+      "scroll_triggered_animations": {
+        "enabled": false,
+        "trigger_points": "none",
+        "animation_type": "none",
+        "scrub_behavior": "none"
+      },
+      "scroll_morphing": {
+        "enabled": false,
+        "description": "Application geometry remains stable while the user reviews sensitive changes."
+      }
+    },
+    "text_effects": {
+      "type": "none",
+      "description": "Text remains static, selectable, and optimized for scanning.",
+      "technology": "CSS",
+      "params": {
+        "split_strategy": "none",
+        "animation_per_unit": "none",
+        "stagger": "0ms",
+        "effect_style": "none"
+      }
+    },
+    "cursor_effects": {
+      "enabled": false,
+      "type": "system cursor",
+      "description": "Use native pointer and text cursors with explicit focus-visible states.",
+      "params": {
+        "shape": "system",
+        "size": "system",
+        "blend_mode": "normal",
+        "trail": "none",
+        "interaction_zone": "standard controls and resizable regions"
+      }
+    },
+    "image_effects": {
+      "type": "static technical diagram treatment",
+      "description": "Diagrams and screenshots use neutral frames, one-pixel borders, and no distortion.",
+      "technology": "CSS and static SVG or raster assets",
+      "params": {
+        "filter_pipeline": "none or grayscale for explanatory diagrams",
+        "hover_transform": "none",
+        "reveal_animation": "short opacity only when necessary",
+        "distortion_type": "none"
+      }
+    },
+    "glassmorphism_neumorphism": {
+      "enabled": false,
+      "style": "none",
+      "params": {
+        "blur_radius": "0px",
+        "transparency": "opaque product surfaces",
+        "border_treatment": "one-pixel semantic hairline",
+        "shadow_type": "restrained product shadow only",
+        "light_source_angle": "none"
+      }
+    },
+    "canvas_drawings": {
+      "enabled": false,
+      "type": "none",
+      "description": "Static CSS and SVG cover the initial product visualization needs.",
+      "technology": "none",
+      "params": {
+        "draw_method": "none",
+        "animation_loop": "none",
+        "color_scheme": "none",
+        "responsiveness": "none",
+        "interaction": "none"
+      }
+    },
+    "svg_animations": {
+      "enabled": false,
+      "type": "static monoline iconography",
+      "description": "Icons remain static; enclosing controls may use CSS opacity or translation.",
+      "params": {
+        "animation_method": "CSS on container only",
+        "path_morphing": "none",
+        "stroke_animation": "none",
+        "filter_effects": "none"
+      }
+    },
+    "composite_notes": "ADR 0020 supersedes the old grouped-list console geometry and color pair. All screens use the same semantic light/dark palette, with 8px controls, 14px grouped panels, compact top navigation, a 70rem content cap, and a quiet static grid. Only sign-in may show continuously moving redacted product cards. Reduced motion remains mandatory. Keys, switch transactions, login behavior, and published data stay in their existing owners."
+  }
+}

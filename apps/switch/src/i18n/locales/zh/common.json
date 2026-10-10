@@ -1,0 +1,48 @@
+{
+  "common": {
+    "accessibility": {
+      "closeDialog": "关闭对话框",
+      "collapseSidebar": "收起侧边栏",
+      "expandSidebar": "展开侧边栏",
+      "openInspector": "打开详情",
+      "openNavigation": "打开导航"
+    },
+    "actions": {
+      "apply": "应用",
+      "back": "返回",
+      "cancel": "取消",
+      "close": "关闭",
+      "continue": "继续",
+      "copy": "复制",
+      "create": "创建",
+      "delete": "删除",
+      "done": "完成",
+      "edit": "编辑",
+      "open": "打开",
+      "refresh": "刷新",
+      "restore": "恢复",
+      "retry": "重试",
+      "revoke": "撤销",
+      "save": "保存",
+      "signOut": "退出登录"
+    },
+    "product": {
+      "description": "把 Folkbench 已发布中转站配置到本机编程工具。",
+      "eyebrow": "FOLKBENCH DESKTOP",
+      "foundation": "验证版",
+      "shortName": "Folkbench",
+      "title": "Folkbench Switch"
+    },
+    "skeleton": {
+      "description": "这条路由用于验证导航与会话守卫，页面内容将在后续里程碑实现。",
+      "title": "路由占位"
+    },
+    "status": {
+      "connected": "已连接",
+      "disconnected": "未连接",
+      "loading": "加载中",
+      "unavailable": "不可用",
+      "verified": "已验证"
+    }
+  }
+}

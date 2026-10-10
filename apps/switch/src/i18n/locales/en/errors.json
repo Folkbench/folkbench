@@ -1,0 +1,46 @@
+{
+  "errors": {
+    "api": {
+      "rateLimited": "Too many requests. Wait before trying again.",
+      "unavailable": "The Modelflare service is unavailable."
+    },
+    "auth": {
+      "authorizationFailed": "Authorization failed. No local configuration was changed.",
+      "sessionExpired": "Your session expired. Sign in again."
+    },
+    "bridge": {
+      "commandFailed": "The desktop operation could not be completed.",
+      "desktopUnavailable": "The desktop runtime is unavailable, so privileged operations cannot run."
+    },
+    "catalog": {
+      "invalidModel": "That model is not a public Folkbench ranking model.",
+      "invalidResponse": "The public catalog response could not be used.",
+      "unavailable": "The Folkbench public catalog is unavailable.",
+      "websiteUnavailable": "This station website cannot be opened safely right now. Try again later."
+    },
+    "config": {
+      "concurrentModification": "The file changed after inspection. Build a new preview before applying.",
+      "verifyFailed": "The configuration was written but verification failed.",
+      "writeFailed": "The configuration could not be written. The original file was preserved."
+    },
+    "generic": {
+      "title": "Something went wrong",
+      "unknown": "An unexpected error occurred."
+    },
+    "network": {
+      "offline": "You appear to be offline.",
+      "timeout": "The request timed out."
+    },
+    "service": {
+      "applyUnsupported": "This version cannot write this tool yet.",
+      "credentialMissing": "This service has no saved Key.",
+      "driftDetected": "The tool configuration changed, so this action stopped instead of overwriting your changes.",
+      "inUse": "Close this service or enable another one before deleting it.",
+      "invalidInput": "Name, URL, or Key is missing or not allowed.",
+      "locationUnavailable": "The local config location is not available.",
+      "notFound": "That service is no longer saved.",
+      "toolUnknown": "That tool is not in this catalog.",
+      "writeFailed": "The configuration could not be written. The original file was preserved."
+    }
+  }
+}

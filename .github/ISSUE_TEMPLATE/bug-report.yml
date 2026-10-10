@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible issue without secrets or private data
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 'Do not post API Keys, tokens, prompts, complete configs or raw logs. Security issues belong in a private report; see SECURITY.md.'
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options: [Switch, Blog, Public documentation]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version and commit
+      placeholder: '0.1.0-beta.1 / commit shown in Settings → About'
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system, architecture and tool version
+      placeholder: 'macOS / Apple Silicon / Claude Code version'
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction and expected / actual behavior
+      description: 'Use synthetic configuration and redact private data.'
+    validations:
+      required: true

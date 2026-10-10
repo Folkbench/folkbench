@@ -1,0 +1,8 @@
+{
+  "validation": {
+    "invalidValue": "Enter a valid value.",
+    "required": "This field is required.",
+    "selectOption": "Select an option.",
+    "tooLong": "This value is too long."
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "configure": {
+    "actions": {
+      "add": "添加服务",
+      "addFavorite": "设为常用服务",
+      "addShort": "添加",
+      "close": "关闭",
+      "edit": "编辑",
+      "enable": "启用",
+      "enabled": "使用中",
+      "more": "更多操作",
+      "remove": "删除",
+      "removeFavorite": "取消常用服务",
+      "save": "保存",
+      "switch": "切换",
+      "verify": "验证连通",
+      "balance": "查看余额",
+      "connect": "接入",
+      "details": "测评详情",
+      "detailsFor": "查看 {{name}} 详情",
+      "moreFor": "{{name}} 的更多操作"
+    },
+    "addSource": {
+      "description": "选择填写方式。",
+      "custom": "输入自定义配置",
+      "customHint": "自己填写名称、地址和 Key。",
+      "station": "使用已接入站点快速填写",
+      "stationHint": "从已发布渠道带入名称和地址。"
+    },
+    "balance": {
+      "action": "查看余额",
+      "missingKey": "还没有 Key",
+      "money": "剩余 {{amount}} {{currency}}",
+      "notAdapted": "余额未适配",
+      "percent": "{{window}}剩余 {{percent}}%",
+      "unauthorized": "Key 不能查询余额",
+      "unavailable": "余额暂时查不到",
+      "window": {
+        "fiveHour": "5 小时",
+        "monthly": "30 天",
+        "weekly": "7 天"
+      }
+    },
+    "connect": {
+      "address": "地址",
+      "checking": "正在查看公开运行数据…",
+      "description": "这条链接里带有 Key。确认后，Key 只留在这台电脑上。",
+      "group": "分组",
+      "invalidDescription": "链接缺了必填项，或地址不能保存。",
+      "invalidTitle": "这条链接不能用",
+      "key": "Key",
+      "keyAttached": "已附上",
+      "matched": "这个分组能对上公开可用率和价格。",
+      "model": "模型",
+      "saveFailed": "这条线路没有保存成功。",
+      "station": "站点",
+      "title": "保存这条线路？",
+      "tool": "保存后选中 {{tool}}，不会写入这个工具。",
+      "unavailable": "公开运行数据暂时拉不到，仍然可以保存。",
+      "unmatched": "暂无公开运行数据。"
+    },
+    "binding": {
+      "rank": "#{{rank}}",
+      "unverified": "未核验（{{reason}}）",
+      "verified": "Folkbench 名次 {{rank}}"
+    },
+    "columns": {
+      "action": "操作",
+      "balance": "余额",
+      "binding": "Folkbench",
+      "channel": "站点 / 渠道 / 模型",
+      "name": "服务"
+    },
+    "current": "当前使用",
+    "delete": {
+      "confirm": "删除后，本地保存的 API Key 也会被移除。",
+      "title": "删除 {{name}}？"
+    },
+    "description": "把已保存的服务启用到当前编程工具。Key 只存在 Rust 侧，不会出现在窗口里。",
+    "effect": {
+      "hotReload": "热切",
+      "notImplemented": "尚未实现写入",
+      "requiresRestart": "需要重启"
+    },
+    "effectDetail": {
+      "claude-code": "{{tool}} 会在当前会话使用新的地址和 Key",
+      "codex": "{{tool}} 只在启动时读取配置，需要完全退出后重新打开",
+      "gemini-cli": "{{tool}} 新开一轮对话后会使用新配置"
+    },
+    "effectLine": {
+      "hotReload": "{{tool}} · 启用后热切",
+      "notImplemented": "{{tool}} · 这一版还不能写入该工具",
+      "requiresRestart": "{{tool}} · 启用后需要重启该工具会话"
+    },
+    "enableReview": {
+      "address": "地址",
+      "confirm": "确认写入工具配置",
+      "description": "将把这条服务写入 {{tool}} 的本机配置。",
+      "kicker": "在 {{tool}} 启用",
+      "effect": "生效",
+      "keyHidden": "已保存的 Key 会由本机服务写入，不在这里展示。",
+      "limit": "这里预览的是写入目标与生效方式，尚不是逐文件差异预览；不会自动发送可能计费的模型请求。",
+      "title": "在 {{tool}} 启用 {{name}}？"
+    },
+    "empty": {
+      "action": "添加服务",
+      "import": "从当前工具导入",
+      "imported": "当前配置已导入",
+      "title": "还没有保存的服务",
+      "preview": {
+        "service": "已保存的服务"
+      }
+    },
+    "form": {
+      "addHint": "显示名、Base URL 和 Key 必填。",
+      "apiKey": "API Key",
+      "apiKeyReplace": "API Key",
+      "showApiKey": "显示 API Key",
+      "hideApiKey": "隐藏 API Key",
+      "apiProtocol": "API 协议",
+      "apiProtocolHelpAria": "查看协议说明",
+      "apiProtocolHelp": {
+        "claude-code": "Claude Code 本身按 Anthropic Messages 协议发请求（通常是 /v1/messages）。请优先选择 Anthropic Messages；若填的是 OpenAI 风格的 Base URL 或其他协议，本期不会做协议转换，可能无法正常调用。",
+        "codex": "Codex 主要使用 OpenAI Responses 协议。请优先选择 Responses；Chat Completions 或 Anthropic Messages 与工具不匹配时可能无法调用。",
+        "gemini-cli": "Gemini CLI 使用 Gemini 原生接口。请优先选择 Gemini 原生接口；其他协议与工具不匹配时可能无法调用。",
+        "opencode": "OpenCode 可按上游使用多种协议（Chat Completions、Responses、Anthropic Messages）。请按实际接口选择；Folkbench 按所选协议原样写入，不做协议转换。",
+        "default": "协议需与当前工具及上游接口一致。可选协议对齐各工具实际可写入的配置；Folkbench 按所选协议原样写入，本期不做协议转换。",
+        "openclaw": "OpenClaw 按所选 API 协议写入配置（常见为 OpenAI Completions）。可选 Completions、Responses、Anthropic Messages、Gemini 原生；本期不做协议转换，请与上游接口保持一致。",
+        "pi": "Pi 按所选 API 协议写入配置。可选 Completions、Responses、Anthropic Messages、Gemini 原生；本期不做协议转换，请与上游接口保持一致。",
+        "hermes": "Hermes 的 API 模式对应 Chat Completions、Responses（codex_responses）与 Anthropic Messages。请按上游选择；本期不做协议转换，也不支持 Bedrock。",
+        "grok-build": "Grok Build 原生偏 Responses。可选 Responses、Chat Completions、Anthropic Messages；非原生协议需上游本身兼容，本期不做本地路由转换。",
+        "minimax-code": "MiniMax Code 支持 Anthropic Messages、Chat Completions 与 Responses。请按上游选择；本期不做协议转换。"
+      },
+      "protocolRecommended": "（推荐）",
+      "baseUrl": "API Base URL",
+      "baseUrlPlaceholder": "例如：https://api.example.com/v1",
+      "channelId": "Folkbench 渠道 id（可选）",
+      "editHint": "当前 Key 已回显（密码框掩码）。清空 Key 栏则保持原值。",
+      "hint": "显示名、Base URL 和 Key 必填。Folkbench id 可选，只用于名次核验。",
+      "modelId": "模型 id（可选）",
+      "moreIds": "站点 / 渠道 / 模型（可选）",
+      "name": "显示名",
+      "protocols": {
+        "anthropic-messages": "Anthropic Messages（Claude）",
+        "auto": "默认",
+        "gemini": "Gemini 原生接口",
+        "openai-completions": "OpenAI 兼容接口（Chat Completions）",
+        "openai-responses": "OpenAI Responses 接口"
+      },
+      "stationId": "Folkbench 站点 id（可选）",
+      "tool": "要切换的工具",
+      "unspecified": "未填写 Folkbench id"
+    },
+    "home": {
+      "allServices": "全部服务",
+      "channel": "渠道 / 分组",
+      "chooseForTool": "为 {{tool}} 选择服务",
+      "chooseService": "选择已保存服务",
+      "current": "当前启用 · {{tool}}",
+      "currentMissing": "当前工具配置未匹配到已保存服务",
+      "description": "启用一条服务后，它会写入当前工具的本机配置。",
+      "favoriteServices": "常用服务",
+      "manual": "手动添加 · 未关联榜单",
+      "model": "模型",
+      "noOtherServices": "当前只有这条已保存服务",
+      "noOtherServicesDescription": "添加其他已购买的服务，或从顶部发现服务中挑选新线路。",
+      "noPublicStatus": "暂无公开运行数据",
+      "noSearchDescription": "试试其他服务名称、渠道或模型。",
+      "noSearchResults": "没有找到匹配的服务",
+      "notEnabled": "尚未为此工具启用服务",
+      "otherServices": "切换到其他服务",
+      "otherServicesDescription": "启用后会写入 {{tool}}；其他工具当前使用的服务不会改变。",
+      "recentAvailability": "近 24 小时",
+      "search": "搜索已保存服务",
+      "target": "当前配置目标",
+      "viewAllServices": "查看全部 {{count}} 个服务"
+    },
+    "list": {
+      "count": "{{count}} 条服务"
+    },
+    "restartHint": "请重启 {{tool}} 会话后才会生效",
+    "switch": {
+      "disable": "从 {{tool}} 关闭 {{name}}",
+      "enable": "在 {{tool}} 上启用 {{name}}"
+    },
+    "switchResult": {
+      "description": "{{name}} 已写入 {{tool}} 的本机配置。",
+      "effect": "生效方式：{{effect}}",
+      "rollback": "恢复上一个配置",
+      "scope": "已确认配置写入；尚未用你的 Key 发起模型请求。若工具提示需要重启，请重新打开会话后使用。",
+      "title": "工具配置已写入"
+    },
+    "status": {
+      "added": "服务已保存在本地。",
+      "closed": "已从 {{tool}} 关闭（{{effect}}）。",
+      "deleteBlocked": "请先启用其他服务，再删除当前使用的这一条。",
+      "favoriteLimit": "最多选择 4 个常用服务，请先取消一个。",
+      "favoriteMinimum": "至少保留 1 个常用服务。",
+      "imported": "已把当前工具配置导入为一条服务。",
+      "importEmpty": "当前工具配置里没有找到 Base URL 和 Key。",
+      "importAlreadySynced": "当前工具的配置已经保存。",
+      "importChecking": "正在检查当前工具配置…",
+      "importRetry": "重试检查导入状态",
+      "importStatusUnavailable": "无法检查当前工具配置是否有变化。",
+      "reachable": "连通正常（{{ms}} ms）",
+      "restored": "已恢复上一个工具配置。",
+      "saved": "服务已更新。",
+      "switched": "已写入 {{tool}}（{{effect}}）。",
+      "unreachable": "无法连通",
+      "reachableSlow": "连通但较慢（{{ms}} ms）"
+    },
+    "statusWindow": {
+      "label": "{{name}} 最近 24 小时渠道状态",
+      "summary": "正常 {{ok}}；延迟 {{delayed}}；异常 {{down}}；无数据 {{unknown}}。"
+    },
+    "title": "我的服务",
+    "comparison": {
+      "priceUnit": "价格 / 百万 Token",
+      "columns": {
+        "channel": "渠道 / 站点",
+        "availability": "24h 可用率 / 状态",
+        "input": "输入价格",
+        "output": "输出价格",
+        "actions": "操作"
+      }
+    },
+    "backup": {
+      "title": "备用渠道",
+      "reorder": "拖动调整顺序",
+      "priceMeta": "输入 {{input}} · 输出 {{output}}"
+    }
+  }
+}

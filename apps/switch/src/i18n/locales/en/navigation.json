@@ -1,0 +1,27 @@
+{
+  "navigation": {
+    "account": {
+      "label": "Account"
+    },
+    "connection": {
+      "label": "Connection"
+    },
+    "groups": {
+      "general": "General",
+      "local": "Local",
+      "system": "System",
+      "workspace": "Workspace"
+    },
+    "items": {
+      "apiKeys": "API Keys",
+      "changes": "Change History",
+      "discover": "Discover services",
+      "overview": "Overview",
+      "services": "My routes",
+      "settings": "Settings",
+      "tools": "Tools",
+      "usage": "Local usage"
+    },
+    "primary": "Primary navigation"
+  }
+}

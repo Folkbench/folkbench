@@ -1,0 +1,80 @@
+{
+  "discovery": {
+    "connect": {
+      "description": "公开榜单如果带有 API 地址，会自动填上；没有的话请向站点索取。Key 需要你自己填写。保存仅加入本机服务列表，不会立即改写工具配置。",
+      "result": {
+        "checkUnavailable": "服务已保存在本机，但连通性检查未能完成。",
+        "description": "服务已加入对应工具的本机列表。回到该工具后，你可以决定是否启用。",
+        "reachable": "服务已保存，目标主机可达（{{ms}} ms）。",
+        "scope": "这不是 API Key 或模型响应验证，工具配置也尚未改动。",
+        "title": "已加入我的服务",
+        "unreachable": "服务已保存，但目标主机无法连通；请核对 API 地址。",
+        "viewServices": "查看我的服务",
+        "reachableSlow": "服务已保存，目标主机可达但较慢（{{ms}} ms）。"
+      },
+      "review": {
+        "description": "先核对本次保存的对象。此步不会自动切换工具或发送付费请求。",
+        "keyHidden": "API Key：已填写，完整内容不会在此显示。",
+        "name": "服务名称：{{name}}",
+        "next": "预览并继续",
+        "saveAndCheck": "保存并检查连通性",
+        "scope": "保存后只检查目标地址的 HTTP 可达与延迟；不会用 Key 发起模型请求，也不会改写工具配置。服务进入与该模型对应的本机工具列表，需要你再手动启用。",
+        "title": "确认接入信息"
+      },
+      "title": "准备接入服务"
+    },
+    "pick": {
+      "description": "先选一条已发布渠道。榜单里有 API 地址时会自动填上，否则填写站点给你的地址。Key 始终由你填写。",
+      "empty": "目前没有已发布的渠道。",
+      "title": "从发现服务选择"
+    },
+    "detail": {
+      "availability": "近期可用率",
+      "back": "← 返回发现服务",
+      "channel": "渠道 / 分组",
+      "continue": "准备接入 →",
+      "disclaimer": "榜单数据只说明该渠道近期表现，不代表你的 Key 已开通、余额充足或当前工具已适配。下一步需要你的 Key。榜单提供了 API 地址时会预先填上。",
+      "infoTitle": "公开资料",
+      "inputPrice": "输入 / 百万 Token",
+      "measuredAt": "最近评测",
+      "notFound": "该渠道目前不在这个模型的已发布榜单中。",
+      "openWebsite": "打开站点官网 ↗",
+      "outputPrice": "输出 / 百万 Token",
+      "sampleSize": "近期样本",
+      "statusWindow": "最近 24 小时",
+      "statusWindowDirection": "较早 → 当前",
+      "website": "站点官网"
+    },
+    "list": {
+      "availability": "近期可用率",
+      "count": "{{count}} 条渠道",
+      "details": "查看详情 →",
+      "empty": "这个模型目前没有已发布的渠道。请选择其他模型。",
+      "input": "输入",
+      "output": "输出",
+      "refreshFailed": "更新失败，展示 {{time}} 获取的榜单；价格和排名可能已变化。",
+      "statusWindow": "{{station}} · {{channel}} 最近 24 小时渠道状态",
+      "updating": "正在更新榜单…",
+      "title": "已发布渠道"
+    },
+    "methods": {
+      "description": "榜单表现、本机连通性与个人 Key 验证不是同一件事。",
+      "hostBody": "保存服务后可以检查目标地址的 HTTP 可达与延迟；这不会发送 Key，也不能证明该模型可用。",
+      "hostTitle": "本机连通性",
+      "keyBody": "只有用用户自己的 Key 发起模型请求，才能确认授权、额度与模型响应；当前版本不自动发起可能计费的请求。",
+      "keyTitle": "Key 与模型验证",
+      "link": "了解这些数据如何判断 →",
+      "rankingBody": "公开榜单给出已发布渠道的近期可用率、样本数与报价。它不是个人账号状态，也不保证当前编程工具的接口格式已经适配。",
+      "rankingTitle": "榜单表现",
+      "title": "了解检测"
+    },
+    "model": "模型",
+    "sort": {
+      "availability": "可用率",
+      "price": "输入价格",
+      "rank": "榜单位次",
+      "title": "排序"
+    },
+    "title": "发现服务"
+  }
+}
