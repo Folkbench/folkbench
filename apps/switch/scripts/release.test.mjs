@@ -4,7 +4,7 @@ import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { checkVersion, releaseTag, replaceCargoVersion, replaceLockVersion, setVersion } from './version.mjs'
-import { validateRelease, checkReleaseNotes } from './release.mjs'
+import { validateRelease, checkReleaseNotes, requiresAppleNotarization } from './release.mjs'
 
 const version = '0.1.0-beta.1'
 const policy = { schemaVersion: 1, channel: 'beta', publicReleaseApproved: false, requiredPlatforms: ['macos-arm64', 'macos-x64', 'windows-x64'], pendingChecks: ['signing'] }
@@ -36,6 +36,19 @@ test('unsigned builds and signed candidates do not authorize publication', () =>
 
 test('release policy cannot silently drop a supported platform', () => {
   assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode: 'build-only', policy: { ...policy, requiredPlatforms: ['macos-arm64'] } }))
+})
+
+test('unsigned publication requires exact-version approval and all ordinary safety checks', () => {
+  const approved = { ...policy, publicReleaseApproved: true, pendingChecks: [], pendingSigningChecks: ['notarization'], unsignedBetaApproval: { approved: true, version } }
+  const input = { version, tag: releaseTag(version), mode: 'publish-beta-unsigned', policy: approved }
+  assert.equal(validateRelease(input).requiresAppleNotarization, false)
+  assert.throws(() => validateRelease({ ...input, policy: { ...approved, unsignedBetaApproval: { approved: true, version: '0.1.0-beta.2' } } }))
+  assert.throws(() => validateRelease({ ...input, policy: { ...approved, unsignedBetaApproval: { approved: false, version } } }))
+  assert.throws(() => validateRelease({ ...input, policy: { ...approved, pendingChecks: ['security review'] } }))
+  assert.throws(() => validateRelease({ ...input, policy: { ...approved, publicReleaseApproved: false } }))
+  assert.throws(() => validateRelease({ ...input, mode: 'publish-beta' }))
+  assert.equal(requiresAppleNotarization('signed-candidate'), true)
+  assert.equal(requiresAppleNotarization('publish-beta'), true)
 })
 
 test('version replacements touch only the application, not dependencies', () => {

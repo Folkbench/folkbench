@@ -9,12 +9,29 @@
 <p align="center"><strong>Choose your AI API relay with data, not guesswork.</strong></p>
 <p align="center">API route measurements · Service recommendations · Open-source tool configuration</p>
 <p align="center">
+  <a href="#download"><strong>Download Switch Beta</strong></a> ·
   <a href="https://folkbench.com/en?utm_source=github&utm_campaign=folkbench-blog">Visit Folkbench</a> ·
   <a href="https://folkbench.com/en/rankings/board?utm_source=github&utm_campaign=folkbench-blog">Rankings</a> ·
   <a href="#service-recommendations">Recommendations</a> ·
   <a href="#folkbench-switch">Folkbench Switch</a> ·
   <a href="README.md">简体中文</a>
 </p>
+
+## Download
+
+**Folkbench Switch · 0.1.0-beta.1**
+
+| Platform | Installer |
+| --- | --- |
+| macOS · Apple Silicon (M series) | DMG, awaiting upload |
+| macOS · Intel | DMG, awaiting upload |
+| Windows · x64 | EXE, awaiting upload |
+
+[**View Beta installers and versions**](https://github.com/Folkbench/folkbench/releases)
+
+The first Beta will provide unnotarized macOS installers and a Windows installer without a digital signature. macOS notarization is in progress. Platform-specific download links and SHA256 checksums will be added after the installers are uploaded.
+
+---
 
 Start with the model you need, then compare the relays offering it. Folkbench brings together models, channels and measurement windows so you can compare availability, 24-hour status, P95 complete-response duration and prices.
 
@@ -103,15 +120,11 @@ Switch is Folkbench's open-source desktop client. Save services, preview configu
 | Local usage trends | Review local model and Token counts, plus public reference-price estimates |
 | Optional account login | Authorize in your system browser; local service management works independently |
 
-Configuration adapters include Claude Code, Codex, Gemini CLI, OpenCode and other tools. See the [Beta release guide](docs/switch/RELEASE.md) for platform and tool-version validation.
+Configuration adapters include Claude Code, Codex, Gemini CLI, OpenCode and other tools.
 
-### Beta and trying the client
+### Using Switch
 
-The current source version is `0.1.0-beta.1`. The first release phase is Beta only. **No public installer has been released yet.** Installers will be available in this repository's [Releases](https://github.com/Folkbench/folkbench/releases) after signing and platform validation.
-
-Once installers are released: choose a tool → add or import a service → enter the provider's Base URL and Key → preview → enable.
-
-For source development, follow the [development guide](docs/development.md). Version and distribution rules are in the [release guide](docs/switch/RELEASE.md).
+Choose a tool → add or import a service → enter the provider's Base URL and Key → preview → enable.
 
 ## Model-specific rankings
 
@@ -125,28 +138,9 @@ For source development, follow the [development guide](docs/development.md). Ver
 
 For more models and filters, open the [full ranking board](https://folkbench.com/en/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog).
 
-## Feedback and development
+## Feedback
 
 Use [Issues](https://github.com/Folkbench/folkbench/issues) for usability feedback, tool compatibility and feature suggestions. Report vulnerabilities privately as described in the [security policy](SECURITY.md).
-
-<details open>
-<summary>Repository layout and developer documentation</summary>
-
-```text
-src/                  Astro blog and three-language content
-apps/switch/          Tauri / React desktop client
-docs/switch/          Beta changelog and release documentation
-.github/workflows/    Component checks, candidate builds and release workflows
-```
-
-Blog and client dependencies and versions remain separate. This repository contains public blog content and Switch source; production backend code and runtime data are separate.
-
-- [Development and validation](docs/development.md)
-- [Beta changelog](docs/switch/CHANGELOG.md)
-- [Version and release process](docs/switch/RELEASE.md)
-- [Full service information](docs/services/README.en.md)
-
-</details>
 
 ## Privacy and licensing
 

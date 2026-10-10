@@ -2,12 +2,16 @@
   "schemaVersion": 1,
   "channel": "beta",
   "publicReleaseApproved": false,
+  "unsignedBetaApproval": { "approved": true, "version": "0.1.0-beta.1" },
+  "pendingSigningChecks": ["Provision and verify Apple Developer ID signing and notarization"],
   "requiredPlatforms": ["macos-arm64", "macos-x64", "windows-x64"],
+  "completedReviews": [
+    "Parsed URL validation rejects remote HTTP, URL userinfo and malformed addresses; unsafe legacy services are refused before activation",
+    "Catalog associations are reference data, not endpoint or Key identity verification; this boundary is documented in SECURITY.md",
+    "Browser callback copy reports receipt rather than claiming token exchange has completed; application sign-in remains protected by PKCE and callback state"
+  ],
   "pendingChecks": [
-    "Resolve the known HTTP loopback URL validation bypass before public distribution",
-    "Review public catalog endpoint matching and desktop authorization completion behavior",
     "Verify installation, account sign-in, deep-link import and configuration switching on each advertised platform",
-    "Provision and verify Apple Developer ID signing and notarization",
     "Complete dependency, licensing and release security review"
   ]
 }

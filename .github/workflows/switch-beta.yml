@@ -11,7 +11,7 @@ on:
       mode:
         description: 'Publication requires completed policy, signing credentials and platform QA'
         type: choice
-        options: [build-only, signed-candidate, publish-beta]
+        options: [build-only, signed-candidate, publish-beta, publish-beta-unsigned]
         default: build-only
         required: true
 permissions:
@@ -28,6 +28,7 @@ jobs:
       tag: ${{ steps.release.outputs.tag }}
       mode: ${{ steps.release.outputs.mode }}
       commit: ${{ steps.release.outputs.commit }}
+      notarize: ${{ steps.release.outputs.notarize }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -47,12 +48,13 @@ jobs:
           node apps/switch/scripts/release.mjs "$REQUESTED_TAG" "$REQUESTED_MODE" > "$RUNNER_TEMP/switch-release.json"
           version=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').version")
           tag=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').tag")
+          notarize=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').requiresAppleNotarization")
           if [ "$REQUESTED_MODE" != 'build-only' ]; then
             test -n "$REQUESTED_TAG"
             test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$tag^{commit}")"
             git merge-base --is-ancestor HEAD origin/main
           fi
-          printf 'version=%s\ntag=%s\nmode=%s\ncommit=%s\n' "$version" "$tag" "$REQUESTED_MODE" "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          printf 'version=%s\ntag=%s\nmode=%s\ncommit=%s\nnotarize=%s\n' "$version" "$tag" "$REQUESTED_MODE" "$(git rev-parse HEAD)" "$notarize" >> "$GITHUB_OUTPUT"
       - run: node --test apps/switch/scripts/*.test.mjs
       - run: node scripts/check-source-hygiene.mjs
   build:
@@ -96,10 +98,11 @@ jobs:
           touch apps/switch/.folkbench-switch-development-host
           bun install --cwd apps/switch --frozen-lockfile
       - run: bun run check:switch
+      - run: bun run build:switch:web
       - run: cargo fmt --all --check --manifest-path apps/switch/src-tauri/Cargo.toml
       - run: cargo test --workspace --locked --manifest-path apps/switch/src-tauri/Cargo.toml
       - name: Import Apple Developer ID into a temporary CI keychain
-        if: runner.os == 'macOS' && needs.validate.outputs.mode != 'build-only'
+        if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
         shell: bash
         env:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
@@ -129,15 +132,15 @@ jobs:
         shell: bash
         working-directory: apps/switch
         env:
-          APPLE_SIGNING_IDENTITY: ${{ runner.os == 'macOS' && (needs.validate.outputs.mode == 'build-only' && '-' || secrets.APPLE_SIGNING_IDENTITY) || '' }}
-          APPLE_ID: ${{ runner.os == 'macOS' && needs.validate.outputs.mode != 'build-only' && secrets.APPLE_ID || '' }}
-          APPLE_PASSWORD: ${{ runner.os == 'macOS' && needs.validate.outputs.mode != 'build-only' && secrets.APPLE_PASSWORD || '' }}
-          APPLE_TEAM_ID: ${{ runner.os == 'macOS' && needs.validate.outputs.mode != 'build-only' && secrets.APPLE_TEAM_ID || '' }}
+          APPLE_SIGNING_IDENTITY: ${{ runner.os == 'macOS' && (needs.validate.outputs.notarize == 'true' && secrets.APPLE_SIGNING_IDENTITY || '-') || '' }}
+          APPLE_ID: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_ID || '' }}
+          APPLE_PASSWORD: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_PASSWORD || '' }}
+          APPLE_TEAM_ID: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_TEAM_ID || '' }}
           TARGET: ${{ matrix.target }}
           BUNDLE: ${{ matrix.bundle }}
         run: bun run tauri build --target "$TARGET" --bundles "$BUNDLE"
       - name: Notarize and verify the macOS distribution
-        if: runner.os == 'macOS' && needs.validate.outputs.mode != 'build-only'
+        if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
         shell: bash
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -176,7 +179,7 @@ jobs:
           security delete-keychain "$RUNNER_TEMP/folkbench-switch-signing.keychain-db" 2>/dev/null || true
           rm -f -- "$RUNNER_TEMP/folkbench-switch-signing.p12" "$RUNNER_TEMP/switch-notarization.json"
   publish:
-    if: github.event_name == 'workflow_dispatch' && needs.validate.outputs.mode == 'publish-beta'
+    if: github.event_name == 'workflow_dispatch' && (needs.validate.outputs.mode == 'publish-beta' || needs.validate.outputs.mode == 'publish-beta-unsigned')
     needs: [validate, build]
     environment: switch-beta
     permissions:
@@ -184,6 +187,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       FOLKBENCH_BUILD_COMMIT: ${{ needs.validate.outputs.commit }}
+      RELEASE_MODE: ${{ needs.validate.outputs.mode }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -194,7 +198,7 @@ jobs:
           path: .release-artifacts
           merge-multiple: true
       - name: Verify complete platform set, source version and installer hashes
-        run: node apps/switch/scripts/artifacts.mjs verify .release-artifacts publish-beta
+        run: node apps/switch/scripts/artifacts.mjs verify .release-artifacts "$RELEASE_MODE"
       - name: Publish an approved Beta, never Latest or Stable
         env:
           GH_TOKEN: ${{ github.token }}

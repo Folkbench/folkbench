@@ -9,12 +9,29 @@
 <p align="center"><strong>选中转站，不靠感觉，靠数据。</strong></p>
 <p align="center">AI API 线路评测与对比 · 站点推荐 · 开源工具配置管理</p>
 <p align="center">
+  <a href="#下载安装"><strong>下载 Switch Beta</strong></a> ·
   <a href="https://folkbench.com/?utm_source=github&utm_campaign=folkbench-blog">访问主站</a> ·
   <a href="https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog">查看榜单</a> ·
   <a href="#站点推荐">站点推荐</a> ·
   <a href="#folkbench-switch">Folkbench Switch</a> ·
   <a href="README.en.md">English</a>
 </p>
+
+## 下载安装
+
+**Folkbench Switch · 0.1.0-beta.1**
+
+| 系统 | 安装包 |
+| --- | --- |
+| macOS · Apple Silicon（M 系列） | DMG，准备上传 |
+| macOS · Intel | DMG，准备上传 |
+| Windows · x64 | EXE，准备上传 |
+
+[**查看 Beta 安装包与版本**](https://github.com/Folkbench/folkbench/releases)
+
+本版将先提供未公证的 macOS Beta 和未数字签名的 Windows Beta；macOS 公证正在进行。安装包上传后提供各平台直达下载链接及 SHA256 校验文件。
+
+---
 
 先选模型，再比较提供它的中转站。Folkbench 将模型、渠道与评测窗口放在一起，让你查看可用率、24 小时状态、P95 完整响应耗时和价格，再决定用哪条线路。
 
@@ -102,15 +119,11 @@ Switch 是 Folkbench 的开源桌面客户端：保存常用服务、预览配�
 | 本机使用曲线 | 查看本机会话中的模型与 Token 统计、公开参考价估算 |
 | 可选账号登录 | 通过系统浏览器授权；本机服务管理可以独立使用 |
 
-配置适配包含 Claude Code、Codex、Gemini CLI、OpenCode 等工具。各平台与工具版本的验证范围见 [Beta 发布指南](docs/switch/RELEASE.md)。
+配置适配包含 Claude Code、Codex、Gemini CLI、OpenCode 等工具。
 
-### Beta 与体验
+### 使用方式
 
-当前源码版本为 `0.1.0-beta.1`，首版仅提供 Beta。**公开安装包尚未发布**，签名与平台验证完成后在本仓库 [Releases](https://github.com/Folkbench/folkbench/releases) 提供下载。
-
-安装包发布后的流程：选择工具 → 添加或导入服务 → 填写站点提供的 Base URL 和 Key → 预览配置 → 启用。
-
-从源码体验请阅读 [开发指南](docs/development.md)；版本与发布规则见 [发布流程](docs/switch/RELEASE.md)。
+选择工具 → 添加或导入服务 → 填写站点提供的 Base URL 和 Key → 预览配置 → 启用。
 
 ## 热门模型榜单
 
@@ -124,28 +137,9 @@ Switch 是 Folkbench 的开源桌面客户端：保存常用服务、预览配�
 
 更多模型与筛选条件请进入 [完整榜单](https://folkbench.com/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)。
 
-## 反馈与开发
+## 问题反馈
 
 欢迎通过 [Issues](https://github.com/Folkbench/folkbench/issues) 反馈体验、工具兼容问题或功能建议。漏洞请按 [安全政策](SECURITY.md) 私下报告。
-
-<details open>
-<summary>仓库结构与开发文档</summary>
-
-```text
-src/                  Astro 博客与三语言内容
-apps/switch/          Tauri / React 桌面客户端
-docs/switch/          Beta 更新记录与发布文档
-.github/workflows/    组件检查、候选构建与发布流程
-```
-
-博客与客户端独立管理依赖和版本。此仓库提供公开博客内容及 Switch 源码，正式主站后台与运行数据不在其中。
-
-- [开发与验证](docs/development.md)
-- [Beta 更新记录](docs/switch/CHANGELOG.md)
-- [版本与发布](docs/switch/RELEASE.md)
-- [站点完整资料](docs/services/README.zh-CN.md)
-
-</details>
 
 ## 隐私与许可
 

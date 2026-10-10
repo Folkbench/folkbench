@@ -3,7 +3,7 @@ import { readdir, readFile, writeFile, mkdir, copyFile, lstat } from 'node:fs/pr
 import { basename, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { checkVersion, releaseTag, switchRoot } from './version.mjs'
-import { validateRelease } from './release.mjs'
+import { validateRelease, releaseModes, requiresAppleNotarization } from './release.mjs'
 
 export const platforms = {
   'macos-arm64': { target: 'aarch64-apple-darwin', bundle: 'dmg', extension: '.dmg' },
@@ -12,14 +12,16 @@ export const platforms = {
 }
 
 export function validateArtifact(record, { version, commit, mode }) {
-  if (!['build-only', 'signed-candidate', 'publish-beta'].includes(mode)) throw new Error('Unknown artifact mode.')
+  if (!releaseModes.includes(mode)) throw new Error('Unknown artifact mode.')
   const platform = platforms[record.platform]
   if (!platform || record.schemaVersion !== 1 || record.version !== version || record.commit !== commit || record.mode !== mode || record.tag !== releaseTag(version)) throw new Error('Artifact identity differs from the validated release.')
   if (!/^[a-f0-9]{40}$/.test(commit) || !/^[a-f0-9]{64}$/.test(record.sha256) || !Number.isSafeInteger(record.bytes) || record.bytes <= 0) throw new Error('Invalid artifact digest, size or source commit.')
-  const expectedName = `Folkbench-Switch_${version}_${record.platform}${mode === 'build-only' && record.platform.startsWith('macos-') ? '_unsigned' : ''}${platform.extension}`
+  const macOS = record.platform.startsWith('macos-')
+  const notarized = macOS && requiresAppleNotarization(mode)
+  const expectedName = `Folkbench-Switch_${version}_${record.platform}${macOS && !notarized ? '_unsigned' : ''}${platform.extension}`
   if (record.asset !== expectedName || basename(record.asset) !== record.asset) throw new Error('Unexpected artifact filename.')
-  if (mode !== 'build-only' && record.platform.startsWith('macos-') && record.appleSignedAndNotarized !== true) throw new Error('A notarized macOS artifact is required.')
-  if (mode === 'build-only' && record.appleSignedAndNotarized === true) throw new Error('Unsigned test artifacts cannot claim notarization.')
+  if (record.appleSignedAndNotarized !== notarized) throw new Error('Artifact notarization status differs from its build mode.')
+  if (record.windowsAuthenticode !== false) throw new Error('Windows signing is not configured; artifacts must not claim it.')
   return record
 }
 
@@ -34,8 +36,9 @@ async function collect(platformName, mode, output, root = switchRoot) {
   const source = resolve(directory, names[0])
   if (!(await lstat(source)).isFile()) throw new Error('Installer is not a regular file.')
   const bytes = await readFile(source)
-  const asset = `Folkbench-Switch_${version}_${platformName}${mode === 'build-only' && platformName.startsWith('macos-') ? '_unsigned' : ''}${platform.extension}`
-  const record = validateArtifact({ schemaVersion: 1, platform: platformName, version, tag: releaseTag(version), commit, mode, asset, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex'), appleSignedAndNotarized: mode !== 'build-only' && platformName.startsWith('macos-'), windowsAuthenticode: false }, { version, commit, mode })
+  const notarized = platformName.startsWith('macos-') && requiresAppleNotarization(mode)
+  const asset = `Folkbench-Switch_${version}_${platformName}${platformName.startsWith('macos-') && !notarized ? '_unsigned' : ''}${platform.extension}`
+  const record = validateArtifact({ schemaVersion: 1, platform: platformName, version, tag: releaseTag(version), commit, mode, asset, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex'), appleSignedAndNotarized: notarized, windowsAuthenticode: false }, { version, commit, mode })
   await mkdir(output, { recursive: true })
   await copyFile(source, resolve(output, asset))
   await writeFile(resolve(output, `${platformName}.json`), JSON.stringify(record, null, 2) + '\n')

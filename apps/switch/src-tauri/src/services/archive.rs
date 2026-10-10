@@ -85,17 +85,28 @@ fn protocol_supported(tool_id: &str, protocol: ServiceProtocol) -> bool {
 
 pub(crate) fn allowed_base_url(base_url: &str) -> bool {
     let trimmed = base_url.trim();
-    if let Some(rest) = trimmed.strip_prefix("https://") {
-        return !rest.is_empty();
+    if trimmed.chars().any(char::is_control) {
+        return false;
     }
-    let Some(rest) = trimmed.strip_prefix("http://") else {
+    let Ok(parsed) = url::Url::parse(trimmed) else {
         return false;
     };
-    let hostport = rest.split('/').next().unwrap_or("");
-    hostport == "127.0.0.1"
-        || hostport.starts_with("127.0.0.1:")
-        || hostport == "localhost"
-        || hostport.starts_with("localhost:")
+    if !parsed.username().is_empty()
+        || parsed.password().is_some()
+        || parsed.host().is_none()
+    {
+        return false;
+    }
+    match parsed.scheme() {
+        "https" => true,
+        "http" => match parsed.host() {
+            Some(url::Host::Domain(host)) => host == "localhost",
+            Some(url::Host::Ipv4(address)) => address.is_loopback(),
+            Some(url::Host::Ipv6(address)) => address.is_loopback(),
+            None => false,
+        },
+        _ => false,
+    }
 }
 
 fn archive_path(config_dir: &Path) -> std::path::PathBuf {
@@ -819,6 +830,51 @@ mod tests {
         )
         .unwrap_err();
         assert_eq!(err, ServiceError::InvalidInput);
+    }
+
+    #[test]
+    fn base_urls_validate_the_parsed_host_and_reject_userinfo() {
+        for value in [
+            "https://example.com/v1",
+            "http://localhost:8080/v1",
+            "http://127.0.0.1:8080/v1",
+            "http://[::1]:8080/v1",
+        ] {
+            assert!(allowed_base_url(value), "{value}");
+        }
+        for value in [
+            "http://localhost:80@relay.example/v1",
+            "http://127.0.0.1:80@relay.example/v1",
+            "http://localhost.relay.example/v1",
+            "http://127.0.0.1.relay.example/v1",
+            "https://user:password@relay.example/v1",
+            "http://relay.example/v1",
+            "https://",
+            "https://example.com:invalid/v1",
+            "https://example.com/\npath",
+            "file:///tmp/example",
+        ] {
+            assert!(!allowed_base_url(value), "{value}");
+        }
+    }
+
+    #[test]
+    fn rejected_loopback_spoof_does_not_save_the_key_or_service() {
+        let dir = TempDir::new();
+        let result = add(
+            &dir.0,
+            "Bad".into(),
+            "".into(),
+            "".into(),
+            "".into(),
+            ServiceProtocol::Auto,
+            "http://localhost:80@relay.example/v1".into(),
+            "synthetic-key".into(),
+            None,
+        );
+        assert_eq!(result.unwrap_err(), ServiceError::InvalidInput);
+        assert!(!dir.0.join("services.json").exists());
+        assert!(!dir.0.join("credentials.json").exists());
     }
 
     #[test]
