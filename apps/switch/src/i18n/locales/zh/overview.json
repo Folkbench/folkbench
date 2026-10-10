@@ -1,0 +1,32 @@
+{
+  "overview": {
+    "description": "查看已保存的服务、Folkbench 核验情况和可切换的工具。",
+    "metrics": {
+      "apiKeyCount": "API Keys",
+      "balance": "余额",
+      "configuredTools": "已配置工具",
+      "services": "我的服务",
+      "tools": "支持的工具",
+      "usageToday": "今日用量",
+      "verified": "已核验"
+    },
+    "readiness": {
+      "action": "检查工具",
+      "description": "先添加已购买的中转服务，再选工具切换。余额适配和 MCP 不在这一版。",
+      "manage": "管理服务",
+      "title": "下一步",
+      "tools": "查看工具"
+    },
+    "recentChanges": {
+      "empty": "还没有本地配置变更。",
+      "title": "近期变更"
+    },
+    "recentUsage": {
+      "empty": "暂无可用的用量记录。",
+      "requests_one": "{{count}} 次请求",
+      "requests_other": "{{count}} 次请求",
+      "title": "近期用量"
+    },
+    "title": "概览"
+  }
+}

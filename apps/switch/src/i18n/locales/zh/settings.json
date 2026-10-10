@@ -1,0 +1,70 @@
+{
+  "settings": {
+    "about": {
+      "title": "关于",
+      "version": "版本",
+      "channel": "发布通道",
+      "beta": "Beta",
+      "commit": "构建提交",
+      "unavailable": "版本信息暂时无法读取，请重新打开设置。"
+    },
+    "account": {
+      "checking": "正在检查账号…",
+      "dialog": {
+        "description": "将在系统浏览器打开 Folkbench。你可以登录已有账号或注册新账号，完成后会自动返回 Switch。",
+        "privacy": "客户端只保存独立的登录状态；中转站 Key、本机配置和本地用量不会上传。",
+        "title": "登录或注册 Folkbench"
+      },
+      "guest": "正在本机使用 Switch",
+      "localOnly": "登录为可选操作，已保存的 Key 仍留在本机。",
+      "signIn": "登录或注册",
+      "signOut": "退出登录",
+      "signOutFailed": "退出登录失败，请在网络恢复后重试。",
+      "title": "Folkbench 账号",
+      "signInShort": "登录"
+    },
+    "appearance": {
+      "theme": {
+        "dark": "深色",
+        "light": "浅色",
+        "system": "跟随系统",
+        "title": "主题"
+      },
+      "title": "外观",
+      "description": "页面、图表、菜单和弹窗使用同一套主题。",
+      "switchToLight": "切换浅色模式",
+      "switchToDark": "切换暗黑模式",
+      "saveFailed": "外观偏好保存失败，请重试。"
+    },
+    "description": "调整外观、语言与隐私。",
+    "general": {
+      "title": "常规"
+    },
+    "language": {
+      "description": "英语是默认语言和 fallback 语言。",
+      "options": {
+        "en": "English",
+        "zh": "简体中文"
+      },
+      "saved": "语言偏好已保存。",
+      "switchTo": "切换至 {{language}}",
+      "title": "语言"
+    },
+    "privacy": {
+      "body": "不发送遥测。配置和 Key 保存在本机，不上传到 Folkbench。本机用量从会话文件提取模型和 token 计数，不上传会话内容。",
+      "telemetry": {
+        "description": "Folkbench Switch 这一版不发送遥测。",
+        "title": "遥测"
+      },
+      "title": "隐私"
+    },
+    "title": "设置",
+    "updates": {
+      "channel": {
+        "beta": "测试版",
+        "title": "更新频道"
+      },
+      "title": "更新"
+    }
+  }
+}

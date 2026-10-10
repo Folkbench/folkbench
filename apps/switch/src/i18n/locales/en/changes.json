@@ -1,0 +1,34 @@
+{
+  "changes": {
+    "description": "Review redacted local configuration transactions and rollback eligibility.",
+    "details": {
+      "afterHash": "Result hash",
+      "beforeHash": "Original hash",
+      "target": "Target",
+      "verification": "Verification"
+    },
+    "empty": {
+      "description": "Applied configuration transactions will appear here.",
+      "title": "No local changes"
+    },
+    "rollback": {
+      "confirm": {
+        "description": "Restore the previous configuration only if the file has not changed since apply.",
+        "title": "Restore previous configuration?"
+      },
+      "success": "Previous configuration restored.",
+      "unavailable": {
+        "concurrentModification": "Rollback is unavailable because the file changed after apply."
+      }
+    },
+    "table": {
+      "columns": {
+        "action": "Action",
+        "status": "Status",
+        "time": "Time",
+        "tool": "Tool"
+      }
+    },
+    "title": "Change History"
+  }
+}

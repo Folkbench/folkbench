@@ -1,0 +1,46 @@
+{
+  "errors": {
+    "api": {
+      "rateLimited": "请求过于频繁，请稍后再试。",
+      "unavailable": "Modelflare 服务当前不可用。"
+    },
+    "auth": {
+      "authorizationFailed": "授权失败，本地配置没有发生变化。",
+      "sessionExpired": "登录状态已过期，请重新登录。"
+    },
+    "bridge": {
+      "commandFailed": "桌面操作未能完成。",
+      "desktopUnavailable": "桌面 runtime 不可用，无法执行特权操作。"
+    },
+    "catalog": {
+      "invalidModel": "该模型不是 Folkbench 公开榜单模型。",
+      "invalidResponse": "公开目录响应无法使用。",
+      "unavailable": "Folkbench 公开目录当前不可用。",
+      "websiteUnavailable": "目前无法安全打开该站点官网，请稍后再试。"
+    },
+    "config": {
+      "concurrentModification": "文件在检查后发生了变化，请重新生成预览再应用。",
+      "verifyFailed": "配置已写入，但验证失败。",
+      "writeFailed": "无法写入配置，原始文件已保留。"
+    },
+    "generic": {
+      "title": "操作失败",
+      "unknown": "发生了未知错误。"
+    },
+    "network": {
+      "offline": "当前似乎处于离线状态。",
+      "timeout": "请求超时。"
+    },
+    "service": {
+      "applyUnsupported": "这一版还不能写入该工具。",
+      "credentialMissing": "这条服务没有保存的 Key。",
+      "driftDetected": "当前工具配置已被修改，为避免覆盖你的改动，这次操作已停止。",
+      "inUse": "请先关闭或改用其他服务，再删除这一条。",
+      "invalidInput": "名称、URL 或 Key 缺失或不允许。",
+      "locationUnavailable": "找不到本地配置目录。",
+      "notFound": "这条服务已经不在本地存档里。",
+      "toolUnknown": "目录里没有这个工具。",
+      "writeFailed": "无法写入配置，原始文件已保留。"
+    }
+  }
+}

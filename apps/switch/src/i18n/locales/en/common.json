@@ -1,0 +1,48 @@
+{
+  "common": {
+    "accessibility": {
+      "closeDialog": "Close dialog",
+      "collapseSidebar": "Collapse sidebar",
+      "expandSidebar": "Expand sidebar",
+      "openInspector": "Open details",
+      "openNavigation": "Open navigation"
+    },
+    "actions": {
+      "apply": "Apply",
+      "back": "Back",
+      "cancel": "Cancel",
+      "close": "Close",
+      "continue": "Continue",
+      "copy": "Copy",
+      "create": "Create",
+      "delete": "Delete",
+      "done": "Done",
+      "edit": "Edit",
+      "open": "Open",
+      "refresh": "Refresh",
+      "restore": "Restore",
+      "retry": "Retry",
+      "revoke": "Revoke",
+      "save": "Save",
+      "signOut": "Sign out"
+    },
+    "product": {
+      "description": "Configure local coding tools against Folkbench published stations.",
+      "eyebrow": "FOLKBENCH DESKTOP",
+      "foundation": "SPIKE",
+      "shortName": "Folkbench",
+      "title": "Folkbench Switch"
+    },
+    "skeleton": {
+      "description": "This route exists so navigation and session guards can be reviewed. Its screen arrives in a later milestone.",
+      "title": "Route placeholder"
+    },
+    "status": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "loading": "Loading",
+      "unavailable": "Unavailable",
+      "verified": "Verified"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "tools": {
+    "configuration": {
+      "actions": {
+        "configure": "配置",
+        "inspect": "检查"
+      },
+      "apply": {
+        "success": "配置已应用。"
+      },
+      "preview": {
+        "description": "写入前检查每一项脱敏变更。",
+        "title": "预览变更"
+      },
+      "steps": {
+        "apply": "应用",
+        "inspect": "检查",
+        "preview": "预览",
+        "receipt": "凭证",
+        "select": "选择 Key/Profile",
+        "verify": "验证"
+      },
+      "verify": {
+        "success": "配置已验证。"
+      }
+    },
+    "description": "当前支持 13 个工具的真实配置读写；不同工具会按原生能力热切换或在重启后生效。",
+    "effect": {
+      "hotReload": "切换后当前会话即可生效。",
+      "notImplemented": "这一版还不能写入该工具的配置。",
+      "requiresRestart": "写入后需要重启该工具。"
+    },
+    "search": {
+      "placeholder": "搜索工具"
+    },
+    "status": {
+      "configured": "已配置",
+      "detected": "已检测",
+      "needsAttention": "需要处理",
+      "notConfigured": "未配置",
+      "notDetected": "未检测"
+    },
+    "title": "工具"
+  }
+}

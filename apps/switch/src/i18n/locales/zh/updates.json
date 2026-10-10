@@ -1,0 +1,15 @@
+{
+  "updates": {
+    "actions": {
+      "installLater": "稍后安装",
+      "restartNow": "立即重启"
+    },
+    "available": {
+      "description": "有新的已签名 MF Switch 更新可用。",
+      "title": "发现更新"
+    },
+    "downloading": "正在下载更新…",
+    "none": "MF Switch 已是最新版本。",
+    "ready": "更新已准备好安装。"
+  }
+}

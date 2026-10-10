@@ -1,0 +1,106 @@
+{
+  "signIn": {
+    "browser": {
+      "action": "登录或注册 Folkbench",
+      "cancel": "取消登录",
+      "description": "在系统浏览器登录或注册；已保存的服务 Key 仍留在这台电脑上。",
+      "failed": "登录未完成，请重试。",
+      "pending": "等待浏览器完成登录…",
+      "unavailable": "账号登录暂时不可用，仍可继续在本机使用 Switch。"
+    },
+    "form": {
+      "email": {
+        "label": "邮箱",
+        "placeholder": "name@example.com"
+      },
+      "password": {
+        "forgot": "忘记密码？",
+        "hide": "隐藏密码",
+        "label": "密码",
+        "placeholder": "请输入密码",
+        "show": "显示密码"
+      },
+      "submit": "登录"
+    },
+    "providers": {
+      "divider": "或使用以下方式",
+      "github": "使用 GitHub 继续",
+      "google": "使用 Google 继续",
+      "line": "使用 LINE 继续",
+      "linuxdo": "使用 LinuxDO 继续"
+    },
+    "signUp": {
+      "action": "注册",
+      "prompt": "还没有账户？"
+    },
+    "showcase": {
+      "account": {
+        "balance": "账号",
+        "description": "登录是可选的，已保存的服务仍留在这台电脑上。",
+        "eyebrow": "账户",
+        "keys": "API Key",
+        "status": "可选",
+        "title": "登录或游客都能使用 Switch",
+        "usage": "本机用量"
+      },
+      "apiKeys": {
+        "description": "服务 Key 保存在本机，仅在手动切换工具时使用。",
+        "eyebrow": "API Key",
+        "masked": "已脱敏",
+        "status": "本机",
+        "title": "中转站 Key 留在这台电脑上"
+      },
+      "history": {
+        "applied": "配置已应用",
+        "description": "查看脱敏的本地变更记录与验证结果。",
+        "eyebrow": "变更历史",
+        "inspected": "目标已检查",
+        "status": "有记录",
+        "title": "每次本地修改都有记录",
+        "verified": "结果已验证"
+      },
+      "preview": {
+        "description": "写入前先看清将要修改的字段。",
+        "eyebrow": "变更预览",
+        "preserved": "其他字段保持不变",
+        "status": "应用前",
+        "title": "每次配置修改都可预览"
+      },
+      "privacy": {
+        "description": "配置留在本地，不收集 Prompt 或响应内容。",
+        "eyebrow": "本地优先",
+        "local": "本地配置",
+        "noPrompts": "不保存 Prompt",
+        "status": "隐私保护",
+        "title": "你的工作区仍由你掌控"
+      },
+      "rollback": {
+        "description": "需要时恢复原状，同时避免覆盖后续修改。",
+        "eyebrow": "回滚",
+        "inspect": "检查",
+        "preview": "预览",
+        "restore": "恢复",
+        "status": "可回滚",
+        "title": "计划改变时也能安全恢复"
+      },
+      "tools": {
+        "description": "无需手动编辑配置文件，即可设置支持的编程客户端。",
+        "eyebrow": "客户端配置",
+        "status": "一键配置",
+        "title": "一处配置所有支持的客户端"
+      },
+      "usage": {
+        "cost": "估算",
+        "description": "查看本机会话的 Token 汇总和标注清楚的费用估算。",
+        "eyebrow": "用量",
+        "requests": "会话",
+        "status": "可查看",
+        "title": "查看本机会话用量",
+        "tokens": "Token"
+      }
+    },
+    "skipToCatalog": "先使用本地模式",
+    "subtitle": "用 Folkbench 的公开评测数据管理和切换本地 AI 服务。",
+    "title": "开始使用 Folkbench Switch"
+  }
+}

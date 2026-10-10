@@ -1,0 +1,233 @@
+{
+  "configure": {
+    "actions": {
+      "add": "Add service",
+      "addFavorite": "Add to favorite services",
+      "addShort": "Add",
+      "close": "Close",
+      "edit": "Edit",
+      "enable": "Enable",
+      "enabled": "In use",
+      "more": "More actions",
+      "remove": "Delete",
+      "removeFavorite": "Remove from favorite services",
+      "save": "Save",
+      "switch": "Switch",
+      "verify": "Verify reachability",
+      "balance": "Check balance",
+      "connect": "Connect",
+      "details": "Measurement details",
+      "detailsFor": "View details for {{name}}",
+      "moreFor": "More actions for {{name}}"
+    },
+    "addSource": {
+      "description": "Choose how to fill this service.",
+      "custom": "Enter a custom configuration",
+      "customHint": "Type the name, address, and Key yourself.",
+      "station": "Fill from an onboarded station",
+      "stationHint": "Bring in the name and address from a published channel."
+    },
+    "balance": {
+      "action": "Check balance",
+      "missingKey": "No Key saved",
+      "money": "{{amount}} {{currency}} left",
+      "notAdapted": "Balance not adapted",
+      "percent": "{{percent}}% left in {{window}}",
+      "unauthorized": "This Key cannot check the balance",
+      "unavailable": "Balance is unavailable right now",
+      "window": {
+        "fiveHour": "5 hours",
+        "monthly": "30 days",
+        "weekly": "7 days"
+      }
+    },
+    "connect": {
+      "address": "Address",
+      "checking": "Checking public run data…",
+      "description": "This link includes an API Key. After you confirm, the Key stays only on this computer.",
+      "group": "Group",
+      "invalidDescription": "The link is missing a required field, or the address is not one this app can save.",
+      "invalidTitle": "This link cannot be used",
+      "key": "Key",
+      "keyAttached": "Included",
+      "matched": "Public availability and price will show for this group.",
+      "model": "Model",
+      "saveFailed": "Could not save this route.",
+      "station": "Station",
+      "title": "Save this route?",
+      "tool": "After saving, {{tool}} is selected. This does not enable it.",
+      "unavailable": "Public run data could not be loaded. The route can still be saved.",
+      "unmatched": "No public run data for this group."
+    },
+    "binding": {
+      "rank": "#{{rank}}",
+      "unverified": "Unverified ({{reason}})",
+      "verified": "Folkbench rank {{rank}}"
+    },
+    "columns": {
+      "action": "Actions",
+      "balance": "Balance",
+      "binding": "Folkbench",
+      "channel": "Station / channel / model",
+      "name": "Service"
+    },
+    "current": "In use",
+    "delete": {
+      "confirm": "Delete this service? The API Key is removed from local storage.",
+      "title": "Delete {{name}}?"
+    },
+    "description": "Enable a saved service on the current coding tool. Keys stay in Rust storage and never render in the window.",
+    "effect": {
+      "hotReload": "hot reload",
+      "notImplemented": "not implemented yet",
+      "requiresRestart": "restart required"
+    },
+    "effectDetail": {
+      "claude-code": "{{tool}} uses the new address and Key in the current session",
+      "codex": "{{tool}} reads its configuration only at startup. Quit it completely, then open it again",
+      "gemini-cli": "{{tool}} uses the new configuration on the next conversation"
+    },
+    "effectLine": {
+      "hotReload": "{{tool}} · takes effect in the current session",
+      "notImplemented": "{{tool}} · this version cannot write this tool yet",
+      "requiresRestart": "{{tool}} · restart that tool after enabling"
+    },
+    "enableReview": {
+      "address": "Address",
+      "confirm": "Confirm tool configuration write",
+      "description": "This service will be written to the local {{tool}} configuration.",
+      "kicker": "Enable in {{tool}}",
+      "effect": "Effect",
+      "keyHidden": "The saved Key will be installed by the local service and is not shown here.",
+      "limit": "This shows the target and effect, not a per-file diff. No potentially billable model request is sent automatically.",
+      "title": "Enable {{name}} in {{tool}}?"
+    },
+    "empty": {
+      "action": "Add service",
+      "import": "Import from current tool",
+      "imported": "Current configuration imported",
+      "title": "No saved services",
+      "preview": {
+        "service": "Saved service"
+      }
+    },
+    "form": {
+      "addHint": "Name, base URL, and Key are required.",
+      "apiKey": "API Key",
+      "apiKeyReplace": "API Key",
+      "showApiKey": "Show API Key",
+      "hideApiKey": "Hide API Key",
+      "apiProtocol": "API protocol",
+      "apiProtocolHelpAria": "Protocol help",
+      "apiProtocolHelp": {
+        "claude-code": "Claude Code sends requests with the Anthropic Messages protocol (typically /v1/messages). Prefer Anthropic Messages. OpenAI-style base URLs or other protocols are not converted in this version and may fail.",
+        "codex": "Codex primarily uses the OpenAI Responses protocol. Prefer Responses; Chat Completions or Anthropic Messages may not work if they do not match the tool.",
+        "gemini-cli": "Gemini CLI uses the Gemini native API. Prefer the Gemini native option; other protocols may fail if they do not match the tool.",
+        "opencode": "OpenCode can use several protocols depending on the upstream (Chat Completions, Responses, or Anthropic Messages). Pick the one the endpoint expects; Folkbench writes the config as-is without conversion.",
+        "default": "The protocol must match what the tool and upstream endpoint expect. Selectable options follow what each tool can write; Folkbench writes the config as-is without conversion in this version.",
+        "openclaw": "OpenClaw writes the selected API protocol into config (often OpenAI Completions). Completions, Responses, Anthropic Messages, and Gemini native are available. Folkbench does not convert protocols in this version—match the upstream.",
+        "pi": "Pi writes the selected API protocol into config. Completions, Responses, Anthropic Messages, and Gemini native are available. Folkbench does not convert protocols in this version—match the upstream.",
+        "hermes": "Hermes API modes map to Chat Completions, Responses (codex_responses), and Anthropic Messages. Pick what the upstream speaks; this version does not convert protocols and does not offer Bedrock.",
+        "grok-build": "Grok Build is Responses-native. Responses, Chat Completions, and Anthropic Messages are available; non-native choices need a compatible upstream. This version does not run local routing conversion.",
+        "minimax-code": "MiniMax Code supports Anthropic Messages, Chat Completions, and Responses. Pick what the upstream speaks; Folkbench does not convert protocols in this version."
+      },
+      "protocolRecommended": " (Recommended)",
+      "baseUrl": "API Base URL",
+      "baseUrlPlaceholder": "Example: https://api.example.com/v1",
+      "channelId": "Folkbench channel id (optional)",
+      "editHint": "The current Key is prefilled (password-masked). Clear the field to keep the saved Key.",
+      "hint": "Name, base URL, and Key are required. Folkbench ids are optional and used only for ranking badges.",
+      "modelId": "Model id (optional)",
+      "moreIds": "Station / channel / model (optional)",
+      "name": "Display name",
+      "protocols": {
+        "anthropic-messages": "Anthropic Messages (Claude)",
+        "auto": "Default",
+        "gemini": "Gemini native API",
+        "openai-completions": "OpenAI-compatible API (Chat Completions)",
+        "openai-responses": "OpenAI Responses API"
+      },
+      "stationId": "Folkbench station id (optional)",
+      "tool": "Tool to switch",
+      "unspecified": "No Folkbench ids"
+    },
+    "home": {
+      "allServices": "All services",
+      "channel": "Channel / group",
+      "chooseForTool": "Choose a service for {{tool}}",
+      "chooseService": "Choose a saved service",
+      "current": "In use · {{tool}}",
+      "currentMissing": "The tool's current configuration does not match a saved service",
+      "description": "Enabling a service writes it to this tool's local configuration.",
+      "favoriteServices": "Favorite services",
+      "manual": "Added manually · not linked to rankings",
+      "model": "Model",
+      "noOtherServices": "This is the only saved service",
+      "noOtherServicesDescription": "Add another service you already use, or choose a route from Discover services above.",
+      "noPublicStatus": "No public run data yet",
+      "noSearchDescription": "Try another service name, channel, or model.",
+      "noSearchResults": "No matching services",
+      "notEnabled": "No service is enabled for this tool yet",
+      "otherServices": "Switch to another service",
+      "otherServicesDescription": "Enabling a service writes to {{tool}}. Other tools keep their current service.",
+      "recentAvailability": "Last 24 hours",
+      "search": "Search saved services",
+      "target": "Current configuration target",
+      "viewAllServices": "View all {{count}} services"
+    },
+    "list": {
+      "count": "{{count}} services"
+    },
+    "restartHint": "Restart {{tool}} for this write to take effect",
+    "switch": {
+      "disable": "Stop using {{name}} on {{tool}}",
+      "enable": "Use {{name}} on {{tool}}"
+    },
+    "switchResult": {
+      "description": "{{name}} was written to the local {{tool}} configuration.",
+      "effect": "Takes effect: {{effect}}",
+      "rollback": "Restore previous configuration",
+      "scope": "The configuration write completed. No model request was sent with your Key. Restart the tool session if required before using it.",
+      "title": "Tool configuration written"
+    },
+    "status": {
+      "added": "Service saved locally.",
+      "closed": "Closed on {{tool}} ({{effect}}).",
+      "deleteBlocked": "Enable another service before deleting the one in use.",
+      "favoriteLimit": "Choose up to 4 favorite services. Remove one first.",
+      "favoriteMinimum": "Keep at least 1 favorite service.",
+      "imported": "Imported the current tool config as a service.",
+      "importEmpty": "No base URL and Key were found in the current tool config.",
+      "importAlreadySynced": "The current tool configuration is already saved for this tool.",
+      "importChecking": "Checking the current tool configuration…",
+      "importRetry": "Retry import status check",
+      "importStatusUnavailable": "Could not check whether the current tool configuration changed.",
+      "reachable": "Reachable ({{ms}} ms)",
+      "restored": "The previous tool configuration was restored.",
+      "saved": "Service updated.",
+      "switched": "Wrote {{tool}} ({{effect}}).",
+      "unreachable": "Unreachable",
+      "reachableSlow": "Reachable but slow ({{ms}} ms)"
+    },
+    "statusWindow": {
+      "label": "{{name}} channel status over the last 24 hours",
+      "summary": "Normal: {{ok}}; delayed: {{delayed}}; down: {{down}}; no data: {{unknown}}."
+    },
+    "title": "My services",
+    "comparison": {
+      "priceUnit": "Price / million tokens",
+      "columns": {
+        "channel": "Channel / station",
+        "availability": "24h availability / status",
+        "input": "Input price",
+        "output": "Output price",
+        "actions": "Actions"
+      }
+    },
+    "backup": {
+      "title": "Backup channels",
+      "reorder": "Drag to reorder",
+      "priceMeta": "In {{input}} · Out {{output}}"
+    }
+  }
+}

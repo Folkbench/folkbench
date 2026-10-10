@@ -1,0 +1,32 @@
+{
+  "overview": {
+    "description": "Saved services, Folkbench binding, and tools you can switch.",
+    "metrics": {
+      "apiKeyCount": "API Keys",
+      "balance": "Balance",
+      "configuredTools": "Configured tools",
+      "services": "My services",
+      "tools": "Supported tools",
+      "usageToday": "Usage today",
+      "verified": "Verified"
+    },
+    "readiness": {
+      "action": "Review tools",
+      "description": "Add a relay you already pay for, then switch a coding tool. Balance adapters and MCP are not in this version.",
+      "manage": "Manage services",
+      "title": "Next step",
+      "tools": "Review tools"
+    },
+    "recentChanges": {
+      "empty": "No local configuration changes yet.",
+      "title": "Recent changes"
+    },
+    "recentUsage": {
+      "empty": "No usage records are available.",
+      "requests_one": "{{count}} request",
+      "requests_other": "{{count}} requests",
+      "title": "Recent usage"
+    },
+    "title": "Overview"
+  }
+}

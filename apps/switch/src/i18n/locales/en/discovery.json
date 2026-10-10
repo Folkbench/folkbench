@@ -1,0 +1,80 @@
+{
+  "discovery": {
+    "connect": {
+      "description": "When the public ranking includes an API address, it is filled in. Otherwise get the address from the station. You enter the Key yourself. Saving adds a local service without changing a tool configuration.",
+      "result": {
+        "checkUnavailable": "The service was saved locally, but the reachability check could not finish.",
+        "description": "The service is in that tool's local list. After you return to the tool, you can choose whether to enable it.",
+        "reachable": "The service was saved and the target is reachable ({{ms}} ms).",
+        "scope": "This is not an API Key or model-response check. No tool configuration was changed.",
+        "title": "Added to my services",
+        "unreachable": "The service was saved, but the target is unreachable. Check the API URL.",
+        "viewServices": "View my services",
+        "reachableSlow": "The service was saved and the target is reachable but slow ({{ms}} ms)."
+      },
+      "review": {
+        "description": "Review what will be saved. This step will not switch tools or send a paid request.",
+        "keyHidden": "API Key: entered, but the full value is not shown here.",
+        "name": "Service name: {{name}}",
+        "next": "Preview and continue",
+        "saveAndCheck": "Save and check connectivity",
+        "scope": "After saving, only HTTP reachability and latency are checked. No model request is sent with the Key and no tool configuration is changed. The service is filed in the local list for the matching tool, and you still enable it yourself.",
+        "title": "Review connection"
+      },
+      "title": "Prepare a connection"
+    },
+    "pick": {
+      "description": "Start from a published channel. An API address on the ranking is filled in; otherwise enter the address from the station. You always enter the Key.",
+      "empty": "No published channels yet.",
+      "title": "Choose a published service"
+    },
+    "detail": {
+      "availability": "Recent availability",
+      "back": "← Back to discovery",
+      "channel": "Channel / group",
+      "continue": "Prepare connection →",
+      "disclaimer": "Ranking data describes recent channel performance. It does not prove that your Key is active, has balance, or works with the selected tool. You will need your Key next. An API address on the ranking is filled in when the station published one.",
+      "infoTitle": "Public details",
+      "inputPrice": "Input / million tokens",
+      "measuredAt": "Last measured",
+      "notFound": "This channel is not in the published ranking for this model.",
+      "openWebsite": "Open station website ↗",
+      "outputPrice": "Output / million tokens",
+      "sampleSize": "Recent samples",
+      "statusWindow": "Last 24 hours",
+      "statusWindowDirection": "Earlier → now",
+      "website": "Station website"
+    },
+    "list": {
+      "availability": "Recent availability",
+      "count": "{{count}} channels",
+      "details": "View details →",
+      "empty": "No published channels for this model yet. Try another model.",
+      "input": "Input",
+      "output": "Output",
+      "refreshFailed": "Refresh failed. Showing rankings loaded at {{time}}; prices and rank may have changed.",
+      "statusWindow": "{{station}} · {{channel}} channel status over the last 24 hours",
+      "updating": "Updating rankings…",
+      "title": "Published channels"
+    },
+    "methods": {
+      "description": "Ranking performance, host reachability, and personal Key checks are different signals.",
+      "hostBody": "After saving, the app can check HTTP reachability and latency for the target URL. This does not send your Key or prove that the model works.",
+      "hostTitle": "Local reachability",
+      "keyBody": "Only a model request made with your own Key can confirm authorization, balance, and model response. This version never starts a potentially billable request automatically.",
+      "keyTitle": "Key and model verification",
+      "link": "How these signals are checked →",
+      "rankingBody": "The public ranking reports recent availability, sample count, and prices for published channels. It is not your account status and does not prove compatibility with your coding tool.",
+      "rankingTitle": "Ranking performance",
+      "title": "About checks"
+    },
+    "model": "Model",
+    "sort": {
+      "availability": "Availability",
+      "price": "Input price",
+      "rank": "Ranking",
+      "title": "Sort"
+    },
+    "title": "Discover services"
+  }
+}

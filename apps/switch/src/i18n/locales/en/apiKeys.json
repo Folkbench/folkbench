@@ -1,0 +1,41 @@
+{
+  "apiKeys": {
+    "copy": {
+      "success": "API Key copied securely."
+    },
+    "create": {
+      "dialog": {
+        "description": "Create a dedicated Key for this device or workflow.",
+        "title": "Create API Key"
+      },
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Development laptop"
+        }
+      },
+      "success": "API Key created."
+    },
+    "description": "Manage masked API Keys and their local device association.",
+    "empty": {
+      "description": "Create a dedicated Key before configuring a tool.",
+      "title": "No API Keys"
+    },
+    "list": {
+      "columns": {
+        "createdAt": "Created",
+        "lastUsed": "Last used",
+        "name": "Name",
+        "status": "Status"
+      }
+    },
+    "revoke": {
+      "confirm": {
+        "description": "Requests using this Key will stop working. This action cannot be undone.",
+        "title": "Revoke API Key?"
+      },
+      "success": "API Key revoked."
+    },
+    "title": "API Keys"
+  }
+}

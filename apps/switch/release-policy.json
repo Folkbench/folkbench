@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "channel": "beta",
+  "publicReleaseApproved": false,
+  "requiredPlatforms": ["macos-arm64", "macos-x64", "windows-x64"],
+  "pendingChecks": [
+    "Resolve the known HTTP loopback URL validation bypass before public distribution",
+    "Review public catalog endpoint matching and desktop authorization completion behavior",
+    "Verify installation, account sign-in, deep-link import and configuration switching on each advertised platform",
+    "Provision and verify Apple Developer ID signing and notarization",
+    "Complete dependency, licensing and release security review"
+  ]
+}

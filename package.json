@@ -2,14 +2,23 @@
   "name": "folkbench-blog",
   "version": "0.1.0",
   "private": false,
-  "repository": "git+https://github.com/Folkbench/folkbench-blog.git",
+  "repository": "git+https://github.com/Folkbench/folkbench.git",
   "homepage": "https://folkbench.com/blog",
   "type": "module",
   "scripts": {
     "dev": "astro dev --host --port 8341",
-    "build": "astro build",
+    "build": "bun run build:blog",
+    "build:blog": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "build:switch:web": "bun run --cwd apps/switch build:web",
     "preview": "astro preview --host --port 8341",
-    "check": "tsc --noEmit && node scripts/check-article-locales.mjs"
+    "check": "bun run check:source && bun run test:repository-tools && bun run check:blog && bun run check:switch",
+    "check:source": "node scripts/check-source-hygiene.mjs",
+    "check:blog": "ASTRO_TELEMETRY_DISABLED=1 astro sync && tsc --noEmit && node scripts/check-article-locales.mjs",
+    "check:switch": "bun run --cwd apps/switch check",
+    "test:switch:rust": "bun run --cwd apps/switch rust:test",
+    "switch:dev": "bun run --cwd apps/switch tauri dev",
+    "switch:version": "node apps/switch/scripts/version.mjs",
+    "test:repository-tools": "node --test scripts/*.test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",

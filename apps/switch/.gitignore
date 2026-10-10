@@ -1,0 +1,46 @@
+# JavaScript
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Rust and Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+.folkbench-switch-development-host
+credentials.json
+services.json
+.runtime/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Generated installers and update artifacts
+*.AppImage
+*.app.tar.gz
+*.dmg
+*.msi
+*.sig
+*.deb
+*.rpm
+
+# Logs and editor state
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated on demand by forks that must not ship the brand icon
+assets/fork-placeholder-icon.png
+
+# Local scratch files
+.tmp/
+tmp/

@@ -1,0 +1,41 @@
+{
+  "apiKeys": {
+    "copy": {
+      "success": "已安全复制 API Key。"
+    },
+    "create": {
+      "dialog": {
+        "description": "为当前设备或工作流创建专用 Key。",
+        "title": "创建 API Key"
+      },
+      "fields": {
+        "name": {
+          "label": "名称",
+          "placeholder": "开发笔记本"
+        }
+      },
+      "success": "API Key 已创建。"
+    },
+    "description": "管理脱敏 API Key 及其本地设备关联。",
+    "empty": {
+      "description": "配置工具前，请先创建一个专用 Key。",
+      "title": "暂无 API Key"
+    },
+    "list": {
+      "columns": {
+        "createdAt": "创建时间",
+        "lastUsed": "最近使用",
+        "name": "名称",
+        "status": "状态"
+      }
+    },
+    "revoke": {
+      "confirm": {
+        "description": "使用此 Key 的请求将停止工作，此操作无法撤销。",
+        "title": "撤销 API Key？"
+      },
+      "success": "API Key 已撤销。"
+    },
+    "title": "API Keys"
+  }
+}
