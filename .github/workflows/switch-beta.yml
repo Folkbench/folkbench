@@ -5,11 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Matching switch-vX.Y.Z-beta.N tag; leave empty for a development build'
+        description: 'Matching tag required for publication; candidates may use main without a tag'
         type: string
         required: false
       mode:
-        description: 'Publication requires completed policy, signing credentials and platform QA'
+        description: 'Candidates do not publish; publication requires completed policy and platform QA'
         type: choice
         options: [build-only, signed-candidate, publish-beta, publish-beta-unsigned]
         default: build-only
@@ -50,9 +50,11 @@ jobs:
           tag=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').tag")
           notarize=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').requiresAppleNotarization")
           if [ "$REQUESTED_MODE" != 'build-only' ]; then
+            git merge-base --is-ancestor HEAD origin/main
+          fi
+          if [ "$REQUESTED_MODE" = 'publish-beta' ] || [ "$REQUESTED_MODE" = 'publish-beta-unsigned' ]; then
             test -n "$REQUESTED_TAG"
             test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$tag^{commit}")"
-            git merge-base --is-ancestor HEAD origin/main
           fi
           printf 'version=%s\ntag=%s\nmode=%s\ncommit=%s\nnotarize=%s\n' "$version" "$tag" "$REQUESTED_MODE" "$(git rev-parse HEAD)" "$notarize" >> "$GITHUB_OUTPUT"
       - run: node --test apps/switch/scripts/*.test.mjs
@@ -92,6 +94,42 @@ jobs:
           toolchain: 1.98.1
           targets: ${{ matrix.target }}
           components: rustfmt
+      - name: Prepare temporary certificate and App Store Connect API private key
+        id: apple_files
+        if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        run: node apps/switch/scripts/apple-ci.mjs prepare
+      - name: Import and verify Developer ID and API Key authentication
+        if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: |
+          set -euo pipefail
+          signing_password=$(openssl rand -hex 24)
+          echo "::add-mask::$signing_password"
+          signing_keychain="$FOLKBENCH_APPLE_SIGNING_DIR/signing.keychain-db"
+          security create-keychain -p "$signing_password" "$signing_keychain"
+          security unlock-keychain -p "$signing_password" "$signing_keychain"
+          security set-keychain-settings -lut 21600 "$signing_keychain"
+          security import "$FOLKBENCH_APPLE_SIGNING_DIR/certificate.p12" -k "$signing_keychain" -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign > "$FOLKBENCH_APPLE_SIGNING_DIR/import.log" 2>&1 || { echo 'Certificate import failed; verify the p12 and its export password.'; exit 1; }
+          security list-keychains -d user -s "$signing_keychain" login.keychain-db
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$signing_password" "$signing_keychain" > "$FOLKBENCH_APPLE_SIGNING_DIR/keychain.log" 2>&1
+          security find-identity -v -p codesigning "$signing_keychain" > "$FOLKBENCH_APPLE_SIGNING_DIR/identities.txt"
+          node -e 'const fs=require("node:fs"); const text=fs.readFileSync(process.env.FOLKBENCH_APPLE_SIGNING_DIR + "/identities.txt", "utf8"); if (!text.includes("\"" + process.env.APPLE_SIGNING_IDENTITY + "\"")) { console.error("No valid matching Developer ID Application certificate and private key."); process.exit(1); }'
+          xcrun notarytool history --key "$APPLE_API_KEY_PATH" --key-id "$APPLE_API_KEY" --issuer "$APPLE_API_ISSUER" --output-format json > "$FOLKBENCH_APPLE_SIGNING_DIR/history.json" 2> "$FOLKBENCH_APPLE_SIGNING_DIR/notary-error.txt" || { echo 'Apple API Key authentication failed; verify the Key ID, Issuer ID, p8 and team access.'; exit 1; }
+          echo 'Developer ID certificate and Apple API Key authentication verified.'
       - name: Mark isolated CI host and install dependencies
         shell: bash
         run: |
@@ -101,50 +139,23 @@ jobs:
       - run: bun run build:switch:web
       - run: cargo fmt --all --check --manifest-path apps/switch/src-tauri/Cargo.toml
       - run: cargo test --workspace --locked --manifest-path apps/switch/src-tauri/Cargo.toml
-      - name: Import Apple Developer ID into a temporary CI keychain
-        if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
-        shell: bash
-        env:
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: |
-          set -euo pipefail
-          for name in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
-            test -n "${!name}" || { echo "Missing required Apple release credential: $name"; exit 1; }
-          done
-          [[ "$APPLE_SIGNING_IDENTITY" == 'Developer ID Application:'* ]]
-          signing_password=$(openssl rand -hex 24)
-          echo "::add-mask::$signing_password"
-          signing_keychain="$RUNNER_TEMP/folkbench-switch-signing.keychain-db"
-          printf '%s' "$APPLE_CERTIFICATE" | openssl base64 -d -A > "$RUNNER_TEMP/folkbench-switch-signing.p12"
-          chmod 600 "$RUNNER_TEMP/folkbench-switch-signing.p12"
-          security create-keychain -p "$signing_password" "$signing_keychain"
-          security unlock-keychain -p "$signing_password" "$signing_keychain"
-          security set-keychain-settings -lut 21600 "$signing_keychain"
-          security import "$RUNNER_TEMP/folkbench-switch-signing.p12" -k "$signing_keychain" -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-          security list-keychains -d user -s "$signing_keychain" login.keychain-db
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$signing_password" "$signing_keychain"
       - name: Build installer
         shell: bash
         working-directory: apps/switch
         env:
-          APPLE_SIGNING_IDENTITY: ${{ runner.os == 'macOS' && (needs.validate.outputs.notarize == 'true' && secrets.APPLE_SIGNING_IDENTITY || '-') || '' }}
-          APPLE_ID: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_ID || '' }}
-          APPLE_PASSWORD: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_PASSWORD || '' }}
-          APPLE_TEAM_ID: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_TEAM_ID || '' }}
+          APPLE_SIGNING_IDENTITY: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_SIGNING_IDENTITY || '' }}
+          APPLE_API_KEY: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_API_KEY || '' }}
+          APPLE_API_ISSUER: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_API_ISSUER || '' }}
+          NOTARIZE: ${{ needs.validate.outputs.notarize }}
           TARGET: ${{ matrix.target }}
           BUNDLE: ${{ matrix.bundle }}
-        run: bun run tauri build --target "$TARGET" --bundles "$BUNDLE"
+        run: node scripts/apple-ci.mjs build
       - name: Notarize and verify the macOS distribution
         if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
         shell: bash
         env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           TARGET: ${{ matrix.target }}
         run: |
@@ -152,12 +163,15 @@ jobs:
           bundle="apps/switch/src-tauri/target/$TARGET/release/bundle"
           app="$bundle/macos/Folkbench Switch.app"
           codesign --verify --deep --strict "$app"
+          codesign -dv --verbose=4 "$app" 2> "$FOLKBENCH_APPLE_SIGNING_DIR/codesign-details.txt"
+          node -e 'const fs=require("node:fs"); const text=fs.readFileSync(process.env.FOLKBENCH_APPLE_SIGNING_DIR + "/codesign-details.txt", "utf8"); if (!text.split("\n").includes("TeamIdentifier=" + process.env.APPLE_TEAM_ID) || !/flags=.*\bruntime\b/.test(text)) { console.error("Application signing team or hardened runtime verification failed."); process.exit(1); }'
+          xcrun stapler validate "$app"
           spctl --assess --type execute "$app"
           shopt -s nullglob
           installers=("$bundle"/dmg/*.dmg)
           test "${#installers[@]}" -eq 1
-          xcrun notarytool submit "${installers[0]}" --apple-id "$APPLE_ID" --password "$APPLE_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait --output-format json > "$RUNNER_TEMP/switch-notarization.json"
-          node -e "if (require(process.env.RUNNER_TEMP + '/switch-notarization.json').status !== 'Accepted') process.exit(1)"
+          xcrun notarytool submit "${installers[0]}" --key "$APPLE_API_KEY_PATH" --key-id "$APPLE_API_KEY" --issuer "$APPLE_API_ISSUER" --wait --output-format json > "$FOLKBENCH_APPLE_SIGNING_DIR/notarization.json"
+          node -e 'const fs=require("node:fs"); if (JSON.parse(fs.readFileSync(process.env.FOLKBENCH_APPLE_SIGNING_DIR + "/notarization.json", "utf8")).status !== "Accepted") { console.error("Apple did not accept the DMG notarization."); process.exit(1); }'
           xcrun stapler staple "${installers[0]}"
           xcrun stapler validate "${installers[0]}"
       - name: Collect only installers and public build metadata
@@ -165,22 +179,54 @@ jobs:
         env:
           PLATFORM: ${{ matrix.platform }}
           MODE: ${{ needs.validate.outputs.mode }}
-        run: node apps/switch/scripts/artifacts.mjs collect "$PLATFORM" "$MODE" .release-artifacts
+        run: node apps/switch/scripts/artifacts.mjs collect "$PLATFORM" "$MODE" release-artifacts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: switch-${{ matrix.platform }}-${{ needs.validate.outputs.commit }}
-          path: .release-artifacts/
+          path: |
+            release-artifacts/*.dmg
+            release-artifacts/*.exe
+            release-artifacts/*.json
           if-no-files-found: error
           retention-days: 14
       - name: Remove temporary Apple credential material
         if: always() && runner.os == 'macOS'
         shell: bash
         run: |
-          security delete-keychain "$RUNNER_TEMP/folkbench-switch-signing.keychain-db" 2>/dev/null || true
-          rm -f -- "$RUNNER_TEMP/folkbench-switch-signing.p12" "$RUNNER_TEMP/switch-notarization.json"
+          signing_directory="${FOLKBENCH_APPLE_SIGNING_DIR:-}"
+          if [[ -n "$signing_directory" && "$signing_directory" == "$RUNNER_TEMP"/folkbench-switch-signing-* ]]; then
+            security delete-keychain "$signing_directory/signing.keychain-db" 2>/dev/null || true
+            rm -f -- "$signing_directory/certificate.p12" "$signing_directory/AuthKey.p8" "$signing_directory/import.log" "$signing_directory/keychain.log" "$signing_directory/identities.txt" "$signing_directory/history.json" "$signing_directory/notary-error.txt" "$signing_directory/codesign-details.txt" "$signing_directory/notarization.json"
+            rmdir "$signing_directory" 2>/dev/null || true
+          fi
+  verify:
+    needs: [validate, build]
+    runs-on: ubuntu-22.04
+    env:
+      FOLKBENCH_BUILD_COMMIT: ${{ needs.validate.outputs.commit }}
+      RELEASE_MODE: ${{ needs.validate.outputs.mode }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: switch-*-${{ needs.validate.outputs.commit }}
+          path: release-artifacts
+          merge-multiple: true
+      - name: Verify all candidate installers and generate public checksums
+        run: node apps/switch/scripts/artifacts.mjs verify release-artifacts "$RELEASE_MODE"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-verification-${{ needs.validate.outputs.commit }}
+          path: |
+            release-artifacts/SHA256SUMS.txt
+            release-artifacts/release-manifest.json
+          if-no-files-found: error
+          retention-days: 14
   publish:
     if: github.event_name == 'workflow_dispatch' && (needs.validate.outputs.mode == 'publish-beta' || needs.validate.outputs.mode == 'publish-beta-unsigned')
-    needs: [validate, build]
+    needs: [validate, build, verify]
     environment: switch-beta
     permissions:
       contents: write
@@ -195,10 +241,10 @@ jobs:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           pattern: switch-*-${{ needs.validate.outputs.commit }}
-          path: .release-artifacts
+          path: release-artifacts
           merge-multiple: true
       - name: Verify complete platform set, source version and installer hashes
-        run: node apps/switch/scripts/artifacts.mjs verify .release-artifacts "$RELEASE_MODE"
+        run: node apps/switch/scripts/artifacts.mjs verify release-artifacts "$RELEASE_MODE"
       - name: Publish an approved Beta, never Latest or Stable
         env:
           GH_TOKEN: ${{ github.token }}
@@ -212,5 +258,5 @@ jobs:
             echo 'This version already has a Release. Do not overwrite it; create a new Beta version.'
             exit 1
           fi
-          gh release create "$RELEASE_TAG" .release-artifacts/* --draft --prerelease --target "$SOURCE_COMMIT" --title "Folkbench Switch $VERSION" --notes-file docs/switch/CHANGELOG.md
+          gh release create "$RELEASE_TAG" release-artifacts/* --draft --prerelease --target "$SOURCE_COMMIT" --title "Folkbench Switch $VERSION" --notes-file docs/switch/CHANGELOG.md
           gh release edit "$RELEASE_TAG" --draft=false --prerelease --latest=false
