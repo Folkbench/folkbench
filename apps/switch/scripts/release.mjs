@@ -3,8 +3,12 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { checkVersion, releaseTag, switchRoot } from './version.mjs'
 
+export const releaseModes = ['build-only', 'signed-candidate', 'publish-beta', 'publish-beta-unsigned']
+export const isPublicRelease = mode => ['publish-beta', 'publish-beta-unsigned'].includes(mode)
+export const requiresAppleNotarization = mode => ['signed-candidate', 'publish-beta'].includes(mode)
+
 export function validateRelease({ version, tag, mode, policy }) {
-  if (!['build-only', 'signed-candidate', 'publish-beta'].includes(mode)) throw new Error('Unknown release mode.')
+  if (!releaseModes.includes(mode)) throw new Error('Unknown release mode.')
   const expected = releaseTag(version)
   if (tag !== expected) throw new Error(`Release tag must equal ${expected}.`)
   if (policy.schemaVersion !== 1 || policy.channel !== 'beta') throw new Error('Invalid Beta release policy.')
@@ -12,10 +16,16 @@ export function validateRelease({ version, tag, mode, policy }) {
       ['macos-arm64', 'macos-x64', 'windows-x64'].some(platform => !policy.requiredPlatforms.includes(platform))) {
     throw new Error('The Beta platform matrix does not match its release policy.')
   }
-  if (mode === 'publish-beta' && (policy.publicReleaseApproved !== true || !Array.isArray(policy.pendingChecks) || policy.pendingChecks.length !== 0)) {
+  if (isPublicRelease(mode) && (policy.publicReleaseApproved !== true || !Array.isArray(policy.pendingChecks) || policy.pendingChecks.length !== 0)) {
     throw new Error('Public release is blocked: complete release-policy.json checks and obtain release approval first.')
   }
-  return { version, tag: expected, channel: 'beta', prerelease: true, mode }
+  if (mode === 'publish-beta-unsigned' && (policy.unsignedBetaApproval?.approved !== true || policy.unsignedBetaApproval?.version !== version)) {
+    throw new Error('This exact Beta version needs separate approval for unsigned distribution.')
+  }
+  if (mode === 'publish-beta' && (policy.pendingSigningChecks?.length || 0) !== 0) {
+    throw new Error('Signed publication requires completed signing and notarization checks.')
+  }
+  return { version, tag: expected, channel: 'beta', prerelease: true, mode, requiresAppleNotarization: requiresAppleNotarization(mode) }
 }
 
 export function checkReleaseNotes(text, version) {
@@ -33,7 +43,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     const mode = process.argv[3] || 'build-only'
     const policy = JSON.parse(await readFile(resolve(switchRoot, 'release-policy.json'), 'utf8'))
     const result = validateRelease({ version, tag, mode, policy })
-    if (mode === 'publish-beta') checkReleaseNotes(await readFile(resolve(switchRoot, '../../docs/switch/CHANGELOG.md'), 'utf8'), version)
+    if (isPublicRelease(mode)) checkReleaseNotes(await readFile(resolve(switchRoot, '../../docs/switch/CHANGELOG.md'), 'utf8'), version)
     console.log(JSON.stringify(result))
   } catch (error) {
     console.error(error.message)

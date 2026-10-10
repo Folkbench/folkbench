@@ -347,8 +347,8 @@ fn callback_http_response(page: CallbackPage) -> Vec<u8> {
         CallbackPage::Complete => (
             "200 OK",
             "FOLKBENCH SWITCH · ACCOUNT",
-            "登录成功",
-            "授权已完成，Folkbench Switch 已打开。现在可以关闭此页面，回到客户端继续使用。",
+            "返回 Folkbench Switch",
+            "已收到授权回调。请回到应用继续，登录结果将在应用中显示。",
             "✓",
         ),
         CallbackPage::Cancelled => (
@@ -526,9 +526,11 @@ mod tests {
             .expect("response has headers and body");
         assert!(headers.starts_with("HTTP/1.1 200 OK"));
         assert!(headers.contains("Content-Type: text/html; charset=utf-8"));
-        assert!(body.contains("登录成功"));
+        assert!(body.contains("返回 Folkbench Switch"));
         assert!(body.contains("Folkbench Switch"));
-        assert!(body.contains("Folkbench Switch 已打开"));
+        assert!(body.contains("登录结果将在应用中显示"));
+        assert!(!body.contains("登录成功"));
+        assert!(!body.contains("Folkbench Switch 已打开"));
         assert!(body.contains("class=\"lane reverse\""));
         assert!(!body.contains("fbsg_"));
     }

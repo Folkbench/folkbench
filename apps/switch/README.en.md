@@ -1,7 +1,11 @@
 # Folkbench Switch
 
-The client is prepared under `apps/switch` in the Folkbench repository. Start with the [main README](../../README.en.md), [development guide](../../docs/development.md), [Beta release process](../../docs/switch/RELEASE.md) and [security policy](../../SECURITY.md).
+Manage AI API services for Claude Code, Codex, Gemini CLI, OpenCode and other coding tools. Compare Folkbench's public route data and review your local usage trend.
 
-The source version is defined in [package.json](package.json). No approved public installer has been released yet. CI candidates are not an official download.
+- [Product overview and downloads](../../README.en.md#download)
+- [Beta installers and versions](https://github.com/Folkbench/folkbench/releases)
+- [Report an issue](https://github.com/Folkbench/folkbench/issues)
+- [Privacy and security](../../SECURITY.md)
+- [Source license](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md)
 
-Import URLs carry a provider Key. Do not publish them, send them to analytics or include them in logs. Saving requires confirmation and does not automatically switch the live tool configuration.
+Local service management works independently; account login uses your system browser. API Keys are stored locally. Do not share import links containing a Key.

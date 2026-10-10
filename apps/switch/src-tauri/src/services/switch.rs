@@ -159,6 +159,9 @@ fn switch_inner(
 ) -> Result<SwitchResult, ServiceError> {
     let record = archive::get_for_tool(config_dir, tool_id, service_id)?
         .ok_or(ServiceError::NotFound)?;
+    if !archive::allowed_base_url(record.base_url()) {
+        return Err(ServiceError::InvalidInput);
+    }
     let key = credentials::get_for_tool(config_dir, tool_id, service_id)
         .ok_or(ServiceError::CredentialMissing)?;
     let previous = resolve_previous_state(
@@ -624,6 +627,9 @@ fn apply_archived_service(
 ) -> Result<SwitchResult, ServiceError> {
     let record = archive::get_for_tool(config_dir, tool_id, service_id)?
         .ok_or(ServiceError::NotFound)?;
+    if !archive::allowed_base_url(record.base_url()) {
+        return Err(ServiceError::InvalidInput);
+    }
     let key = credentials::get_for_tool(config_dir, tool_id, service_id)
         .ok_or(ServiceError::CredentialMissing)?;
     adapters::apply(ApplyRequest {
@@ -775,6 +781,51 @@ mod tests {
         )
         .unwrap();
         assert!(live.contains("sk-a"));
+    }
+
+    #[test]
+    fn unsafe_legacy_url_is_not_activated_and_keeps_the_saved_key() {
+        let dir = TempDir::new();
+        let added = archive::add(
+            &dir.config,
+            "Legacy".into(),
+            "".into(),
+            "".into(),
+            "".into(),
+            ServiceProtocol::Auto,
+            "https://example.com/v1".into(),
+            "synthetic-preserved-key".into(),
+            None,
+        )
+        .unwrap();
+        let path = dir.config.join("services.json");
+        let mut stored: serde_json::Value =
+            serde_json::from_str(&std::fs::read_to_string(&path).unwrap())
+                .unwrap();
+        stored["services"][0]["baseUrl"] =
+            "http://localhost:80@relay.example/v1".into();
+        std::fs::write(&path, serde_json::to_string(&stored).unwrap()).unwrap();
+        assert_eq!(
+            switch(&dir.config, &dir.home, "claude-code", &added.id)
+                .unwrap_err(),
+            ServiceError::InvalidInput
+        );
+        assert_eq!(
+            apply_archived_service(
+                &dir.config,
+                &dir.home,
+                "claude-code",
+                &added.id
+            )
+            .unwrap_err(),
+            ServiceError::InvalidInput
+        );
+        assert!(!dir.home.join(".claude/settings.json").exists());
+        assert_eq!(
+            credentials::get_for_tool(&dir.config, "claude-code", &added.id)
+                .as_deref(),
+            Some("synthetic-preserved-key")
+        );
     }
 
     #[test]
