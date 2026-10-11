@@ -4,10 +4,10 @@ import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { checkVersion, releaseTag, replaceCargoVersion, replaceLockVersion, setVersion } from './version.mjs'
-import { validateRelease, checkReleaseNotes, requiresAppleNotarization } from './release.mjs'
+import { validateRelease, checkReleaseNotes, extractReleaseNotes, requiresAppleNotarization } from './release.mjs'
 
 const version = '0.1.0-beta.1'
-const policy = { schemaVersion: 1, channel: 'beta', publicReleaseApproved: false, requiredPlatforms: ['macos-arm64', 'macos-x64', 'windows-x64'], pendingChecks: ['signing'] }
+const policy = { schemaVersion: 2, channel: 'beta', requireMacNotarization: true, requiredPlatforms: ['macos-arm64', 'macos-x64', 'windows-x64'] }
 
 test('publication rejects placeholder and missing version release notes', () => {
   assert.throws(() => checkReleaseNotes('## 0.1.0-beta.1 — 准备中，尚未公开发布', version))
@@ -31,24 +31,25 @@ test('unsigned builds and signed candidates do not authorize publication', () =>
   assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode: 'publish-beta', policy }))
   assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode: 'publish-beta', policy: { ...policy, publicReleaseApproved: true } }))
   assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode: 'publish-beta', policy: { ...policy, pendingChecks: [] } }))
-  assert.equal(validateRelease({ version, tag: releaseTag(version), mode: 'publish-beta', policy: { ...policy, publicReleaseApproved: true, pendingChecks: [] } }).channel, 'beta')
+  assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode: 'publish-beta', policy: { ...policy, publicReleaseApproved: true, pendingChecks: [] } }))
 })
 
 test('release policy cannot silently drop a supported platform', () => {
   assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode: 'build-only', policy: { ...policy, requiredPlatforms: ['macos-arm64'] } }))
 })
 
-test('unsigned publication requires exact-version approval and all ordinary safety checks', () => {
-  const approved = { ...policy, publicReleaseApproved: true, pendingChecks: [], pendingSigningChecks: ['notarization'], unsignedBetaApproval: { approved: true, version } }
-  const input = { version, tag: releaseTag(version), mode: 'publish-beta-unsigned', policy: approved }
-  assert.equal(validateRelease(input).requiresAppleNotarization, false)
-  assert.throws(() => validateRelease({ ...input, policy: { ...approved, unsignedBetaApproval: { approved: true, version: '0.1.0-beta.2' } } }))
-  assert.throws(() => validateRelease({ ...input, policy: { ...approved, unsignedBetaApproval: { approved: false, version } } }))
-  assert.throws(() => validateRelease({ ...input, policy: { ...approved, pendingChecks: ['security review'] } }))
-  assert.throws(() => validateRelease({ ...input, policy: { ...approved, publicReleaseApproved: false } }))
-  assert.throws(() => validateRelease({ ...input, mode: 'publish-beta' }))
+test('old publication modes and persistent approvals cannot authorize a new build', () => {
+  for (const mode of ['publish-beta', 'publish-beta-unsigned']) assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode, policy }))
+  for (const change of [{ schemaVersion: 1 }, { publicReleaseApproved: true }, { unsignedBetaApproval: { approved: true, version } }, { requireMacNotarization: false }]) assert.throws(() => validateRelease({ version, tag: releaseTag(version), mode: 'signed-candidate', policy: { ...policy, ...change } }))
   assert.equal(requiresAppleNotarization('signed-candidate'), true)
-  assert.equal(requiresAppleNotarization('publish-beta'), true)
+  assert.equal(requiresAppleNotarization('build-only'), false)
+  assert.equal(requiresAppleNotarization('publish-beta'), false)
+})
+
+test('release notes contain only the reviewed version section', () => {
+  const text = '## 0.1.0-beta.2\nnew\n\n## 0.1.0-beta.1\nold\n\n## 0.0.1-beta.1\nolder\n'
+  assert.equal(extractReleaseNotes(text, version), '## 0.1.0-beta.1\nold\n')
+  assert.throws(() => extractReleaseNotes(text, '0.1.0-beta.3'))
 })
 
 test('version replacements touch only the application, not dependencies', () => {

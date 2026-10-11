@@ -1,17 +1,6 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "channel": "beta",
-  "publicReleaseApproved": true,
-  "unsignedBetaApproval": { "approved": true, "version": "0.1.0-beta.1" },
-  "pendingSigningChecks": [],
   "requiredPlatforms": ["macos-arm64", "macos-x64", "windows-x64"],
-  "completedReviews": [
-    "Parsed URL validation rejects remote HTTP, URL userinfo and malformed addresses; unsafe legacy services are refused before activation",
-    "Catalog associations are reference data, not endpoint or Key identity verification; this boundary is documented in SECURITY.md",
-    "Browser callback copy reports receipt rather than claiming token exchange has completed; application sign-in remains protected by PKCE and callback state",
-    "Apple Developer ID signing and API Key notarization verified by signed candidate run 38067468356; publication re-verifies each new installer",
-    "User confirmed prior three-platform candidate installers were tested and explicitly authorized public Beta release on 2026-10-11; installer-only follow-up is checked in CI",
-    "Locked dependency licensing and release security reviewed; full dependency notices distributed and remaining upstream maintenance advisories recorded in docs/switch/RELEASE-REVIEW-beta.1.md"
-  ],
-  "pendingChecks": []
+  "requireMacNotarization": true
 }

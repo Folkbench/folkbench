@@ -1,6 +1,6 @@
 Folkbench Switch — third-party license texts
 
-Generated for 0.1.0-beta.1 from the locked dependency set.
+Generated for 0.1.0-beta.2 from the locked dependency set.
 
 This inventory includes runtime dependencies and some build-time dependencies.
 

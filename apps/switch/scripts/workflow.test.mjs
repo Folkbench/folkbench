@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
 const workflow = await readFile(new URL('../../../.github/workflows/switch-beta.yml', import.meta.url), 'utf8')
+const promotion = await readFile(new URL('../../../.github/workflows/switch-publish.yml', import.meta.url), 'utf8')
 
 test('candidate workflow uses API Key notarization without Apple login passwords', () => {
   for (const name of ['APPLE_API_KEY', 'APPLE_API_ISSUER', 'APPLE_API_PRIVATE_KEY']) assert.ok(workflow.includes(`secrets.${name}`))
@@ -19,18 +20,26 @@ test('installer uploads use a non-hidden directory and exclude credential materi
   assert.match(workflow, /"\$signing_directory\/AuthKey\.p8"/)
 })
 
-test('all candidates are verified but only explicit public modes can publish', () => {
-  const verify = workflow.slice(workflow.indexOf('\n  verify:'), workflow.indexOf('\n  publish:'))
+test('build workflow freezes reviewed files and cannot publish or run from tags', () => {
+  const verify = workflow.slice(workflow.indexOf('\n  verify:'))
   assert.match(verify, /needs: \[validate, build\]/)
   assert.match(verify, /artifacts\.mjs verify release-artifacts "\$RELEASE_MODE"/)
-  assert.match(verify, /release-artifacts\/SHA256SUMS\.txt/)
-  assert.match(verify, /release-artifacts\/release-manifest\.json/)
-  // Verification metadata must not match the platform-only download pattern.
-  assert.match(verify, /name: release-verification-/)
-  const publish = workflow.slice(workflow.indexOf('\n  publish:'))
-  assert.match(publish, /if: github\.event_name == 'workflow_dispatch' && \(needs\.validate\.outputs\.mode == 'publish-beta' \|\| needs\.validate\.outputs\.mode == 'publish-beta-unsigned'\)/)
-  assert.match(publish, /needs: \[validate, build, verify\]/)
-  const tagCheck = workflow.slice(workflow.indexOf('if [ "$REQUESTED_MODE" ='), workflow.indexOf("printf 'version="))
-  assert.match(tagCheck, /publish-beta-unsigned/)
-  assert.doesNotMatch(tagCheck, /signed-candidate/)
+  assert.match(verify, /name: switch-reviewed-.*github\.run_id.*github\.run_attempt/)
+  assert.match(verify, /path: release-artifacts\//)
+  assert.doesNotMatch(workflow, /\n  publish:|contents: write|publish-beta|\n  push:|tags:/)
+  assert.match(workflow, /default: signed-candidate/)
+})
+
+test('promotion downloads exact artifact IDs and never compiles, signs or executes candidate code', () => {
+  assert.match(promotion, /artifact-ids:.*steps\.reviewed\.outputs\.artifact_id/)
+  assert.match(promotion, /run-id:.*steps\.reviewed\.outputs\.run_id/)
+  assert.match(promotion, /promote\.mjs prepare/)
+  assert.match(promotion, /promote\.mjs verify reviewed-installers/)
+  assert.match(promotion, /promote\.mjs publish reviewed-installers/)
+  assert.doesNotMatch(promotion, /bun install|cargo |tauri |apple-ci|notarytool|codesign|secrets\.|environment:|needs:.*build|workflow_run:/)
+  assert.match(promotion, /ref: \$\{\{ github\.sha \}\}/)
+  assert.match(promotion, /persist-credentials: false/)
+  for (const input of ['run_id', 'run_attempt', 'source_commit', 'manifest_sha256', 'qa_approved']) assert.match(promotion, new RegExp(`      ${input}:`))
+  assert.match(promotion, /default: false/)
+  assert.doesNotMatch(promotion, /run:.*\$\{\{ inputs\./)
 })

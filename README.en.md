@@ -16,7 +16,7 @@ Live AI API Relay Benchmarks · One-Click Local Endpoint Switcher
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
 
-[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch Client](#2-use-endpoints-folkbench-switch-client) · [📦 Downloads](#3-installation--downloads) · [🔥 Popular Models](#popular-models) · [🏢 Recommended Providers](#recommended-providers) · [简体中文](README.md)· [日本語](README.ja.md)
+[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch Client](#2-use-endpoints-folkbench-switch-client) · [📦 Downloads](https://github.com/Folkbench/folkbench/releases) · [🔥 Popular Models](#popular-models) · [🏢 Recommended Providers](#recommended-providers) · [简体中文](README.md)· [日本語](README.ja.md)
 
 </div>
 
@@ -62,7 +62,7 @@ Switch is Folkbench’s open-source companion desktop app (built with Tauri and 
 - 🔄 **One-Click Provider Switching**: Save multiple Base URLs and API Keys, apply configurations to target tools in a single click, and switch or restore at will.
 - 🛡️ **Lossless & State Preservation**: Preview configuration diffs before applying. When switching Codex to a third-party relay, it automatically stashes your official ChatGPT OAuth session securely and restores it seamlessly when reverting.
 - 📈 **Integrated Benchmark Metrics**: View live availability and latency from Folkbench probes directly within the client before switching endpoints.
-- 🔒 **Local Storage & Privacy**: All API Keys and configurations remain strictly on your local disk; zero telemetry or cloud syncing. Fully offline-capable.
+- 🔒 **Local Storage & Privacy**: Model API Keys and tool configuration are stored locally and are not synced to Folkbench servers. Keys are sent to your configured API endpoint when querying models, balances or invoking a service.
 - 📊 **Local Usage Estimator**: Tracks local token consumption by session and estimates costs based on reference pricing.
 
 ### 🧰 Supported Tools
@@ -91,23 +91,23 @@ Switch adapts to the configuration schemes and directory conventions of each too
 
 ## 3. Installation & Downloads
 
-Latest Release: **0.1.0-beta.1**
+**[Download the latest Switch Beta](https://github.com/Folkbench/folkbench/releases)** and choose your platform's installer under **Assets**.
 
 | Platform | Architecture | Package | Status |
 | :--- | :--- | :--- | :--- |
-| **macOS** | Apple Silicon (M-series) | `.dmg` | **Apple-signed and notarized**; runs directly out of the box |
-| **macOS** | Intel (x64) | `.dmg` | **Apple-signed and notarized**; runs directly out of the box |
-| **Windows** | x64 | `.exe` | Installer / Portable (standalone executable) |
+| **macOS** | Apple Silicon (M-series) | `.dmg` with `macos-arm64` in its name | **Apple-signed and notarized**; runs directly out of the box |
+| **macOS** | Intel (x64) | `.dmg` with `macos-x64` in its name | **Apple-signed and notarized**; runs directly out of the box |
+| **Windows** | x64 | `.exe` with `windows-x64` in its name | NSIS installer |
 
-Head over to [GitHub Releases](https://github.com/Folkbench/folkbench/releases) to download the binary for your platform. Every release includes SHA-256 checksums.
+Each release includes its notes, signing status and `SHA256SUMS.txt` checksums. The download entry stays the same across version updates.
 
-*Note: Windows code signing is currently in progress. If SmartScreen displays a warning, click 'More info' and 'Run anyway'.*
+*Note: Windows installers are currently unsigned and may trigger security warnings. Check the release notes and checksums first.*
 
 ---
 
 ## 🔒 Privacy & Security
 
-- **Strictly Local**: Switch stores all settings, endpoints, and API Keys locally on your filesystem (in your user profile directory). The client never uploads credentials to any remote server.
+- **Local Storage**: Model Keys and tool configuration are stored locally, not synced to Folkbench servers. Keys are sent to the user's configured API endpoint when invoking services. Optional account login and public measurements require network access.
 - **Zero Code Collection**: Token usage estimation runs purely local log parsing. Switch never inspects, captures, or transmits your code, prompts, or conversational context.
 - **Safety Reminder**: When opening GitHub Issues or sharing log screenshots, please redact your real API Keys.
 

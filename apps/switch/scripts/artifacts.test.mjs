@@ -11,13 +11,13 @@ test('artifact metadata rejects traversal, mismatched versions and signatures', 
   for (const change of [{ asset: '../private.p12' }, { version: '0.1.0-beta.2' }, { commit: 'c'.repeat(40) }, { sha256: 'invalid' }, { bytes: -1 }, { platform: 'unsupported' }, { appleSignedAndNotarized: true }]) assert.throws(() => validateArtifact({ ...sample, ...change }, context))
 })
 test('public macOS artifacts require a verified notarization claim', () => {
-  const signed = { ...context, mode: 'publish-beta' }
+  const signed = { ...context, mode: 'signed-candidate' }
   const record = { ...sample, mode: signed.mode, asset: 'Folkbench-Switch_0.1.0-beta.1_macos-arm64.dmg' }
   assert.throws(() => validateArtifact(record, signed))
   assert.equal(validateArtifact({ ...record, appleSignedAndNotarized: true }, signed).platform, 'macos-arm64')
 })
-test('explicitly unsigned Beta artifacts retain the unsigned filename and status', () => {
-  const unsigned = { ...context, mode: 'publish-beta-unsigned' }
+test('unsigned diagnostic artifacts retain the unsigned filename and status', () => {
+  const unsigned = { ...context, mode: 'build-only' }
   const record = { ...sample, mode: unsigned.mode }
   assert.equal(validateArtifact(record, unsigned), record)
   assert.throws(() => validateArtifact({ ...record, appleSignedAndNotarized: true }, unsigned))

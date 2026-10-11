@@ -1,7 +1,7 @@
 {
   "name": "folkbench-switch",
   "private": true,
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "description": "Folkbench desktop assistant for API services the user already bought",
   "license": "Apache-2.0",
   "repository": {

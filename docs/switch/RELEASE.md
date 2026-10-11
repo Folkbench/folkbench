@@ -1,75 +1,104 @@
-# Switch Beta 发布流程
+# Switch Beta 构建与发布
 
-首版只提供 Beta，没有 Stable、Nightly 或应用内自动更新。仓库迁移与代码 push 不会更新用户已安装的客户端。
+构建和公开发布是两个独立操作。**只发布已经验收的原安装包，不在发布阶段重新编译、打包或公证。**
 
-## 版本来源
+## 仓库与版本
 
-唯一应用版本来源是 `apps/switch/package.json`。Tauri 直接读取它；统一脚本同步应用 Cargo.toml 和 Cargo.lock，契约 crate 保持自己的版本。
+公开源码位于 `apps/switch/`，与根目录博客独立构建。客户端开发源码整理为公开快照后，再在本仓库进行安装包构建；不要将其他仓库的内部指令、配置、用户数据或提交历史复制进来。
 
-```sh
-bun run switch:version -- 0.1.0-beta.2
-bun run check
+应用版本以 `apps/switch/package.json` 为准，统一版本脚本同步应用 Cargo 配置，契约 crate 独立。版本只采用 `x.y.z-beta.N`，公开 tag 为 `switch-vx.y.z-beta.N`。提交源码或推送 tag 都不自动打包、公开发布或更新已安装客户端。
+
+已公开的版本不能移动 tag 或替换安装包。Beta.1 保持原样，未来改动使用新的 Beta 版本。本仓暂不提供 Stable、Nightly 或应用内自动更新。
+
+## 1. 普通 CI
+
+`switch-ci.yml` 对相关源码变化运行前端、版本、国际化及三平台 Rust 检查；`blog-ci.yml` 检查博客。`commit-ci.yml` 检查新提交或 PR 标题，已有历史不重写。
+
+普通 CI 不读取签名凭据、不创建安装包 Release。提交消息使用 `type(scope): 摘要`，公开 scope 为 `switch`、`blog`、`repo`、`release` 或 `deps`。已有 pre-commit/pre-push 质量检查继续保留；启用方式仍是 `git config core.hooksPath .githooks`。
+
+## 2. 构建待验收安装包
+
+GitHub Actions 入口：**Switch build installers**，文件 `switch-beta.yml`。仅手动从公开仓 `main` 调用，不接受 fork、PR 或 tag 触发。
+
+输入：
+
+- `source_commit`：完整公开源码 SHA，必须位于 `main` 历史；留空使用触发构建时的 SHA。
+- `mode`：默认 `signed-candidate`，Mac 签名并公证；`build-only` 只生成未公证诊断包，不能公开发布。
+- `platforms`：默认 `all`，构建 macOS ARM64、macOS x64 和 Windows x64；单平台仅用于排查。
+
+流程：
+
+```text
+校验源码与版本
+    → 并行执行检查、原生测试、打包
+    → Mac 签名、公证、附加票据并验证
+    → 核对各平台安装文件
+    → 冻结安装包、当版发布说明、清单和校验和
 ```
 
-应用版本是 `0.1.0-beta.N`；Git tag 是 `switch-v0.1.0-beta.N`。每个公开包对应一个不可覆盖的版本与源码提交。不要重新移动已公开的 tag 或替换已发布安装包。
+源码中的当版 CHANGELOG 应在正式验收构建前准备完成。缺少或仍标为“准备中”的说明不阻止诊断构建，但对应产物不能发布；补好说明后需重新构建并验收。
 
-## 执行模式与唯一 Beta 通道
-
-| 模式 | 凭据 | 结果 |
-| --- | --- | --- |
-| `build-only` | 不读取 Apple 凭据 | 未公证的开发验证产物，仅保存在 CI Artifacts 14 天 |
-| `signed-candidate` | Apple 证书、公证凭据 | 签名和公证候选，仍只保存在 CI Artifacts |
-| `publish-beta` | 证书、完成的平台 QA、明确发布批准 | 所有产物验证后创建并公开一个 prerelease；不会标为 Latest |
-| `publish-beta-unsigned` | 具体版本的未公证发布批准、完成安全检查与平台 QA | 公开未公证 Beta；Mac 文件名带 `_unsigned`，签名状态和摘要如实记录 |
-
-这些是执行方式，不是四种应用版本。推 Beta tag 默认只执行 `build-only`。公开发布只能显式执行 workflow_dispatch 的发布模式，不能因 push main 或推 tag 而自动发生。`signed-candidate` 可直接从 main 运行，无需提前创建公开 tag；版本、逻辑 tag 与实际源码 commit 仍写入候选元数据。
-
-当前已明确批准首版 `0.1.0-beta.1` 可以先作为未公证 Beta 发布，批准记录为 `unsignedBetaApproval`。它不能替代安全检查、平台 QA、资源许可审查或 `publicReleaseApproved`，也不能用于其他版本。Apple 公证待办单独记录在 `pendingSigningChecks`；签名版发布仍要求它清空。公证完成后发布新 Beta，不覆盖旧版安装包或移动旧 tag。
-
-## 首版平台
-
-构建矩阵：macOS Apple Silicon、macOS Intel、Windows x64。Linux 仅做编译与 Rust 检查，首版没有 Linux 安装包。只有实际完成 QA 后才能宣称某个平台已支持。
-
-Windows 首版暂未配置 Authenticode，产物元数据明确记录这一点；必须验证 SmartScreen 与安装/卸载体验并如实说明。签名版 macOS 包必须通过 Developer ID 签名、公证与凭据附加。经具体版本批准的未公证 Beta 使用 ad-hoc 签名，不能冒充 Developer ID 签名或已公证，Release 和 README 必须明确提示。
-
-## GitHub 设置（维护者手动完成）
-
-在 `Folkbench/folkbench` 的 `switch-beta` Environment 配置 required reviewers、禁止 self-review，并限制获准的 main/tag 来源。候选从 main 触发，以匹配环境来源限制。配置以下 7 个 Environment Secrets，切勿发到聊天、提交仓库或放进普通 CI artifact：
-
-- `APPLE_CERTIFICATE`：包含私钥的 .p12 的 Base64
-- `APPLE_CERTIFICATE_PASSWORD`：.p12 导出密码
-- `APPLE_SIGNING_IDENTITY`：完整 Developer ID Application 身份
-- `APPLE_TEAM_ID`：开发者团队 ID
-- `APPLE_API_KEY`：App Store Connect 团队 API Key 的 Key ID，不是私钥
-- `APPLE_API_ISSUER`：对应 API Key 的 Issuer UUID，不是 Team ID
-- `APPLE_API_PRIVATE_KEY`：下载的 .p8 原始完整 PEM 文本，保留首尾标记和换行，不是 Base64
-
-本流水线只用 API Key 公证，不读取 Apple 登录账号或密码。Secret 名称存在不代表值有效。Mac 候选会在编译前校验格式、导入证书、核对 Developer ID 签名身份与 Team ID，并用 notarytool history 验证 API Key 访问权限；最终仍以实际签名、公证结果为准。
-
-证书及 .p8 只写入 Runner 的唯一临时目录，目录权限 0700、文件权限 0600；临时 Keychain 和文件在成功或失败后清理。私钥文本不传入 Tauri 构建子进程、不上传 Artifact。Tauri 仅获得签名身份、Key ID、Issuer 和临时 .p8 路径。应用公证完成后，另对最终 DMG 提交公证并附加票据；codesign、Team ID、hardened runtime、应用 stapler、Gatekeeper 与 DMG stapler 检查均通过后才收集 Mac 候选。
-
-`switch-build` 是无签名凭据的测试环境，不放证书或发布 secrets。普通 PR 和 CI 检查不读取发布 secrets。Windows 构建会移除所有 Apple 凭据；未公证 Mac 构建会移除公证变量，而不是设置空值，避免意外触发公证。
-
-### 构建 API Key 公证候选（不公开发布）
-
-在最新 main 上运行：
+构建例子（不是发布命令）：
 
 ```sh
-gh workflow run switch-beta.yml --repo Folkbench/folkbench --ref main -f mode=signed-candidate
+gh workflow run switch-beta.yml --repo Folkbench/folkbench --ref main -f mode=signed-candidate -f platforms=all
 ```
 
-不传 tag，不修改公开发布批准，不创建 Release。三平台安装包上传后，独立 verify job 核对完整平台集合、版本、源码 commit、SHA256 和真实签名状态。安装包分平台保存；`release-verification-<commit>` Artifact 提供 `SHA256SUMS.txt` 和 `release-manifest.json`，均保留 14 天。产物目录为非隐藏的 `release-artifacts/`，只上传 DMG、EXE 和公开 JSON 元数据，绝不上传 Runner 临时目录。
+构建完成后的 Summary 会显示源码 SHA、构建编号、尝试编号及清单 SHA256。下载本次运行的 `switch-reviewed-<run_id>-<run_attempt>` Artifact，ZIP 解压后得到 DMG、EXE、平台元数据、`SHA256SUMS.txt`、`release-manifest.json` 和 `RELEASE-NOTES.md`。产物保留 30 天，受仓库保留策略上限约束。
 
-## 公开发布前
+运行重试会改变尝试编号。要得到新的一套完整产物，需要重跑完整构建；不能把不同尝试的几个平台拼成一个已验收版本。
 
-1. 修复 `apps/switch/release-policy.json` 中已确认的阻断项；完成安全、依赖和资源许可审查。
-2. 在每个公布的平台实测：安装、版本显示、单实例、登录/取消登录、一键导入、服务切换、失败恢复、升级后配置保留和卸载。
-3. 补充当版 CHANGELOG，去掉该版本标题的“准备中 / 尚未公开”占位，同步 README 的安装与发布状态；依据完成的验证清空 `pendingChecks`，获得公开发布确认后才将 `publicReleaseApproved` 改为 true。这是实际批准记录，不是为了让检查变绿而删掉待办。
-4. 按仓库确认规则提交、push、创建匹配版本的公开发布 tag。签名候选和公开发布的源码都必须位于 main 历史上；只有公开发布强制要求已创建的匹配 tag。
-5. 未公证 Beta 先构建并验证候选，确认具体版本批准仍有效后运行 `publish-beta-unsigned`；签名版先运行 `signed-candidate` 并验证，再运行 `publish-beta`。发布环境与模式保持独立。
+## 3. 人工验收
 
-工作流在 tag 处自行执行检查，不假定 main CI 已先完成。只在全部三个平台成功、版本与源码 SHA 一致、安装包 SHA256 一致、签名状态符合所选模式时发布。产生 Draft 后上传/公开失败时保留 Draft 排查，禁止覆盖已公开版本。
+测试这次下载的实际安装包，而不是本地开发程序。对每个平台检查：
 
-公开包附带 `SHA256SUMS.txt` 和 `release-manifest.json`，记录版本、commit、平台、摘要及签名状态。安装包中保留源代码 LICENSE、NOTICE 和第三方资源声明。下载入口置于中英文 README 首屏，使用实际上传的 asset 链接；GitHub `/releases/latest` 不包含 prerelease。上传前不能把不存在的 asset 写成可用下载。
+- 安装、启动、版本显示及单实例。
+- 登录、取消登录和回到应用。
+- 服务导入、工具配置切换。
+- 失败恢复、升级后的配置保留、卸载体验。
 
-自动更新后续需单独设计，包括更新签名、密钥保管、渠道选择和降级策略；Apple 签名不能替代更新签名。
+同时检查当版变更的安全和许可影响。CI 成功不能替代人工验收。Windows 当前没有 Authenticode 签名，需要如实说明并检查其安装提示；Linux 目前只有原生检查，不提供安装包。
+
+保存与这批包对应的构建编号、尝试编号、源码 SHA 和清单 SHA256。源码或文件发生变化，不能沿用旧验收。
+
+## 4. 发布原文件
+
+GitHub Actions 入口：**Switch publish reviewed installers**，文件 `switch-publish.yml`。由有权限的维护者在 `main` 手动运行。
+
+输入验收过的：
+
+1. `run_id`：构建编号。
+2. `run_attempt`：确切尝试编号。
+3. `source_commit`：这批包的源码 SHA，不是现在最新的 main。
+4. `manifest_sha256`：验收清单的 SHA256。
+5. `qa_approved`：确认这批三平台安装包完成验收，默认不勾选。
+
+发布流程会重新读取 GitHub 构建状态，核对仓库、工作流、分支、尝试和不可变 Artifact ID，再验证清单、平台集合、每个文件摘要与真实记录的签名状态。失败、过期、缺失、单平台、未公证、旧格式或摘要变化的包都会被拒绝。
+
+发布工作流**不安装构建依赖、不运行 Cargo/Tauri、不读取 Apple 凭据，也不重新生成清单或安装包**。它执行受信 main 上的发布脚本，不执行下载产物或候选源码中的程序。
+
+验证通过后创建匹配 tag 与 Draft，上传这些原文件，核对服务器端文件大小和 SHA256 后再公开为 Beta prerelease，不标为 Latest。首次发布无需提前推 tag。
+
+`release-policy.json` 仅保存通道、平台与签名要求，不保存长期有效的“已批准”布尔值。本次显式发布确认绑定到指定的构建、源码和清单；不复用旧版本批准，也不设置重复的 Environment reviewer 审批。
+
+当前只允许三平台完整且 Mac 已签名公证的构建公开发布。未公证包保留为诊断产物，不自动降级发布；若未来需要未公证公开分发，应另行设计具体版本的授权。
+
+## 5. 失败重试与下载入口
+
+- 上传中断时保留 Draft；用同一组验收输入再次运行发布。
+- 只跳过大小和摘要完全一致的已有文件，不使用 clobber，也不删除或覆盖不同文件。
+- 已存在其他构建的 Draft、已公开 Release、不同源码 tag 或被改动的 Draft 说明都会停止发布，交给维护者处理。
+- 产物过期或丢失时，重新构建并验收，不能发布时临时重建。
+- README 下载入口固定指向 `https://github.com/Folkbench/folkbench/releases`；用户在目标版本的 Assets 选择安装包。Beta prerelease 不使用 `/releases/latest`，常规版本更新无需修改 README 的下载链接。
+- 公开成功后确认 Release 中实际 DMG/EXE 文件、签名说明和校验和。Artifact ZIP 不是公开安装包入口。
+- 本次 CI 流程改造不会替换既有 Release 或自动发新版。
+
+## 6. 凭据、权限和缓存
+
+签名构建仍在 `switch-beta` Environment 使用以下七个 Secret：`APPLE_CERTIFICATE`、`APPLE_CERTIFICATE_PASSWORD`、`APPLE_SIGNING_IDENTITY`、`APPLE_TEAM_ID`、`APPLE_API_KEY`、`APPLE_API_ISSUER`、`APPLE_API_PRIVATE_KEY`。证书为含私钥 p12 的 Base64，API 私钥为原始完整 p8 PEM；Key ID、Issuer ID、Team ID 不能混用。不能将值发到聊天、源码或日志。
+
+证书和 p8 只写到隔离 Runner 的私有临时目录和临时 Keychain，成功或失败后清理。构建环境只传入必要路径和身份，Windows 不获取 Apple 凭据。Mac 验证 Developer ID、Team ID、hardened runtime、应用和 DMG 的公证票据与 Gatekeeper。
+
+发布工作流仅使用 GitHub workflow token 的 Actions 读取与 Contents 写入权限，不接入签名 Environment。维护者提交与发布授权规则仍有效；workflow_dispatch 不等于 Agent 可以自行发布。
+
+缓存只保存依赖和编译缓存，按检查/发布、平台、架构和锁文件隔离；不缓存私钥、Keychain 或用户数据。源码检测不是完整安全审计，人工验收也不能被脚本伪造为已完成。

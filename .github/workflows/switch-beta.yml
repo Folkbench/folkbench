@@ -1,27 +1,31 @@
-name: Switch Beta candidate and release
+name: Switch build installers
 on:
-  push:
-    tags: ['switch-v*-beta.*']
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Matching tag required for publication; candidates may use main without a tag'
+      source_commit:
+        description: 'Full public main commit SHA; empty uses the dispatch commit'
         type: string
         required: false
       mode:
-        description: 'Candidates do not publish; publication requires completed policy and platform QA'
+        description: 'Build only. Default signs and notarizes macOS; never publishes.'
         type: choice
-        options: [build-only, signed-candidate, publish-beta, publish-beta-unsigned]
-        default: build-only
+        options: [signed-candidate, build-only]
+        default: signed-candidate
+        required: true
+      platforms:
+        description: 'Single-platform builds are for diagnostics, not publication'
+        type: choice
+        options: [all, macos-arm64, macos-x64, windows-x64]
+        default: all
         required: true
 permissions:
   contents: read
 concurrency:
-  group: switch-beta-${{ github.event_name }}-${{ inputs.tag || github.ref_name }}-${{ inputs.mode || 'build-only' }}
+  group: switch-build-${{ github.run_id }}
   cancel-in-progress: false
 jobs:
   validate:
-    if: github.repository == 'Folkbench/folkbench'
+    if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
     outputs:
       version: ${{ steps.release.outputs.version }}
@@ -29,34 +33,25 @@ jobs:
       mode: ${{ steps.release.outputs.mode }}
       commit: ${{ steps.release.outputs.commit }}
       notarize: ${{ steps.release.outputs.notarize }}
+      matrix: ${{ steps.release.outputs.matrix }}
+      selected_platforms: ${{ steps.release.outputs.selected_platforms }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.3.14
-      - name: Validate Beta identity and release approval
+      - name: Validate immutable source and build-only identity
         id: release
         shell: bash
         env:
-          REQUESTED_TAG: ${{ github.ref_type == 'tag' && github.ref_name || inputs.tag }}
-          REQUESTED_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'build-only' }}
-        run: |
-          set -euo pipefail
-          node apps/switch/scripts/release.mjs "$REQUESTED_TAG" "$REQUESTED_MODE" > "$RUNNER_TEMP/switch-release.json"
-          version=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').version")
-          tag=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').tag")
-          notarize=$(node -p "require(process.env.RUNNER_TEMP + '/switch-release.json').requiresAppleNotarization")
-          if [ "$REQUESTED_MODE" != 'build-only' ]; then
-            git merge-base --is-ancestor HEAD origin/main
-          fi
-          if [ "$REQUESTED_MODE" = 'publish-beta' ] || [ "$REQUESTED_MODE" = 'publish-beta-unsigned' ]; then
-            test -n "$REQUESTED_TAG"
-            test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$tag^{commit}")"
-          fi
-          printf 'version=%s\ntag=%s\nmode=%s\ncommit=%s\nnotarize=%s\n' "$version" "$tag" "$REQUESTED_MODE" "$(git rev-parse HEAD)" "$notarize" >> "$GITHUB_OUTPUT"
+          REQUESTED_SOURCE: ${{ inputs.source_commit }}
+          REQUESTED_MODE: ${{ inputs.mode }}
+          REQUESTED_PLATFORMS: ${{ inputs.platforms }}
+        run: node apps/switch/scripts/build-context.mjs
       - run: node --test apps/switch/scripts/*.test.mjs
       - run: node scripts/check-source-hygiene.mjs
   build:
@@ -64,20 +59,7 @@ jobs:
     environment: ${{ needs.validate.outputs.mode == 'build-only' && 'switch-build' || 'switch-beta' }}
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - os: macos-15
-            platform: macos-arm64
-            target: aarch64-apple-darwin
-            bundle: dmg
-          - os: macos-15
-            platform: macos-x64
-            target: x86_64-apple-darwin
-            bundle: dmg
-          - os: windows-2022
-            platform: windows-x64
-            target: x86_64-pc-windows-msvc
-            bundle: nsis
+      matrix: ${{ fromJSON(needs.validate.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
     env:
@@ -86,6 +68,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ needs.validate.outputs.commit }}
+          persist-credentials: false
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.3.14
@@ -94,6 +77,16 @@ jobs:
           toolchain: 1.98.1
           targets: ${{ matrix.target }}
           components: rustfmt
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.bun/install/cache
+          key: switch-release-bun-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('apps/switch/bun.lock') }}
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
+        with:
+          workspaces: apps/switch/src-tauri -> target
+          prefix-key: switch-release-${{ matrix.platform }}
+          cache-workspace-crates: false
+          cache-on-failure: false
       - name: Prepare temporary certificate and App Store Connect API private key
         id: apple_files
         if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
@@ -187,13 +180,13 @@ jobs:
         run: node apps/switch/scripts/artifacts.mjs collect "$PLATFORM" "$MODE" release-artifacts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: switch-${{ matrix.platform }}-${{ needs.validate.outputs.commit }}
+          name: switch-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             release-artifacts/*.dmg
             release-artifacts/*.exe
             release-artifacts/*.json
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
       - name: Remove temporary Apple credential material
         if: always() && runner.os == 'macOS'
         shell: bash
@@ -210,58 +203,22 @@ jobs:
     env:
       FOLKBENCH_BUILD_COMMIT: ${{ needs.validate.outputs.commit }}
       RELEASE_MODE: ${{ needs.validate.outputs.mode }}
+      BUILD_PLATFORMS: ${{ needs.validate.outputs.selected_platforms }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ needs.validate.outputs.commit }}
+          persist-credentials: false
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          pattern: switch-*-${{ needs.validate.outputs.commit }}
+          pattern: switch-*-${{ github.run_id }}-${{ github.run_attempt }}
           path: release-artifacts
           merge-multiple: true
-      - name: Verify all candidate installers and generate public checksums
+      - name: Verify original installers and freeze their reviewed manifest
         run: node apps/switch/scripts/artifacts.mjs verify release-artifacts "$RELEASE_MODE"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: release-verification-${{ needs.validate.outputs.commit }}
-          path: |
-            release-artifacts/SHA256SUMS.txt
-            release-artifacts/release-manifest.json
+          name: switch-reviewed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: release-artifacts/
           if-no-files-found: error
-          retention-days: 14
-  publish:
-    if: github.event_name == 'workflow_dispatch' && (needs.validate.outputs.mode == 'publish-beta' || needs.validate.outputs.mode == 'publish-beta-unsigned')
-    needs: [validate, build, verify]
-    environment: switch-beta
-    permissions:
-      contents: write
-    runs-on: ubuntu-22.04
-    env:
-      FOLKBENCH_BUILD_COMMIT: ${{ needs.validate.outputs.commit }}
-      RELEASE_MODE: ${{ needs.validate.outputs.mode }}
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          ref: ${{ needs.validate.outputs.commit }}
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
-        with:
-          pattern: switch-*-${{ needs.validate.outputs.commit }}
-          path: release-artifacts
-          merge-multiple: true
-      - name: Verify complete platform set, source version and installer hashes
-        run: node apps/switch/scripts/artifacts.mjs verify release-artifacts "$RELEASE_MODE"
-      - name: Publish an approved Beta, never Latest or Stable
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ needs.validate.outputs.tag }}
-          SOURCE_COMMIT: ${{ needs.validate.outputs.commit }}
-          VERSION: ${{ needs.validate.outputs.version }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            echo 'This version already has a Release. Do not overwrite it; create a new Beta version.'
-            exit 1
-          fi
-          gh release create "$RELEASE_TAG" release-artifacts/* --draft --prerelease --target "$SOURCE_COMMIT" --title "Folkbench Switch $VERSION" --notes-file docs/switch/CHANGELOG.md
-          gh release edit "$RELEASE_TAG" --draft=false --prerelease --latest=false
+          retention-days: 30
