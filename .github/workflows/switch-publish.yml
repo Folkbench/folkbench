@@ -65,5 +65,5 @@ jobs:
           path: reviewed-installers
       - name: Verify the reviewed files without modifying them
         run: node apps/switch/scripts/promote.mjs verify reviewed-installers
-      - name: Upload original files and publish Beta; never rebuild or overwrite
+      - name: Upload three original installers and SHA256 checksums; use reviewed notes as release body
         run: node apps/switch/scripts/promote.mjs publish reviewed-installers

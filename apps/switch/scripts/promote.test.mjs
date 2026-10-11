@@ -79,7 +79,26 @@ test('valid promotion verifies original installer bytes without rewriting any fi
   const before = await readFile(join(directory, 'release-manifest.json'))
   const reviewed = await verifyReviewedDirectory(directory, approval, policy)
   assert.equal(reviewed.manifest.assets.length, 3)
+  assert.equal(reviewed.files.length, 9)
+  assert.deepEqual(reviewed.releaseFiles.map(file => file.name).sort(), [
+    ...reviewed.manifest.assets.map(record => record.asset), 'SHA256SUMS.txt',
+  ].sort())
+  assert.equal(reviewed.notes, await readFile(join(directory, 'RELEASE-NOTES.md'), 'utf8'))
   assert.deepEqual(await readFile(join(directory, 'release-manifest.json')), before)
+})
+
+test('CI-only metadata and notes remain mandatory and tampering stops publication before remote writes', async t => {
+  for (const name of ['release-manifest.json', 'macos-arm64.json', 'macos-x64.json', 'windows-x64.json', 'RELEASE-NOTES.md']) {
+    const { directory, approval } = await fixture(t)
+    await writeFile(join(directory, name), 'tampered')
+    const calls = []
+    await assert.rejects(publishReviewed(directory, approval, policy, {
+      prepare: async () => approval,
+      api: async path => { calls.push(path); throw new Error('must not reach GitHub') },
+      upload: async () => { throw new Error('must not upload') },
+    }))
+    assert.deepEqual(calls, [])
+  }
 })
 
 test('manifest, installer, notes and checksum tampering are independently rejected', async t => {
@@ -140,10 +159,14 @@ test('simulated publication uploads exact reviewed bytes, resumes a draft and ne
     throw new Error(path)
   }
   let failed = false
+  let tamperMetadata = false
+  const metadataPath = join(directory, 'macos-arm64.json')
+  const metadata = await readFile(metadataPath)
   const upload = async (_id, file, bytes) => {
     assert.equal(sha256(bytes), file.sha256)
     assert.deepEqual(bytes, await readFile(join(directory, file.name)))
     if (remoteAssets.length === 2 && !failed) { failed = true; throw new Error('synthetic upload interruption') }
+    if (tamperMetadata && remoteAssets.length === 3) await writeFile(metadataPath, Buffer.concat([metadata, Buffer.from(' ')]))
     const item = { name: file.name, size: bytes.length, state: 'uploaded', digest: `sha256:${sha256(bytes)}` }
     remoteAssets.push(item)
     return item
@@ -152,10 +175,24 @@ test('simulated publication uploads exact reviewed bytes, resumes a draft and ne
   await assert.rejects(publishReviewed(directory, approval, policy, dependencies), /interruption/)
   assert.equal(draft.draft, true)
   assert.equal(remoteAssets.length, 2)
+  // Internal files are no longer uploaded, so still detect changes before publishing.
+  tamperMetadata = true
+  await assert.rejects(publishReviewed(directory, approval, policy, dependencies), /bundle changed/)
+  assert.equal(draft.draft, true)
+  tamperMetadata = false
+  await writeFile(metadataPath, metadata)
   await publishReviewed(directory, approval, policy, dependencies)
   assert.equal(draft.draft, false)
-  assert.equal(remoteAssets.length, 9)
-  assert.equal(new Set(remoteAssets.map(item => item.name)).size, 9)
+  assert.equal(remoteAssets.length, 4)
+  assert.deepEqual(remoteAssets.map(item => item.name).sort(), [
+    `Folkbench-Switch_${version}_macos-arm64.dmg`,
+    `Folkbench-Switch_${version}_macos-x64.dmg`,
+    `Folkbench-Switch_${version}_windows-x64.exe`,
+    'SHA256SUMS.txt',
+  ].sort())
+  assert.equal(new Set(remoteAssets.map(item => item.name)).size, 4)
+  assert.ok(draft.body.startsWith(await readFile(join(directory, 'RELEASE-NOTES.md'), 'utf8')))
+  assert.doesNotMatch(draft.body, /release-manifest\.json|macos-arm64\.json|RELEASE-NOTES\.md/)
   assert.equal(calls.filter(([path, method]) => path === 'git/refs' && method === 'POST').length, 1)
   assert.equal(calls.filter(([path, method]) => path === 'releases' && method === 'POST').length, 1)
   assert.equal(draft.make_latest, 'false')

@@ -12,9 +12,9 @@
 
 ## 1. 普通 CI
 
-`switch-ci.yml` 对相关源码变化运行前端、版本、国际化及三平台 Rust 检查；`blog-ci.yml` 检查博客。`commit-ci.yml` 检查新提交或 PR 标题，已有历史不重写。
+`switch-ci.yml` 对相关源码变化运行前端、版本、国际化及三平台 Rust 检查；`blog-ci.yml` 检查博客。不设置提交文案规范 CI，不改写已有历史。
 
-普通 CI 不读取签名凭据、不创建安装包 Release。提交消息使用 `type(scope): 摘要`，公开 scope 为 `switch`、`blog`、`repo`、`release` 或 `deps`。已有 pre-commit/pre-push 质量检查继续保留；启用方式仍是 `git config core.hooksPath .githooks`。
+普通 CI 不读取签名凭据、不创建安装包 Release。提交文案不限制格式，已有 pre-commit/pre-push 质量检查继续保留；启用方式仍是 `git config core.hooksPath .githooks`。
 
 ## 2. 构建待验收安装包
 
@@ -77,7 +77,9 @@ GitHub Actions 入口：**Switch publish reviewed installers**，文件 `switch-
 
 发布工作流**不安装构建依赖、不运行 Cargo/Tauri、不读取 Apple 凭据，也不重新生成清单或安装包**。它执行受信 main 上的发布脚本，不执行下载产物或候选源码中的程序。
 
-验证通过后创建匹配 tag 与 Draft，上传这些原文件，核对服务器端文件大小和 SHA256 后再公开为 Beta prerelease，不标为 Latest。首次发布无需提前推 tag。
+验证通过后创建匹配 tag 与 Draft，只上传三个原安装包和原 `SHA256SUMS.txt`（共四个附件），核对服务器端文件大小和 SHA256 后再公开为 Beta prerelease，不标为 Latest。首次发布无需提前推 tag。
+
+平台 JSON、`release-manifest.json` 与 `RELEASE-NOTES.md` 继续保存在验收过的 CI Artifact 中，发布时仍完整校验，但不上传为 Release 附件。更新说明使用该原始 `RELEASE-NOTES.md` 内容写入 Release 正文，并保留签名状态说明与构建来源标记。发布期间会再次核对完整验收产物，不能因精简附件而跳过元数据校验或重新生成文件。GitHub 自动显示的 Source code ZIP / tar.gz 是平台生成的源码入口，不是流水线上传的安装包。
 
 `release-policy.json` 仅保存通道、平台与签名要求，不保存长期有效的“已批准”布尔值。本次显式发布确认绑定到指定的构建、源码和清单；不复用旧版本批准，也不设置重复的 Environment reviewer 审批。
 
@@ -88,6 +90,7 @@ GitHub Actions 入口：**Switch publish reviewed installers**，文件 `switch-
 - 上传中断时保留 Draft；用同一组验收输入再次运行发布。
 - 只跳过大小和摘要完全一致的已有文件，不使用 clobber，也不删除或覆盖不同文件。
 - 已存在其他构建的 Draft、已公开 Release、不同源码 tag 或被改动的 Draft 说明都会停止发布，交给维护者处理。
+- 旧 Draft 若包含 JSON 或更新说明附件，本流程不会自动删除；不改动已公开版本，也不为适配新附件布局覆盖历史资产。
 - 产物过期或丢失时，重新构建并验收，不能发布时临时重建。
 - README 下载入口固定指向 `https://github.com/Folkbench/folkbench/releases`；用户在目标版本的 Assets 选择安装包。Beta prerelease 不使用 `/releases/latest`，常规版本更新无需修改 README 的下载链接。
 - 公开成功后确认 Release 中实际 DMG/EXE 文件、签名说明和校验和。Artifact ZIP 不是公开安装包入口。

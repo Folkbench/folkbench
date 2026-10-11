@@ -105,7 +105,10 @@ export async function verifyReviewedDirectory(directory, approval, policy) {
     const bytes = await regularFile(resolve(directory, name))
     files.push({ name, bytes: bytes.length, sha256: sha256(bytes) })
   }
-  return { manifest, files, notes: notes.toString('utf8') }
+  // Keep the full CI bundle verified, but expose only installers and checksums on Releases.
+  const releaseNames = new Set([...records.map(record => record.asset), 'SHA256SUMS.txt'])
+  const releaseFiles = files.filter(file => releaseNames.has(file.name))
+  return { manifest, files, releaseFiles, notes: notes.toString('utf8') }
 }
 
 export function buildMarker(approval) {
@@ -178,15 +181,18 @@ export async function publishReviewed(directory, approval, policy, { api = githu
   }
   const tag = await api(`git/ref/tags/${approval.tag}`)
   if (await tagSource(tag, api) !== approval.commit) throw new Error('Release tag source differs from the reviewed source.')
-  const existing = checkUploadedAssets(await listReleaseAssets(release.id, api), reviewed.files)
-  for (const file of reviewed.files) {
+  const existing = checkUploadedAssets(await listReleaseAssets(release.id, api), reviewed.releaseFiles)
+  for (const file of reviewed.releaseFiles) {
     if (existing.has(file.name)) continue
     const bytes = await regularFile(resolve(directory, file.name))
     if (bytes.length !== file.bytes || sha256(bytes) !== file.sha256) throw new Error('Installer changed before upload; publication stopped.')
     const uploaded = await upload(release.id, file, bytes)
     checkUploadedAssets([uploaded], [file], { complete: true })
   }
-  checkUploadedAssets(await listReleaseAssets(release.id, api), reviewed.files, { complete: true })
+  checkUploadedAssets(await listReleaseAssets(release.id, api), reviewed.releaseFiles, { complete: true })
+  // Metadata and release notes remain in CI; they must not change while public files upload.
+  const finalReviewed = await verifyReviewedDirectory(directory, approval, policy)
+  if (!isDeepStrictEqual(finalReviewed, reviewed)) throw new Error('Reviewed artifact bundle changed during upload; draft retained.')
   // Re-check source run, tag and draft immediately before the only public mutation.
   if (!isDeepStrictEqual(await prepare(approval, { api }), approval)) throw new Error('Build provenance changed during upload; draft retained.')
   validateDraft(await api(`releases/${release.id}`), approval, body)
@@ -211,7 +217,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       for (const key of Object.keys(approval)) if (approval[key] !== prepared[key]) throw new Error('Approval differs from preparation.')
       if (process.argv[2] === 'verify') {
         const result = await verifyReviewedDirectory(resolve(process.argv[3]), prepared, policy)
-        console.log(`Verified ${result.manifest.assets.length} original installers; no files were regenerated.`)
+        console.log(`Verified ${result.manifest.assets.length} original installers; ${result.releaseFiles.length} public attachments; metadata stays in CI; no files were regenerated.`)
       } else console.log(await publishReviewed(resolve(process.argv[3]), prepared, policy))
     } else throw new Error('Usage: promote.mjs prepare | verify DIRECTORY | publish DIRECTORY')
   } catch (error) { console.error(error.message); process.exitCode = 1 }
