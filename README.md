@@ -23,13 +23,13 @@
 
 | 系统 | 安装包 |
 | --- | --- |
-| macOS · Apple Silicon（M 系列） | DMG，准备上传 |
-| macOS · Intel | DMG，准备上传 |
-| Windows · x64 | EXE，准备上传 |
+| macOS · Apple Silicon（M 系列） | [**下载 DMG**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_macos-arm64.dmg) |
+| macOS · Intel | [**下载 DMG**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_macos-x64.dmg) |
+| Windows · x64 | [**下载 EXE**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_windows-x64.exe) |
 
-[**查看 Beta 安装包与版本**](https://github.com/Folkbench/folkbench/releases)
+[版本说明](https://github.com/Folkbench/folkbench/releases/tag/switch-v0.1.0-beta.1) · [SHA256 校验文件](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/SHA256SUMS.txt)
 
-本版将先提供未公证的 macOS Beta 和未数字签名的 Windows Beta；macOS 公证正在进行。安装包上传后提供各平台直达下载链接及 SHA256 校验文件。
+macOS 安装包已通过 Developer ID 签名与 Apple 公证；打开 DMG 后，将 Folkbench Switch 拖入 Applications。Windows 安装包尚未数字签名，系统可能显示安全提示。此版本为 Beta，尚非 Stable。
 
 ---
 
