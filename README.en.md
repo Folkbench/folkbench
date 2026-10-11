@@ -11,7 +11,7 @@
 
 Live AI API Relay Benchmarks · One-Click Local Endpoint Switcher
 
-[![Version](https://img.shields.io/badge/version-0.1.0--beta.1-blue.svg)](https://github.com/Folkbench/folkbench/releases)
+[![Release](https://img.shields.io/badge/release-Beta-blue.svg)](https://github.com/Folkbench/folkbench/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
@@ -91,8 +91,6 @@ Switch adapts to the configuration schemes and directory conventions of each too
 ---
 
 ## 3. Installation & Downloads
-
-Latest Release: **0.1.0-beta.1**
 
 | Platform | Architecture | Package | Status |
 | :--- | :--- | :--- | :--- |
