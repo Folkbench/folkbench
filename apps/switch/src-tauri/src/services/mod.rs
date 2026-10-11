@@ -19,6 +19,7 @@ pub use account::{
     begin_authorization, cancel_authorization, complete_authorization,
     session_state, sign_out, unavailable_state,
 };
+pub use archive::allowed_base_url as allowed_service_base_url;
 pub use balance::query as query_service_balance;
 pub use bootstrap::bootstrap_state;
 pub use catalog::{list_published_stations, resolve_published_station_website};
@@ -26,8 +27,8 @@ pub use catalog_asset::resolve_catalog_asset;
 pub use session_usage::list as list_session_usage;
 
 use crate::domain::{
-    MyService, PreferenceError, Preferences, PreferredLanguage, PreferredTheme,
-    ServiceError, ServiceProtocol, SwitchResult,
+    FetchedModel, MyService, PreferenceError, Preferences, PreferredLanguage,
+    PreferredTheme, ServiceError, ServiceProtocol, SwitchResult,
 };
 use std::path::Path;
 
@@ -45,6 +46,7 @@ macro_rules! locked_api {
 locked_api! {
     fn add_my_service_for_tool(config_dir: &Path, tool_id: &str, name: String,
         station_id: String, channel_id: String, model_id: String,
+        models: Vec<FetchedModel>, provider_id: String,
         api_protocol: ServiceProtocol, base_url: String, api_key: String,
         rankings_json: Option<&str>) -> Result<MyService, ServiceError> = archive::add_for_tool;
     fn get_my_service_credential(config_dir: &Path, tool_id: &str, id: &str)
@@ -69,6 +71,7 @@ locked_api! {
         -> Result<SwitchResult, ServiceError> = switch::unswitch;
     fn update_my_service(config_dir: &Path, home: &Path, tool_id: &str, id: &str,
         name: String, station_id: String, channel_id: String, model_id: String,
+        models: Vec<FetchedModel>, provider_id: String,
         api_protocol: ServiceProtocol, base_url: String, api_key: Option<String>,
         rankings_json: Option<&str>) -> Result<MyService, ServiceError> = switch::update_for_tool;
     fn load_preferences(config_dir: &Path) -> Preferences = preferences::load;

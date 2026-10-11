@@ -14,7 +14,28 @@ export function PublishedServicePicker({
 }) {
   const { t } = useTranslation()
   const catalog = useQuery(publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID))
-  const rows = catalog.data?.stations ?? []
+  // One row per station: logo + name only (no channel). Prefer ranked / with baseUrl.
+  const rows = (() => {
+    const seen = new Map<string, PublishedStation>()
+    for (const row of catalog.data?.stations ?? []) {
+      const prev = seen.get(row.stationId)
+      if (!prev) {
+        seen.set(row.stationId, row)
+        continue
+      }
+      const prevRank = prev.rank ?? Number.POSITIVE_INFINITY
+      const nextRank = row.rank ?? Number.POSITIVE_INFINITY
+      const prevHasUrl = Boolean(prev.baseUrl)
+      const nextHasUrl = Boolean(row.baseUrl)
+      if (
+        (!prevHasUrl && nextHasUrl) ||
+        (prevHasUrl === nextHasUrl && nextRank < prevRank)
+      ) {
+        seen.set(row.stationId, row)
+      }
+    }
+    return Array.from(seen.values())
+  })()
   const error =
     catalog.error instanceof BridgeError &&
     catalog.error.code === BRIDGE_ERROR.desktopUnavailable
@@ -46,7 +67,7 @@ export function PublishedServicePicker({
         >
           {rows.map((row) => (
             <button
-              key={`${row.stationId}:${row.channelId}`}
+              key={row.stationId}
               type="button"
               role="listitem"
               className="flex w-full cursor-pointer items-center gap-3 border-b px-3 py-2.5 text-left last:border-b-0 hover:bg-muted/50"
@@ -57,13 +78,8 @@ export function PublishedServicePicker({
                 avatarPath={row.stationAvatarPath}
                 origin={catalog.data?.origin ?? 'https://folkbench.com'}
               />
-              <span className="min-w-0">
-                <span className="block truncate text-[14px] font-medium">
-                  {row.stationName}
-                </span>
-                <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
-                  {row.channelName}
-                </span>
+              <span className="min-w-0 truncate text-[14px] font-medium">
+                {row.stationName}
               </span>
             </button>
           ))}

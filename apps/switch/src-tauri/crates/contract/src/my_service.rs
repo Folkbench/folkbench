@@ -89,6 +89,13 @@ pub struct MyService {
     pub station_id: String,
     pub channel_id: String,
     pub model_id: String,
+    /// Provider model list captured when the user pulled/selected models.
+    /// Empty means legacy archive or no fetch yet; adapters may probe.
+    #[serde(default)]
+    pub models: Vec<FetchedModel>,
+    /// Tool-facing provider key (e.g. models.providers.<id>). Empty falls back to `id`.
+    #[serde(default)]
+    pub provider_id: String,
     pub api_protocol: ServiceProtocol,
     pub base_url: String,
     pub has_credential: bool,
@@ -190,4 +197,51 @@ pub struct ServiceBalance {
     pub remaining: Option<String>,
     pub unit: Option<ServiceBalanceUnit>,
     pub window: Option<ServiceBalanceWindow>,
+}
+
+/// One model id returned by a provider's model-list endpoint.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(
+    feature = "generate-bindings",
+    ts(export, export_to = "myService.ts")
+)]
+#[serde(rename_all = "camelCase")]
+pub struct FetchedModel {
+    pub id: String,
+    pub name: String,
+}
+
+/// Outcome of an on-demand model-list fetch for the add/edit service form.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(
+    feature = "generate-bindings",
+    ts(export, export_to = "myService.ts")
+)]
+#[serde(rename_all = "camelCase")]
+pub enum ModelFetchStatus {
+    Ready,
+    Empty,
+    MissingKey,
+    InvalidUrl,
+    Unauthorized,
+    EndpointNotFound,
+    Unreachable,
+    Unavailable,
+}
+
+/// Model list for the add/edit form. The Key never appears on this type.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(
+    feature = "generate-bindings",
+    ts(export, export_to = "myService.ts")
+)]
+#[serde(rename_all = "camelCase")]
+pub struct ModelFetchResult {
+    pub status: ModelFetchStatus,
+    pub models: Vec<FetchedModel>,
+    pub endpoint: Option<String>,
+    pub http_status: Option<u16>,
 }

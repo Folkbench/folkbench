@@ -186,6 +186,11 @@ impl ConnectSlot {
                     .filter(|tool| adapters::writable(tool))
             })
             .unwrap_or_else(|| "claude-code".to_string());
+        let provider_id = if crate::adapters::provider_id_required(&tool_id) {
+            super::archive::derive_provider_id(&pending.name, &pending.base_url)
+        } else {
+            String::new()
+        };
         let saved = super::archive::add_for_tool(
             config_dir,
             &tool_id,
@@ -193,6 +198,8 @@ impl ConnectSlot {
             pending.station_id.clone(),
             pending.channel_id.clone(),
             pending.model_id.clone(),
+            Vec::new(),
+            provider_id,
             ServiceProtocol::Auto,
             pending.base_url.clone(),
             pending.api_key.clone(),

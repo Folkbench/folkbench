@@ -3,7 +3,7 @@ use std::fs::{self, File};
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
-use chrono::{DateTime, Days, Local, NaiveDate, Timelike};
+use chrono::{DateTime, Days, Local, NaiveDate, TimeZone, Timelike};
 use serde_json::Value;
 
 use crate::domain::{
@@ -264,6 +264,7 @@ fn summarize_on(home: &Path, today: NaiveDate) -> SessionUsageSummary {
             scan_dsh(&home.join(".dsh")).into_summary("dsh", today),
             scan_qwen(&home.join(".qwen")).into_summary("qwen-code", today),
             scan_kimi(home).into_summary("kimi-cli", today),
+            scan_aider(home).into_summary("aider", today),
         ],
     }
 }
@@ -578,7 +579,7 @@ fn scan_opencode(root: &Path) -> Acc {
         let Ok(value) = serde_json::from_str::<Value>(&raw) else {
             return;
         };
-        add_opencode_assistant(&mut acc, &value, None);
+        add_opencode_assistant(&mut acc, &value, None, false);
     });
     // Oldest layout: storage/session/message/<session>/*.json
     let legacy = root.join("storage").join("session").join("message");
@@ -594,9 +595,9 @@ fn scan_opencode(root: &Path) -> Acc {
         if let Some(assistant) =
             value.get("metadata").and_then(|meta| meta.get("assistant"))
         {
-            add_opencode_assistant(&mut acc, assistant, None);
+            add_opencode_assistant(&mut acc, assistant, None, false);
         } else {
-            add_opencode_assistant(&mut acc, &value, None);
+            add_opencode_assistant(&mut acc, &value, None, false);
         }
     });
     acc
@@ -611,6 +612,55 @@ fn scan_opencode_db(path: &Path, acc: &mut Acc) {
         return;
     };
     let _ = conn.pragma_update(None, "query_only", true);
+    // OpenCode 2.x: per-turn rows in `session_message` (type column, nested model).
+    if opencode_table_exists(&conn, "session_message") {
+        scan_opencode_session_messages(&conn, acc);
+        return;
+    }
+    // OpenCode 1.x sqlite: assistant payloads in `message.data`.
+    if opencode_table_exists(&conn, "message") {
+        scan_opencode_legacy_messages(&conn, acc);
+        return;
+    }
+    // Fallback: session rollups when message tables are absent.
+    if opencode_table_exists(&conn, "session_v2") {
+        scan_opencode_session_v2(&conn, acc);
+    }
+}
+
+fn opencode_table_exists(conn: &rusqlite::Connection, name: &str) -> bool {
+    conn.query_row(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?1",
+        [name],
+        |_| Ok(()),
+    )
+    .is_ok()
+}
+
+fn scan_opencode_session_messages(conn: &rusqlite::Connection, acc: &mut Acc) {
+    let Ok(mut statement) =
+        conn.prepare("SELECT data, time_created, type FROM session_message")
+    else {
+        return;
+    };
+    let Ok(rows) = statement.query_map([], |row| {
+        let data: String = row.get(0)?;
+        let created: Option<i64> = row.get(1)?;
+        let row_type: Option<String> = row.get(2)?;
+        Ok((data, created, row_type))
+    }) else {
+        return;
+    };
+    for row in rows.flatten() {
+        let Ok(value) = serde_json::from_str::<Value>(&row.0) else {
+            continue;
+        };
+        let known_assistant = row.2.as_deref() == Some("assistant");
+        add_opencode_assistant(acc, &value, row.1, known_assistant);
+    }
+}
+
+fn scan_opencode_legacy_messages(conn: &rusqlite::Connection, acc: &mut Acc) {
     let Ok(mut statement) =
         conn.prepare("SELECT data, time_created FROM message")
     else {
@@ -627,16 +677,81 @@ fn scan_opencode_db(path: &Path, acc: &mut Acc) {
         let Ok(value) = serde_json::from_str::<Value>(&row.0) else {
             continue;
         };
-        add_opencode_assistant(acc, &value, row.1);
+        add_opencode_assistant(acc, &value, row.1, false);
     }
+}
+
+/// Session-level token columns when per-message rows are unavailable.
+fn scan_opencode_session_v2(conn: &rusqlite::Connection, acc: &mut Acc) {
+    let Ok(mut statement) = conn.prepare(
+        "SELECT tokens_input, tokens_output, tokens_reasoning,
+                tokens_cache_read, tokens_cache_write, model, time_updated
+         FROM session_v2",
+    ) else {
+        return;
+    };
+    let Ok(rows) = statement.query_map([], |row| {
+        let input: i64 = row.get(0)?;
+        let output: i64 = row.get(1)?;
+        let reasoning: i64 = row.get(2)?;
+        let cache_read: i64 = row.get(3)?;
+        let cache_write: i64 = row.get(4)?;
+        let model: Option<String> = row.get(5)?;
+        let updated: Option<i64> = row.get(6)?;
+        Ok((
+            input,
+            output,
+            reasoning,
+            cache_read,
+            cache_write,
+            model,
+            updated,
+        ))
+    }) else {
+        return;
+    };
+    for row in rows.flatten() {
+        let input = row.0.max(0) as u64;
+        let output = (row.1.max(0) + row.2.max(0)) as u64;
+        let cache_read = row.3.max(0) as u64;
+        let cache_write = row.4.max(0) as u64;
+        if input == 0 && output == 0 && cache_read == 0 && cache_write == 0 {
+            continue;
+        }
+        let model = opencode_model_id_from_raw(row.5.as_deref().unwrap_or(""));
+        acc.add_turn(
+            &model,
+            input,
+            output,
+            cache_read,
+            cache_write,
+            row.6.and_then(epoch_ms_hour),
+        );
+    }
+}
+
+fn opencode_model_id_from_raw(raw: &str) -> String {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    if let Ok(value) = serde_json::from_str::<Value>(trimmed) {
+        if let Some(id) = value.get("id").and_then(Value::as_str) {
+            return id.to_string();
+        }
+    }
+    trimmed.to_string()
 }
 
 fn add_opencode_assistant(
     acc: &mut Acc,
     message: &Value,
     fallback_ms: Option<i64>,
+    known_assistant: bool,
 ) {
-    if message.get("role").and_then(Value::as_str) != Some("assistant") {
+    let is_assistant = known_assistant
+        || message.get("role").and_then(Value::as_str) == Some("assistant");
+    if !is_assistant {
         return;
     }
     let Some(tokens) = message.get("tokens") else {
@@ -651,7 +766,7 @@ fn add_opencode_assistant(
     if input == 0 && output == 0 && cache_read == 0 && cache_write == 0 {
         return;
     }
-    let model = message.get("modelID").and_then(Value::as_str).unwrap_or("");
+    let model = opencode_message_model(message);
     acc.add_turn(
         model,
         input,
@@ -660,6 +775,19 @@ fn add_opencode_assistant(
         cache_write,
         opencode_message_hour(message, fallback_ms),
     );
+}
+
+fn opencode_message_model(message: &Value) -> &str {
+    message
+        .get("modelID")
+        .and_then(Value::as_str)
+        .or_else(|| {
+            message
+                .get("model")
+                .and_then(|model| model.get("id"))
+                .and_then(Value::as_str)
+        })
+        .unwrap_or("")
 }
 
 fn opencode_message_hour(
@@ -1426,6 +1554,306 @@ fn add_kimi_record(
         cache_write,
         flexible_hour(value.get("timestamp")),
     );
+}
+
+// --- Aider ------------------------------------------------------------------
+
+/// Aider writes `.aider.chat.history.md` in the project (git root) or cwd.
+/// Token lines look like:
+/// `> Tokens: 8.7k sent, 16 received. Cost: $0.04 message, $0.04 session.`
+/// optional `, Nk cache write` / `, Nk cache hit` between sent and received.
+/// Sessions are marked `# aider chat started at YYYY-MM-DD HH:MM:SS`.
+fn scan_aider(home: &Path) -> Acc {
+    let mut acc = Acc::default();
+    for path in aider_history_paths(home) {
+        let Ok(raw) = fs::read_to_string(&path) else {
+            continue;
+        };
+        acc.files_scanned += 1;
+        parse_aider_history(&mut acc, &raw);
+    }
+    acc
+}
+
+fn aider_history_paths(home: &Path) -> Vec<std::path::PathBuf> {
+    aider_history_paths_with_extras(home, &aider_mounted_volume_roots())
+}
+
+/// Discover `.aider.chat.history.md` under `home`, optional extra roots (mounted
+/// volumes / test fixtures), and on macOS via Spotlight filename search.
+fn aider_history_paths_with_extras(
+    home: &Path,
+    extra_roots: &[std::path::PathBuf],
+) -> Vec<std::path::PathBuf> {
+    let mut paths = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+    let mut push = |path: std::path::PathBuf| {
+        if path.is_file() && seen.insert(path.clone()) {
+            paths.push(path);
+        }
+    };
+    push(home.join(AIDER_HISTORY_NAME));
+    walk_aider_histories(home, 0, &mut |path| push(path.to_path_buf()));
+    for root in extra_roots {
+        if root.as_path() == home {
+            continue;
+        }
+        walk_aider_histories(root, 0, &mut |path| push(path.to_path_buf()));
+    }
+    #[cfg(all(target_os = "macos", not(test)))]
+    if let Some(extra) = mdfind_aider_histories() {
+        for path in extra {
+            push(path);
+        }
+    }
+    paths
+}
+
+/// Non-boot volumes under `/Volumes` — Aider histories live in project roots,
+/// often on a work disk that Spotlight does not return for dotfile name queries.
+fn aider_mounted_volume_roots() -> Vec<std::path::PathBuf> {
+    #[cfg(any(test, not(target_os = "macos")))]
+    {
+        return Vec::new();
+    }
+    #[cfg(all(target_os = "macos", not(test)))]
+    {
+        let mut roots = Vec::new();
+        let Ok(entries) = fs::read_dir("/Volumes") else {
+            return roots;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let Ok(meta) = path.symlink_metadata() else {
+                continue;
+            };
+            if meta.file_type().is_symlink() || !meta.is_dir() {
+                continue;
+            }
+            let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+            // Skip the system volume alias; project disks keep other names.
+            if name.is_empty() || name == "Macintosh HD" {
+                continue;
+            }
+            roots.push(path);
+        }
+        roots
+    }
+}
+
+const AIDER_HISTORY_NAME: &str = ".aider.chat.history.md";
+const AIDER_WALK_MAX_DEPTH: usize = 8;
+const AIDER_WALK_MAX_FILES: usize = 200;
+
+fn skip_aider_walk_dir(name: &str) -> bool {
+    matches!(
+        name,
+        ".git"
+            | "node_modules"
+            | "Library"
+            | ".cache"
+            | "Caches"
+            | "target"
+            | ".npm"
+            | ".bun"
+            | ".cargo"
+            | ".rustup"
+            | "Applications"
+            | ".Trash"
+            | "Movies"
+            | "Music"
+            | "Pictures"
+            | "venv"
+            | ".venv"
+            | "__pycache__"
+            | ".aider.tags.cache.v4"
+            | "dist"
+            | "build"
+            | ".tox"
+            | ".mypy_cache"
+            | ".pytest_cache"
+            | "DerivedData"
+            | ".Spotlight-V100"
+            | ".TemporaryItems"
+            | ".fseventsd"
+            | ".DocumentRevisions-V100"
+            | ".Trashes"
+    )
+}
+
+fn walk_aider_histories(
+    dir: &Path,
+    depth: usize,
+    visit: &mut impl FnMut(&Path),
+) {
+    fn rec(
+        dir: &Path,
+        depth: usize,
+        remaining: &mut usize,
+        visit: &mut impl FnMut(&Path),
+    ) {
+        if depth > AIDER_WALK_MAX_DEPTH || *remaining == 0 {
+            return;
+        }
+        let Ok(entries) = fs::read_dir(dir) else {
+            return;
+        };
+        for entry in entries.flatten() {
+            if *remaining == 0 {
+                return;
+            }
+            let path = entry.path();
+            let Ok(meta) = path.symlink_metadata() else {
+                continue;
+            };
+            if meta.file_type().is_symlink() {
+                continue;
+            }
+            let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+            if meta.is_dir() {
+                if skip_aider_walk_dir(name) {
+                    continue;
+                }
+                rec(&path, depth + 1, remaining, visit);
+            } else if meta.is_file() && name == AIDER_HISTORY_NAME {
+                *remaining -= 1;
+                visit(&path);
+            }
+        }
+    }
+    let mut remaining = AIDER_WALK_MAX_FILES;
+    rec(dir, depth, &mut remaining, visit);
+}
+
+#[cfg(all(target_os = "macos", not(test)))]
+fn mdfind_aider_histories() -> Option<Vec<std::path::PathBuf>> {
+    // Prefer `-name`: `kMDItemFSName == '…'` often misses leading-dot files,
+    // including histories on external volumes where mdls still sees the file.
+    let output = std::process::Command::new("mdfind")
+        .arg("-name")
+        .arg(AIDER_HISTORY_NAME)
+        .output()
+        .ok()?;
+    if !output.status.success() {
+        return None;
+    }
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let paths: Vec<_> = stdout
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .map(std::path::PathBuf::from)
+        .collect();
+    if paths.is_empty() { None } else { Some(paths) }
+}
+
+fn parse_aider_history(acc: &mut Acc, raw: &str) {
+    let mut model = String::new();
+    let mut when: Option<LocalHour> = None;
+    for line in raw.lines() {
+        let trimmed = strip_aider_line(line);
+        if trimmed.is_empty() {
+            continue;
+        }
+        if let Some(stamp) = trimmed.strip_prefix("# aider chat started at ") {
+            when = parse_aider_started(stamp.trim());
+            continue;
+        }
+        if let Some(rest) = trimmed
+            .strip_prefix("Main model: ")
+            .or_else(|| trimmed.strip_prefix("Model: "))
+        {
+            if let Some(id) = rest.split_whitespace().next() {
+                model = id.to_string();
+            }
+            continue;
+        }
+        if let Some(tokens) = parse_aider_tokens_line(trimmed) {
+            let (input, output, cache_write, cache_read) = tokens;
+            if input + output + cache_read + cache_write == 0 {
+                continue;
+            }
+            acc.add_turn(
+                model.as_str(),
+                input,
+                output,
+                cache_read,
+                cache_write,
+                when,
+            );
+        }
+    }
+}
+
+fn strip_aider_line(line: &str) -> &str {
+    let mut text = line.trim();
+    if let Some(rest) = text.strip_prefix('>') {
+        text = rest.trim_start();
+    }
+    text.trim_end_matches([' ', '\t'])
+}
+
+fn parse_aider_started(stamp: &str) -> Option<LocalHour> {
+    // `2026-10-10 19:31:36` local wall time as written by Aider.
+    let naive =
+        chrono::NaiveDateTime::parse_from_str(stamp, "%Y-%m-%d %H:%M:%S")
+            .ok()?;
+    let local = Local.from_local_datetime(&naive).single()?;
+    Some(LocalHour {
+        date: local.date_naive(),
+        hour: u8::try_from(local.hour()).unwrap_or(0),
+    })
+}
+
+/// Reverse of Aider `format_tokens`: bare ints, `8.7k`, or rounded `10k`.
+fn parse_aider_token_count(raw: &str) -> Option<u64> {
+    let text = raw.trim().trim_end_matches('.').to_ascii_lowercase();
+    if text.is_empty() {
+        return None;
+    }
+    if let Some(num) = text.strip_suffix('k') {
+        let value: f64 = num.trim().parse().ok()?;
+        if !value.is_finite() || value < 0.0 {
+            return None;
+        }
+        return Some(value.mul_add(1000.0, 0.5).floor() as u64);
+    }
+    if let Some(num) = text.strip_suffix('m') {
+        let value: f64 = num.trim().parse().ok()?;
+        if !value.is_finite() || value < 0.0 {
+            return None;
+        }
+        return Some(value.mul_add(1_000_000.0, 0.5).floor() as u64);
+    }
+    text.parse::<u64>().ok()
+}
+
+fn parse_aider_tokens_line(line: &str) -> Option<(u64, u64, u64, u64)> {
+    let rest = line.strip_prefix("Tokens:")?.trim_start();
+    // Aider appends `Cost: $… message, $… session.` on the same line.
+    let rest = rest
+        .split(" Cost:")
+        .next()
+        .unwrap_or(rest)
+        .trim()
+        .trim_end_matches('.');
+    let mut sent = None;
+    let mut received = None;
+    let mut cache_write = 0u64;
+    let mut cache_hit = 0u64;
+    for part in rest.split(',') {
+        let part = part.trim().trim_end_matches('.');
+        if let Some(raw) = part.strip_suffix(" sent") {
+            sent = parse_aider_token_count(raw.trim());
+        } else if let Some(raw) = part.strip_suffix(" received") {
+            received = parse_aider_token_count(raw.trim());
+        } else if let Some(raw) = part.strip_suffix(" cache write") {
+            cache_write = parse_aider_token_count(raw.trim()).unwrap_or(0);
+        } else if let Some(raw) = part.strip_suffix(" cache hit") {
+            cache_hit = parse_aider_token_count(raw.trim()).unwrap_or(0);
+        }
+    }
+    Some((sent?, received?, cache_write, cache_hit))
 }
 
 fn openai_usage(value: &Value) -> (u64, u64, u64, u64) {
@@ -2390,6 +2818,152 @@ mod tests {
         assert_ne!(opencode.input_tokens, 99);
     }
 
+    #[test]
+    fn opencode_v2_session_message_counts_tokens() {
+        let home = TempHome::new();
+        let today = NaiveDate::from_ymd_opt(2026, 10, 10).unwrap();
+        let noon = Local
+            .from_local_datetime(&today.and_hms_opt(15, 10, 0).unwrap())
+            .single()
+            .unwrap();
+        let ms = noon.timestamp_millis();
+        let root = home.0.join(".local/share/opencode");
+        fs::create_dir_all(&root).unwrap();
+        let db_path = root.join("opencode.db");
+        {
+            use rusqlite::Connection;
+            let conn = Connection::open(&db_path).unwrap();
+            conn.execute_batch(
+                "CREATE TABLE session_v2 (
+                    id TEXT PRIMARY KEY,
+                    tokens_input INTEGER DEFAULT 0 NOT NULL,
+                    tokens_output INTEGER DEFAULT 0 NOT NULL,
+                    tokens_reasoning INTEGER DEFAULT 0 NOT NULL,
+                    tokens_cache_read INTEGER DEFAULT 0 NOT NULL,
+                    tokens_cache_write INTEGER DEFAULT 0 NOT NULL,
+                    model TEXT,
+                    time_updated INTEGER NOT NULL
+                );
+                CREATE TABLE session_message (
+                    id TEXT PRIMARY KEY,
+                    session_id TEXT NOT NULL,
+                    type TEXT NOT NULL,
+                    time_created INTEGER NOT NULL,
+                    data TEXT NOT NULL
+                );",
+            )
+            .unwrap();
+            // Session rollups differ from message tokens; scanner must prefer messages.
+            conn.execute(
+                "INSERT INTO session_v2 (
+                    id, tokens_input, tokens_output, tokens_reasoning,
+                    tokens_cache_read, tokens_cache_write, model, time_updated
+                ) VALUES (?1, 6814, 23, 58, 0, 0, ?2, ?3)",
+                rusqlite::params![
+                    "ses_1",
+                    r#"{"id":"gpt-5.4","providerID":"svc-demo"}"#,
+                    ms
+                ],
+            )
+            .unwrap();
+            let assistant = serde_json::json!({
+                "time": {"created": ms, "completed": ms},
+                "model": {"id": "gpt-5.4", "providerID": "svc-demo"},
+                "tokens": {
+                    "input": 6299,
+                    "output": 14,
+                    "reasoning": 0,
+                    "cache": {"read": 0, "write": 0}
+                }
+            })
+            .to_string();
+            conn.execute(
+                "INSERT INTO session_message (id, session_id, type, time_created, data)
+                 VALUES ('msg_a', 'ses_1', 'assistant', ?1, ?2)",
+                rusqlite::params![ms, assistant],
+            )
+            .unwrap();
+            conn.execute(
+                "INSERT INTO session_message (id, session_id, type, time_created, data)
+                 VALUES ('msg_u', 'ses_1', 'user', ?1, ?2)",
+                rusqlite::params![ms, r#"{"text":"hi"}"#],
+            )
+            .unwrap();
+        }
+        let summary = summarize_on(&home.0, today);
+        let opencode = summary
+            .tools
+            .iter()
+            .find(|row| row.tool_id == "opencode")
+            .unwrap();
+        assert_eq!(opencode.turns, 1);
+        assert_eq!(opencode.input_tokens, 6299);
+        assert_eq!(opencode.output_tokens, 14);
+        let day = opencode
+            .days
+            .iter()
+            .find(|row| row.date == today.to_string())
+            .unwrap();
+        assert_eq!(day.turns, 1);
+        assert_eq!(day.input_tokens, 6299);
+        let hour = opencode
+            .hours
+            .iter()
+            .find(|row| row.date == today.to_string() && row.hour == 15)
+            .unwrap();
+        assert_eq!(hour.models[0].model, "gpt-5.4");
+    }
+
+    #[test]
+    fn opencode_v2_session_v2_rollup_used_without_messages() {
+        let home = TempHome::new();
+        let today = NaiveDate::from_ymd_opt(2026, 10, 10).unwrap();
+        let noon = Local
+            .from_local_datetime(&today.and_hms_opt(16, 0, 0).unwrap())
+            .single()
+            .unwrap();
+        let ms = noon.timestamp_millis();
+        let root = home.0.join(".local/share/opencode");
+        fs::create_dir_all(&root).unwrap();
+        let db_path = root.join("opencode.db");
+        {
+            use rusqlite::Connection;
+            let conn = Connection::open(&db_path).unwrap();
+            conn.execute_batch(
+                "CREATE TABLE session_v2 (
+                    id TEXT PRIMARY KEY,
+                    tokens_input INTEGER DEFAULT 0 NOT NULL,
+                    tokens_output INTEGER DEFAULT 0 NOT NULL,
+                    tokens_reasoning INTEGER DEFAULT 0 NOT NULL,
+                    tokens_cache_read INTEGER DEFAULT 0 NOT NULL,
+                    tokens_cache_write INTEGER DEFAULT 0 NOT NULL,
+                    model TEXT,
+                    time_updated INTEGER NOT NULL
+                );",
+            )
+            .unwrap();
+            conn.execute(
+                "INSERT INTO session_v2 (
+                    id, tokens_input, tokens_output, tokens_reasoning,
+                    tokens_cache_read, tokens_cache_write, model, time_updated
+                ) VALUES ('ses_1', 100, 20, 5, 1, 2, ?1, ?2)",
+                rusqlite::params![r#"{"id":"gpt-5","providerID":"x"}"#, ms],
+            )
+            .unwrap();
+        }
+        let summary = summarize_on(&home.0, today);
+        let opencode = summary
+            .tools
+            .iter()
+            .find(|row| row.tool_id == "opencode")
+            .unwrap();
+        assert_eq!(opencode.turns, 1);
+        assert_eq!(opencode.input_tokens, 100);
+        assert_eq!(opencode.output_tokens, 25);
+        assert_eq!(opencode.cache_read_tokens, 1);
+        assert_eq!(opencode.cache_write_tokens, 2);
+    }
+
     fn tool<'a>(
         summary: &'a SessionUsageSummary,
         id: &str,
@@ -2428,6 +3002,7 @@ mod tests {
             "dsh",
             "qwen-code",
             "kimi-cli",
+            "aider",
         ] {
             assert!(ids.contains(&id), "missing {id}");
         }
@@ -2735,5 +3310,139 @@ mod tests {
         assert_eq!(kimi.cache_read_tokens, 74);
         assert_eq!(kimi.cache_write_tokens, 1);
         assert_eq!(kimi.undated_turns, 0);
+    }
+
+    #[test]
+    fn aider_parses_chat_history_tokens_and_model() {
+        let home = TempHome::new();
+        let today = NaiveDate::from_ymd_opt(2026, 10, 10).unwrap();
+        let history = r#"
+# aider chat started at 2026-10-10 12:00:00
+
+> Model: openai/gpt-6-luna with whole edit format
+
+#### hi
+
+hello
+
+> Tokens: 8.7k sent, 16 received. Cost: $0.04 message, $0.04 session.
+
+# aider chat started at 2026-10-10 13:00:00
+
+> Main model: openai/gpt-5.6-sol with whole edit format
+
+#### next
+
+ok
+
+> Tokens: 1.0k sent, 200 cache write, 500 cache hit, 40 received. Cost: $0.01 message, $0.05 session.
+"#;
+        fs::write(home.0.join(".aider.chat.history.md"), history).unwrap();
+        // Nested project history under home.
+        let nested = home.0.join("proj").join(".aider.chat.history.md");
+        fs::create_dir_all(nested.parent().unwrap()).unwrap();
+        fs::write(
+            &nested,
+            "# aider chat started at 2026-10-09 12:00:00\n\n> Model: openai/gpt-6-luna with whole edit format\n\n> Tokens: 100 sent, 5 received.\n",
+        )
+        .unwrap();
+        let summary = summarize_on(&home.0, today);
+        let aider = tool(&summary, "aider");
+        assert_eq!(aider.files_scanned, 2);
+        assert_eq!(aider.turns, 3);
+        assert_eq!(aider.input_tokens, 8700 + 1000 + 100);
+        assert_eq!(aider.output_tokens, 16 + 40 + 5);
+        assert_eq!(aider.cache_write_tokens, 200);
+        assert_eq!(aider.cache_read_tokens, 500);
+        assert_eq!(aider.undated_turns, 0);
+        let noon = aider
+            .hours
+            .iter()
+            .find(|row| row.date == today.to_string() && row.hour == 12)
+            .unwrap();
+        assert_eq!(noon.input_tokens, 8700);
+        assert_eq!(noon.output_tokens, 16);
+        assert!(
+            noon.models
+                .iter()
+                .any(|m| m.model == "gpt-6-luna" && m.turns == 1)
+        );
+        let one_pm = aider
+            .hours
+            .iter()
+            .find(|row| row.date == today.to_string() && row.hour == 13)
+            .unwrap();
+        assert_eq!(one_pm.input_tokens, 1000);
+        assert_eq!(one_pm.cache_write_tokens, 200);
+        assert_eq!(one_pm.cache_read_tokens, 500);
+        assert!(
+            one_pm
+                .models
+                .iter()
+                .any(|m| m.model == "gpt-5.6-sol" && m.turns == 1)
+        );
+    }
+
+    #[test]
+    fn aider_token_count_parser_matches_format_tokens() {
+        assert_eq!(parse_aider_token_count("16"), Some(16));
+        assert_eq!(parse_aider_token_count("8.7k"), Some(8700));
+        assert_eq!(parse_aider_token_count("1.0k"), Some(1000));
+        assert_eq!(parse_aider_token_count("10k"), Some(10_000));
+        assert_eq!(parse_aider_token_count("2.5m"), Some(2_500_000));
+        assert_eq!(
+            parse_aider_tokens_line(
+                "Tokens: 8.7k sent, 200 cache write, 500 cache hit, 16 received."
+            ),
+            Some((8700, 16, 200, 500))
+        );
+        assert_eq!(
+            parse_aider_tokens_line(
+                "Tokens: 8.7k sent, 16 received. Cost: $0.04 message, $0.04 session."
+            ),
+            Some((8700, 16, 0, 0))
+        );
+        // Real Aider history lines keep markdown trailing spaces after `> `.
+        let real = "> Tokens: 8.7k sent, 16 received. Cost: $0.04 message, $0.04 session.  ";
+        assert_eq!(
+            parse_aider_tokens_line(strip_aider_line(real)),
+            Some((8700, 16, 0, 0))
+        );
+    }
+
+    #[test]
+    fn aider_discovers_history_on_extra_roots_outside_home() {
+        let home = TempHome::new();
+        let volume = TempHome::new();
+        let today = NaiveDate::from_ymd_opt(2026, 10, 10).unwrap();
+        // Home history with no token lines must not block project histories.
+        fs::write(
+            home.0.join(".aider.chat.history.md"),
+            "# aider chat started at 2026-10-10 19:00:00\n\n> Model: openai/gpt-6-luna\n",
+        )
+        .unwrap();
+        let project = volume.0.join("folkbench").join(".aider.chat.history.md");
+        fs::create_dir_all(project.parent().unwrap()).unwrap();
+        fs::write(
+            &project,
+            "# aider chat started at 2026-10-10 19:55:00\n\n> Main model: openai/gpt-5.6-sol with whole edit format\n\n#### hi\n\nhello\n\n> Tokens: 8.7k sent, 16 received. Cost: $0.04 message, $0.04 session.  \n",
+        )
+        .unwrap();
+        let paths =
+            aider_history_paths_with_extras(&home.0, &[volume.0.clone()]);
+        assert!(
+            paths.iter().any(|p| p == &project),
+            "expected project history on extra root, got {paths:?}"
+        );
+        let mut acc = Acc::default();
+        for path in &paths {
+            let raw = fs::read_to_string(path).unwrap();
+            acc.files_scanned += 1;
+            parse_aider_history(&mut acc, &raw);
+        }
+        let aider = acc.into_summary("aider", today);
+        assert_eq!(aider.turns, 1);
+        assert_eq!(aider.input_tokens, 8700);
+        assert_eq!(aider.output_tokens, 16);
     }
 }

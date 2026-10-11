@@ -33,7 +33,6 @@
 | 管理并一键切换本地配置 | [Folkbench Switch](#folkbench-switch) | 支持 Claude Code、Codex 等工具一键换源 |
 | 了解评测方法与接入指南 | [文章与指南](https://folkbench.com/blog?utm_source=github&utm_campaign=folkbench-blog) | 评测逻辑与使用文档 |
 
-
 ## Folkbench Switch
 
 Switch 是 Folkbench 的开源桌面客户端，核心功能就是**让你在不同的中转站和官方线路之间，一键切换 Base URL 和 API Key，不再需要手动改配置文件。**
@@ -48,22 +47,25 @@ Switch 是 Folkbench 的开源桌面客户端，核心功能就是**让你在不
 
 ### 下载安装
 
-**当前版本：0.1.0-beta.1**
+**Folkbench Switch · 0.1.0-beta.1**
 
-| 系统平台 | 安装包格式 | 下载入口 |
-| --- | --- | --- |
-| macOS · Apple Silicon（M 系列） | DMG | [前往 GitHub Releases 下载](https://github.com/Folkbench/folkbench/releases) |
-| macOS · Intel | DMG | [前往 GitHub Releases 下载](https://github.com/Folkbench/folkbench/releases) |
-| Windows · x64 | EXE | [前往 GitHub Releases 下载](https://github.com/Folkbench/folkbench/releases) |
+| 系统 | 安装包 |
+| --- | --- |
+| macOS · Apple Silicon（M 系列） | [**下载 DMG**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_macos-arm64.dmg) |
+| macOS · Intel | [**下载 DMG**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_macos-x64.dmg) |
+| Windows · x64 | [**下载 EXE**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_windows-x64.exe) |
 
-Beta 阶段 macOS 正在进行苹果官方公证，Windows 签名正在办理中。如系统提示未签名，在系统设置中选择“仍要打开”即可
+[版本说明](https://github.com/Folkbench/folkbench/releases/tag/switch-v0.1.0-beta.1) · [SHA256 校验文件](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/SHA256SUMS.txt)
+
+macOS 安装包已通过 Developer ID 签名与 Apple 公证；打开 DMG 后，将 Folkbench Switch 拖入 Applications。Windows 安装包尚未数字签名，系统可能显示安全提示。此版本为 Beta，尚非 Stable。
 
 ---
 
 先选模型，再比较提供它的中转站。Folkbench 将模型、渠道与评测窗口放在一起，让你查看可用率、24 小时状态、P95 完整响应耗时和价格，再决定用哪条线路。
 
+## 站点推荐
 
-
+部分链接含推广或返佣参数。站点介绍不等同于实测排名，价格、优惠及服务条款以站点官网为准。
 
 <details open>
 <summary><strong>部分站点的介绍与优惠资料</strong></summary>

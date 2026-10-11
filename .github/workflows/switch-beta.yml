@@ -150,6 +150,11 @@ jobs:
           TARGET: ${{ matrix.target }}
           BUNDLE: ${{ matrix.bundle }}
         run: node scripts/apple-ci.mjs build
+      - name: Verify approved DMG background and native installation layout
+        if: runner.os == 'macOS'
+        env:
+          TARGET: ${{ matrix.target }}
+        run: node apps/switch/scripts/dmg-layout.mjs
       - name: Notarize and verify the macOS distribution
         if: runner.os == 'macOS' && needs.validate.outputs.notarize == 'true'
         shell: bash

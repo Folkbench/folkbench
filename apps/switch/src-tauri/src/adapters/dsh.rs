@@ -1,8 +1,9 @@
 use std::path::Path;
 
-use crate::domain::{ServiceError, ServiceProtocol};
+use crate::domain::{FetchedModel, ServiceError, ServiceProtocol};
 
 use super::atomic::{read_yaml_mapping, write_yaml};
+use super::model_fetch;
 use super::projection::LiveProjection;
 
 pub fn inspect(
@@ -35,6 +36,7 @@ pub fn apply(
     service_id: &str,
     name: &str,
     model_id: &str,
+    archived_models: &[FetchedModel],
     protocol: ServiceProtocol,
     base_url: &str,
     api_key: &str,
@@ -62,13 +64,19 @@ pub fn apply(
     insert_string(provider, "apiKeyEnv", &credential_ref);
     insert_string(provider, "api", api);
     insert_string(provider, "baseURL", base_url);
+    let resolved =
+        model_fetch::models_for_apply(archived_models, model_id, Vec::new());
+    let model_entries: Vec<serde_yaml::Value> = resolved
+        .iter()
+        .map(|(id, _)| {
+            let mut model = serde_yaml::Mapping::new();
+            insert_string(&mut model, "id", id);
+            serde_yaml::Value::Mapping(model)
+        })
+        .collect();
     provider.insert(
         serde_yaml::Value::String("models".into()),
-        serde_yaml::Value::Sequence(vec![serde_yaml::Value::Mapping({
-            let mut model = serde_yaml::Mapping::new();
-            insert_string(&mut model, "id", model_id);
-            model
-        })]),
+        serde_yaml::Value::Sequence(model_entries),
     );
     write_yaml(&settings_path, &settings)?;
 

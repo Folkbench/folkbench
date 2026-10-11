@@ -11,6 +11,7 @@ export {
 } from '@/bridge/commands/catalog'
 export {
   addMyService,
+  fetchServiceModels,
   getMyServiceCredential,
   getMyServiceImportStatus,
   importMyServiceFromLive,
@@ -66,6 +67,11 @@ export type {
   ConnectPublicStatus,
 } from '@/bridge/generated/connect'
 
+export type {
+  FetchedModel,
+  ModelFetchResult,
+  ModelFetchStatus,
+} from '@/bridge/generated/myService'
 export type {
   FolkbenchBinding,
   MyService,

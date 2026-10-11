@@ -10,6 +10,7 @@ mod grok;
 mod hermes;
 mod kimi;
 mod minimax;
+pub(crate) mod model_fetch;
 mod openclaw;
 mod opencode;
 mod pi;
@@ -20,7 +21,8 @@ mod session_usage;
 pub(crate) use apply::configuration_files;
 pub use apply::{
     ApplyRequest, ReachabilityProbe, apply, clear, detected, inspect,
-    inspect_for_import, known_tool, probe_base_url, writable,
+    inspect_for_import, known_tool, model_required, probe_base_url,
+    provider_id_required, writable,
 };
 pub(crate) use atomic::FileSnapshot;
 pub(crate) use atomic::remove_file as remove_owned_file;

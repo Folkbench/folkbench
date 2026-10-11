@@ -23,13 +23,13 @@
 
 | Platform | Installer |
 | --- | --- |
-| macOS · Apple Silicon (M series) | DMG, awaiting upload |
-| macOS · Intel | DMG, awaiting upload |
-| Windows · x64 | EXE, awaiting upload |
+| macOS · Apple Silicon (M series) | [**Download DMG**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_macos-arm64.dmg) |
+| macOS · Intel | [**Download DMG**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_macos-x64.dmg) |
+| Windows · x64 | [**Download EXE**](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/Folkbench-Switch_0.1.0-beta.1_windows-x64.exe) |
 
-[**View Beta installers and versions**](https://github.com/Folkbench/folkbench/releases)
+[Release notes](https://github.com/Folkbench/folkbench/releases/tag/switch-v0.1.0-beta.1) · [SHA256 checksums](https://github.com/Folkbench/folkbench/releases/download/switch-v0.1.0-beta.1/SHA256SUMS.txt)
 
-The first Beta will provide unnotarized macOS installers and a Windows installer without a digital signature. macOS notarization is in progress. Platform-specific download links and SHA256 checksums will be added after the installers are uploaded.
+The macOS installers are Developer ID signed and Apple notarized. Open the DMG and drag Folkbench Switch into Applications. The Windows installer is not digitally signed, so Windows may show a security warning. This is a Beta, not a Stable release.
 
 ---
 

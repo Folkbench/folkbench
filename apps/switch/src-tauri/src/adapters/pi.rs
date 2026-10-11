@@ -1,8 +1,9 @@
 use std::path::Path;
 
-use crate::domain::{ServiceError, ServiceProtocol};
+use crate::domain::{FetchedModel, ServiceError, ServiceProtocol};
 
 use super::atomic::{read_json_object, write_json};
+use super::model_fetch;
 use super::projection::LiveProjection;
 
 pub fn inspect(
@@ -39,9 +40,11 @@ pub fn inspect(
 
 pub fn apply(
     dir: &Path,
-    service_id: &str,
-    name: &str,
+    provider_id: &str,
+    archive_service_id: &str,
+    _name: &str,
     model_id: &str,
+    archived_models: &[FetchedModel],
     protocol: ServiceProtocol,
     base_url: &str,
     api_key: &str,
@@ -49,22 +52,31 @@ pub fn apply(
     let models_path = dir.join("models.json");
     let mut models = read_json_object(&models_path)?;
     let providers = object(&mut models, "providers")?;
+    let resolved =
+        model_fetch::models_for_apply(archived_models, model_id, Vec::new());
+    let model_entries: Vec<serde_json::Value> = resolved
+        .iter()
+        .map(|(id, model_name)| serde_json::json!({ "id": id, "name": model_name }))
+        .collect();
     providers.insert(
-        service_id.into(),
+        provider_id.into(),
         serde_json::json!({
             "baseUrl": base_url,
             "api": api_name(protocol)?,
             "apiKey": api_key,
-            "models": [{ "id": model_id, "name": name }]
+            "models": model_entries
         }),
     );
+    if provider_id != archive_service_id {
+        providers.remove(archive_service_id);
+    }
     write_json(&models_path, &models)?;
 
     let settings_path = dir.join("settings.json");
     let mut settings = read_json_object(&settings_path)?;
     settings.insert(
         "model".into(),
-        serde_json::Value::String(format!("{service_id}/{model_id}")),
+        serde_json::Value::String(format!("{provider_id}/{model_id}")),
     );
     write_json(&settings_path, &settings)
 }

@@ -16,7 +16,7 @@
         "description": "Review what will be saved. This step will not switch tools or send a paid request.",
         "keyHidden": "API Key: entered, but the full value is not shown here.",
         "name": "Service name: {{name}}",
-        "next": "Preview and continue",
+        "next": "Save",
         "saveAndCheck": "Save and check connectivity",
         "scope": "After saving, only HTTP reachability and latency are checked. No model request is sent with the Key and no tool configuration is changed. The service is filed in the local list for the matching tool, and you still enable it yourself.",
         "title": "Review connection"

@@ -1,7 +1,9 @@
 use std::path::Path;
 
 use crate::adapters::{self, ApplyRequest};
-use crate::domain::{MyService, ServiceError, ServiceProtocol, SwitchResult};
+use crate::domain::{
+    FetchedModel, MyService, ServiceError, ServiceProtocol, SwitchResult,
+};
 use crate::services::{archive, credentials, journal, preferences};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -35,6 +37,8 @@ pub fn update_for_tool(
     station_id: String,
     channel_id: String,
     model_id: String,
+    models: Vec<FetchedModel>,
+    provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
     api_key: Option<String>,
@@ -45,12 +49,28 @@ pub fn update_for_tool(
         .ok_or(ServiceError::NotFound)?;
     let previous_key =
         credentials::get_for_tool(config_dir, tool_id, service_id);
+    let previous_provider = archive::resolve_provider_id(&previous.row);
     let key_changed = api_key.as_deref().is_some_and(|key| {
         !key.trim().is_empty() && Some(key.trim()) != previous_key.as_deref()
     });
+    let next_provider_preview = {
+        let trimmed = provider_id.trim();
+        if trimmed.is_empty() {
+            service_id.to_string()
+        } else {
+            trimmed.to_string()
+        }
+    };
+    let provider_changed = next_provider_preview != previous_provider;
+    let next_models = crate::adapters::model_fetch::normalize_stored_models(
+        models.clone(),
+        model_id.trim(),
+    );
     let configuration_changed = key_changed
+        || provider_changed
         || base_url.trim().trim_end_matches('/') != previous.base_url()
         || model_id.trim() != previous.row.model_id
+        || next_models != previous.row.models
         || api_protocol != previous.row.api_protocol;
     let active = configuration_changed
         && preferences::load(config_dir)
@@ -82,6 +102,8 @@ pub fn update_for_tool(
             station_id,
             channel_id,
             model_id,
+            models,
+            provider_id,
             api_protocol,
             base_url,
             api_key,
@@ -94,6 +116,19 @@ pub fn update_for_tool(
                 service_id,
                 &[tool_id.to_string()],
             )?;
+            let next_provider = archive::resolve_provider_id(
+                &archive::get_for_tool(config_dir, tool_id, service_id)?
+                    .ok_or(ServiceError::NotFound)?
+                    .row,
+            );
+            if previous_provider != next_provider {
+                adapters::clear(
+                    tool_id,
+                    home,
+                    &previous_provider,
+                    previous_key.as_deref(),
+                )?;
+            }
             apply_archived_service(config_dir, home, tool_id, service_id)?;
             if !live_matches_service(config_dir, home, tool_id, service_id)? {
                 return Err(ServiceError::WriteFailed);
@@ -266,7 +301,9 @@ fn rollback_inner(
             &undo.current_service_id,
         )
         .ok_or(ServiceError::CredentialMissing)?;
-        adapters::clear(tool_id, home, &undo.current_service_id, Some(&key))?
+        let provider_id =
+            provider_key_for(config_dir, tool_id, &undo.current_service_id);
+        adapters::clear(tool_id, home, &provider_id, Some(&key))?
     };
 
     if preferences::complete_rollback(
@@ -311,7 +348,8 @@ fn unswitch_inner(
         .cloned()
         .ok_or(ServiceError::NotFound)?;
 
-    let live = adapters::inspect(tool_id, home, Some(&current_id))?;
+    let provider_id = provider_key_for(config_dir, tool_id, &current_id);
+    let live = adapters::inspect(tool_id, home, Some(&provider_id))?;
     let _ = archive::backfill_live_for_tool(
         config_dir,
         tool_id,
@@ -330,7 +368,7 @@ fn unswitch_inner(
         credentials::get_for_tool(config_dir, tool_id, &current_id)
             .ok_or(ServiceError::CredentialMissing)?;
     let result =
-        adapters::clear(tool_id, home, &current_id, Some(&current_key))?;
+        adapters::clear(tool_id, home, &provider_id, Some(&current_key))?;
     if preferences::clear_current_for_tool(config_dir, tool_id).is_err() {
         return Err(ServiceError::WriteFailed);
     }
@@ -424,12 +462,9 @@ pub fn recover_interrupted_switch(
                     tool_id,
                     &pending.service_id,
                 );
-                adapters::clear(
-                    tool_id,
-                    home,
-                    &pending.service_id,
-                    key.as_deref(),
-                )?;
+                let provider_id =
+                    provider_key_for(config_dir, tool_id, &pending.service_id);
+                adapters::clear(tool_id, home, &provider_id, key.as_deref())?;
                 let current = preferences::load(config_dir)
                     .current_by_tool
                     .get(tool_id)
@@ -509,6 +544,11 @@ fn add_from_live(
         .find(|tool| tool.id == tool_id)
         .map(|tool| format!("{} (imported)", tool.display_name))
         .unwrap_or_else(|| format!("{tool_id} (imported)"));
+    let provider_id = if adapters::provider_id_required(tool_id) {
+        archive::derive_provider_id(&name, &base_url)
+    } else {
+        String::new()
+    };
     archive::add_for_tool(
         config_dir,
         tool_id,
@@ -516,6 +556,8 @@ fn add_from_live(
         String::new(),
         String::new(),
         String::new(),
+        Vec::new(),
+        provider_id,
         match tool_id {
             "claude-code" => ServiceProtocol::AnthropicMessages,
             "codex" => ServiceProtocol::OpenaiResponses,
@@ -540,7 +582,10 @@ fn resolve_previous_state(
         .current_by_tool
         .get(tool_id)
         .cloned();
-    let live = adapters::inspect(tool_id, home, current_id.as_deref())?;
+    let inspect_key = current_id
+        .as_deref()
+        .map(|id| provider_key_for(config_dir, tool_id, id));
+    let live = adapters::inspect(tool_id, home, inspect_key.as_deref())?;
     let (url, secret) = match (live.base_url, live.api_key) {
         (None, None) if current_id.is_none() => {
             return Ok(PreviousState::Empty);
@@ -619,6 +664,18 @@ fn endpoint(value: &str) -> String {
     value.trim().trim_end_matches('/').to_string()
 }
 
+fn provider_key_for(
+    config_dir: &Path,
+    tool_id: &str,
+    service_id: &str,
+) -> String {
+    archive::get_for_tool(config_dir, tool_id, service_id)
+        .ok()
+        .flatten()
+        .map(|view| archive::resolve_provider_id(&view.row))
+        .unwrap_or_else(|| service_id.to_string())
+}
+
 fn apply_archived_service(
     config_dir: &Path,
     home: &Path,
@@ -632,12 +689,15 @@ fn apply_archived_service(
     }
     let key = credentials::get_for_tool(config_dir, tool_id, service_id)
         .ok_or(ServiceError::CredentialMissing)?;
+    let provider_id = archive::resolve_provider_id(&record.row);
     adapters::apply(ApplyRequest {
         tool_id,
         home,
         service_id,
+        provider_id: &provider_id,
         name: &record.row.name,
         model_id: &record.row.model_id,
+        models: &record.row.models,
         api_protocol: record.row.api_protocol,
         base_url: record.base_url(),
         api_key: &key,
@@ -654,7 +714,8 @@ fn live_matches_service(
         .ok_or(ServiceError::NotFound)?;
     let key = credentials::get_for_tool(config_dir, tool_id, service_id)
         .ok_or(ServiceError::CredentialMissing)?;
-    let live = adapters::inspect(tool_id, home, Some(service_id))?;
+    let provider_id = archive::resolve_provider_id(&record.row);
+    let live = adapters::inspect(tool_id, home, Some(&provider_id))?;
     Ok(live.base_url.as_deref() == Some(record.base_url())
         && live.api_key.as_deref() == Some(key.as_str()))
 }
@@ -704,6 +765,8 @@ pub fn update(
         station_id,
         channel_id,
         model_id,
+        Vec::new(),
+        String::new(),
         api_protocol,
         base_url,
         api_key,
@@ -829,6 +892,69 @@ mod tests {
     }
 
     #[test]
+    fn switch_writes_full_archived_models_for_kimi_and_qwen() {
+        use crate::domain::FetchedModel;
+        let dir = TempDir::new();
+        let archived = vec![
+            FetchedModel {
+                id: "m1".into(),
+                name: "One".into(),
+            },
+            FetchedModel {
+                id: "m2".into(),
+                name: "Two".into(),
+            },
+        ];
+        for tool_id in ["kimi-cli", "qwen-code"] {
+            let added = archive::add_for_tool(
+                &dir.config,
+                tool_id,
+                "Relay".into(),
+                "station-1".into(),
+                "channel-1".into(),
+                "m1".into(),
+                archived.clone(),
+                "example".into(),
+                ServiceProtocol::OpenaiCompletions,
+                "https://127.0.0.1:1/v1".into(),
+                "sk-a".into(),
+                None,
+            )
+            .unwrap_or_else(|error| panic!("{tool_id}: {error:?}"));
+            switch(&dir.config, &dir.home, tool_id, &added.id)
+                .unwrap_or_else(|error| panic!("{tool_id}: {error:?}"));
+            if tool_id == "kimi-cli" {
+                let raw = std::fs::read_to_string(
+                    dir.home.join(".kimi").join("config.toml"),
+                )
+                .unwrap();
+                assert!(raw.contains("example/m1"), "{raw}");
+                assert!(raw.contains("example/m2"), "{raw}");
+                assert!(
+                    raw.contains("default_model = \"example/m1\""),
+                    "{raw}"
+                );
+            } else {
+                let value: serde_json::Value = serde_json::from_str(
+                    &std::fs::read_to_string(
+                        dir.home.join(".qwen").join("settings.json"),
+                    )
+                    .unwrap(),
+                )
+                .unwrap();
+                let models = value["modelProviders"]["example"]
+                    .as_array()
+                    .expect("modelProviders");
+                assert_eq!(models.len(), 2, "{value}");
+                assert_eq!(models[0]["id"], "m1");
+                assert_eq!(models[0]["name"], "One");
+                assert_eq!(models[1]["id"], "m2");
+                assert_eq!(value["model"]["name"], "m1");
+            }
+        }
+    }
+
+    #[test]
     fn every_experimental_adapter_completes_the_switch_service_flow() {
         let dir = TempDir::new();
 
@@ -854,6 +980,12 @@ mod tests {
                 "station-1".into(),
                 "channel-1".into(),
                 "gpt-5-6-sol".into(),
+                Vec::new(),
+                if adapters::provider_id_required(tool_id) {
+                    "example".into()
+                } else {
+                    String::new()
+                },
                 ServiceProtocol::Auto,
                 "https://example.com/v1".into(),
                 "sk-a".into(),
@@ -863,8 +995,15 @@ mod tests {
             let result = switch(&dir.config, &dir.home, tool_id, &added.id)
                 .unwrap_or_else(|error| panic!("{tool_id}: {error:?}"));
             assert_eq!(result.service_id, added.id, "{tool_id}");
-            let live = adapters::inspect(tool_id, &dir.home, Some(&added.id))
-                .unwrap_or_else(|error| panic!("{tool_id}: {error:?}"));
+            let provider_key = archive::resolve_provider_id(
+                &archive::get_for_tool(&dir.config, tool_id, &added.id)
+                    .unwrap()
+                    .unwrap()
+                    .row,
+            );
+            let live =
+                adapters::inspect(tool_id, &dir.home, Some(&provider_key))
+                    .unwrap_or_else(|error| panic!("{tool_id}: {error:?}"));
             assert_eq!(
                 live.base_url.as_deref(),
                 Some("https://example.com/v1"),
@@ -1508,6 +1647,8 @@ requires_openai_auth = true
             "".into(),
             "".into(),
             "example-model".into(),
+            Vec::new(),
+            String::new(),
             ServiceProtocol::Auto,
             "https://new.example/v1".into(),
             Some("synthetic-new-key".into()),
@@ -1577,6 +1718,8 @@ requires_openai_auth = true
             String::new(),
             String::new(),
             "test-model".into(),
+            Vec::new(),
+            String::new(),
             ServiceProtocol::Gemini,
             "https://new.example/v1".into(),
             "synthetic-new-key".into(),

@@ -280,11 +280,12 @@ export function UsageBars({
                   opacity={0.45}
                 />
               ) : (
-                segments.map((slice) => {
+                segments.map((slice, segmentIndex) => {
                   const heightPx = Math.max(
                     (slice.tokens / maximum) * plotHeight,
                     1
                   )
+                  if (segmentIndex > 0) cursor -= 1
                   cursor -= heightPx
                   const color =
                     MODEL_FILLS[

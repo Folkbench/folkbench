@@ -3,8 +3,8 @@ use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
 use crate::domain::{
-    MyService, ServiceBalance, ServiceError, ServiceProtocol, SwitchResult,
-    VerifyResult,
+    FetchedModel, ModelFetchResult, ModelFetchStatus, MyService,
+    ServiceBalance, ServiceError, ServiceProtocol, SwitchResult, VerifyResult,
 };
 use crate::{adapters, services};
 
@@ -12,6 +12,14 @@ fn config_dir(app: &AppHandle) -> Result<PathBuf, ServiceError> {
     app.path()
         .app_config_dir()
         .map_err(|_| ServiceError::LocationUnavailable)
+}
+
+/// Reject an empty model for tools whose config needs one, before archiving.
+fn ensure_model(tool_id: &str, model_id: &str) -> Result<(), ServiceError> {
+    if adapters::model_required(tool_id) && model_id.trim().is_empty() {
+        return Err(ServiceError::InvalidInput);
+    }
+    Ok(())
 }
 
 fn user_home(app: &AppHandle) -> Result<PathBuf, ServiceError> {
@@ -37,10 +45,13 @@ pub fn add_my_service(
     station_id: String,
     channel_id: String,
     model_id: String,
+    models: Option<Vec<FetchedModel>>,
+    provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
     api_key: String,
 ) -> Result<MyService, ServiceError> {
+    ensure_model(&tool_id, &model_id)?;
     let dir = config_dir(&app)?;
     services::add_my_service_for_tool(
         &dir,
@@ -49,6 +60,8 @@ pub fn add_my_service(
         station_id,
         channel_id,
         model_id,
+        models.unwrap_or_default(),
+        provider_id,
         api_protocol,
         base_url,
         api_key,
@@ -75,10 +88,13 @@ pub fn update_my_service(
     station_id: String,
     channel_id: String,
     model_id: String,
+    models: Option<Vec<FetchedModel>>,
+    provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
     api_key: Option<String>,
 ) -> Result<MyService, ServiceError> {
+    ensure_model(&tool_id, &model_id)?;
     let dir = config_dir(&app)?;
     services::update_my_service(
         &dir,
@@ -89,6 +105,8 @@ pub fn update_my_service(
         station_id,
         channel_id,
         model_id,
+        models.unwrap_or_default(),
+        provider_id,
         api_protocol,
         base_url,
         api_key,
@@ -179,6 +197,62 @@ pub async fn verify_my_service(
         latency_ms: probe.latency_ms,
         degraded: probe.degraded,
     })
+}
+
+/// Fetch the provider model list for the add/edit form (cc-switch style).
+///
+/// `api_key` may be blank while editing: the saved Key for `service_id` is
+/// used instead. The Key stays in Rust and is never returned.
+#[tauri::command(rename_all = "camelCase")]
+pub async fn fetch_service_models(
+    app: AppHandle,
+    tool_id: String,
+    service_id: Option<String>,
+    base_url: String,
+    api_key: Option<String>,
+    api_protocol: ServiceProtocol,
+) -> Result<ModelFetchResult, ServiceError> {
+    if !adapters::known_tool(&tool_id) {
+        return Err(ServiceError::ToolUnknown);
+    }
+    let typed = api_key.unwrap_or_default();
+    let key = if typed.trim().is_empty() {
+        match service_id.as_deref().filter(|id| !id.is_empty()) {
+            Some(id) => {
+                let dir = config_dir(&app)?;
+                services::get_my_service_credential(&dir, &tool_id, id)?
+                    .unwrap_or_default()
+            }
+            None => String::new(),
+        }
+    } else {
+        typed
+    };
+    if !services::allowed_service_base_url(&base_url) {
+        return Ok(ModelFetchResult {
+            status: ModelFetchStatus::InvalidUrl,
+            models: Vec::new(),
+            endpoint: None,
+            http_status: None,
+        });
+    }
+    let protocol =
+        adapters::model_fetch::effective_protocol(&tool_id, api_protocol);
+    Ok(tauri::async_runtime::spawn_blocking(move || {
+        adapters::model_fetch::fetch(
+            &base_url,
+            &key,
+            protocol,
+            adapters::model_fetch::FORM_TIMEOUT,
+        )
+    })
+    .await
+    .unwrap_or(ModelFetchResult {
+        status: ModelFetchStatus::Unavailable,
+        models: Vec::new(),
+        endpoint: None,
+        http_status: None,
+    }))
 }
 
 #[tauri::command(rename_all = "camelCase")]

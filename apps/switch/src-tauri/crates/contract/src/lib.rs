@@ -24,9 +24,10 @@ pub use catalog::{
 pub use connect::{ConnectNotice, ConnectPreview, ConnectPublicStatus};
 pub use links::{ExternalLink, ExternalLinkError};
 pub use my_service::{
-    FolkbenchBinding, MyService, ServiceBalance, ServiceBalanceStatus,
-    ServiceBalanceUnit, ServiceBalanceWindow, ServiceError, ServiceProtocol,
-    SwitchEffect, SwitchResult, VerifyResult,
+    FetchedModel, FolkbenchBinding, ModelFetchResult, ModelFetchStatus,
+    MyService, ServiceBalance, ServiceBalanceStatus, ServiceBalanceUnit,
+    ServiceBalanceWindow, ServiceError, ServiceProtocol, SwitchEffect,
+    SwitchResult, VerifyResult,
 };
 pub use preferences::{
     PreferenceError, Preferences, PreferredLanguage, PreferredTheme, SwitchUndo,

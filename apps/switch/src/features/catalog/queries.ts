@@ -6,6 +6,7 @@ import {
 
 import {
   addMyService,
+  fetchServiceModels,
   getMyServiceImportStatus,
   importMyServiceFromLive,
   listMyServices,
@@ -171,6 +172,12 @@ export function useVerifyMyService() {
   return useMutation({
     mutationFn: ({ toolId, serviceId }: { toolId: string; serviceId: string }) =>
       verifyMyService(toolId, serviceId),
+  })
+}
+
+export function useFetchServiceModels() {
+  return useMutation({
+    mutationFn: fetchServiceModels,
   })
 }
 
