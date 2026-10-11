@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 528" fill="none">
+  <rect width="960" height="528" fill="#f6f4ef"/>
+  <text x="40" y="42" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="13" letter-spacing="0.06em">Puntuación global · sobre 100</text>
+  <text x="40" y="100" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">Sonnet 5</text>
+  <rect x="300" y="86" width="400" height="14" rx="7" fill="#e4e0d6"/>
+  <rect x="300" y="86" width="321.6" height="14" rx="7" fill="#425466"/>
+  <line x1="620.0" y1="84" x2="620.0" y2="102" stroke="#f6f4ef" stroke-width="1.5"/>
+  <text x="718" y="99" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="18">80.4</text>
+  <text x="40" y="130" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15"><tspan fill="#6d7168">Primero en 6 de 12, con empates</tspan><tspan fill="#6d7168"> · </tspan><tspan fill="#6d7168">Ninguna</tspan></text>
+  <text x="40" y="196" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">GLM 5.2</text>
+  <rect x="300" y="182" width="400" height="14" rx="7" fill="#e4e0d6"/>
+  <rect x="300" y="182" width="317.2" height="14" rx="7" fill="#425466"/>
+  <line x1="620.0" y1="180" x2="620.0" y2="198" stroke="#f6f4ef" stroke-width="1.5"/>
+  <text x="718" y="195" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="18">79.3</text>
+  <text x="40" y="226" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15"><tspan fill="#6d7168">Primero en 5 de 12, con empates</tspan><tspan fill="#6d7168"> · </tspan><tspan fill="#B7791F">1 aviso de regla</tspan></text>
+  <text x="40" y="292" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">Kimi K2.7 Code</text>
+  <rect x="300" y="278" width="400" height="14" rx="7" fill="#e4e0d6"/>
+  <rect x="300" y="278" width="310.4" height="14" rx="7" fill="#425466"/>
+  <line x1="620.0" y1="276" x2="620.0" y2="294" stroke="#f6f4ef" stroke-width="1.5"/>
+  <text x="718" y="291" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="18">77.6</text>
+  <text x="40" y="322" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15"><tspan fill="#6d7168">Primero en 3 de 12, con empates</tspan><tspan fill="#6d7168"> · </tspan><tspan fill="#B7791F">1 aviso de regla</tspan><tspan fill="#6d7168"> · </tspan><tspan fill="#C9372C">1 riesgo duro</tspan></text>
+  <text x="40" y="388" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">GPT-5.6 Terra</text>
+  <rect x="300" y="374" width="400" height="14" rx="7" fill="#e4e0d6"/>
+  <rect x="300" y="374" width="302.4" height="14" rx="7" fill="#425466"/>
+  <line x1="620.0" y1="372" x2="620.0" y2="390" stroke="#f6f4ef" stroke-width="1.5"/>
+  <text x="718" y="387" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="18">75.6</text>
+  <text x="40" y="418" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15"><tspan fill="#6d7168">Primero en 0 de 12</tspan><tspan fill="#6d7168"> · </tspan><tspan fill="#6d7168">Ninguna</tspan></text>
+  <text x="300" y="468" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="12">0</text>
+  <text x="620.0" y="468" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="12" text-anchor="middle">80</text>
+  <text x="700" y="468" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="12" text-anchor="end">100</text>
+  <text x="40" y="504" fill="#6d7168" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">Escala de 0 a 100. Las notas quedan juntas. El riesgo no se mezcla con la nota.</text>
+</svg>

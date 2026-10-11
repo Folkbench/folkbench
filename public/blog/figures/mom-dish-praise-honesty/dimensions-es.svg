@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" fill="none">
+  <rect width="920" height="520" fill="#f6f4ef"/>
+  <rect x="36" y="32" width="408" height="456" rx="16" fill="#fffdf8" stroke="#e4e0d6"/>
+  <rect x="476" y="32" width="408" height="456" rx="16" fill="#fffdf8" stroke="#e4e0d6"/>
+  <text x="64" y="84" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">Lo que mira la nota de estilo</text>
+  <text x="504" y="84" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">Lo que las respuestas borraron</text>
+  <circle cx="78" cy="150" r="6" fill="#147a5a"/>
+  <text x="100" y="157" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">Concreto</text>
+  <circle cx="78" cy="214" r="6" fill="#147a5a"/>
+  <text x="100" y="221" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">Suena sincero</text>
+  <circle cx="78" cy="278" r="6" fill="#147a5a"/>
+  <text x="100" y="285" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">Humor</text>
+  <circle cx="78" cy="342" r="6" fill="#147a5a"/>
+  <text x="100" y="349" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">Sin empalago</text>
+  <circle cx="78" cy="406" r="6" fill="#147a5a"/>
+  <text x="100" y="413" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">Encaja en la escena</text>
+  <circle cx="518" cy="196" r="6" fill="#b24a38"/>
+  <text x="540" y="203" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18">El cerdo estaba un poco salado</text>
+  <circle cx="518" cy="292" r="6" fill="#b24a38"/>
+  <text x="540" y="299" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18">La sopa estaba un poco a pescado</text>
+</svg>
