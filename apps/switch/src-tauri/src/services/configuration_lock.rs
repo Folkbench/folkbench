@@ -40,6 +40,8 @@ mod tests {
                         String::new(),
                         String::new(),
                         String::new(),
+                        Vec::new(),
+                        String::new(),
                         ServiceProtocol::Auto,
                         "https://example.com/v1".into(),
                         format!("synthetic-{index}"),

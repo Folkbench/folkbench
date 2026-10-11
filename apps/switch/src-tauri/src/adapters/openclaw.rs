@@ -1,8 +1,9 @@
 use std::path::Path;
 
-use crate::domain::{ServiceError, ServiceProtocol};
+use crate::domain::{FetchedModel, ServiceError, ServiceProtocol};
 
 use super::atomic::{read_json_object, write_json};
+use super::model_fetch;
 use super::projection::LiveProjection;
 
 pub fn inspect(
@@ -40,9 +41,11 @@ pub fn inspect(
 
 pub fn apply(
     dir: &Path,
-    service_id: &str,
-    name: &str,
+    provider_id: &str,
+    archive_service_id: &str,
+    _name: &str,
     model_id: &str,
+    archived_models: &[FetchedModel],
     protocol: ServiceProtocol,
     base_url: &str,
     api_key: &str,
@@ -51,27 +54,40 @@ pub fn apply(
     let mut root = read_json_object(&path)?;
     let models = object(&mut root, "models")?;
     models.insert("mode".into(), serde_json::Value::String("merge".into()));
-    object(models, "providers")?.insert(
-        service_id.into(),
-        serde_json::json!({
-            "baseUrl": base_url,
-            "apiKey": api_key,
-            "api": api_name(protocol),
-            "models": [{
-                "id": model_id,
-                "name": name,
+    let providers = object(models, "providers")?;
+    let resolved =
+        model_fetch::models_for_apply(archived_models, model_id, Vec::new());
+    let model_entries: Vec<serde_json::Value> = resolved
+        .iter()
+        .map(|(id, model_name)| {
+            serde_json::json!({
+                "id": id,
+                "name": model_name,
                 "reasoning": false,
                 "input": ["text"],
                 "contextWindow": 128000,
                 "maxTokens": 8192
-            }]
+            })
+        })
+        .collect();
+    providers.insert(
+        provider_id.into(),
+        serde_json::json!({
+            "baseUrl": base_url,
+            "apiKey": api_key,
+            "api": api_name(protocol),
+            "models": model_entries
         }),
     );
+    // Drop leftover Folkbench svc-* key after the user sets a readable id.
+    if provider_id != archive_service_id {
+        providers.remove(archive_service_id);
+    }
     let agents = object(&mut root, "agents")?;
     let defaults = object(agents, "defaults")?;
     object(defaults, "model")?.insert(
         "primary".into(),
-        serde_json::Value::String(format!("{service_id}/{model_id}")),
+        serde_json::Value::String(format!("{provider_id}/{model_id}")),
     );
     write_json(&path, &root)
 }
@@ -127,4 +143,32 @@ fn object<'a>(
         .or_insert_with(|| serde_json::json!({}))
         .as_object_mut()
         .ok_or(ServiceError::WriteFailed)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolved_list_includes_archived_models_and_default() {
+        let archived = vec![
+            FetchedModel {
+                id: "a".into(),
+                name: "A".into(),
+            },
+            FetchedModel {
+                id: "b".into(),
+                name: "B".into(),
+            },
+        ];
+        let list = model_fetch::models_for_apply(&archived, "c", Vec::new());
+        assert_eq!(
+            list,
+            vec![
+                ("a".into(), "A".into()),
+                ("b".into(), "B".into()),
+                ("c".into(), "c".into()),
+            ]
+        );
+    }
 }

@@ -83,7 +83,6 @@
       "requiresRestart": "restart required"
     },
     "effectDetail": {
-      "claude-code": "{{tool}} uses the new address and Key in the current session",
       "codex": "{{tool}} reads its configuration only at startup. Quit it completely, then open it again",
       "gemini-cli": "{{tool}} uses the new configuration on the next conversation"
     },
@@ -104,7 +103,7 @@
     },
     "empty": {
       "action": "Add service",
-      "import": "Import from current tool",
+      "import": "Sync existing local config",
       "imported": "Current configuration imported",
       "title": "No saved services",
       "preview": {
@@ -140,6 +139,13 @@
       "modelId": "Model id (optional)",
       "moreIds": "Station / channel / model (optional)",
       "name": "Display name",
+      "providerId": "Provider ID",
+      "providerIdHelpAria": "Provider ID help",
+      "providerIdHelp": "The provider ID is the key written under the tool config (for example models.providers.<id> in OpenClaw / Pi, or custom_providers[].name / model.provider: custom:<id> in Hermes). Model refs look like id/model. Pick a preset (openai, anthropic, …) from the list or type your own. Use letters, digits, hyphens, or underscores—no spaces or slashes.",
+      "providerIdPlaceholder": "e.g. modelflare or my-relay",
+      "providerIdPresets": "Show provider presets",
+      "providerIdRequired": "Enter a provider ID (pick from the list or type one).",
+      "providerIdInvalid": "Provider ID must start with a letter or digit and may only contain letters, digits, hyphens, and underscores.",
       "protocols": {
         "anthropic-messages": "Anthropic Messages (Claude)",
         "auto": "Default",
@@ -149,7 +155,33 @@
       },
       "stationId": "Folkbench station id (optional)",
       "tool": "Tool to switch",
-      "unspecified": "No Folkbench ids"
+      "unspecified": "No Folkbench ids",
+      "model": "Model",
+      "modelOptional": "Model (optional)",
+      "modelPlaceholder": "Enter a model id, e.g. gpt-5.4",
+      "modelSelectPlaceholder": "Choose a model",
+      "modelCustom": "Enter a model id manually…",
+      "modelCustomSuffix": " (custom)",
+      "modelBackToList": "Pick from list",
+      "fetchModels": "Fetch models",
+      "refetchModels": "Refetch",
+      "fetchingModels": "Fetching…",
+      "modelRequired": "{{tool}} needs a model: choose one from the list or enter a model id.",
+      "modelHintRequired": "This tool's config must include a model. Choose or enter one before saving.",
+      "modelHintOptional": "Leave empty to keep the tool's own model setting.",
+      "modelHintOpencode": "If empty, switching probes the model list and picks a default.",
+      "modelFetch": {
+        "needsCredentials": "The model list loads automatically once Base URL and API Key are filled in.",
+        "pending": "Fetching the model list…",
+        "ready": "Found {{count}} models.",
+        "empty": "The endpoint returned an empty model list. Enter a model id manually.",
+        "missingKey": "An API Key is required to fetch the model list.",
+        "invalidUrl": "Base URL must start with https:// (http:// is allowed for localhost).",
+        "unauthorized": "The Key is invalid or cannot list models (HTTP {{status}}).",
+        "endpointNotFound": "This address does not expose a model list. Enter a model id manually.",
+        "unreachable": "Cannot reach this address. Check the Base URL or your network.",
+        "unavailable": "Fetching the model list failed ({{status}}). Retry later or enter one manually."
+      }
     },
     "home": {
       "allServices": "All services",
@@ -178,7 +210,7 @@
     "list": {
       "count": "{{count}} services"
     },
-    "restartHint": "Restart {{tool}} for this write to take effect",
+    "restartHint": "Restart the {{tool}} session for this to take effect",
     "switch": {
       "disable": "Stop using {{name}} on {{tool}}",
       "enable": "Use {{name}} on {{tool}}"
@@ -207,7 +239,8 @@
       "saved": "Service updated.",
       "switched": "Wrote {{tool}} ({{effect}}).",
       "unreachable": "Unreachable",
-      "reachableSlow": "Reachable but slow ({{ms}} ms)"
+      "reachableSlow": "Reachable but slow ({{ms}} ms)",
+      "restartToApply": "Restart the {{tool}} session for this to take effect"
     },
     "statusWindow": {
       "label": "{{name}} channel status over the last 24 hours",

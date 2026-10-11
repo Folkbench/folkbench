@@ -48,6 +48,7 @@ pub fn run() {
             commands::my_services::unswitch_my_service,
             commands::my_services::update_my_service,
             commands::my_services::verify_my_service,
+            commands::my_services::fetch_service_models,
             commands::links::open_external_link,
             commands::preferences::get_preferences,
             commands::preferences::complete_account_onboarding,

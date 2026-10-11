@@ -23,6 +23,7 @@ export function ChoiceSelect<T extends string>({
   value,
   options,
   hint,
+  placeholder,
   hideLabel = false,
   onChange,
 }: {
@@ -31,6 +32,7 @@ export function ChoiceSelect<T extends string>({
   value: T
   options: Array<ChoiceOption<T>>
   hint?: string
+  placeholder?: string
   hideLabel?: boolean
   onChange: (value: T) => void
 }) {
@@ -61,7 +63,12 @@ export function ChoiceSelect<T extends string>({
           <Select.Value className="flex min-w-0 items-center gap-2">
             {(selected) => {
               const option = options.find((item) => item.value === selected)
-              if (!option) return null
+              if (!option)
+                return placeholder ? (
+                  <span className="truncate text-muted-foreground">
+                    {placeholder}
+                  </span>
+                ) : null
               return <ChoiceOptionLabel option={option} />
             }}
           </Select.Value>

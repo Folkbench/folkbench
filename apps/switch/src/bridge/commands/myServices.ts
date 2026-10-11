@@ -1,4 +1,6 @@
 import type {
+  FetchedModel,
+  ModelFetchResult,
   MyService,
   ServiceProtocol,
   SwitchResult,
@@ -28,6 +30,8 @@ export async function addMyService(input: {
   stationId: string
   channelId: string
   modelId: string
+  models?: FetchedModel[]
+  providerId: string
   apiProtocol: ServiceProtocol
   baseUrl: string
   apiKey: string
@@ -49,6 +53,8 @@ export async function updateMyService(input: {
   stationId: string
   channelId: string
   modelId: string
+  models?: FetchedModel[]
+  providerId: string
   apiProtocol: ServiceProtocol
   baseUrl: string
   apiKey?: string
@@ -78,6 +84,18 @@ export async function verifyMyService(
   serviceId: string
 ): Promise<VerifyResult> {
   return invokeCommand<VerifyResult>('verify_my_service', { toolId, serviceId })
+}
+
+/** Pull the provider model list for the add/edit form. A blank apiKey with a
+ * serviceId falls back to that service's saved Key inside Rust. */
+export async function fetchServiceModels(input: {
+  toolId: string
+  serviceId?: string
+  baseUrl: string
+  apiKey?: string
+  apiProtocol: ServiceProtocol
+}): Promise<ModelFetchResult> {
+  return invokeCommand<ModelFetchResult>('fetch_service_models', input)
 }
 
 export async function queryServiceBalance(

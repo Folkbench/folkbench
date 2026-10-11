@@ -118,6 +118,17 @@ export function ToolDock({
       frame = requestAnimationFrame(tick)
     }
     const onMove = (event: PointerEvent) => {
+      const wrap = dock.current?.closest('.agent-dock-wrap')
+      // Window-level pointermove still fires under dialogs. Only magnify when
+      // the topmost hit target is actually the dock (or nothing covering it).
+      const top = document.elementFromPoint(event.clientX, event.clientY)
+      if (!wrap || !top || !wrap.contains(top)) {
+        if (pointer.current != null) {
+          pointer.current = null
+          wake()
+        }
+        return
+      }
       pointer.current = { x: event.clientX, y: event.clientY }
       wake()
     }
