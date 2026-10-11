@@ -1,13 +1,17 @@
 # Third-Party Notices
 
 This file records third-party source or assets that were copied or adapted
-into this repository. Declared package dependencies are not inventoried here.
+into this repository. Full dependency license texts are distributed in
+`THIRD_PARTY_LICENSES.txt`; the versioned inventory and lockfile hashes are
+recorded in `dependency-license-inventory.json`.
 
 ## Current state
 
-Adapted interface source is recorded below. Other package dependencies arrive
-through `bun.lock` and `src-tauri/Cargo.lock`. Those lockfiles are not
-license-censused as a development or release gate.
+Adapted interface source is recorded below. Package dependencies arrive through
+`bun.lock` and `src-tauri/Cargo.lock`. Release-tool tests require the license
+inventory to match the current manifests and lockfiles. MPL-2.0 dependencies
+are unmodified and their exact public source archives are listed in the
+distributed license file.
 
 The Folkbench application icon is recorded in `assets/LICENSE.md`. Tool marks
 used only to identify external coding tools are recorded below and in that
@@ -58,7 +62,7 @@ not claim those products endorse it.
 - Commit: `c257f688cf4de7ec10cc1be84cad29cd4631182c` (2026-09-04)
 - Original files: `apps/v4/registry/bases/base/ui/calendar.tsx`,
   `apps/v4/registry/bases/base/ui/popover.tsx`
-- License: MIT
+- License: MIT. Full text is included in `THIRD_PARTY_LICENSES.txt`.
 - Incorporated as `src/components/ui/calendar.tsx` and
   `src/components/ui/popover.tsx`, generated for the base-nova style with
   Hugeicons. The usage date control composes them as the documented date

@@ -37,10 +37,19 @@
   },
   "bundle": {
     "active": true,
+    "macOS": {
+      "dmg": {
+        "background": "../assets/dmg/background.png",
+        "windowSize": { "width": 802, "height": 514 },
+        "appPosition": { "x": 206, "y": 248 },
+        "applicationFolderPosition": { "x": 598, "y": 248 }
+      }
+    },
     "resources": {
       "../LICENSE": "LICENSE",
       "../NOTICE": "NOTICE",
       "../THIRD_PARTY_NOTICES.md": "THIRD_PARTY_NOTICES.md",
+      "../THIRD_PARTY_LICENSES.txt": "THIRD_PARTY_LICENSES.txt",
       "../src/assets/tool-logos/LOBEHUB-ICONS-LICENSE": "LOBEHUB-ICONS-LICENSE"
     },
     "icon": [

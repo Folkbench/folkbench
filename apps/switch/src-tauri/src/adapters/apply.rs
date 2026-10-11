@@ -4,7 +4,7 @@ use std::{
 };
 
 use crate::domain::{
-    ServiceError, ServiceProtocol, SwitchEffect, SwitchResult,
+    FetchedModel, ServiceError, ServiceProtocol, SwitchEffect, SwitchResult,
 };
 
 use super::{
@@ -15,9 +15,14 @@ use super::{
 pub struct ApplyRequest<'a> {
     pub tool_id: &'a str,
     pub home: &'a Path,
+    /// Folkbench archive id (credentials / preferences).
     pub service_id: &'a str,
+    /// Tool config provider key (models.providers.<id>, model refs).
+    pub provider_id: &'a str,
     pub name: &'a str,
     pub model_id: &'a str,
+    /// Archived model list from the last form fetch (may be empty).
+    pub models: &'a [FetchedModel],
     pub api_protocol: ServiceProtocol,
     pub base_url: &'a str,
     pub api_key: &'a str,
@@ -128,6 +133,44 @@ pub fn known_tool(tool_id: &str) -> bool {
     )
 }
 
+/// Tools whose adapters write the model id into a required config slot.
+/// An empty id there produces an invalid tool config (e.g. OpenClaw
+/// `models[0].id: ""`), so add/edit/switch must carry a chosen model.
+/// Claude/Codex/Gemini keep their own model setting; OpenCode can use an
+/// archived model list (and probes only when that list is empty).
+pub fn model_required(tool_id: &str) -> bool {
+    matches!(
+        tool_id,
+        "grok-build"
+            | "openclaw"
+            | "hermes"
+            | "pi"
+            | "minimax-code"
+            | "dsh"
+            | "qwen-code"
+            | "kimi-cli"
+            | "aider"
+    )
+}
+
+/// Tools that write models.providers.<id> / provider/model refs and must
+/// carry an explicit provider id in the archive (no empty → svc-uuid fallback
+/// at save time).
+pub fn provider_id_required(tool_id: &str) -> bool {
+    matches!(
+        tool_id,
+        "openclaw"
+            | "pi"
+            | "opencode"
+            | "hermes"
+            | "qwen-code"
+            | "kimi-cli"
+            | "dsh"
+            | "minimax-code"
+            | "grok-build"
+    )
+}
+
 pub fn writable(tool_id: &str) -> bool {
     effect(tool_id) != SwitchEffect::NotImplemented
 }
@@ -151,7 +194,7 @@ pub fn inspect(
         "codex" => codex::inspect(&dir)?,
         "gemini-cli" => gemini::inspect(&dir)?,
         "grok-build" => grok::inspect(&dir, service_id)?,
-        "hermes" => hermes::inspect(&dir)?,
+        "hermes" => hermes::inspect(&dir, service_id)?,
         "minimax-code" => minimax::inspect(&dir, service_id)?,
         "dsh" => dsh::inspect(&dir, service_id)?,
         "aider" => aider::inspect(&dir)?,
@@ -197,6 +240,9 @@ fn apply_inner(
     {
         return Err(ServiceError::InvalidInput);
     }
+    if model_required(request.tool_id) && request.model_id.trim().is_empty() {
+        return Err(ServiceError::InvalidInput);
+    }
     let Some(dir) = config_dir(request.tool_id, request.home) else {
         return Err(ServiceError::ApplyUnsupported);
     };
@@ -213,7 +259,7 @@ fn apply_inner(
         )?,
         "codex" => codex::apply(
             &dir,
-            request.service_id,
+            request.provider_id,
             request.name,
             request.model_id,
             request.api_protocol,
@@ -228,7 +274,7 @@ fn apply_inner(
         )?,
         "grok-build" => grok::apply(
             &dir,
-            request.service_id,
+            request.provider_id,
             request.name,
             request.model_id,
             request.api_protocol,
@@ -237,25 +283,30 @@ fn apply_inner(
         )?,
         "hermes" => hermes::apply(
             &dir,
+            request.provider_id,
+            request.service_id,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
         )?,
         "minimax-code" => minimax::apply(
             &dir,
-            request.service_id,
+            request.provider_id,
             request.name,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
         )?,
         "dsh" => dsh::apply(
             &dir,
-            request.service_id,
+            request.provider_id,
             request.name,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
@@ -269,45 +320,52 @@ fn apply_inner(
         )?,
         "opencode" => opencode::apply(
             &dir,
-            request.service_id,
+            request.provider_id,
             request.name,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
         )?,
         "openclaw" => openclaw::apply(
             &dir,
+            request.provider_id,
             request.service_id,
             request.name,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
         )?,
         "pi" => pi::apply(
             &dir,
+            request.provider_id,
             request.service_id,
             request.name,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
         )?,
         "qwen-code" => qwen::apply(
             &dir,
-            request.service_id,
+            request.provider_id,
             request.name,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
         )?,
         "kimi-cli" => kimi::apply(
             &dir,
-            request.service_id,
+            request.provider_id,
             request.name,
             request.model_id,
+            request.models,
             request.api_protocol,
             request.base_url,
             request.api_key,
@@ -357,7 +415,7 @@ fn clear_inner(
             "codex" => codex::clear(&dir, service_id, expected_api_key)?,
             "gemini-cli" => gemini::clear(&dir)?,
             "grok-build" => grok::clear(&dir, service_id)?,
-            "hermes" => hermes::clear(&dir)?,
+            "hermes" => hermes::clear(&dir, service_id)?,
             "minimax-code" => minimax::clear(&dir, service_id)?,
             "dsh" => dsh::clear(&dir, service_id)?,
             "aider" => aider::clear(&dir)?,
@@ -518,8 +576,10 @@ mod tests {
             tool_id,
             home,
             service_id,
+            provider_id: service_id,
             name: "Example",
             model_id: "gpt-5-6-sol",
+            models: &[],
             api_protocol: ServiceProtocol::Auto,
             base_url: "https://example.com/v1",
             api_key: "sk-test",
@@ -775,14 +835,23 @@ requires_openai_auth = true
             "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"provider\": {\n    \"anthropic\": { \"options\": { \"timeout\": 1 } }\n  }\n}\n",
         )
         .unwrap();
-        apply(request(&home.0, "opencode", "svc-1")).expect("apply");
+        let mut req = request(&home.0, "opencode", "svc-1");
+        req.api_protocol = ServiceProtocol::OpenaiResponses;
+        // Keep discovery offline so this test only asserts archived model_id.
+        req.base_url = "http://127.0.0.1:9";
+        apply(req).expect("apply");
         let raw = fs::read_to_string(dir.join("opencode.json")).unwrap();
         let value: serde_json::Value = serde_json::from_str(&raw).unwrap();
         assert_eq!(value["$schema"], "https://opencode.ai/config.json");
         assert_eq!(value["provider"]["anthropic"]["options"]["timeout"], 1);
         assert_eq!(
             value["provider"]["svc-1"]["options"]["baseURL"],
-            "https://example.com/v1"
+            "http://127.0.0.1:9"
+        );
+        assert_eq!(value["provider"]["svc-1"]["npm"], "@ai-sdk/openai");
+        assert_eq!(
+            value["provider"]["svc-1"]["models"]["gpt-5-6-sol"]["name"],
+            "gpt-5-6-sol"
         );
         assert_eq!(value["model"], "svc-1/gpt-5-6-sol");
     }
@@ -917,15 +986,20 @@ requires_openai_auth = true
             "{\n  \"ui\": { \"theme\": \"dark\" }\n}\n",
         )
         .unwrap();
-        apply(request(&home.0, "qwen-code", "svc-1")).expect("apply");
+        let mut req = request(&home.0, "qwen-code", "svc-1");
+        // Keep discovery offline so this test only asserts archived model_id.
+        req.base_url = "http://127.0.0.1:9";
+        apply(req).expect("apply");
         let raw = fs::read_to_string(dir.join("settings.json")).unwrap();
         let value: serde_json::Value = serde_json::from_str(&raw).unwrap();
         assert_eq!(value["ui"]["theme"], "dark");
         assert_eq!(value["security"]["auth"]["selectedType"], "svc-1");
         assert_eq!(
             value["modelProviders"]["svc-1"][0]["baseUrl"],
-            "https://example.com/v1"
+            "http://127.0.0.1:9"
         );
+        assert_eq!(value["modelProviders"]["svc-1"][0]["id"], "gpt-5-6-sol");
+        assert_eq!(value["model"]["name"], "gpt-5-6-sol");
         let live = inspect("qwen-code", &home.0, Some("svc-1")).unwrap();
         assert_eq!(live.api_key.as_deref(), Some("sk-test"));
     }
@@ -988,11 +1062,14 @@ requires_openai_auth = true
         fs::write(dir.join("config.toml"), "telemetry = false\n").unwrap();
         let mut req = request(&home.0, "kimi-cli", "svc-1");
         req.api_protocol = ServiceProtocol::AnthropicMessages;
+        // Keep discovery offline so this test only asserts archived model_id.
+        req.base_url = "http://127.0.0.1:9";
         apply(req).expect("apply");
         let raw = fs::read_to_string(dir.join("config.toml")).unwrap();
         assert!(raw.contains("telemetry = false"));
         assert!(raw.contains("type = \"anthropic\""));
         assert!(raw.contains("default_model = \"svc-1/gpt-5-6-sol\""));
+        assert!(raw.contains("base_url = \"http://127.0.0.1:9\""));
         let live = inspect("kimi-cli", &home.0, Some("svc-1")).unwrap();
         assert_eq!(live.api_key.as_deref(), Some("sk-test"));
     }
@@ -1010,11 +1087,46 @@ requires_openai_auth = true
         )
         .unwrap();
         assert_eq!(root["terminal"]["backend"], "local");
-        assert_eq!(root["model"]["provider"], "custom");
-        assert_eq!(root["model"]["api_key"], "sk-test");
-        assert_eq!(root["model"]["api_mode"], "chat_completions");
+        assert_eq!(root["model"]["provider"], "custom:svc-1");
+        assert_eq!(root["model"]["default"], "gpt-5-6-sol");
+        assert!(root["model"].get("api_key").is_none());
+        assert!(root["model"].get("base_url").is_none());
+        assert!(root["model"].get("api_mode").is_none());
+        let providers = root["custom_providers"].as_sequence().expect("list");
+        assert_eq!(providers.len(), 1);
+        assert_eq!(providers[0]["name"], "svc-1");
+        assert_eq!(providers[0]["base_url"], "https://example.com/v1");
+        assert_eq!(providers[0]["api_key"], "sk-test");
+        assert_eq!(providers[0]["api_mode"], "chat_completions");
+        assert_eq!(providers[0]["model"], "gpt-5-6-sol");
+        assert!(providers[0]["models"]["gpt-5-6-sol"].is_mapping());
         let live = inspect("hermes", &home.0, Some("svc-1")).unwrap();
         assert_eq!(live.base_url.as_deref(), Some("https://example.com/v1"));
+        assert_eq!(live.api_key.as_deref(), Some("sk-test"));
+    }
+
+    #[test]
+    fn hermes_renames_provider_and_drops_archive_id_entry() {
+        let home = TempHome::new();
+        let dir = home.0.join(".hermes");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("config.yaml"), "").unwrap();
+        apply(request(&home.0, "hermes", "svc-1")).expect("seed");
+        let mut req = request(&home.0, "hermes", "svc-1");
+        req.provider_id = "modelflare";
+        req.api_protocol = ServiceProtocol::OpenaiResponses;
+        apply(req).expect("rename");
+        let root: serde_yaml::Value = serde_yaml::from_str(
+            &fs::read_to_string(dir.join("config.yaml")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(root["model"]["provider"], "custom:modelflare");
+        let providers = root["custom_providers"].as_sequence().expect("list");
+        assert_eq!(providers.len(), 1);
+        assert_eq!(providers[0]["name"], "modelflare");
+        assert_eq!(providers[0]["api_mode"], "codex_responses");
+        let live = inspect("hermes", &home.0, Some("modelflare")).unwrap();
+        assert_eq!(live.api_key.as_deref(), Some("sk-test"));
     }
 
     #[test]
@@ -1029,6 +1141,8 @@ requires_openai_auth = true
         .unwrap();
         let mut req = request(&home.0, "minimax-code", "svc-1");
         req.api_protocol = ServiceProtocol::OpenaiResponses;
+        // Unreachable port: discovery fails fast; archived model_id still written.
+        req.base_url = "http://127.0.0.1:9";
         apply(req).expect("apply");
         let root: serde_yaml::Value = serde_yaml::from_str(
             &fs::read_to_string(dir.join("config.yaml")).unwrap(),
@@ -1041,6 +1155,263 @@ requires_openai_auth = true
             root["custom_provider"]["svc-1"]["options"]["apiKey"],
             "sk-test"
         );
+        assert!(
+            root["custom_provider"]["svc-1"]["models"]["gpt-5-6-sol"]
+                .is_mapping()
+        );
+        assert_eq!(root["defaultModel"], "custom_provider:svc-1/gpt-5-6-sol");
+    }
+
+    #[test]
+    fn minimax_writes_all_discovered_models_and_default() {
+        use std::io::{Read, Write};
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let body = r#"{"data":[{"id":"gpt-5.4"},{"id":"gpt-5.6-sol"},{"id":"claude-sonnet"}]}"#;
+        let reply = format!(
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+            body.len(),
+            body
+        );
+        std::thread::spawn(move || {
+            // {base}/v1/models then maybe {base}/models — answer both.
+            for _ in 0..2 {
+                let Ok((mut stream, _)) = listener.accept() else {
+                    return;
+                };
+                let mut buf = [0u8; 4096];
+                let _ = stream.read(&mut buf);
+                let _ = stream.write_all(reply.as_bytes());
+            }
+        });
+
+        let home = TempHome::new();
+        let dir = home.0.join(".minimax");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("config.yaml"), "").unwrap();
+        let base_url = format!("http://127.0.0.1:{port}/v1");
+        let mut req = request(&home.0, "minimax-code", "modelflare");
+        req.base_url = &base_url;
+        req.model_id = "gpt-5.6-sol";
+        apply(req).expect("apply");
+        let root: serde_yaml::Value = serde_yaml::from_str(
+            &fs::read_to_string(dir.join("config.yaml")).unwrap(),
+        )
+        .unwrap();
+        let models = root["custom_provider"]["modelflare"]["models"]
+            .as_mapping()
+            .expect("models map");
+        assert!(
+            models.contains_key(serde_yaml::Value::String("gpt-5.4".into()))
+        );
+        assert!(
+            models
+                .contains_key(serde_yaml::Value::String("gpt-5.6-sol".into()))
+        );
+        assert!(
+            models.contains_key(serde_yaml::Value::String(
+                "claude-sonnet".into()
+            ))
+        );
+        assert_eq!(models.len(), 3);
+        assert_eq!(
+            root["defaultModel"],
+            "custom_provider:modelflare/gpt-5.6-sol"
+        );
+    }
+
+    #[test]
+    fn minimax_writes_archived_models_without_probing() {
+        use crate::domain::FetchedModel;
+        let home = TempHome::new();
+        let dir = home.0.join(".minimax");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("config.yaml"), "").unwrap();
+        // Unreachable URL would hang/fail a probe — archive list must win.
+        let archived = [
+            FetchedModel {
+                id: "arch-a".into(),
+                name: "A".into(),
+            },
+            FetchedModel {
+                id: "arch-b".into(),
+                name: "B".into(),
+            },
+        ];
+        let mut req = request(&home.0, "minimax-code", "modelflare");
+        req.model_id = "arch-a";
+        req.models = &archived;
+        req.base_url = "https://127.0.0.1:1/v1";
+        apply(req).expect("apply");
+        let root: serde_yaml::Value = serde_yaml::from_str(
+            &fs::read_to_string(dir.join("config.yaml")).unwrap(),
+        )
+        .unwrap();
+        let models = root["custom_provider"]["modelflare"]["models"]
+            .as_mapping()
+            .expect("models map");
+        assert!(
+            models.contains_key(serde_yaml::Value::String("arch-a".into()))
+        );
+        assert!(
+            models.contains_key(serde_yaml::Value::String("arch-b".into()))
+        );
+        assert_eq!(models.len(), 2);
+        assert_eq!(root["defaultModel"], "custom_provider:modelflare/arch-a");
+    }
+
+    #[test]
+    fn openclaw_writes_full_archived_model_list() {
+        use crate::domain::FetchedModel;
+        let home = TempHome::new();
+        let dir = home.0.join(".openclaw");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(
+            dir.join("openclaw.json"),
+            "{}
+",
+        )
+        .unwrap();
+        let archived = [
+            FetchedModel {
+                id: "m1".into(),
+                name: "One".into(),
+            },
+            FetchedModel {
+                id: "m2".into(),
+                name: "Two".into(),
+            },
+        ];
+        let mut req = request(&home.0, "openclaw", "svc-1");
+        req.model_id = "m1";
+        req.models = &archived;
+        apply(req).expect("apply");
+        let value: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(dir.join("openclaw.json")).unwrap(),
+        )
+        .unwrap();
+        let models = value["models"]["providers"]["svc-1"]["models"]
+            .as_array()
+            .expect("models array");
+        assert_eq!(models.len(), 2);
+        assert_eq!(models[0]["id"], "m1");
+        assert_eq!(models[1]["id"], "m2");
+        assert_eq!(value["agents"]["defaults"]["model"]["primary"], "svc-1/m1");
+    }
+
+    #[test]
+    fn qwen_writes_full_archived_model_list() {
+        use crate::domain::FetchedModel;
+        let home = TempHome::new();
+        let dir = home.0.join(".qwen");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("settings.json"), "{}\n").unwrap();
+        let archived = [
+            FetchedModel {
+                id: "m1".into(),
+                name: "One".into(),
+            },
+            FetchedModel {
+                id: "m2".into(),
+                name: "Two".into(),
+            },
+        ];
+        let mut req = request(&home.0, "qwen-code", "svc-1");
+        req.model_id = "m1";
+        req.models = &archived;
+        // Unreachable URL would hang/fail a probe — archive list must win.
+        req.base_url = "https://127.0.0.1:1/v1";
+        apply(req).expect("apply");
+        let value: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(dir.join("settings.json")).unwrap(),
+        )
+        .unwrap();
+        let models = value["modelProviders"]["svc-1"]
+            .as_array()
+            .expect("modelProviders array");
+        assert_eq!(models.len(), 2);
+        assert_eq!(models[0]["id"], "m1");
+        assert_eq!(models[0]["name"], "One");
+        assert_eq!(models[1]["id"], "m2");
+        assert_eq!(models[1]["name"], "Two");
+        assert_eq!(value["model"]["name"], "m1");
+        assert_eq!(value["security"]["auth"]["selectedType"], "svc-1");
+    }
+
+    #[test]
+    fn kimi_writes_full_archived_model_list() {
+        use crate::domain::FetchedModel;
+        let home = TempHome::new();
+        let dir = home.0.join(".kimi");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("config.toml"), "telemetry = false\n").unwrap();
+        let archived = [
+            FetchedModel {
+                id: "m1".into(),
+                name: "One".into(),
+            },
+            FetchedModel {
+                id: "m2".into(),
+                name: "Two".into(),
+            },
+        ];
+        let mut req = request(&home.0, "kimi-cli", "svc-1");
+        req.model_id = "m1";
+        req.models = &archived;
+        req.base_url = "https://127.0.0.1:1/v1";
+        apply(req).expect("apply");
+        let raw = fs::read_to_string(dir.join("config.toml")).unwrap();
+        assert!(raw.contains("telemetry = false"));
+        assert!(raw.contains("svc-1/m1"));
+        assert!(raw.contains("svc-1/m2"));
+        assert!(raw.contains("default_model = \"svc-1/m1\""));
+        assert!(raw.contains("display_name = \"One\""));
+        assert!(raw.contains("display_name = \"Two\""));
+
+        // Shrinked archive replaces stale aliases for this provider.
+        let shrunk = [FetchedModel {
+            id: "m1".into(),
+            name: "One".into(),
+        }];
+        let mut req2 = request(&home.0, "kimi-cli", "svc-1");
+        req2.model_id = "m1";
+        req2.models = &shrunk;
+        req2.base_url = "https://127.0.0.1:1/v1";
+        apply(req2).expect("re-apply");
+        let raw2 = fs::read_to_string(dir.join("config.toml")).unwrap();
+        assert!(raw2.contains("svc-1/m1"));
+        assert!(!raw2.contains("svc-1/m2"));
+        assert!(raw2.contains("default_model = \"svc-1/m1\""));
+    }
+
+    #[test]
+    fn kimi_code_dir_writes_full_archived_model_list() {
+        use crate::domain::FetchedModel;
+        let home = TempHome::new();
+        // Modern Kimi Code uses ~/.kimi-code (preferred over legacy ~/.kimi).
+        let dir = home.0.join(".kimi-code");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("config.toml"), "telemetry = false\n").unwrap();
+        let archived = [
+            FetchedModel {
+                id: "m1".into(),
+                name: "One".into(),
+            },
+            FetchedModel {
+                id: "m2".into(),
+                name: "Two".into(),
+            },
+        ];
+        let mut req = request(&home.0, "kimi-cli", "svc-1");
+        req.model_id = "m1";
+        req.models = &archived;
+        req.base_url = "https://127.0.0.1:1/v1";
+        apply(req).expect("apply");
+        let raw = fs::read_to_string(dir.join("config.toml")).unwrap();
+        assert!(raw.contains("svc-1/m1"));
+        assert!(raw.contains("svc-1/m2"));
+        assert!(raw.contains("default_model = \"svc-1/m1\""));
+        assert!(!home.0.join(".kimi").exists());
     }
 
     #[test]
@@ -1095,6 +1466,8 @@ requires_openai_auth = true
         .unwrap();
         let mut req = request(&home.0, "opencode", "svc-1");
         req.model_id = "";
+        // Unreachable port: discovery must fail fast and still leave models {}.
+        req.base_url = "http://127.0.0.1:9";
         apply(req).expect("apply");
         let raw = fs::read_to_string(dir.join("opencode.json")).unwrap();
         let value: serde_json::Value = serde_json::from_str(&raw).unwrap();
@@ -1138,6 +1511,7 @@ requires_openai_auth = true
         .unwrap();
         let mut req = request(&home.0, "opencode", "svc-1");
         req.model_id = "";
+        req.base_url = "http://127.0.0.1:9";
         apply(req).expect("apply");
         clear("opencode", &home.0, "svc-1", None).expect("clear");
         let raw = fs::read_to_string(dir.join("opencode.json")).unwrap();
@@ -1145,6 +1519,22 @@ requires_openai_auth = true
         assert_eq!(value["model"], "anthropic/keep-me");
         assert_eq!(value["provider"]["anthropic"]["options"]["timeout"], 1);
         assert!(value["provider"].get("svc-1").is_none());
+    }
+
+    #[test]
+    fn apply_rejects_empty_model_for_tools_that_need_one() {
+        let home = TempHome::new();
+        for tool in ["openclaw", "pi", "dsh", "kimi-cli", "grok-build"] {
+            let mut req = request(&home.0, tool, "svc-1");
+            req.model_id = "  ";
+            assert_eq!(
+                apply(req).expect_err(tool),
+                ServiceError::InvalidInput,
+                "{tool}"
+            );
+        }
+        assert!(!model_required("codex"));
+        assert!(!model_required("opencode"));
     }
 
     #[test]

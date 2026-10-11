@@ -1,9 +1,12 @@
 import { useQueries, useQuery } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import CircleQuestionMarkIcon from '@hugeicons/core-free-icons/CircleQuestionMarkIcon'
+import { Autocomplete } from '@base-ui/react/autocomplete'
+import ArrowDown01Icon from '@hugeicons/core-free-icons/ArrowDown01Icon'
+import CheckmarkCircle02Icon from '@hugeicons/core-free-icons/CheckmarkCircle02Icon'
 import EyeIcon from '@hugeicons/core-free-icons/EyeIcon'
 import ViewOffIcon from '@hugeicons/core-free-icons/ViewOffIcon'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -15,6 +18,8 @@ import {
   listPublishedStations,
 } from '@/bridge'
 import type {
+  FetchedModel,
+  ModelFetchResult,
   MyService,
   PublishedCatalog,
   PublishedStation,
@@ -58,6 +63,7 @@ import {
   myServicesQueryOptions,
   switchToolsQueryOptions,
   useAddMyService,
+  useFetchServiceModels,
   useImportMyServiceFromLive,
   useRemoveMyService,
   useRollbackMyServiceSwitch,
@@ -95,6 +101,9 @@ type FormState = {
   stationId: string
   channelId: string
   modelId: string
+  /** Last successful model-list fetch; persisted with the service. */
+  models: FetchedModel[]
+  providerId: string
   apiProtocol: ServiceProtocol
   baseUrl: string
   apiKey: string
@@ -106,9 +115,89 @@ const emptyForm: FormState = {
   stationId: '',
   channelId: '',
   modelId: '',
+  models: [],
+  providerId: '',
   apiProtocol: 'auto',
   baseUrl: '',
   apiKey: '',
+}
+
+const PROVIDER_ID_PRESETS = [
+  'openai',
+  'anthropic',
+  'google',
+  'deepseek',
+  'moonshot',
+  'minimax',
+  'qwen',
+  'kimi',
+  'grok',
+  'openrouter',
+  'together',
+  'fireworks',
+  'siliconflow',
+  'modelflare',
+  'azure',
+  'ollama',
+] as const
+
+/** Tools that write models.providers.<id> / provider/model refs. */
+function usesProviderIdField(toolId: string): boolean {
+  switch (toolId) {
+    case 'openclaw':
+    case 'pi':
+    case 'opencode':
+    case 'hermes':
+    case 'qwen-code':
+    case 'kimi-cli':
+    case 'dsh':
+    case 'minimax-code':
+    case 'grok-build':
+      return true
+    default:
+      return false
+  }
+}
+
+function slugifyProviderId(raw: string): string {
+  let out = ''
+  for (const c of raw.trim()) {
+    if (/[a-zA-Z0-9]/.test(c)) out += c.toLowerCase()
+    else if ((c === '-' || c === '_' || /\s/.test(c)) && out && !out.endsWith('-'))
+      out += '-'
+  }
+  while (out.endsWith('-')) out = out.slice(0, -1)
+  return out.slice(0, 64)
+}
+
+/** Suggest providerId from baseUrl domain only (never from display name). */
+function deriveProviderId(baseUrl: string): string {
+  const trimmed = baseUrl.trim()
+  const rest = trimmed.startsWith('https://')
+    ? trimmed.slice('https://'.length)
+    : trimmed.startsWith('http://')
+      ? trimmed.slice('http://'.length)
+      : ''
+  if (!rest) return ''
+  const host = (rest.split('/')[0] ?? '').split(':')[0] ?? ''
+  if (!host || host === 'localhost' || host === '127.0.0.1') return ''
+  const labels = host.split('.').filter(Boolean)
+  while (
+    labels.length > 1 &&
+    ['api', 'www', 'gateway'].includes(labels[0]!.toLowerCase())
+  ) {
+    labels.shift()
+  }
+  const brand =
+    labels.length >= 2 ? labels[labels.length - 2]! : labels[0] ?? ''
+  return slugifyProviderId(brand)
+}
+
+function allowedProviderId(value: string): boolean {
+  const trimmed = value.trim()
+  if (!trimmed) return true
+  if (trimmed.length > 64) return false
+  return /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(trimmed)
 }
 
 function protocolsForTool(toolId: string): ServiceProtocol[] {
@@ -219,6 +308,27 @@ function defaultProtocolForTool(toolId: string): ServiceProtocol {
   return recommendedProtocolForTool(toolId) ?? 'auto'
 }
 
+/** Mirrors Rust `adapters::model_required`: these adapters write the model id
+ * into a required config slot, so an empty id would break the tool config. */
+function modelRequiredForTool(toolId: string): boolean {
+  switch (toolId) {
+    case 'grok-build':
+    case 'openclaw':
+    case 'hermes':
+    case 'pi':
+    case 'minimax-code':
+    case 'dsh':
+    case 'qwen-code':
+    case 'kimi-cli':
+    case 'aider':
+      return true
+    default:
+      return false
+  }
+}
+
+const CUSTOM_MODEL_VALUE = '__custom_model__'
+
 type ProtocolHelpToolId =
   | 'claude-code'
   | 'codex'
@@ -253,7 +363,11 @@ function protocolHelpKey(toolId: string): ProtocolHelpToolId {
 
 function addInputFromForm(form: FormState) {
   const { targetToolId, ...service } = form
-  return { ...service, toolId: targetToolId }
+  return {
+    ...service,
+    providerId: service.providerId.trim(),
+    toolId: targetToolId,
+  }
 }
 
 function currentPublishedStation(
@@ -280,17 +394,10 @@ function effectExplanation(
   effect: SwitchEffect,
   t: (key: string, values?: { tool: string }) => string
 ) {
-  if (toolId === 'claude-code') {
-    return t('configure.effectDetail.claude-code', { tool: toolName })
-  }
-  if (toolId === 'codex') {
-    return t('configure.effectDetail.codex', { tool: toolName })
-  }
+  // Restart guidance is shown in toasts after switch/save, not inline.
+  if (effect === 'requiresRestart') return null
   if (toolId === 'gemini-cli') {
     return t('configure.effectDetail.gemini-cli', { tool: toolName })
-  }
-  if (effect === 'requiresRestart') {
-    return t('configure.restartHint', { tool: toolName })
   }
   if (effect === 'hotReload') {
     return t('configure.effectLine.hotReload', { tool: toolName })
@@ -341,6 +448,12 @@ export function HomePage() {
   const switchService = useSwitchMyService()
   const unswitchService = useUnswitchMyService()
   const verifyService = useVerifyMyService()
+  const fetchModels = useFetchServiceModels()
+  const [modelFetch, setModelFetch] = useState<ModelFetchResult | null>(null)
+  const [modelFetchPending, setModelFetchPending] = useState(false)
+  const [modelCustom, setModelCustom] = useState(false)
+  const [providerIdTouched, setProviderIdTouched] = useState(false)
+  const modelFetchSeq = useRef(0)
   const [balances, setBalances] = useState<Record<string, ServiceBalance>>({})
 
   const [form, setForm] = useState(emptyForm)
@@ -435,7 +548,6 @@ export function HomePage() {
     if (openedCatalogAdd.current === catalogAddKey) {
       setForm((current) => {
         if (
-          current.modelId !== (search.modelId ?? '') ||
           current.stationId !== (search.stationId ?? '') ||
           current.channelId !== (search.channelId ?? '') ||
           current.apiKey !== ''
@@ -488,16 +600,22 @@ export function HomePage() {
       return
     }
     setAddSource('catalog')
-    setForm({
-      ...defaults,
-      name: [search.stationName, search.channelName]
-        .filter(Boolean)
-        .join(' · '),
-      stationId: search.stationId,
-      channelId: search.channelId,
-      modelId: search.modelId,
-      baseUrl: publishedBaseUrl,
-    })
+    {
+      const catalogName = search.stationName?.trim() || ''
+      setForm({
+        ...defaults,
+        name: catalogName,
+        stationId: search.stationId,
+        channelId: search.channelId,
+        // Ranking modelId is only for catalog lookup; form model stays empty.
+        modelId: '',
+        baseUrl: publishedBaseUrl,
+        providerId: usesProviderIdField(defaults.targetToolId)
+          ? deriveProviderId(publishedBaseUrl)
+          : '',
+      })
+      setProviderIdTouched(false)
+    }
     if (publishedBaseUrl) filledCatalogBase.current = catalogAddKey
   }, [
     catalogAddKey,
@@ -525,6 +643,7 @@ export function HomePage() {
     'dsh',
     'qwen-code',
     'kimi-cli',
+    'aider',
   ].includes(toolId)
   const usage = useQuery({
     ...sessionUsageQueryOptions,
@@ -644,6 +763,7 @@ export function HomePage() {
         : null
 
   function closeDialog() {
+    resetModelPicker()
     editingCredentialRequest.current = null
     setDialog(null)
     setEditing(null)
@@ -682,6 +802,7 @@ export function HomePage() {
   }
 
   function openAdd() {
+    resetModelPicker()
     setEditing(null)
     setAddSource('choose')
     setCatalogStep('entry')
@@ -696,23 +817,30 @@ export function HomePage() {
 
   function choosePublished(station: PublishedStation) {
     const targetToolId = defaultTargetToolId
+    const name = station.stationName
+    const baseUrl = station.baseUrl ?? ''
     setForm({
       ...emptyForm,
       targetToolId,
       apiProtocol: defaultProtocolForTool(targetToolId),
-      name: [station.stationName, station.channelName]
-        .filter(Boolean)
-        .join(' · '),
+      name,
       stationId: station.stationId,
       channelId: station.channelId,
-      modelId: station.modelId,
-      baseUrl: station.baseUrl ?? '',
+      // Keep model empty — user selects after credentials, same as manual add.
+      modelId: '',
+      baseUrl,
+      providerId: usesProviderIdField(targetToolId)
+        ? deriveProviderId(baseUrl)
+        : '',
     })
+    setProviderIdTouched(false)
     setAddSource('catalog')
     setCatalogStep('entry')
   }
 
   function chooseManualAdd() {
+    resetModelPicker()
+    setProviderIdTouched(false)
     setForm({
       ...emptyForm,
       targetToolId: defaultTargetToolId,
@@ -723,21 +851,42 @@ export function HomePage() {
   }
 
   async function openEdit(service: MyService) {
+    resetModelPicker()
     setCatalogStep('entry')
+    const savedProvider = service.providerId?.trim() ?? ''
+    const archivedModels = service.models ?? []
     const nextForm = {
       targetToolId: toolId,
       name: service.name,
       stationId: service.stationId,
       channelId: service.channelId,
       modelId: service.modelId,
+      models: archivedModels,
+      providerId: savedProvider
+        ? savedProvider
+        : usesProviderIdField(toolId)
+          ? deriveProviderId(service.baseUrl)
+          : '',
       apiProtocol: service.apiProtocol,
       baseUrl: service.baseUrl,
       apiKey: '',
     }
+    setProviderIdTouched(Boolean(savedProvider))
     const requestId = `${toolId}:${service.id}`
     editingCredentialRequest.current = requestId
     setEditing(service)
     setForm(nextForm)
+    // Seed the picker from the archived list so the user sees models before
+    // a refresh fetch completes (cc-switch style).
+    if (archivedModels.length > 0) {
+      setModelFetch({
+        status: 'ready',
+        models: archivedModels,
+        endpoint: null,
+        httpStatus: null,
+      })
+      setModelCustom(false)
+    }
     setDialog('edit')
     if (!service.hasCredential) return
     try {
@@ -754,6 +903,27 @@ export function HomePage() {
   async function onSave(event: React.FormEvent) {
     event.preventDefault()
     if (isCatalogAdd && catalogStep === 'result') return
+    if (modelRequired && !form.modelId.trim()) {
+      toast.error(
+        t('configure.form.modelRequired', {
+          tool:
+            toolList.find((tool) => tool.id === formToolId)?.displayName ??
+            formToolId,
+        })
+      )
+      return
+    }
+    if (usesProviderIdField(formToolId) && !form.providerId.trim()) {
+      toast.error(t('configure.form.providerIdRequired'))
+      return
+    }
+    if (
+      usesProviderIdField(formToolId) &&
+      !allowedProviderId(form.providerId)
+    ) {
+      toast.error(t('configure.form.providerIdInvalid'))
+      return
+    }
     if (isCatalogAdd && catalogStep === 'entry') {
       setCatalogStep('review')
       return
@@ -789,11 +959,22 @@ export function HomePage() {
           stationId: form.stationId,
           channelId: form.channelId,
           modelId: form.modelId,
+          models: form.models,
+          providerId: form.providerId.trim(),
           apiProtocol: form.apiProtocol,
           baseUrl: form.baseUrl,
           apiKey: form.apiKey.trim() ? form.apiKey : undefined,
         })
-        toast.success(t('configure.status.saved'))
+        if (
+          effect === 'requiresRestart' &&
+          currentId === editing.id
+        ) {
+          toast.success(
+            t('configure.status.restartToApply', { tool: toolName })
+          )
+        } else {
+          toast.success(t('configure.status.saved'))
+        }
       } else {
         await addService.mutateAsync(addInputFromForm(form))
         toast.success(t('configure.status.added'))
@@ -850,12 +1031,18 @@ export function HomePage() {
         toolId,
         serviceId: service.id,
       })
-      toast.success(
-        t('configure.status.switched', {
-          tool: result.toolId,
-          effect: effectLabel(result.effect, t),
-        })
-      )
+      if (result.effect === 'requiresRestart') {
+        toast.success(
+          t('configure.status.restartToApply', { tool: toolName })
+        )
+      } else {
+        toast.success(
+          t('configure.status.switched', {
+            tool: toolName,
+            effect: effectLabel(result.effect, t),
+          })
+        )
+      }
     } catch (error) {
       toast.error(serviceErrorMessage(error, t))
     }
@@ -975,6 +1162,108 @@ export function HomePage() {
           : dialog === 'add' && addSource === 'manual'
             ? 'backToChoose'
             : 'close'
+  const formToolId = dialog === 'edit' ? toolId : form.targetToolId
+  const modelRequired = modelRequiredForTool(formToolId)
+  const showModelField =
+    dialog !== null &&
+    !showAddChoice &&
+    !showPublishedPicker &&
+    (!isCatalogAdd || catalogStep === 'entry')
+  const canFetchModels =
+    showModelField &&
+    /^https?:\/\/\S+/.test(form.baseUrl.trim()) &&
+    (form.apiKey.trim() !== '' ||
+      Boolean(dialog === 'edit' && editing?.hasCredential))
+  const fetchedModels: FetchedModel[] =
+    modelFetch?.status === 'ready' ? modelFetch.models : []
+
+  function resetModelPicker() {
+    modelFetchSeq.current += 1
+    setModelFetch(null)
+    setModelFetchPending(false)
+    setModelCustom(false)
+    setProviderIdTouched(false)
+  }
+
+  async function runModelFetch() {
+    const seq = ++modelFetchSeq.current
+    setModelFetchPending(true)
+    try {
+      const result = await fetchModels.mutateAsync({
+        toolId: formToolId,
+        serviceId: dialog === 'edit' ? editing?.id : undefined,
+        baseUrl: form.baseUrl.trim(),
+        apiKey: form.apiKey.trim() || undefined,
+        apiProtocol: form.apiProtocol,
+      })
+      if (seq !== modelFetchSeq.current) return
+      setModelFetch(result)
+      // A fresh list returns the picker to select mode; typed ids stay.
+      // Persist the list on the form so add/update archives it (cc-switch).
+      if (result.status === 'ready') {
+        setModelCustom(false)
+        setForm((current) => ({ ...current, models: result.models }))
+      }
+    } catch {
+      if (seq !== modelFetchSeq.current) return
+      setModelFetch({
+        status: 'unavailable',
+        models: [],
+        endpoint: null,
+        httpStatus: null,
+      })
+    } finally {
+      if (seq === modelFetchSeq.current) setModelFetchPending(false)
+    }
+  }
+
+  // Auto-pull the model list once Base URL + Key (or a saved Key) are present,
+  // debounced so typing does not fire a request per keystroke.
+  useEffect(() => {
+    if (!canFetchModels) return
+    const timer = window.setTimeout(() => {
+      void runModelFetch()
+    }, 700)
+    return () => window.clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    canFetchModels,
+    form.baseUrl,
+    form.apiKey,
+    form.apiProtocol,
+    formToolId,
+    editing?.id,
+  ])
+
+  function modelHint(): string {
+    if (modelFetchPending) return t('configure.form.modelFetch.pending')
+    if (modelFetch) {
+      const status = modelFetch.httpStatus ?? ''
+      switch (modelFetch.status) {
+        case 'ready':
+          return t('configure.form.modelFetch.ready', {
+            count: modelFetch.models.length,
+          })
+        case 'unauthorized':
+          return t('configure.form.modelFetch.unauthorized', { status })
+        case 'unavailable':
+          return t('configure.form.modelFetch.unavailable', {
+            status: status || '—',
+          })
+        default:
+          return t(`configure.form.modelFetch.${modelFetch.status}`)
+      }
+    }
+    if (!canFetchModels) return t('configure.form.modelFetch.needsCredentials')
+    return modelRequired
+      ? t('configure.form.modelHintRequired')
+      : t(
+          formToolId === 'opencode'
+            ? 'configure.form.modelHintOpencode'
+            : 'configure.form.modelHintOptional'
+        )
+  }
+
   const focusBackupList = () => {
     document
       .querySelector('.home-list-scroll')
@@ -1019,8 +1308,10 @@ export function HomePage() {
         </div>
         <div className="home-tool-actions">
           <span className="min-w-0 text-right text-[12px] leading-snug text-muted-foreground">
-            {effectExplanation(toolId, toolName, effect, t) ??
-              effectLabel(effect, t)}
+            {effect === 'requiresRestart'
+              ? null
+              : (effectExplanation(toolId, toolName, effect, t) ??
+                effectLabel(effect, t))}
           </span>
           <Button
             variant="ghost"
@@ -1135,11 +1426,6 @@ export function HomePage() {
                 />
               </div>
             </div>
-            {effectExplanation(toolId, toolName, effect, t) ? (
-              <p className="line-focus-effect mt-2 text-[12px] text-muted-foreground">
-                {effectExplanation(toolId, toolName, effect, t)}
-              </p>
-            ) : null}
           </section>
         ) : (
           <section className="line-focus line-focus-idle">
@@ -1309,23 +1595,31 @@ export function HomePage() {
             <form className="grid gap-3" onSubmit={onSave}>
               {!isCatalogAdd || catalogStep === 'entry' ? (
                 <>
-                  {isCatalogAdd && form.stationId ? (
-                    <div className="rounded-lg border bg-muted/40 px-3 py-2 text-[13px]">
-                      <p className="font-medium">
-                        {search.stationName || form.name}
-                      </p>
-                      <p className="mt-0.5 text-muted-foreground">
-                        {search.channelName
-                          ? `${search.channelName} · ${form.modelId}`
-                          : form.modelId}
-                      </p>
-                    </div>
-                  ) : null}
                   <Field
                     label={t('configure.form.name')}
                     value={form.name}
-                    onChange={(value) => setForm({ ...form, name: value })}
+                    onChange={(value) =>
+                      setForm((current) => ({
+                        ...current,
+                        name: value,
+                      }))
+                    }
                   />
+                  {usesProviderIdField(
+                    dialog === 'edit' ? toolId : form.targetToolId
+                  ) ? (
+                    <ProviderIdField
+                      label={t('configure.form.providerId')}
+                      helpTip={t('configure.form.providerIdHelp')}
+                      helpAriaLabel={t('configure.form.providerIdHelpAria')}
+                      value={form.providerId}
+                      required
+                      onChange={(providerId) => {
+                        setProviderIdTouched(true)
+                        setForm((current) => ({ ...current, providerId }))
+                      }}
+                    />
+                  ) : null}
                   <ProtocolField
                     label={t('configure.form.apiProtocol')}
                     helpTip={t(
@@ -1358,7 +1652,19 @@ export function HomePage() {
                     label={t('configure.form.baseUrl')}
                     value={form.baseUrl}
                     placeholder={t('configure.form.baseUrlPlaceholder')}
-                    onChange={(value) => setForm({ ...form, baseUrl: value })}
+                    onChange={(value) =>
+                      setForm((current) => ({
+                        ...current,
+                        baseUrl: value,
+                        providerId:
+                          providerIdTouched ||
+                          !usesProviderIdField(
+                            dialog === 'edit' ? toolId : current.targetToolId
+                          )
+                            ? current.providerId
+                            : deriveProviderId(value),
+                      }))
+                    }
                   />
                   <Field
                     key={
@@ -1376,6 +1682,26 @@ export function HomePage() {
                     required={dialog !== 'edit'}
                     onChange={(value) => setForm({ ...form, apiKey: value })}
                   />
+                  {showModelField ? (
+                    <ModelField
+                      label={
+                        modelRequired
+                          ? t('configure.form.model')
+                          : t('configure.form.modelOptional')
+                      }
+                      value={form.modelId}
+                      models={fetchedModels}
+                      custom={modelCustom}
+                      pending={modelFetchPending}
+                      canFetch={canFetchModels}
+                      hint={modelHint()}
+                      onFetch={() => void runModelFetch()}
+                      onCustomChange={setModelCustom}
+                      onChange={(modelId) =>
+                        setForm((current) => ({ ...current, modelId }))
+                      }
+                    />
+                  ) : null}
                 </>
               ) : catalogStep === 'review' ? (
                 <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
@@ -1388,6 +1714,16 @@ export function HomePage() {
                   <p className="mt-1 break-all font-mono text-[12px] text-muted-foreground">
                     {form.baseUrl}
                   </p>
+                  {form.modelId ? (
+                    <p className="mt-1 text-[12px] text-muted-foreground">
+                      {t('configure.form.model')}：{form.modelId}
+                    </p>
+                  ) : null}
+                  {form.providerId ? (
+                    <p className="mt-1 text-[12px] text-muted-foreground">
+                      {t('configure.form.providerId')}：{form.providerId}
+                    </p>
+                  ) : null}
                   <p className="mt-1 text-[12px] text-muted-foreground">
                     {t('configure.form.apiProtocol')}：
                     {t(`configure.form.protocols.${form.apiProtocol}`)}
@@ -1457,10 +1793,8 @@ export function HomePage() {
                       verifyService.isPending
                     }
                   >
-                    {isCatalogAdd
-                      ? catalogStep === 'review'
-                        ? t('discovery.connect.review.saveAndCheck')
-                        : t('discovery.connect.review.next')
+                    {isCatalogAdd && catalogStep === 'review'
+                      ? t('discovery.connect.review.saveAndCheck')
                       : t('configure.actions.save')}
                   </Button>
                 )}
@@ -1574,6 +1908,112 @@ function Field({
   )
 }
 
+function ModelField({
+  label,
+  value,
+  models,
+  custom,
+  pending,
+  canFetch,
+  hint,
+  onFetch,
+  onCustomChange,
+  onChange,
+}: {
+  label: string
+  value: string
+  models: FetchedModel[]
+  custom: boolean
+  pending: boolean
+  canFetch: boolean
+  hint: string
+  onFetch: () => void
+  onCustomChange: (custom: boolean) => void
+  onChange: (value: string) => void
+}) {
+  const { t } = useTranslation()
+  const inputId = useId()
+  const hasList = models.length > 0
+  const showSelect = hasList && !custom
+  const options = models.map((model) => ({
+    value: model.id,
+    label: model.name !== model.id ? `${model.name} · ${model.id}` : model.id,
+  }))
+  if (value && !models.some((model) => model.id === value)) {
+    options.unshift({
+      value,
+      label: `${value}${t('configure.form.modelCustomSuffix')}`,
+    })
+  }
+  options.push({
+    value: CUSTOM_MODEL_VALUE,
+    label: t('configure.form.modelCustom'),
+  })
+
+  return (
+    <div className="grid min-w-0 gap-1.5">
+      <div className="flex min-w-0 items-center gap-1">
+        <Label htmlFor={showSelect ? undefined : inputId}>{label}</Label>
+        <div className="ml-auto flex items-center gap-0.5">
+          {hasList && custom ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              className="text-muted-foreground"
+              onClick={() => onCustomChange(false)}
+            >
+              {t('configure.form.modelBackToList')}
+            </Button>
+          ) : null}
+          <Button
+            type="button"
+            variant="ghost"
+            size="xs"
+            className="text-brand-signal"
+            disabled={!canFetch || pending}
+            onClick={onFetch}
+          >
+            {pending
+              ? t('configure.form.fetchingModels')
+              : hasList
+                ? t('configure.form.refetchModels')
+                : t('configure.form.fetchModels')}
+          </Button>
+        </div>
+      </div>
+      {showSelect ? (
+        <ChoiceSelect
+          label={label}
+          hideLabel
+          value={value}
+          placeholder={t('configure.form.modelSelectPlaceholder')}
+          options={options}
+          onChange={(next) => {
+            if (next === CUSTOM_MODEL_VALUE) {
+              onCustomChange(true)
+              return
+            }
+            onChange(next)
+          }}
+        />
+      ) : (
+        <Input
+          id={inputId}
+          autoComplete="off"
+          spellCheck={false}
+          placeholder={t('configure.form.modelPlaceholder')}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      )}
+      <p className="text-[12px] text-muted-foreground" role="status">
+        {hint}
+      </p>
+    </div>
+  )
+}
+
 function ProtocolField({
   label,
   helpTip,
@@ -1621,5 +2061,126 @@ function ProtocolField({
         </TooltipProvider>
       }
     />
+  )
+}
+
+function ProviderIdField({
+  label,
+  helpTip,
+  helpAriaLabel,
+  value,
+  required = false,
+  onChange,
+}: {
+  label: string
+  helpTip: string
+  helpAriaLabel: string
+  value: string
+  required?: boolean
+  onChange: (value: string) => void
+}) {
+  const { t } = useTranslation()
+  const inputId = useId()
+  const query = value.trim().toLowerCase()
+  const exactPreset = PROVIDER_ID_PRESETS.some((item) => item === query)
+  // Static list: show every preset when empty or on an exact preset, so the
+  // arrow always reveals all choices; otherwise narrow by substring.
+  const items: string[] =
+    !query || exactPreset
+      ? [...PROVIDER_ID_PRESETS]
+      : PROVIDER_ID_PRESETS.filter((item) => item.includes(query))
+
+  return (
+    <div className="grid min-w-0 gap-1.5">
+      <div className="flex min-w-0 items-center gap-1">
+        <Label htmlFor={inputId}>{label}</Label>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger
+              type="button"
+              delay={200}
+              className="inline-flex size-4 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label={helpAriaLabel}
+            >
+              <HugeiconsIcon
+                icon={CircleQuestionMarkIcon}
+                strokeWidth={1.7}
+                className="size-3.5"
+              />
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              align="start"
+              className="max-w-[280px] text-left leading-relaxed"
+            >
+              {helpTip}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      <Autocomplete.Root
+        items={items}
+        mode="none"
+        value={value}
+        onValueChange={(next) => onChange(next)}
+      >
+        <div className="relative">
+          <Autocomplete.Input
+            id={inputId}
+            required={required}
+            autoComplete="off"
+            spellCheck={false}
+            placeholder={t('configure.form.providerIdPlaceholder')}
+            className="flex h-9 w-full min-w-0 rounded-lg border border-input bg-card py-1 pr-9 pl-3 text-[13px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          />
+          <Autocomplete.Trigger
+            aria-label={t('configure.form.providerIdPresets')}
+            className="absolute inset-y-0 right-1 my-auto flex size-7 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
+          >
+            <HugeiconsIcon
+              icon={ArrowDown01Icon}
+              className="size-4"
+              strokeWidth={1.7}
+            />
+          </Autocomplete.Trigger>
+        </div>
+        <Autocomplete.Portal>
+          <Autocomplete.Positioner
+            sideOffset={6}
+            className="z-50 outline-none"
+          >
+            <Autocomplete.Popup className="min-w-[var(--anchor-width)] max-w-[calc(100vw-32px)] rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-[var(--shadow-overlay)] data-[empty]:hidden">
+              <Autocomplete.List className="max-h-72 overflow-y-auto">
+                {(item: string) => (
+                  <Autocomplete.Item
+                    key={item}
+                    value={item}
+                    className="relative flex min-h-9 cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-[13px] outline-none data-highlighted:bg-muted"
+                  >
+                    {item}
+                    {item === query ? (
+                      <HugeiconsIcon
+                        icon={CheckmarkCircle02Icon}
+                        className="ml-auto size-4 text-brand-signal"
+                        strokeWidth={1.7}
+                      />
+                    ) : null}
+                  </Autocomplete.Item>
+                )}
+              </Autocomplete.List>
+            </Autocomplete.Popup>
+          </Autocomplete.Positioner>
+        </Autocomplete.Portal>
+      </Autocomplete.Root>
+      {required && !value.trim() ? (
+        <p className="text-[12px] text-muted-foreground" role="status">
+          {t('configure.form.providerIdRequired')}
+        </p>
+      ) : value.trim() && !allowedProviderId(value) ? (
+        <p className="text-[12px] text-destructive" role="alert">
+          {t('configure.form.providerIdInvalid')}
+        </p>
+      ) : null}
+    </div>
   )
 }

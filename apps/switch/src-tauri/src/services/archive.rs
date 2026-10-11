@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use crate::domain::{
-    FolkbenchBinding, MyService, ServiceError, ServiceProtocol,
+    FetchedModel, FolkbenchBinding, MyService, ServiceError, ServiceProtocol,
 };
 use crate::services::atomic::write_json_atomically;
 use crate::services::catalog::parse_rankings_json;
@@ -24,6 +24,13 @@ pub(crate) struct StoredService {
     pub station_id: String,
     pub channel_id: String,
     pub model_id: String,
+    /// Full model list from the last successful form fetch (cc-switch style).
+    #[serde(default)]
+    pub models: Vec<FetchedModel>,
+    /// Tool-facing provider key under models.providers / model refs.
+    /// Empty means resolve to the Folkbench service id at apply time.
+    #[serde(default)]
+    pub provider_id: String,
     #[serde(default)]
     pub api_protocol: ServiceProtocol,
     pub base_url: String,
@@ -47,8 +54,10 @@ fn protocol_supported(tool_id: &str, protocol: ServiceProtocol) -> bool {
         "gemini-cli" => {
             matches!(protocol, ServiceProtocol::Auto | ServiceProtocol::Gemini)
         }
-        // OpenCode UI: completions / responses / anthropic (adapter still writes
-        // openai-compatible npm; Bedrock/Google SDK packages not wired yet).
+        // OpenCode UI: completions / responses / anthropic. Adapter maps npm
+        // by protocol (responses→openai, completions→openai-compatible,
+        // anthropic→@ai-sdk/anthropic) and probes GET /models for the picker.
+        // Gemini/Bedrock not offered in this tool's protocol list.
         "opencode" => matches!(
             protocol,
             ServiceProtocol::Auto
@@ -83,7 +92,7 @@ fn protocol_supported(tool_id: &str, protocol: ServiceProtocol) -> bool {
     }
 }
 
-pub(crate) fn allowed_base_url(base_url: &str) -> bool {
+pub fn allowed_base_url(base_url: &str) -> bool {
     let trimmed = base_url.trim();
     if trimmed.chars().any(char::is_control) {
         return false;
@@ -107,6 +116,138 @@ pub(crate) fn allowed_base_url(base_url: &str) -> bool {
         },
         _ => false,
     }
+}
+
+/// Provider ids are slug-like keys used by tools such as OpenClaw / Pi.
+pub fn allowed_provider_id(value: &str) -> bool {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return true;
+    }
+    if trimmed.len() > 64 {
+        return false;
+    }
+    let mut chars = trimmed.chars();
+    let Some(first) = chars.next() else {
+        return true;
+    };
+    if !first.is_ascii_alphanumeric() {
+        return false;
+    }
+    chars.all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+}
+
+/// Suggest a readable provider id from the display name or Base URL host.
+pub fn derive_provider_id(name: &str, base_url: &str) -> String {
+    if let Some(from_host) = provider_id_from_host(base_url) {
+        if allowed_provider_id(&from_host) && !from_host.is_empty() {
+            return from_host;
+        }
+    }
+    let from_name = slugify_provider_id(name);
+    if !from_name.is_empty() {
+        return from_name;
+    }
+    "custom".to_string()
+}
+
+fn provider_id_from_host(base_url: &str) -> Option<String> {
+    let trimmed = base_url.trim();
+    let rest = trimmed
+        .strip_prefix("https://")
+        .or_else(|| trimmed.strip_prefix("http://"))?;
+    let host = rest
+        .split('/')
+        .next()
+        .unwrap_or("")
+        .split(':')
+        .next()
+        .unwrap_or("");
+    if host.is_empty() || host == "localhost" || host == "127.0.0.1" {
+        return None;
+    }
+    let mut labels: Vec<&str> =
+        host.split('.').filter(|part| !part.is_empty()).collect();
+    if labels.is_empty() {
+        return None;
+    }
+    while labels.len() > 1 {
+        let head = labels[0].to_ascii_lowercase();
+        if matches!(head.as_str(), "api" | "www" | "gateway") {
+            labels.remove(0);
+            continue;
+        }
+        break;
+    }
+    let brand = if labels.len() >= 2 {
+        labels[labels.len() - 2]
+    } else {
+        labels[0]
+    };
+    let slug = slugify_provider_id(brand);
+    if slug.is_empty() { None } else { Some(slug) }
+}
+
+fn slugify_provider_id(raw: &str) -> String {
+    let mut out = String::new();
+    for c in raw.trim().chars() {
+        if c.is_ascii_alphanumeric() {
+            out.push(c.to_ascii_lowercase());
+        } else if (c == '-' || c == '_' || c.is_whitespace())
+            && !out.is_empty()
+            && !out.ends_with('-')
+        {
+            out.push('-');
+        }
+    }
+    while out.ends_with('-') {
+        out.pop();
+    }
+    if out.len() > 64 {
+        out.truncate(64);
+    }
+    out
+}
+
+/// Config key written into the tool: explicit provider_id, else Folkbench service id.
+pub fn resolve_provider_id(row: &StoredService) -> String {
+    let trimmed = row.provider_id.trim();
+    if !trimmed.is_empty() {
+        trimmed.to_string()
+    } else {
+        row.id.clone()
+    }
+}
+
+fn normalize_provider_id(
+    tool_id: &str,
+    raw: &str,
+) -> Result<String, ServiceError> {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        // Tools with a provider-id field must set one explicitly.
+        if crate::adapters::provider_id_required(tool_id) {
+            return Err(ServiceError::InvalidInput);
+        }
+        return Ok(String::new());
+    }
+    if !allowed_provider_id(trimmed) {
+        return Err(ServiceError::InvalidInput);
+    }
+    Ok(trimmed.to_string())
+}
+
+fn provider_id_taken(
+    archive: &ArchiveFile,
+    tool_id: &str,
+    provider_id: &str,
+    except_id: Option<&str>,
+) -> bool {
+    archive.services.iter().any(|row| {
+        row.tool_id == tool_id
+            && except_id.is_none_or(|id| row.id != id)
+            && resolve_provider_id(row) == provider_id
+    })
 }
 
 fn archive_path(config_dir: &Path) -> std::path::PathBuf {
@@ -203,6 +344,8 @@ fn to_public(
         station_id: row.station_id,
         channel_id: row.channel_id,
         model_id: row.model_id,
+        models: row.models,
+        provider_id: row.provider_id,
         api_protocol: row.api_protocol,
         base_url: row.base_url,
         has_credential,
@@ -276,6 +419,8 @@ pub fn add_for_tool(
     station_id: String,
     channel_id: String,
     model_id: String,
+    models: Vec<FetchedModel>,
+    provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
     api_key: String,
@@ -304,16 +449,29 @@ pub fn add_for_tool(
     if !protocol_supported(tool_id, api_protocol) {
         return Err(ServiceError::ApplyUnsupported);
     }
+    let normalized_name = name.trim().to_string();
+    let normalized_base = base_url.trim().trim_end_matches('/').to_string();
+    let normalized_provider = normalize_provider_id(tool_id, &provider_id)?;
     let mut archive = load_file(config_dir)?;
+    if provider_id_taken(&archive, tool_id, &normalized_provider, None) {
+        return Err(ServiceError::InvalidInput);
+    }
+    let trimmed_model = model_id.trim().to_string();
+    let stored_models = crate::adapters::model_fetch::normalize_stored_models(
+        models,
+        &trimmed_model,
+    );
     let stored = StoredService {
         tool_id: tool_id.to_string(),
         id: id.clone(),
-        name: name.trim().to_string(),
+        name: normalized_name,
         station_id: station_id.trim().to_string(),
         channel_id: channel_id.trim().to_string(),
-        model_id: model_id.trim().to_string(),
+        model_id: trimmed_model,
+        models: stored_models,
+        provider_id: normalized_provider,
         api_protocol,
-        base_url: base_url.trim().trim_end_matches('/').to_string(),
+        base_url: normalized_base,
     };
     archive.services.push(stored.clone());
     credentials::put_for_tool(config_dir, tool_id, &id, api_key.trim())
@@ -341,6 +499,8 @@ pub fn update_for_tool(
     station_id: String,
     channel_id: String,
     model_id: String,
+    models: Vec<FetchedModel>,
+    provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
     api_key: Option<String>,
@@ -362,7 +522,13 @@ pub fn update_for_tool(
         return Err(ServiceError::InvalidInput);
     }
 
+    let normalized_name = name.trim().to_string();
+    let normalized_base = base_url.trim().trim_end_matches('/').to_string();
+    let normalized_provider = normalize_provider_id(tool_id, &provider_id)?;
     let mut archive = load_file(config_dir)?;
+    if provider_id_taken(&archive, tool_id, &normalized_provider, Some(id)) {
+        return Err(ServiceError::InvalidInput);
+    }
     let snapshot = {
         let Some(stored) = archive
             .services
@@ -371,12 +537,18 @@ pub fn update_for_tool(
         else {
             return Err(ServiceError::NotFound);
         };
-        stored.name = name.trim().to_string();
+        let trimmed_model = model_id.trim().to_string();
+        stored.name = normalized_name;
         stored.station_id = station_id.trim().to_string();
         stored.channel_id = channel_id.trim().to_string();
-        stored.model_id = model_id.trim().to_string();
+        stored.models = crate::adapters::model_fetch::normalize_stored_models(
+            models,
+            &trimmed_model,
+        );
+        stored.model_id = trimmed_model;
+        stored.provider_id = normalized_provider;
         stored.api_protocol = api_protocol;
-        stored.base_url = base_url.trim().trim_end_matches('/').to_string();
+        stored.base_url = normalized_base;
         stored.clone()
     };
     write_json_atomically(config_dir, FILE_NAME, &archive)
@@ -538,6 +710,8 @@ pub fn add(
         station_id,
         channel_id,
         model_id,
+        Vec::new(),
+        String::new(),
         api_protocol,
         base_url,
         api_key,
@@ -600,6 +774,8 @@ pub fn update(
         station_id,
         channel_id,
         model_id,
+        Vec::new(),
+        String::new(),
         api_protocol,
         base_url,
         api_key,
@@ -943,5 +1119,195 @@ mod tests {
             std::fs::read_to_string(dir.0.join("credentials.json")).unwrap();
         assert!(raw.contains("sk-new"));
         assert!(!raw.contains("sk-old"));
+    }
+}
+
+#[cfg(test)]
+mod provider_id_tests {
+    use super::{
+        StoredService, allowed_provider_id, derive_provider_id,
+        resolve_provider_id,
+    };
+    use crate::domain::ServiceProtocol;
+
+    #[test]
+    fn accepts_slug_provider_ids() {
+        assert!(allowed_provider_id(""));
+        assert!(allowed_provider_id("openai"));
+        assert!(allowed_provider_id("model-flare"));
+        assert!(allowed_provider_id("OpenAI_1"));
+        assert!(!allowed_provider_id("-bad"));
+        assert!(!allowed_provider_id("has space"));
+        assert!(!allowed_provider_id("has/slash"));
+    }
+
+    #[test]
+    fn derives_from_host_and_name() {
+        assert_eq!(
+            derive_provider_id("ignored", "https://api.modelflare.dev/v1"),
+            "modelflare"
+        );
+        assert_eq!(
+            derive_provider_id("My Relay", "https://127.0.0.1:8080/v1"),
+            "my-relay"
+        );
+        assert_eq!(derive_provider_id("", ""), "custom");
+    }
+
+    #[test]
+    fn resolve_falls_back_to_service_id() {
+        let row = StoredService {
+            tool_id: "openclaw".into(),
+            id: "svc-abc".into(),
+            name: "X".into(),
+            station_id: String::new(),
+            channel_id: String::new(),
+            model_id: "gpt".into(),
+            models: Vec::new(),
+            provider_id: String::new(),
+            api_protocol: ServiceProtocol::Auto,
+            base_url: "https://example.com".into(),
+        };
+        assert_eq!(resolve_provider_id(&row), "svc-abc");
+        let mut named = row.clone();
+        named.provider_id = "modelflare".into();
+        assert_eq!(resolve_provider_id(&named), "modelflare");
+    }
+
+    #[test]
+    fn required_tools_reject_empty_provider_id() {
+        use crate::domain::ServiceError;
+        use std::sync::atomic::{AtomicU32, Ordering};
+        static SEQ: AtomicU32 = AtomicU32::new(0);
+        let path = std::env::temp_dir().join(format!(
+            "folkbench-provider-id-required-{}-{}",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ));
+        std::fs::create_dir_all(&path).unwrap();
+        let err = super::add_for_tool(
+            &path,
+            "openclaw",
+            "Relay".into(),
+            "".into(),
+            "".into(),
+            "gpt-5.4".into(),
+            Vec::new(),
+            String::new(),
+            ServiceProtocol::OpenaiCompletions,
+            "https://example.com/v1".into(),
+            "sk-test".into(),
+            None,
+        )
+        .unwrap_err();
+        assert_eq!(err, ServiceError::InvalidInput);
+        let ok = super::add_for_tool(
+            &path,
+            "openclaw",
+            "Relay".into(),
+            "".into(),
+            "".into(),
+            "gpt-5.4".into(),
+            Vec::new(),
+            "modelflare".into(),
+            ServiceProtocol::OpenaiCompletions,
+            "https://example.com/v1".into(),
+            "sk-test".into(),
+            None,
+        )
+        .expect("with provider id");
+        assert_eq!(ok.provider_id, "modelflare");
+        let _ = std::fs::remove_dir_all(&path);
+    }
+}
+
+#[cfg(test)]
+mod models_archive_tests {
+    use super::*;
+    use crate::domain::{FetchedModel, ServiceProtocol};
+    use std::sync::atomic::{AtomicU32, Ordering};
+
+    fn temp_dir() -> std::path::PathBuf {
+        static SEQ: AtomicU32 = AtomicU32::new(0);
+        let path = std::env::temp_dir().join(format!(
+            "folkbench-models-archive-{}-{}",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ));
+        std::fs::create_dir_all(&path).unwrap();
+        path
+    }
+
+    #[test]
+    fn persists_fetched_models_on_add_and_update() {
+        let path = temp_dir();
+        let models = vec![
+            FetchedModel {
+                id: "gpt-5.4".into(),
+                name: "GPT 5.4".into(),
+            },
+            FetchedModel {
+                id: "other".into(),
+                name: "Other".into(),
+            },
+        ];
+        let added = add_for_tool(
+            &path,
+            "minimax-code",
+            "Relay".into(),
+            "".into(),
+            "".into(),
+            "gpt-5.4".into(),
+            models.clone(),
+            "modelflare".into(),
+            ServiceProtocol::OpenaiCompletions,
+            "https://example.com/v1".into(),
+            "sk-test".into(),
+            None,
+        )
+        .expect("add");
+        assert_eq!(added.models.len(), 2);
+        assert_eq!(added.models[0].id, "gpt-5.4");
+
+        let listed = list_for_tool(&path, "minimax-code").unwrap();
+        assert_eq!(listed[0].models.len(), 2);
+
+        let updated = update_for_tool(
+            &path,
+            "minimax-code",
+            &added.id,
+            "Relay".into(),
+            "".into(),
+            "".into(),
+            "other".into(),
+            vec![FetchedModel {
+                id: "only".into(),
+                name: "Only".into(),
+            }],
+            "modelflare".into(),
+            ServiceProtocol::OpenaiCompletions,
+            "https://example.com/v1".into(),
+            None,
+            None,
+        )
+        .expect("update");
+        // model_id "other" is ensured into the list
+        assert!(updated.models.iter().any(|m| m.id == "only"));
+        assert!(updated.models.iter().any(|m| m.id == "other"));
+        let _ = std::fs::remove_dir_all(&path);
+    }
+
+    #[test]
+    fn legacy_archive_without_models_field_loads() {
+        let path = temp_dir();
+        std::fs::write(
+            path.join("services.json"),
+            r#"{"services":[{"toolId":"minimax-code","id":"svc-1","name":"Old","stationId":"","channelId":"","modelId":"gpt","providerId":"x","apiProtocol":"openai-completions","baseUrl":"https://example.com/v1"}]}"#,
+        )
+        .unwrap();
+        let listed = list_for_tool(&path, "minimax-code").unwrap();
+        assert_eq!(listed.len(), 1);
+        assert!(listed[0].models.is_empty());
+        let _ = std::fs::remove_dir_all(&path);
     }
 }
