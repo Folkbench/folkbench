@@ -17,54 +17,56 @@
   <a href="README.en.md">English</a>
 </p>
 
-## 下载安装
+**主站帮助你选服务，Switch 帮助你把服务接入编程工具。**
 
-**Folkbench Switch · 0.1.0-beta.1**
+**主站**：多节点探针持续测试，展示各家真实的可用率、P95 延迟与价格，帮你挑出稳定好用的线路。
 
-| 系统 | 安装包 |
-| --- | --- |
-| macOS · Apple Silicon（M 系列） | DMG，准备上传 |
-| macOS · Intel | DMG，准备上传 |
-| Windows · x64 | EXE，准备上传 |
+**Switch**：开源桌面客户端，保存各中转站与官方的 Base URL 和 Key，为各类编程工具一键切换配置。
 
-[**查看 Beta 安装包与版本**](https://github.com/Folkbench/folkbench/releases)
+## 从哪里开始
 
-本版将先提供未公证的 macOS Beta 和未数字签名的 Windows Beta；macOS 公证正在进行。安装包上传后提供各平台直达下载链接及 SHA256 校验文件。
+| 你想做什么 | 推荐入口 | 说明 |
+| --- | --- | --- |
+| 比较站点的综合表现 | [总榜](https://folkbench.com/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) | 综合可用率、延迟与价格指标 |
+| 优先保证稳定性 | [稳定性榜](https://folkbench.com/rankings/board?metric=availability&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) | 适合长任务与自动化场景 |
+| 比较使用成本 | [性价比榜](https://folkbench.com/rankings/board?metric=price&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) | 比较各线路的实际调用单价 |
+| 管理并一键切换本地配置 | [Folkbench Switch](#folkbench-switch) | 支持 Claude Code、Codex 等工具一键换源 |
+| 了解评测方法与接入指南 | [文章与指南](https://folkbench.com/blog?utm_source=github&utm_campaign=folkbench-blog) | 评测逻辑与使用文档 |
+
+
+## Folkbench Switch
+
+Switch 是 Folkbench 的开源桌面客户端，核心功能就是**让你在不同的中转站和官方线路之间，一键切换 Base URL 和 API Key，不再需要手动改配置文件。**
+
+### 核心功能
+
+- **一键切换 Base URL 和 Key**：集中保存你拥有的各个中转站凭据，点一下就能直接应用到目标工具，随时切换或还原。
+- **支持主流编程工具**：开箱支持 Claude Code、Codex、Gemini CLI、Aider、OpenCode 等，自动写入对应工具所需的配置文件或环境变量。
+- **安全无损切换**：切换前可预览配置变动，支持一键还原；切换 Codex 时会自动暂存官方 ChatGPT 登录态，切回时不丢 Session。
+- **结合主站评测数据**：客户端内置同步公开线路数据，切换前可直接查看站点的实时可用率与延迟，避开刚好在抽风的线路。
+- **配置纯本地保存**：所有 API Key 和配置仅保存在本机文件，不上传云端，保证你的token不被偷。
+
+### 下载安装
+
+**当前版本：0.1.0-beta.1**
+
+| 系统平台 | 安装包格式 | 下载入口 |
+| --- | --- | --- |
+| macOS · Apple Silicon（M 系列） | DMG | [前往 GitHub Releases 下载](https://github.com/Folkbench/folkbench/releases) |
+| macOS · Intel | DMG | [前往 GitHub Releases 下载](https://github.com/Folkbench/folkbench/releases) |
+| Windows · x64 | EXE | [前往 GitHub Releases 下载](https://github.com/Folkbench/folkbench/releases) |
+
+Beta 阶段 macOS 正在进行苹果官方公证，Windows 签名正在办理中。如系统提示未签名，在系统设置中选择“仍要打开”即可
 
 ---
 
 先选模型，再比较提供它的中转站。Folkbench 将模型、渠道与评测窗口放在一起，让你查看可用率、24 小时状态、P95 完整响应耗时和价格，再决定用哪条线路。
 
-**主站帮助你选服务，Switch 帮助你把服务接入编程工具。**
 
-## 从哪里开始
 
-| 你想做什么 | 入口 |
-| --- | --- |
-| 比较站点的整体表现 | [总榜](https://folkbench.com/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| 优先查看可用率 | [稳定性榜](https://folkbench.com/rankings/board?metric=availability&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| 比较价格与使用成本 | [性价比榜](https://folkbench.com/rankings/board?metric=price&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| 了解接入与评测知识 | [文章与指南](https://folkbench.com/blog?utm_source=github&utm_campaign=folkbench-blog) |
-| 管理本机工具的服务配置 | [Folkbench Switch](#folkbench-switch) |
-
-榜单按模型和渠道展示数据，比较时请一起查看样本量、统计窗口和证据状态；P95 表示完整响应耗时。
-
-## 站点推荐
-
-| 站点 | 了解重点 | 入口 |
-| --- | --- | --- |
-| Modelflare | 多模型接入、有序回退、请求与费用记录 | [官网注册](https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| CheapAI | 关注价格与分组选择，比较不同线路的使用成本 | [官网注册](https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| Apiporter | 低额试用、国内企业采购与开票资料 | [官网注册](https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| Cloudbridge | 海外使用、多语言与美元结算场景 | [官网注册](https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| IKunCode | 编程工具接入与客服支持资料 | [官网注册](https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| 境Ai | 多模型聚合、按量计费与套餐选择 | [查看资料](https://folkbench.com/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| 智流 FluxLane | 多线路选择、团队采购与发票合同资料 | [查看资料](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-
-部分链接含推广或返佣参数。站点介绍不等同于实测排名，价格、优惠及服务条款以站点官网为准。
 
 <details open>
-<summary><strong>七个站点的完整介绍与优惠资料</strong></summary>
+<summary><strong>部分站点的介绍与优惠资料</strong></summary>
 
 <h3><a href="https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">Modelflare</a></h3>
 
@@ -104,38 +106,6 @@ IKunCode对于各个编程工具接入的支持比较好，Claude Code、Codex �
 智流 FluxLane 的模型和线路比较多，国内外模型都有，接入方式也比较统一，直接兼容 OpenAI SDK。除了模型和线路比较全，它还把路由、用量、成本和延迟这些东西都做进了平台里，比较适合开发者和团队长期接入。对于企业和高校采购这方面是比较明显的优势，可以提供发票、合同、采购单。
 
 </details>
-
-## Folkbench Switch
-
-**从选线路到用线路，少一些手动改配置。**
-
-Switch 是 Folkbench 的开源桌面客户端：保存常用服务、预览配置并切换编程工具，同时查看 Folkbench 的公开线路数据和自己的本机使用曲线。
-
-| 能力 | 使用方式 |
-| --- | --- |
-| 服务配置管理 | 保存 Base URL 与 API Key，管理首选和备选服务 |
-| 工具配置切换 | 按工具与协议预览、写入配置，提供失败恢复与单实例运行 |
-| 公开线路数据 | 查看已发布的模型及渠道可用率、状态、价格和评测窗口 |
-| 本机使用曲线 | 查看本机会话中的模型与 Token 统计、公开参考价估算 |
-| 可选账号登录 | 通过系统浏览器授权；本机服务管理可以独立使用 |
-
-配置适配包含 Claude Code、Codex、Gemini CLI、OpenCode 等工具。
-
-### 使用方式
-
-选择工具 → 添加或导入服务 → 填写站点提供的 Base URL 和 Key → 预览配置 → 启用。
-
-## 热门模型榜单
-
-| 模型 | 入口 |
-| --- | --- |
-| GPT 6 Sol | [查看中转站榜单](https://folkbench.com/rankings/gpt-6-sol?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| GPT 6 Astra | [查看中转站榜单](https://folkbench.com/rankings/gpt-6-astra?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| Claude Fable 5.1 | [查看中转站榜单](https://folkbench.com/rankings/claude-fable-5-1?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| Grok 4.7 | [查看中转站榜单](https://folkbench.com/rankings/grok-4-7?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| DeepSeek V4.1 Flash | [查看中转站榜单](https://folkbench.com/rankings/deepseek-v4-1-flash?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-
-更多模型与筛选条件请进入 [完整榜单](https://folkbench.com/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)。
 
 ## 问题反馈
 
