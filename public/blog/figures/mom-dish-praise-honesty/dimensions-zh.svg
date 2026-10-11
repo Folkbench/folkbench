@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" fill="none">
+  <rect width="920" height="520" fill="#f6f4ef"/>
+  <rect x="36" y="32" width="408" height="456" rx="16" fill="#fffdf8" stroke="#e4e0d6"/>
+  <rect x="476" y="32" width="408" height="456" rx="16" fill="#fffdf8" stroke="#e4e0d6"/>
+  <text x="64" y="84" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600">风格分能看见</text>
+  <text x="504" y="84" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600">公开输出拿掉了</text>
+  <circle cx="78" cy="150" r="6" fill="#147a5a"/>
+  <text x="100" y="157" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">具体</text>
+  <circle cx="78" cy="214" r="6" fill="#147a5a"/>
+  <text x="100" y="221" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">真心味</text>
+  <circle cx="78" cy="278" r="6" fill="#147a5a"/>
+  <text x="100" y="285" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">幽默</text>
+  <circle cx="78" cy="342" r="6" fill="#147a5a"/>
+  <text x="100" y="349" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">不油腻</text>
+  <circle cx="78" cy="406" r="6" fill="#147a5a"/>
+  <text x="100" y="413" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">场景贴合</text>
+  <circle cx="518" cy="196" r="6" fill="#b24a38"/>
+  <text x="540" y="203" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">红烧肉有点咸</text>
+  <circle cx="518" cy="292" r="6" fill="#b24a38"/>
+  <text x="540" y="299" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">鱼汤有点腥</text>
+</svg>

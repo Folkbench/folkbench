@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 348" fill="none">
+  <rect width="920" height="348" fill="#f6f4ef"/>
+  <text x="28" y="36" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="13" letter-spacing="0.06em">0–100</text>
+  <text x="28" y="86" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">GPT-5.6 Sol</text>
+  <text x="28" y="158" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">Kimi K2.7 Code</text>
+  <text x="28" y="230" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">Opus 4.8</text>
+  <text x="28" y="302" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">GLM 5.2</text>
+  <rect x="230" y="70" width="560" height="18" rx="9" fill="#e7e2d8"/>
+  <rect x="230" y="142" width="560" height="18" rx="9" fill="#e7e2d8"/>
+  <rect x="230" y="214" width="560" height="18" rx="9" fill="#e7e2d8"/>
+  <rect x="230" y="286" width="560" height="18" rx="9" fill="#e7e2d8"/>
+  <rect x="230" y="70" width="430.94" height="18" rx="9" fill="#1f6b52"/>
+  <rect x="230" y="142" width="420.5" height="18" rx="9" fill="#1f6b52"/>
+  <rect x="230" y="214" width="418.76" height="18" rx="9" fill="#1f6b52"/>
+  <rect x="230" y="286" width="407.16" height="18" rx="9" fill="#1f6b52"/>
+  <text x="808" y="84" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15">74.3</text>
+  <text x="808" y="156" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15">72.5</text>
+  <text x="808" y="228" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15">72.2</text>
+  <text x="808" y="300" fill="#171816" font-family="ui-monospace, ui-sans-serif, monospace" font-size="15">70.2</text>
+  <text x="230" y="332" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="12">0</text>
+  <text x="790" y="332" text-anchor="end" fill="#6d7168" font-family="ui-monospace, ui-sans-serif, monospace" font-size="12">100</text>
+</svg>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 188" fill="none">
+  <rect width="920" height="188" fill="#f6f4ef"/>
+  <rect x="20" y="32" width="188" height="124" rx="16" fill="#ffffff" stroke="#e4e0d6"/>
+  <rect x="236" y="32" width="188" height="124" rx="16" fill="#ffffff" stroke="#e4e0d6"/>
+  <rect x="452" y="32" width="188" height="124" rx="16" fill="#ffffff" stroke="#e4e0d6"/>
+  <rect x="668" y="32" width="188" height="124" rx="16" fill="#ffffff" stroke="#e4e0d6"/>
+  <path d="M216 94h14m-6-5 6 5-6 5" stroke="#1f6b52" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M432 94h14m-6-5 6 5-6 5" stroke="#1f6b52" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M648 94h14m-6-5 6 5-6 5" stroke="#1f6b52" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="114" y="74" text-anchor="middle" fill="#1f6b52" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600">1</text>
+  <text x="330" y="74" text-anchor="middle" fill="#1f6b52" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600">2</text>
+  <text x="546" y="74" text-anchor="middle" fill="#1f6b52" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600">3</text>
+  <text x="762" y="74" text-anchor="middle" fill="#1f6b52" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600">4</text>
+  <text x="114" y="104" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">Confirmar</text>
+  <text x="114" y="126" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">los hechos</text>
+  <text x="330" y="104" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">Explicar</text>
+  <text x="330" y="126" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">el límite</text>
+  <text x="546" y="104" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">Proponer</text>
+  <text x="546" y="126" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">el plan</text>
+  <text x="762" y="104" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">Pedir</text>
+  <text x="762" y="126" text-anchor="middle" fill="#171816" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600">confirmación</text>
+</svg>
