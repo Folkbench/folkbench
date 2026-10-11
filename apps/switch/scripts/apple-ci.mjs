@@ -70,7 +70,10 @@ export async function prepareAppleFiles(env, temporaryRoot) {
 export function installerEnvironment(source, { macOS, notarize }) {
   const env = { ...source }
   for (const name of appleEnvironment) delete env[name]
+  delete env.TAURI_BUNDLER_DMG_IGNORE_CI
   if (macOS) {
+    // Tauri otherwise skips Finder layout on CI, losing the installer background.
+    env.TAURI_BUNDLER_DMG_IGNORE_CI = 'true'
     env.APPLE_SIGNING_IDENTITY = '-'
     if (notarize) {
       for (const name of ['APPLE_SIGNING_IDENTITY', 'APPLE_API_KEY', 'APPLE_API_ISSUER', 'APPLE_API_KEY_PATH']) {
