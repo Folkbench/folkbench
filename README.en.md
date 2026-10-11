@@ -16,7 +16,7 @@ Live AI API Relay Benchmarks · One-Click Local Endpoint Switcher
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
 
-[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch Client](#2-use-endpoints-folkbench-switch-client) · [📦 Downloads](#3-installation--downloads) · [🔥 Popular Models](#popular-models) · [🏢 Recommended Providers](#recommended-providers) · [简体中文](README.md)
+[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch Client](#2-use-endpoints-folkbench-switch-client) · [📦 Downloads](#3-installation--downloads) · [🔥 Popular Models](#popular-models) · [🏢 Recommended Providers](#recommended-providers) · [简体中文](README.md)· [日本語](README.ja.md)
 
 </div>
 
