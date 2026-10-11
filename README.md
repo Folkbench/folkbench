@@ -11,7 +11,7 @@
 
 AI API 线路实测大盘 · 开发者本地切源客户端
 
-[![Version](https://img.shields.io/badge/version-0.1.0--beta.1-blue.svg)](https://github.com/Folkbench/folkbench/releases)
+[![Release](https://img.shields.io/badge/release-Beta-blue.svg)](https://github.com/Folkbench/folkbench/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
@@ -91,8 +91,6 @@ Switch 对各工具的配置路径与字段规范进行了适配，切换时仅�
 ---
 
 ## 3. 下载安装
-
-最新版本：**0.1.0-beta.1**
 
 | 系统平台 | 架构 | 安装包 | 状态说明 |
 | :--- | :--- | :--- | :--- |

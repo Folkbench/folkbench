@@ -4,6 +4,7 @@
 
 - `pre-commit`：运行 `bun run check`，确保 Astro/TypeScript 内容契约通过；
 - `pre-push`：运行 `bun run check` 和 `bun run build`，确保推送的文章路由、SEO 输出和静态构建通过；
+- 不设置 `commit-msg` hook，不限制 commit 文案格式；代码、测试与源码安全检查仍由质量 hooks 和 CI 执行。
 - 不使用 `--no-verify` 绕过检查。
 
 如果本机的 Bun 不在 PATH 中，可以在当前 clone 的 Git 配置中指定：

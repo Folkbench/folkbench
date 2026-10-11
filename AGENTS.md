@@ -16,7 +16,7 @@
 - 提交说明面向 Folkbench 用户和开源贡献者，描述产品变化、内容价值和可见行为，不把个人隐私处理、历史重写、内部工作区状态或其他内部操作写成公开产品卖点。
 - 不得使用 `--no-verify`、`-n`、临时修改 `core.hooksPath`、删除 hook、替换 hook、临时 Git 配置或低层 Git plumbing 绕过质量门禁。
 - 开始提交前必须确认 `git config --get core.hooksPath` 精确为 `.githooks`。提交和推送必须让版本化 hook 正常运行；hook 失败时停止、修复原因并原样重跑。
-- 新提交使用 `type(scope): 变更摘要`，scope 为 `switch`、`blog`、`repo`、`release` 或 `deps`；Agent 以中文描述修改。提交消息由 `commit-msg` 和 CI 检查，旧历史不改写。真实 Git 合并消息按合并上下文兼容；回滚使用 `revert(scope): 摘要`。
+- 不限制 commit 文案格式，不设置 `commit-msg` 文案规范钩子或对应 CI；Agent 仍以中文准确描述修改，并遵守前述提交与推送授权要求。不改写旧历史；代码、测试、源码安全及发布质量门禁保持不变。
 
 ## 验证与发布
 

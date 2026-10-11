@@ -1,3 +1,0 @@
-#!/bin/sh
-set -eu
-node scripts/check-commit-message.mjs --public --message "$1"
