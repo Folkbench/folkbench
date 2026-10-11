@@ -11,12 +11,13 @@
 
 AI API 回線リアルタイム実測ベンチマーク · 開発者向けローカルエンドポイント切替クライアント
 
-[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?label=version)](https://github.com/Folkbench/folkbench/releases)
+[![Version](https://img.shields.io/badge/version-0.1.0--beta.1-blue.svg)](https://github.com/Folkbench/folkbench/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
+[![Telegram](https://img.shields.io/badge/Telegram-Group-2BA2E0?logo=telegram&logoColor=white)](https://t.me/+ZCsDR_BEHLw1OGRl)
 
-[🌐 実測ベンチマーク](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch クライアント](#2-回線切替folkbench-switch-クライアント) · [📦 ダウンロード](#3-ダウンロードインストール) · [🔥 人気モデル](#人気モデル) · [🏢 おすすめプロバイダー](#おすすめプロバイダー) · [简体中文](README.md) · [English](README.en.md)
+[🌐 実測ベンチマーク](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch クライアント](#2-回线切替folkbench-switch-クライアント) · [📦 ダウンロード](#3-ダウンロードインストール) · [🔥 人気モデル](#人気モデル) · [💬 コミュニティ (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [简体中文](README.md) · [English](README.en.md)
 
 </div>
 
@@ -109,71 +110,49 @@ Switch は各ツールの設定ファイルパスやフォーマット仕様に�
 
 - **完全ローカル管理**：Switch の設定および API Key は、すべてユーザーのローカル環境（ホームディレクトリ配下）にのみ保存されます。外部サーバーへの送信は一切行いません。
 - **コード・プロンプトの非収集**：利用量集計機能はローカルのログのみを解析します。ソースコード、プロンプト、会話コンテキストの読み取りやアップロードは一切行われません。
-- **セキュリティ上の注意**：GitHub Issues への投稿やログのスクリーンショットを共有する際は、ご自身の API Key が映り込まないようマスキングをお願いします。
+- **セキュリティ上の注意**：GitHub Issues への投稿やログのスクリーンショットを共有する際は、ご自身的 API Key が映り込まないようマスキングをお願いします。
 
 ---
 
-## おすすめプロバイダー
+## 一部プロバイダーの詳細紹介と割引情報
 
-| プロバイダー | 主な特徴 | リンク |
-| :--- | :--- | :--- |
-| Modelflare | 順次フォールバック、バックアップグループ設定、リクエスト＆コスト詳細ログ | [公式サイト登録](https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| CheapAI | 圧倒的な低価格、リアルタイムの動的倍率グループ、割引オプション | [公式サイト登録](https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| Apiporter | 低価格試用（5元〜）、企業向け請求書対応、専任サポート | [公式サイト登録](https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| Cloudbridge | グローバル対応、多言語UI、米ドル決済 | [公式サイト登録](https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| IKunCode | コーディングCLIツール向けの丁寧な導入支援、充実したコミュニティ対応 | [公式サイト登録](https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme) |
-| 境Ai | 幅広いモデル統合、従量課金およびお得なパッケージプラン | [詳細を見る](https://folkbench.com/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| 智流 FluxLane | 企業・大学向け調達対応、統一SDKルーティング、契約書・請求書発行 | [詳細を見る](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+### [Modelflare](https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
 
-一部のリンクには紹介・リファラルパラメータが含まれています。プロバイダーの紹介はベンチマークの実測順位とは無関係であり、価格や規約は各サービスの公式サイトをご確認ください。
+米国の Havenbyte LLC が運営。GPT、Claude、Gemini、Grok などの主要モデルと標準互換プロトコルに対応し、40種以上の画像・動画生成モデルもカバー。単一の API Key で複数モデルのフォールバック制御や予備グループの設定が可能で、リクエストログから遅延や実消費コストを確認できます。
 
-<details open>
-<summary><strong>7大プロバイダーの詳細紹介と割引情報</strong></summary>
+キャッシュ補償制度も特徴で、対象の OpenAI プールでキャッシュヒット率保証（65%〜85%）を下回った場合に補填が行われます。初回チャージ特典として、$20 以上のチャージで GPT 特別プール（GPT-5.6-Sol が上限なしで大幅割引）、$50 以上のチャージで Claude 特別プールがアンロックされます。
 
-<h3><a href="https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">Modelflare</a></h3>
+### [CheapAI](https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
 
-米国 Havenbyte LLC により運営。GPT、Claude、Gemini、Grok など主要モデルおよび各種互換プロトコルに対応し、40種類以上の画像・動画生成モデルも利用可能。API Key ごとに順次フォールバックを設定でき、1つの Key で複数モデルを呼び出したり予備グループを組むことが可能です。詳細ログからステータス、レイテンシ、Token、実際の実費が確認できます。
+圧倒的な低価格を重視したサービス。リアルタイムの回線状況に応じて倍率を自動調整する「動的倍率プール」を備え、リソースに余裕がある時間帯はさらに安価に利用可能です。
 
-キャッシュ補償も大きな特徴です：OpenAI 系の特定グループにおいて日次 65%、75%、85% のキャッシュヒット率を保証し、要件を満たすリクエストで下回った場合には差額補填が行われます。
+コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。
 
-現在、初回チャージによる割引グループ解放キャンペーンを実施中。20 ドルのチャージで GPT 特恵グループが解放され、GPT-5.6-Sol を上限なしで割安利用可能です。50 ドルのチャージで Claude 特恵グループが解放されます。
+### [Apiporter](https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
 
-<h3><a href="https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">CheapAI</a></h3>
+中国国内の法人利用やマルチチャネル集約に最適化。最低5元からの少額チャージ、インボイス対応、オンライン窓口や企業WeChatによる手厚いサポートを提供。API Key ごとの利用上限や有効期限設定が可能で、チーム運用に適しています。
 
-その名の通り低価格に特化しており、特恵グループの価格設定が非常にリーズナブルです。リアルタイムのアカウントプール状況に応じて倍率を自動調整する「動的倍率グループ」を提供。リソースに余裕があるときはさらに低価格で、混雑時は倍率を調整し、コストと可用性のバランスを自動で保ちます。
+### [Cloudbridge](https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
 
-コスパを最優先するユーザー向けの特恵グループのほか、安定性を重視するユーザー向けの Pro / 公式 Key グループも用意されています。
+海外ユーザー向けに設計され、米ドル決済と多言語に対応。GPT、Claude、Grok、DeepSeek などを低額デポジットから利用できます。比較的新しいプロバイダーながら、Folkbench プローブでも良好な稼働実績を記録しています。
 
-<h3><a href="https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">Apiporter</a></h3>
+### [IKunCode](https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
 
-企業ユーザーやマルチチャネル統合に適しており、小額試用や正式な請求書発行を重視する場合に最適です。最低チャージ額はわずか 5 元からで、任意の金額での請求書発行に対応。オンラインチャットや企業 WeChat でのサポートも備えています。
+Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。
 
-複数のチャネルグループが用意されており、価格重視・安定性重視など用途に応じた使い分けが可能。API Key ごとに上限や有効期限を設定できるため、チーム開発での管理にも適しています。
+### [JingAI（境Ai）](https://folkbench.com/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
 
-<h3><a href="https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">Cloudbridge</a></h3>
+複数モデルの統合ゲートウェイを提供。従量課金、月額パッケージ、残高チャージに対応しています。利用前には Folkbench で対象モデルの最新稼働率と遅延を確認することをおすすめします。
 
-グローバルでの利用を想定した設計で、米ドル決済と多言語に対応。最低チャージ額も低めに設定されています。GPT、Claude、Grok、DeepSeek などを幅広く網羅しており、米ドル建てで決済したいチームにとって扱いやすい選択肢です。
+### [FluxLane（智流）](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
 
-比較的新しいサービスですが、Folkbench でも実測データの蓄積が始まっており、一部の回線では良好な安定性を記録しています。
-
-<h3><a href="https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">IKunCode</a></h3>
-
-Claude Code、Codex、Gemini CLI など各種コーディングアシスタントへの接続サポートが手厚く、メール、QQ グループ、Telegram など問い合わせ窓口が幅広く用意されています。サポートのレスポンスが親切で、初めて環境構築を行う開発者にもおすすめです。
-
-<h3><a href="https://folkbench.com/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog" target="_blank" rel="noopener noreferrer">境Ai</a></h3>
-
-複数モデルの統合アクセスに強みを持ち、GPT、Claude、Grok、Gemini などに対応。従量課金、月額パッケージ、残高チャージなど多様なプランが提供されています。比較的新しいサービスのため、Folkbench のリアルタイム大盤で直近の稼働率や遅延を確認しながらの利用をおすすめします。
-
-<h3><a href="https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog" target="_blank" rel="noopener noreferrer">智流 FluxLane</a></h3>
-
-国内外の多様なモデルを網羅し、OpenAI SDK との互換性も確保されています。モデルの豊富さに加え、ルーティング、利用量、コスト、遅延などの分析ダッシュボードがプラットフォーム内に統合されています。企業や教育機関向けの調達対応（請求書、契約書、发票）が整っている点も強みです。
-
-</details>
+国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。
 
 ---
 
-## 🤝 フィードバックとライセンス
+## 🤝 フィードバックとコミュニティ
 
-不具合の報告、対応ツールの要望、機能提案は [GitHub Issues](https://github.com/Folkbench/folkbench/issues) までお気軽にお寄せください。セキュリティ脆弱性については [SECURITY.md](SECURITY.md) をご参照の上、個別にご連絡ください。
-
-- Folkbench Switch クライアントは [Apache-2.0](LICENSE.md) ライセンスの下でオープンソースとして公開されています。
+- **コミュニティ**：[Telegram グループ](https://t.me/+ZCsDR_BEHLw1OGRl) に参加して、AI 開発環境の活用法や最新の回線状況を共有できます。
+- **課題・改善提案**：バグの報告や対応ツールの追加要望は [GitHub Issues](https://github.com/Folkbench/folkbench/issues) までお気軽にお寄せください。
+- **セキュリティ**：脆弱性のご報告は [SECURITY.md](SECURITY.md) をご参照の上、個別にご連絡ください。
+- **オープンソースライセンス**：Folkbench Switch クライアントは [Apache-2.0](LICENSE.md) ライセンスの下で公開されています。
