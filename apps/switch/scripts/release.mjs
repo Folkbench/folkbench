@@ -3,28 +3,25 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { checkVersion, releaseTag, switchRoot } from './version.mjs'
 
-export const releaseModes = ['build-only', 'signed-candidate', 'publish-beta', 'publish-beta-unsigned']
-export const isPublicRelease = mode => ['publish-beta', 'publish-beta-unsigned'].includes(mode)
-export const requiresAppleNotarization = mode => ['signed-candidate', 'publish-beta'].includes(mode)
+// Build modes never authorize publication. Publication promotes reviewed files.
+export const releaseModes = ['build-only', 'signed-candidate']
+export const requiresAppleNotarization = mode => mode === 'signed-candidate'
+
+export const requiredPlatforms = ['macos-arm64', 'macos-x64', 'windows-x64']
+
+export function validatePolicy(policy) {
+  if (policy.schemaVersion !== 2 || policy.channel !== 'beta' || policy.requireMacNotarization !== true) throw new Error('Invalid Beta promotion policy.')
+  if (!Array.isArray(policy.requiredPlatforms) || policy.requiredPlatforms.length !== requiredPlatforms.length ||
+      requiredPlatforms.some(platform => !policy.requiredPlatforms.includes(platform))) throw new Error('The Beta platform matrix does not match its release policy.')
+  if ('publicReleaseApproved' in policy || 'unsignedBetaApproval' in policy) throw new Error('Approval must be bound to the reviewed build, not stored as a reusable boolean.')
+  return policy
+}
 
 export function validateRelease({ version, tag, mode, policy }) {
   if (!releaseModes.includes(mode)) throw new Error('Unknown release mode.')
   const expected = releaseTag(version)
   if (tag !== expected) throw new Error(`Release tag must equal ${expected}.`)
-  if (policy.schemaVersion !== 1 || policy.channel !== 'beta') throw new Error('Invalid Beta release policy.')
-  if (!Array.isArray(policy.requiredPlatforms) || policy.requiredPlatforms.length !== 3 ||
-      ['macos-arm64', 'macos-x64', 'windows-x64'].some(platform => !policy.requiredPlatforms.includes(platform))) {
-    throw new Error('The Beta platform matrix does not match its release policy.')
-  }
-  if (isPublicRelease(mode) && (policy.publicReleaseApproved !== true || !Array.isArray(policy.pendingChecks) || policy.pendingChecks.length !== 0)) {
-    throw new Error('Public release is blocked: complete release-policy.json checks and obtain release approval first.')
-  }
-  if (mode === 'publish-beta-unsigned' && (policy.unsignedBetaApproval?.approved !== true || policy.unsignedBetaApproval?.version !== version)) {
-    throw new Error('This exact Beta version needs separate approval for unsigned distribution.')
-  }
-  if (mode === 'publish-beta' && (policy.pendingSigningChecks?.length || 0) !== 0) {
-    throw new Error('Signed publication requires completed signing and notarization checks.')
-  }
+  validatePolicy(policy)
   return { version, tag: expected, channel: 'beta', prerelease: true, mode, requiresAppleNotarization: requiresAppleNotarization(mode) }
 }
 
@@ -36,6 +33,15 @@ export function checkReleaseNotes(text, version) {
   }
 }
 
+export function extractReleaseNotes(text, version) {
+  checkReleaseNotes(text, version)
+  const lines = text.split('\n')
+  const prefix = `## ${version}`
+  const start = lines.findIndex(line => line.startsWith(prefix) && (line.length === prefix.length || /\s/.test(line[prefix.length])))
+  const end = lines.findIndex((line, index) => index > start && /^## /.test(line))
+  return lines.slice(start, end === -1 ? undefined : end).join('\n').trim() + '\n'
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
     const version = await checkVersion()
@@ -43,7 +49,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     const mode = process.argv[3] || 'build-only'
     const policy = JSON.parse(await readFile(resolve(switchRoot, 'release-policy.json'), 'utf8'))
     const result = validateRelease({ version, tag, mode, policy })
-    if (isPublicRelease(mode)) checkReleaseNotes(await readFile(resolve(switchRoot, '../../docs/switch/CHANGELOG.md'), 'utf8'), version)
     console.log(JSON.stringify(result))
   } catch (error) {
     console.error(error.message)

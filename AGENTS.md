@@ -16,6 +16,7 @@
 - 提交说明面向 Folkbench 用户和开源贡献者，描述产品变化、内容价值和可见行为，不把个人隐私处理、历史重写、内部工作区状态或其他内部操作写成公开产品卖点。
 - 不得使用 `--no-verify`、`-n`、临时修改 `core.hooksPath`、删除 hook、替换 hook、临时 Git 配置或低层 Git plumbing 绕过质量门禁。
 - 开始提交前必须确认 `git config --get core.hooksPath` 精确为 `.githooks`。提交和推送必须让版本化 hook 正常运行；hook 失败时停止、修复原因并原样重跑。
+- 新提交使用 `type(scope): 变更摘要`，scope 为 `switch`、`blog`、`repo`、`release` 或 `deps`；Agent 以中文描述修改。提交消息由 `commit-msg` 和 CI 检查，旧历史不改写。真实 Git 合并消息按合并上下文兼容；回滚使用 `revert(scope): 摘要`。
 
 ## 验证与发布
 
@@ -23,7 +24,7 @@
 - 博客改动至少执行 `bun run check:blog`，静态构建改动执行 `bun run build:blog`。客户端改动执行 `bun run check:switch`，并覆盖 Rust 回归测试；不得用永久跳过测试的方式使 CI 通过。
 - 首版仅允许 Beta 版本。Switch 使用 `apps/switch/package.json` 的版本，通过统一脚本同步 Cargo 和检查 Tauri 配置；契约 crate 的版本与应用版本独立。
 - 安装包、签名私钥、公证凭据、用户配置、提示词和运行日志不得提交。构建只在明确标记的非生产开发环境或 CI 执行，不为截图擅自启动客户端。
-- CI 测试构建不等于公开发布；平台验证、安全检查和发布审批未完成时只能保留构建产物。首版未公证 Beta 仅在用户明确批准该具体版本后，走 `publish-beta-unsigned` 发布，并在文件名、元数据、Release 与 README 明确标注签名状态；此批准不能用于后续版本。签名版仍必须完成签名公证。发布操作需单独授权。
+- CI 测试构建不等于公开发布。构建使用 `switch-beta.yml`，发布使用 `switch-publish.yml`；发布只能读取通过验收的指定构建及清单摘要，不得重新编译、公证或生成另一批文件。现行发布要求三平台完整且 Mac 已签名公证；未公证测试包不能公开晋升。发布操作仍需单独授权，既有版本不可覆盖。
 - 提交前执行 `git diff --cached --check`；推送前必须确认目标 commit、远端分支和实际变更范围。
 - 博客构建不得依赖主站的 secrets、生产数据库、对象存储凭据或运行时配置。
 - 未经用户明确授权，不得部署、切换域名、修改 DNS、发送外部通知或更新父仓库。

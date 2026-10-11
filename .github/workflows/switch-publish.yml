@@ -1,0 +1,69 @@
+name: Switch publish reviewed installers
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Successful installer build run ID'
+        type: string
+        required: true
+      run_attempt:
+        description: 'Exact build attempt shown in the reviewed manifest'
+        type: string
+        required: true
+      source_commit:
+        description: 'Reviewed installer source SHA, not the current main tip'
+        type: string
+        required: true
+      manifest_sha256:
+        description: 'Reviewed manifest SHA256 from the build summary'
+        type: string
+        required: true
+      qa_approved:
+        description: 'These exact Mac ARM, Mac Intel and Windows installers passed installation, login, import, switching and recovery QA'
+        type: boolean
+        default: false
+        required: true
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: switch-publish-reviewed
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main' && inputs.qa_approved
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REVIEWED_RUN_ID: ${{ inputs.run_id }}
+      REVIEWED_RUN_ATTEMPT: ${{ inputs.run_attempt }}
+      REVIEWED_COMMIT: ${{ inputs.source_commit }}
+      REVIEWED_MANIFEST_SHA256: ${{ inputs.manifest_sha256 }}
+      QA_APPROVED: ${{ inputs.qa_approved }}
+    steps:
+      - name: Keep approval state in the private Runner temporary directory
+        run: printf 'PROMOTION_FILE=%s/switch-promotion.json\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+      # Execute only trusted promotion code from the dispatch commit, never code from the downloaded build.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Resolve the exact successful reviewed build
+        id: reviewed
+        run: node apps/switch/scripts/promote.mjs prepare
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.reviewed.outputs.run_id }}
+          artifact-ids: ${{ steps.reviewed.outputs.artifact_id }}
+          merge-multiple: true
+          path: reviewed-installers
+      - name: Verify the reviewed files without modifying them
+        run: node apps/switch/scripts/promote.mjs verify reviewed-installers
+      - name: Upload original files and publish Beta; never rebuild or overwrite
+        run: node apps/switch/scripts/promote.mjs publish reviewed-installers

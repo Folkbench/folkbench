@@ -33,6 +33,10 @@ jobs:
           bun-version: 1.3.14
       - name: Mark isolated CI development host
         run: touch apps/switch/.folkbench-switch-development-host
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.bun/install/cache
+          key: switch-check-bun-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('apps/switch/bun.lock') }}
       - run: bun install --cwd apps/switch --frozen-lockfile
       - run: bun run check:source
       - run: bun run test:repository-tools
@@ -52,6 +56,11 @@ jobs:
         with:
           toolchain: 1.98.1
           components: rustfmt
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
+        with:
+          workspaces: apps/switch/src-tauri -> target
+          prefix-key: switch-check-${{ runner.os }}-${{ runner.arch }}
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - name: Linux native dependencies
         if: runner.os == 'Linux'
         run: |

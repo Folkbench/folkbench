@@ -16,7 +16,7 @@ AI API 线路实测大盘 · 开发者本地切源客户端
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
 
-[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch 客户端](#2-用线路folkbench-switch-客户端) · [📦 下载安装](#3-下载安装) · [🔥 热门模型](#热门模型) · [🏢 站点推荐](#站点推荐) · [English](README.en.md)· [日本語](README.ja.md)
+[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch 客户端](#2-用线路folkbench-switch-客户端) · [📦 下载安装](https://github.com/Folkbench/folkbench/releases) · [🔥 热门模型](#热门模型) · [🏢 站点推荐](#站点推荐) · [English](README.en.md)· [日本語](README.ja.md)
 
 </div>
 
@@ -62,7 +62,7 @@ Switch 是 Folkbench 配套的开源桌面客户端（基于 Tauri + Rust 构建
 - 🔄 **一键切换服务商**：保存多家服务的 Base URL 与 API Key，点击即可将配置应用到目标工具，支持随时切换与还原。
 - 🛡️ **配置无损与状态保护**：修改前提供配置差异预览。切换 Codex 至第三方服务时，会自动安全暂存官方 ChatGPT OAuth 凭据，切回官方时无损恢复。
 - 📈 **探针数据集成**：在客户端内直接查看各站点的公开实时可用率与延迟，切源前确认线路状态。
-- 🔒 **本地存储与隐私**：所有 API Key 和配置仅存储在本地设备中，不上传云端，完全离线运行。
+- 🔒 **本地存储与隐私**：模型 API Key 和工具配置保存在本机，不同步到 Folkbench 服务器；查询模型、余额或调用服务时，Key 会发送到你配置的 API 地址。
 - 📊 **本地用量估算**：按会话统计 Token 消耗量，并根据公开参考单价提供调用成本估算。
 
 ### 🧰 支持的工具
@@ -91,23 +91,23 @@ Switch 对各工具的配置路径与字段规范进行了适配，切换时仅�
 
 ## 3. 下载安装
 
-最新版本：**0.1.0-beta.1**
+**[下载最新 Switch Beta](https://github.com/Folkbench/folkbench/releases)**，在对应版本的 **Assets** 中选择以下安装文件。
 
 | 系统平台 | 架构 | 安装包 | 状态说明 |
 | :--- | :--- | :--- | :--- |
-| **macOS** | Apple Silicon（M 系列） | `.dmg` | **已完成 Apple 官方签名与公证**，下载后可直接运行 |
-| **macOS** | Intel（x64） | `.dmg` | **已完成 Apple 官方签名与公证**，下载后可直接运行 |
-| **Windows** | x64 | `.exe` | 安装包 / 便携版（绿色解压即用） |
+| **macOS** | Apple Silicon（M 系列） | 名称含 `macos-arm64` 的 `.dmg` | **已完成 Apple 官方签名与公证**，下载后可直接运行 |
+| **macOS** | Intel（x64） | 名称含 `macos-x64` 的 `.dmg` | **已完成 Apple 官方签名与公证**，下载后可直接运行 |
+| **Windows** | x64 | 名称含 `windows-x64` 的 `.exe` | NSIS 安装向导 |
 
-前往 [GitHub Releases](https://github.com/Folkbench/folkbench/releases) 下载对应平台的安装文件。各版本均附带 SHA256 校验码。
+对应 Release 提供版本说明、签名状态和 `SHA256SUMS.txt` 校验文件；下载入口固定，不随每次版本更新改变。
 
-*注：Windows 数字签名正在办理中，若系统弹出安全提示，在设置中选择“仍要打开”即可。*
+*注：Windows 安装包尚未数字签名，系统可能显示安全提示，请先核对 Release 中的说明与校验文件。*
 
 ---
 
 ## 🔒 隐私与安全
 
-- **完全本地化**：Switch 所有配置和 API Key 均保存在本地磁盘（配置文件位于本机用户目录），客户端不会将敏感信息上传至任何外部服务器。
+- **本地保存**：模型 Key 和工具配置保存在本机，不同步到 Folkbench 服务器；调用服务时，模型 Key 会发送到用户配置的 API 地址。可选账号登录和公开评测查询需要联网。
 - **不收集代码**：本地用量统计仅在本地解析 Token 数据，不读取或上传代码内容、提示词或交互上下文。
 - **安全提醒**：在提交 Issue 或上传日志截图时，请注意检查并隐去个人的真实 API Key。
 

@@ -1,5 +1,17 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.2 — Beta
+
+- 增加服务模型列表获取和 Provider ID 配置，切换时保留已保存的完整模型设置。
+- 补充 Aider、OpenCode 本机用量记录读取，完善工具使用统计。
+- 简化站点快速接入，修复弹窗显示时 Dock 悬停交互。
+- 构建与公开发布分开：发布复用通过验收的原安装包，提供来源、签名状态和 SHA256 校验信息。
+- 下载入口固定为 Releases 页面，可查看当前版本及历史版本；Beta.1 安装包保持不变。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable；不启用自动更新。
+
 ## 0.1.0-beta.1 — Beta
 
 - 管理本机 AI 编程工具的 API 服务，支持配置导入、预览与切换。
