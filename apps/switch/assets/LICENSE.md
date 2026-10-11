@@ -1,9 +1,20 @@
 # Asset Licensing Boundary
 
 This repository contains the official Folkbench Switch application icon. It is
-the only brand binary here, and the source license does not cover it.
+one of the brand assets here, and the source license does not cover it.
 
-No proprietary font, screenshot, or other brand binary is included.
+No proprietary font is included.
+
+## macOS installation background
+
+- **File:** `dmg/background.png`, 1604 × 980 pixels, 144 DPI (802 × 490 logical points).
+- **Source:** AI-generated installation artwork commissioned and approved for
+  Folkbench Switch, using the supplied Folkbench mark and client design tokens.
+- **Use:** official Folkbench Switch distributions. Like the application icon,
+  this branded artwork is excluded from the Apache-2.0 source-code grant.
+- The application icon and Applications folder in the DMG are native Finder
+  items, not pictures baked into the background. Forks must replace this branded
+  background along with the application identity.
 
 ## Application icon
 

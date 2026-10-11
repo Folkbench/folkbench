@@ -87,6 +87,41 @@ test('Windows never receives Apple credentials even in signed candidate mode', (
   assert.deepEqual(Object.keys(env).filter(name => name.startsWith('APPLE_')), [])
 })
 
+test('macOS applies Finder layout on CI without disabling other CI checks', () => {
+  const source = { CI: 'true', TAURI_BUNDLER_DMG_IGNORE_CI: 'false' }
+  const mac = installerEnvironment(source, { macOS: true, notarize: false })
+  assert.equal(mac.CI, 'true')
+  assert.equal(mac.TAURI_BUNDLER_DMG_IGNORE_CI, 'true')
+  const win = installerEnvironment(source, { macOS: false, notarize: false })
+  assert.equal(win.CI, 'true')
+  assert.ok(!('TAURI_BUNDLER_DMG_IGNORE_CI' in win))
+  assert.equal(source.TAURI_BUNDLER_DMG_IGNORE_CI, 'false')
+})
+
+test('DMG background is a Retina asset aligned with native drag-and-drop icons', async () => {
+  const root = new URL('../', import.meta.url)
+  const config = JSON.parse(await readFile(new URL('src-tauri/tauri.conf.json', root), 'utf8'))
+  const dmg = config.bundle.macOS.dmg
+  assert.deepEqual(dmg.windowSize, { width: 802, height: 514 })
+  assert.deepEqual(dmg.appPosition, { x: 206, y: 248 })
+  assert.deepEqual(dmg.applicationFolderPosition, { x: 598, y: 248 })
+  const png = await readFile(new URL(dmg.background, new URL('src-tauri/', root)))
+  assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a')
+  assert.equal(png.readUInt32BE(16), 1604)
+  assert.equal(png.readUInt32BE(20), 980)
+  let density
+  for (let offset = 8; offset + 12 <= png.length;) {
+    const size = png.readUInt32BE(offset)
+    const type = png.toString('ascii', offset + 4, offset + 8)
+    if (type === 'pHYs') density = png.subarray(offset + 8, offset + 8 + size)
+    offset += size + 12
+  }
+  assert.ok(density, 'PNG must declare its Retina logical size')
+  assert.equal(density[8], 1)
+  assert.ok(Math.abs(density.readUInt32BE(0) * 0.0254 - 144) < 0.1)
+  assert.equal(density.readUInt32BE(0), density.readUInt32BE(4))
+})
+
 test('signed macOS passes API Key ID, issuer and path, never raw PEM or Apple login credentials', () => {
   const source = { ...fixture(), APPLE_ID: 'synthetic-user', APPLE_PASSWORD: 'synthetic-password', APPLE_API_KEY_PATH: '/temporary/AuthKey.p8' }
   const env = installerEnvironment(source, { macOS: true, notarize: true })
