@@ -16,7 +16,7 @@ AI API 线路实测大盘 · 开发者本地切源客户端
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
 
-[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch 客户端](#2-用线路folkbench-switch-客户端) · [📦 下载安装](#3-下载安装) · [🔥 热门模型](#热门模型) · [🏢 站点推荐](#站点推荐) · [English](README.en.md)
+[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch 客户端](#2-用线路folkbench-switch-客户端) · [📦 下载安装](#3-下载安装) · [🔥 热门模型](#热门模型) · [🏢 站点推荐](#站点推荐) · [English](README.en.md)· [日本語](README.ja.md)
 
 </div>
 
