@@ -16,8 +16,9 @@ Live AI API Relay Benchmarks · One-Click Local Endpoint Switcher
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
 [![Telegram](https://img.shields.io/badge/Telegram-Group-2BA2E0?logo=telegram&logoColor=white)](https://t.me/+ZCsDR_BEHLw1OGRl)
+[![QQ](https://img.shields.io/badge/QQ-Group-12B7F5?logo=tencentqq&logoColor=white)](https://qm.qq.com/q/71NzSTrPVK)
 
-[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch Client](#2-use-endpoints-folkbench-switch-client) · [📦 Downloads](#3-installation--downloads) · [🔥 Popular Models](#popular-models) · [💬 Community (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [简体中文](README.md) · [日本語](README.ja.md)
+[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch Client](#2-use-endpoints-folkbench-switch-client) · [📦 Downloads](#3-installation--downloads) · [🔥 Popular Models](#popular-models) · [💬 Community (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [💬 QQ Group](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [日本語](README.ja.md)
 
 </div>
 
@@ -150,7 +151,7 @@ Extensive model catalog spanning international and domestic options with direct 
 
 ## 🤝 Feedback & Community
 
-- **Community Group**: Join our [Telegram Community](https://t.me/+ZCsDR_BEHLw1OGRl) to discuss AI coding workflows and real-time relay status.
+- **Community Group**: Join our [Telegram Community](https://t.me/+ZCsDR_BEHLw1OGRl) or [QQ group “folkbench 用户群”](https://qm.qq.com/q/71NzSTrPVK) (group number 203286875) to discuss AI coding workflows and real-time relay status.
 - **Issues & Suggestions**: Open a ticket on [GitHub Issues](https://github.com/Folkbench/folkbench/issues) for bug reports, tool requests, or feature ideas.
 - **Security Inquiries**: For vulnerability disclosures, please review [SECURITY.md](SECURITY.md).
 - **Open Source License**: Folkbench Switch is distributed under the [Apache-2.0](LICENSE.md) license.
