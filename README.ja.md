@@ -16,8 +16,9 @@ AI API 回線リアルタイム実測ベンチマーク · 開発者向けロー
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
 [![Telegram](https://img.shields.io/badge/Telegram-Group-2BA2E0?logo=telegram&logoColor=white)](https://t.me/+ZCsDR_BEHLw1OGRl)
+[![QQ](https://img.shields.io/badge/QQ-Group-12B7F5?logo=tencentqq&logoColor=white)](https://qm.qq.com/q/71NzSTrPVK)
 
-[🌐 実測ベンチマーク](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch クライアント](#2-回线切替folkbench-switch-クライアント) · [📦 ダウンロード](#3-ダウンロードインストール) · [🔥 人気モデル](#人気モデル) · [💬 コミュニティ (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [简体中文](README.md) · [English](README.en.md)
+[🌐 実測ベンチマーク](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch クライアント](#2-回线切替folkbench-switch-クライアント) · [📦 ダウンロード](#3-ダウンロードインストール) · [🔥 人気モデル](#人気モデル) · [💬 コミュニティ (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [💬 QQ グループ](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [English](README.en.md)
 
 </div>
 
@@ -152,7 +153,7 @@ Claude Code、Codex、Gemini CLI などのコーディング支援ツールの�
 
 ## 🤝 フィードバックとコミュニティ
 
-- **コミュニティ**：[Telegram グループ](https://t.me/+ZCsDR_BEHLw1OGRl) に参加して、AI 開発環境の活用法や最新の回線状況を共有できます。
+- **コミュニティ**：[Telegram グループ](https://t.me/+ZCsDR_BEHLw1OGRl) または [QQ グループ「folkbench 用户群」](https://qm.qq.com/q/71NzSTrPVK)（グループ番号 203286875）に参加して、AI 開発環境の活用法や最新の回線状況を共有できます。
 - **課題・改善提案**：バグの報告や対応ツールの追加要望は [GitHub Issues](https://github.com/Folkbench/folkbench/issues) までお気軽にお寄せください。
 - **セキュリティ**：脆弱性のご報告は [SECURITY.md](SECURITY.md) をご参照の上、個別にご連絡ください。
 - **オープンソースライセンス**：Folkbench Switch クライアントは [Apache-2.0](LICENSE.md) ライセンスの下で公開されています。

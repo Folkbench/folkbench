@@ -16,8 +16,9 @@ AI API 线路实测大盘 · 开发者本地切源客户端
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
 [![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
 [![Telegram](https://img.shields.io/badge/Telegram-Group-2BA2E0?logo=telegram&logoColor=white)](https://t.me/+ZCsDR_BEHLw1OGRl)
+[![QQ](https://img.shields.io/badge/QQ-Group-12B7F5?logo=tencentqq&logoColor=white)](https://qm.qq.com/q/71NzSTrPVK)
 
-[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch 客户端](#2-用线路folkbench-switch-客户端) · [📦 下载安装](#3-下载安装) · [🔥 热门模型](#热门模型) · [💬 交流群 (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [English](README.en.md) · [日本語](README.ja.md)
+[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch 客户端](#2-用线路folkbench-switch-客户端) · [📦 下载安装](#3-下载安装) · [🔥 热门模型](#热门模型) · [💬 交流群 (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [💬 QQ 群](https://qm.qq.com/q/71NzSTrPVK) · [English](README.en.md) · [日本語](README.ja.md)
 
 </div>
 
@@ -156,7 +157,7 @@ IKunCode对于各个编程工具接入的支持比较好，Claude Code、Codex �
 
 ## 🤝 反馈与社区
 
-- **交流社群**：加入 [Telegram 交流群](https://t.me/+ZCsDR_BEHLw1OGRl) 探讨 AI 编程工具技巧与最新线路动态。
+- **交流社群**：加入 [Telegram 交流群](https://t.me/+ZCsDR_BEHLw1OGRl) 或 [QQ 群「folkbench 用户群」](https://qm.qq.com/q/71NzSTrPVK)（群号 203286875）探讨 AI 编程工具技巧与最新线路动态。
 - **问题反馈**：欢迎通过 [GitHub Issues](https://github.com/Folkbench/folkbench/issues) 提交 Bug、工具适配建议或功能反馈。
 - **安全报告**：安全漏洞请通过 [SECURITY.md](SECURITY.md) 私下联系。
 - **开源协议**：Switch 客户端代码遵循 [Apache-2.0](LICENSE.md) 协议开源。
