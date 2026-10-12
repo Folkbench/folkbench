@@ -9,7 +9,7 @@
 
 ### Pick API relays with hard data, not gut feelings.
 
-Live AI API Relay Benchmarks · One-Click Local Endpoint Switcher
+Live AI API Relay Benchmarks & Rankings · One-Click Endpoint Switcher for Claude Code / Codex
 
 [![Release](https://img.shields.io/badge/release-Beta-blue.svg)](https://github.com/Folkbench/folkbench/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE.md)

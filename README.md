@@ -9,7 +9,7 @@
 
 ### 选中转站，不靠感觉，靠数据。
 
-AI API 线路实测大盘 · 开发者本地切源客户端
+AI API 中转站评测排行（API relay benchmark）· Claude Code / Codex 一键切源客户端
 
 [![Release](https://img.shields.io/badge/release-Beta-blue.svg)](https://github.com/Folkbench/folkbench/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE.md)
@@ -24,7 +24,7 @@ AI API 线路实测大盘 · 开发者本地切源客户端
 
 ---
 
-平时使用各类 AI 编程工具，核心其实就是两件事：**选一条靠谱的线路**，以及**把线路配进工具里**。
+平时用 Claude Code、Codex 这类 AI 编程工具，核心其实就是两件事：**选一条靠谱的中转线路**，以及**把线路配进工具里**。
 
 Folkbench 将这两件事串联成了一个完整的工作流：
 
