@@ -1,45 +1,33 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="public/brand/folkbench-logo-only-inverse.svg">
-  <img src="public/brand/folkbench-logo-only.svg" width="80" height="80" alt="Folkbench">
-</picture>
+<img src="public/brand/folkbench-logo-only.svg" width="64" height="64" alt="Folkbench">
 
 # Folkbench
 
-### Pick API relays with hard data, not gut feelings.
+Hands-on relay benchmarks, and Folkbench Switch.
 
-Live AI API Relay Benchmarks & Rankings · One-Click Endpoint Switcher for Claude Code / Codex
+[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+-h3yj4eOYmw0ZTNl) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
 
-[![Release](https://img.shields.io/badge/release-Beta-blue.svg)](https://github.com/Folkbench/folkbench/releases)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE.md)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
-[![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
-[![Telegram](https://img.shields.io/badge/Telegram-Group-2BA2E0?logo=telegram&logoColor=white)](https://t.me/+ZCsDR_BEHLw1OGRl)
-[![QQ](https://img.shields.io/badge/QQ-Group-12B7F5?logo=tencentqq&logoColor=white)](https://qm.qq.com/q/71NzSTrPVK)
+[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=readme_en) · [⚡ Switch Client](#folkbench-switch) · [📦 Downloads](https://github.com/Folkbench/folkbench/releases) · [🔥 Popular Models](#popular-models) · [💬 Community (TG)](https://t.me/+-h3yj4eOYmw0ZTNl) · [💬 QQ Group](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [日本語](README.ja.md)
 
-[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch Client](#2-use-endpoints-folkbench-switch-client) · [📦 Downloads](#3-installation--downloads) · [🔥 Popular Models](#popular-models) · [💬 Community (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [💬 QQ Group](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [日本語](README.ja.md)
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-en-dark.png"><img src="docs/images/hero-en-light.png" width="100%" alt="Folkbench relay rankings and Switch client"></picture>
 
 </div>
 
----
+<br>
 
-When using AI coding assistants every day, everything boils down to two things: **finding a reliable endpoint**, and **getting it configured in your tools**.
-
-Folkbench connects both into a cohesive workflow:
-
-- 🌐 **[1. Pick an Endpoint](#1-pick-an-endpoint-web-benchmarks)**: Multi-region probes test availability, P95 full latency, and token pricing 24/7, filtering out throttled or fake models.
-- ⚡ **[2. Use the Endpoint](#2-use-endpoints-folkbench-switch-client)**: An open-source desktop client that manages Base URLs and API Keys, switching configurations across Claude Code, Codex, and other tools with one click—no manual config file editing required.
+[folkbench.com](https://folkbench.com/?utm_source=github&utm_campaign=readme_en) continuously tests AI API relays and publishes their availability, latency and pricing. This repository holds the code for **Folkbench Switch**, the companion desktop client that writes the route you pick into Claude Code, Codex and other tools.
 
 ---
 
-## 1. Pick an Endpoint: Web Benchmarks
+## Relay Rankings
 
-Automated probes continuously benchmark third-party relays to publish unvarnished, real-time performance metrics—no black boxes, no inflated claims.
+So many relays — which are stable, which are cheap, which leave your data alone? Success rate, latency, price and data-security level, all on one board. [Overall](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=readme_en) · [stability](https://folkbench.com/rankings/board?metric=availability&utm_source=github&utm_campaign=readme_en) · [value](https://folkbench.com/rankings/board?metric=price&utm_source=github&utm_campaign=readme_en).
 
-- 📊 **[Overall Leaderboard](https://folkbench.com/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)**: Balanced evaluation across uptime, P95 end-to-end response time, and pricing.
-- 🛡️ **[Stability Leaderboard](https://folkbench.com/rankings/board?metric=availability&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)**: Sorted by availability—ideal for autonomous agents and long-running pipelines.
-- 💰 **[Value Leaderboard](https://folkbench.com/rankings/board?metric=price&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)**: Ranked by effective price per token, reflecting actual operating costs.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-en-dark.png">
+  <img src="docs/images/features/board-en-light.png" width="100%" alt="Folkbench relay rankings">
+</picture>
 
 ### Popular Models
 
@@ -53,9 +41,14 @@ If you need benchmark data for a specific model across different providers, expl
 | **Grok 4.7** | [View benchmarks across providers](https://folkbench.com/rankings/grok-4-7?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
 | **DeepSeek V4.1 Flash** | [View benchmarks across providers](https://folkbench.com/rankings/deepseek-v4-1-flash?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
 
----
+## Folkbench Switch
 
-## 2. Use Endpoints: Folkbench Switch Client
+A beginner-friendly setup tool for AI coding assistants. Set up Claude Code, Codex, Gemini CLI and more in one click — simple and easy. [Download for macOS / Windows](https://github.com/Folkbench/folkbench/releases).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/switch-en-dark.png">
+  <img src="docs/images/features/switch-en-light.png" width="100%" alt="Folkbench Switch">
+</picture>
 
 Switch is Folkbench’s open-source companion desktop app (built with Tauri and Rust). Its core purpose: **switch Base URLs and API Keys between multiple proxy providers and official endpoints with one click—leaving tedious manual config edits behind.**
 
@@ -82,76 +75,61 @@ Switch adapts to the configuration schemes and directory conventions of each too
 | **DeepSeek Harness** | `~/.dsh/` | Configured for official CLI environments |
 | **Others** | MiniMax Code, Qwen Code, Grok Build, Hermes, Pi, etc. | Continuously maintained and expanded |
 
-### 💡 How It Works
-
-1. **Add Provider**: Enter the provider name, Base URL, and API Key;
-2. **Select Tool**: Choose your active coding assistant from the sidebar (e.g., Claude Code or Codex);
-3. **Apply Config**: Select the desired endpoint and click enable—changes apply instantly;
-4. **Revert or Clear**: Click another profile or hit clear whenever you want to switch back to official or another relay.
-
 ---
 
-## 3. Installation & Downloads
+## Community
 
-| Platform | Architecture | Package | Status |
-| :--- | :--- | :--- | :--- |
-| **macOS** | Apple Silicon (M-series) | `.dmg` | **Apple-signed and notarized**; runs directly out of the box |
-| **macOS** | Intel (x64) | `.dmg` | **Apple-signed and notarized**; runs directly out of the box |
-| **Windows** | x64 | `.exe` | Installer / Portable (standalone executable) |
+File bugs and feature requests in [GitHub Issues](https://github.com/Folkbench/folkbench/issues), or join [Telegram](https://t.me/+-h3yj4eOYmw0ZTNl) or the [QQ group](https://qm.qq.com/q/71NzSTrPVK) (203286875).
 
-Head over to [GitHub Releases](https://github.com/Folkbench/folkbench/releases) to download the binary for your platform. Every release includes SHA-256 checksums.
+## Sponsors
 
-*Note: Windows code signing is currently in progress. If SmartScreen displays a warning, click 'More info' and 'Run anyway'.*
+These relays support Folkbench's ongoing benchmarks. [Become a sponsor →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_en)
 
----
+<!-- 顶级赞助位预留：确定档位后在此放置单独一行大 Logo / Reserved for a top-tier sponsor once tiers exist -->
 
-## 🔒 Privacy & Security
+<!-- /go 跳转上线前的原始链接 / Original links before /go went live:
+     Modelflare: https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     Apiporter: https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     Cloudbridge: https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     IKunCode: https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     境Ai: https://folkbench.com/services/jingai?utm_source=github&utm_campaign=readme
+     智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
+-->
 
-- **Strictly Local**: Switch stores all settings, endpoints, and API Keys locally on your filesystem (in your user profile directory). The client never uploads credentials to any remote server.
-- **Zero Code Collection**: Token usage estimation runs purely local log parsing. Switch never inspects, captures, or transmits your code, prompts, or conversational context.
-- **Safety Reminder**: When opening GitHub Issues or sharing log screenshots, please redact your real API Keys.
+<table>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" alt="Modelflare" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/modelflare?source=readme_en"><b>Modelflare</b></a><br>Operated by US-based Havenbyte LLC. Supports major models (GPT, Claude, Gemini, Grok) and standard OpenAI-compatible protocols, alongside 40+ image and video generation models. Features ordered fallback across multiple models per single API Key, secondary pool groups, and comprehensive request audit logs tracking status, latency, tokens, and actual expenditures.<br><br>Cache compensation guarantee: Select OpenAI pools guarantee daily cache hit rates of 65% (Price-optimized), 75% (Stable), and 85% (Premium); qualifying requests falling below these thresholds receive compensatory credits. First-time top-ups unlock discounted tiers: a $20 deposit unlocks the GPT discount pool (GPT-5.6-Sol at approx. ¥0.51 input / ¥3.01 output per 1M tokens with no upper limit); a $50 deposit unlocks the Claude discount pool.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" alt="CheapAI" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/cheapai?source=readme_en"><b>CheapAI</b></a><br>Focused squarely on budget efficiency, particularly through its discounted pools. Features an innovative dynamic multiplier pool that adjusts rates in real time based on pool capacity—dropping rates when resources are plentiful and balancing cost versus availability during peak periods.<br><br>Offers discount tiers for cost-sensitive developers alongside Stable, Pro, and direct Official Key pools to accommodate varying workload criticalities.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/apiporter?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/apiporter-dark.png"><img src="docs/images/sponsors/apiporter-light.png" alt="Apiporter" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/apiporter?source=readme_en"><b>Apiporter</b></a><br>Tailored for enterprise teams and multi-channel aggregation in mainland China. Low entry threshold with a ¥5 minimum recharge, support for micro-amount VAT invoicing, enterprise WeChat integration, and live customer service. Enables flexible internal resource segregation with per-key quota limits and custom expiration dates.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/cloudbridge?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cloudbridge-dark.png"><img src="docs/images/sponsors/cloudbridge-light.png" alt="Cloudbridge" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/cloudbridge?source=readme_en"><b>Cloudbridge</b></a><br>Geared toward global developers seeking USD billing and multi-language support with low recharge minimums. Offers access to GPT, Claude, Grok, and DeepSeek endpoints. A newer provider with solid initial uptime performance on Folkbench probes.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" alt="IKunCode" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/ikuncode?source=readme_en"><b>IKunCode</b></a><br>Optimized for seamless integration into AI coding CLIs (Claude Code, Codex, Gemini CLI). Provides comprehensive support channels including email, QQ groups, and Telegram with attentive human assistance for beginners.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/jingai?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/jingai-dark.png"><img src="docs/images/sponsors/jingai-light.png" alt="境Ai" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/jingai?source=readme_en"><b>JingAI (境Ai)</b></a><br>Unified multi-model aggregator covering GPT, Claude, Grok, Gemini, and select domestic foundation models. Supports on-demand billing, subscription packages, and direct balance recharges. Check Folkbench probes for latest route latency and uptime.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/fluxlane?source=readme_en"><b>FluxLane (智流)</b></a><br>Extensive model catalog spanning international and domestic options with direct OpenAI SDK compatibility. Features platform-level routing, usage monitoring, latency tracking, and formal procurement support (invoices, corporate contracts, and purchase orders) for enterprises and academic institutions.</td>
+</tr>
+</table>
 
----
+## License
 
-## Detailed Profiles and Promotional Information for Select Providers
+Switch code under `apps/switch/` is licensed under [Apache-2.0](apps/switch/LICENSE). Blog posts, images and brand assets are excluded; see [LICENSE.md](LICENSE.md).
 
-### [Modelflare](https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-Operated by US-based Havenbyte LLC. Supports major models (GPT, Claude, Gemini, Grok) and standard OpenAI-compatible protocols, alongside 40+ image and video generation models. Features ordered fallback across multiple models per single API Key, secondary pool groups, and comprehensive request audit logs tracking status, latency, tokens, and actual expenditures.
-
-Cache compensation guarantee: Select OpenAI pools guarantee daily cache hit rates of 65% (Price-optimized), 75% (Stable), and 85% (Premium); qualifying requests falling below these thresholds receive compensatory credits. First-time top-ups unlock discounted tiers: a $20 deposit unlocks the GPT discount pool (GPT-5.6-Sol at approx. ¥0.51 input / ¥3.01 output per 1M tokens with no upper limit); a $50 deposit unlocks the Claude discount pool.
-
-### [CheapAI](https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-Focused squarely on budget efficiency, particularly through its discounted pools. Features an innovative dynamic multiplier pool that adjusts rates in real time based on pool capacity—dropping rates when resources are plentiful and balancing cost versus availability during peak periods.
-
-Offers discount tiers for cost-sensitive developers alongside Stable, Pro, and direct Official Key pools to accommodate varying workload criticalities.
-
-### [Apiporter](https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-Tailored for enterprise teams and multi-channel aggregation in mainland China. Low entry threshold with a ¥5 minimum recharge, support for micro-amount VAT invoicing, enterprise WeChat integration, and live customer service. Enables flexible internal resource segregation with per-key quota limits and custom expiration dates.
-
-### [Cloudbridge](https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-Geared toward global developers seeking USD billing and multi-language support with low recharge minimums. Offers access to GPT, Claude, Grok, and DeepSeek endpoints. A newer provider with solid initial uptime performance on Folkbench probes.
-
-### [IKunCode](https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-Optimized for seamless integration into AI coding CLIs (Claude Code, Codex, Gemini CLI). Provides comprehensive support channels including email, QQ groups, and Telegram with attentive human assistance for beginners.
-
-### [JingAI (境Ai)](https://folkbench.com/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-
-Unified multi-model aggregator covering GPT, Claude, Grok, Gemini, and select domestic foundation models. Supports on-demand billing, subscription packages, and direct balance recharges. Check Folkbench probes for latest route latency and uptime.
-
-### [FluxLane (智流)](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-
-Extensive model catalog spanning international and domestic options with direct OpenAI SDK compatibility. Features platform-level routing, usage monitoring, latency tracking, and formal procurement support (invoices, corporate contracts, and purchase orders) for enterprises and academic institutions.
-
----
-
-## 🤝 Feedback & Community
-
-- **Community Group**: Join our [Telegram Community](https://t.me/+ZCsDR_BEHLw1OGRl) or [QQ group “folkbench 用户群”](https://qm.qq.com/q/71NzSTrPVK) (group number 203286875) to discuss AI coding workflows and real-time relay status.
-- **Issues & Suggestions**: Open a ticket on [GitHub Issues](https://github.com/Folkbench/folkbench/issues) for bug reports, tool requests, or feature ideas.
-- **Security Inquiries**: For vulnerability disclosures, please review [SECURITY.md](SECURITY.md).
-- **Open Source License**: Folkbench Switch is distributed under the [Apache-2.0](LICENSE.md) license.
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/banner-en-dark.png"><img src="docs/images/banner-en-light.png" width="100%" alt="Folkbench — The model that works best. Anyone can choose it."></picture></p>
