@@ -25,6 +25,8 @@ export function ChoiceSelect<T extends string>({
   hint,
   placeholder,
   hideLabel = false,
+  notice,
+  onOpenChange,
   onChange,
 }: {
   label: string
@@ -34,6 +36,9 @@ export function ChoiceSelect<T extends string>({
   hint?: string
   placeholder?: string
   hideLabel?: boolean
+  /** Status row shown at the top of the popup (e.g. loading / hint). */
+  notice?: ReactNode
+  onOpenChange?: (open: boolean) => void
   onChange: (value: T) => void
 }) {
   const id = useId()
@@ -52,6 +57,7 @@ export function ChoiceSelect<T extends string>({
       <Select.Root<T>
         value={value}
         items={options}
+        onOpenChange={(open) => onOpenChange?.(open)}
         onValueChange={(next) => {
           if (next !== null) onChange(next)
         }}
@@ -87,6 +93,15 @@ export function ChoiceSelect<T extends string>({
             className="z-50 outline-none"
           >
             <Select.Popup className="min-w-[var(--anchor-width)] max-w-[calc(100vw-32px)] rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-[var(--shadow-overlay)]">
+              {notice ? (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="flex min-h-9 items-center gap-2 px-3 py-2 text-[13px] text-muted-foreground"
+                >
+                  {notice}
+                </div>
+              ) : null}
               <Select.List className="max-h-72 overflow-y-auto">
                 {options.map((option) => (
                   <Select.Item

@@ -9,5 +9,8 @@ pub use folkbench_switch_contract::{
     ServiceBalanceStatus, ServiceBalanceUnit, ServiceBalanceWindow,
     ServiceError, ServiceProtocol, SessionState, SessionStatus,
     SessionUsageSummary, SessionUser, SwitchEffect, SwitchResult, SwitchUndo,
-    ToolDescriptor, ToolUsageSummary, VerifyResult,
+    ToolDescriptor, ToolInstallChannel, ToolRuntimeActionResult,
+    ToolRuntimeCatalogEntry, ToolRuntimeInstall, ToolRuntimeKind,
+    ToolRuntimePrerequisites, ToolRuntimeStatus, ToolUsageSummary, UiMode,
+    VerifyResult, WorkFolder, WorkFolderListing,
 };

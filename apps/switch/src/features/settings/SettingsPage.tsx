@@ -8,6 +8,7 @@ import { useAppearance } from '@/components/appearance-provider'
 import {
   preferencesQueryOptions,
   useSetPreferredLanguage,
+  useSetUiMode,
 } from '@/features/preferences/queries'
 import { sessionQueryOptions } from '@/features/session/queries'
 import { bootstrapQueryOptions } from '@/features/bootstrap/queries'
@@ -32,6 +33,8 @@ export function SettingsPage() {
     },
   })
   const languageMutation = useSetPreferredLanguage()
+  const uiModeMutation = useSetUiMode()
+  const uiMode = preferences.data?.uiMode ?? 'easy'
   const locale =
     preferences.data?.language ?? normalizeLocale(i18n.resolvedLanguage)
 
@@ -77,6 +80,39 @@ export function SettingsPage() {
         {appearance.error ? (
           <p role="alert" className="text-[13px] text-destructive">
             {t('settings.appearance.saveFailed')}
+          </p>
+        ) : null}
+      </section>
+      <section className="flex flex-col gap-3">
+        <h2 className="switch-section-title">{t('settings.uiMode.title')}</h2>
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card px-5 py-4">
+          <div>
+            <p className="text-[14px] font-medium">{t('settings.uiMode.title')}</p>
+            <p className="mt-1 text-[12px] text-muted-foreground">
+              {t('settings.uiMode.description')}
+            </p>
+          </div>
+          <div
+            className="switch-segmented can-wrap"
+            role="group"
+            aria-label={t('settings.uiMode.title')}
+          >
+            {(['easy', 'pro'] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                disabled={uiModeMutation.isPending || !preferences.data}
+                aria-pressed={uiMode === mode}
+                onClick={() => uiModeMutation.mutate(mode)}
+              >
+                {t(`settings.uiMode.${mode}`)}
+              </button>
+            ))}
+          </div>
+        </div>
+        {uiModeMutation.isError ? (
+          <p role="alert" className="text-[13px] text-destructive">
+            {t('settings.uiMode.saveFailed')}
           </p>
         ) : null}
       </section>

@@ -28,5 +28,6 @@ pub(crate) use atomic::FileSnapshot;
 pub(crate) use atomic::remove_file as remove_owned_file;
 pub(crate) use atomic::write_bytes as atomic_write_bytes;
 pub use catalog::tool_descriptors;
+pub(crate) use claude::anthropic_base_url;
 pub use projection::LiveProjection;
 pub use session_usage::summarize as summarize_session_usage;

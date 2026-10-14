@@ -2,13 +2,15 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
+import { HugeiconsIcon } from '@hugeicons/react'
 
-import { BRIDGE_ERROR, BridgeError } from '@/bridge'
+import { BRIDGE_ERROR, BridgeError, openPublishedStationWebsite } from '@/bridge'
 import type { PublishedStation } from '@/bridge'
 import { ChoiceSelect, type ChoiceOption } from '@/components/choice-select'
 import { StatusWindow } from '@/components/status-window'
 import { StationAvatar } from '@/components/station-avatar'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   comparePublishedPrices,
@@ -17,6 +19,9 @@ import {
 } from '@/features/discovery/catalog'
 import { DiscoveryRefreshButton } from '@/features/discovery/DiscoveryRefreshButton'
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
+import { preferencesQueryOptions } from '@/features/preferences/queries'
+import { EasyAddWizard } from '@/features/home/EasyAddWizard'
+import { switchToolsQueryOptions } from '@/features/catalog/queries'
 import { cn } from '@/lib/utils'
 
 type SortMode = 'rank' | 'availability' | 'price'
@@ -88,6 +93,13 @@ export function DiscoveryPage() {
   const navigate = useNavigate()
   const { modelId } = useSearch({ from: '/console/discover' })
   const [sortMode, setSortMode] = useState<SortMode>('rank')
+  const [openingWebsite, setOpeningWebsite] = useState<string | null>(null)
+  const [easyWizardOpen, setEasyWizardOpen] = useState(false)
+  const [easyWizardStation, setEasyWizardStation] =
+    useState<PublishedStation | null>(null)
+  const preferences = useQuery(preferencesQueryOptions)
+  const isEasy = preferences.data?.uiMode === 'easy'
+  const tools = useQuery(switchToolsQueryOptions)
   const catalog = useQuery(publishedCatalogQueryOptions(modelId))
   const lastUpdated = catalog.dataUpdatedAt
     ? new Intl.DateTimeFormat(i18n.resolvedLanguage ?? 'en', {
@@ -97,7 +109,28 @@ export function DiscoveryPage() {
         minute: '2-digit',
       }).format(catalog.dataUpdatedAt)
     : null
-  const rows = sortStations(catalog.data?.stations ?? [], sortMode)
+  const rows = sortStations(
+    (catalog.data?.stations ?? []).filter((row) =>
+      isEasy ? Boolean(row.baseUrl) : true
+    ),
+    sortMode
+  )
+
+  async function onRegister(row: PublishedStation) {
+    const key = `${row.stationId}:${row.channelId}`
+    setOpeningWebsite(key)
+    try {
+      await openPublishedStationWebsite({
+        modelId: row.modelId,
+        stationId: row.stationId,
+        channelId: row.channelId,
+      })
+    } catch {
+      // Keep the row usable; website may be missing from the catalog.
+    } finally {
+      setOpeningWebsite(null)
+    }
+  }
   const modelOptions = catalog.data?.models ?? []
   const catalogOrigin = catalog.data?.origin ?? 'https://folkbench.com'
   const modelChoices: Array<ChoiceOption<string>> = modelOptions.length
@@ -140,22 +173,24 @@ export function DiscoveryPage() {
                 }
               />
             </div>
-            <div
-              className="switch-segmented"
-              role="group"
-              aria-label={t('discovery.sort.title')}
-            >
-              {(['rank', 'availability', 'price'] as const).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  aria-pressed={sortMode === mode}
-                  onClick={() => setSortMode(mode)}
-                >
-                  {t(`discovery.sort.${mode}`)}
-                </button>
-              ))}
-            </div>
+            {!isEasy ? (
+              <div
+                className="switch-segmented"
+                role="group"
+                aria-label={t('discovery.sort.title')}
+              >
+                {(['rank', 'availability', 'price'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    aria-pressed={sortMode === mode}
+                    onClick={() => setSortMode(mode)}
+                  >
+                    {t(`discovery.sort.${mode}`)}
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             {catalog.data ? (
@@ -290,49 +325,83 @@ export function DiscoveryPage() {
                   {formatPublishedPrice(row.outputPrice) ?? '—'}
                 </div>
                 <div role="cell" className="line-table-actions items-center">
-                  <Link
-                    to="/discover/$stationId/$channelId"
-                    params={{
-                      stationId: row.stationId,
-                      channelId: row.channelId,
-                    }}
-                    search={{ modelId }}
-                    className={cn(
-                      buttonVariants({ variant: 'ghost', size: 'sm' }),
-                      'font-normal text-muted-foreground'
-                    )}
+                  <button
+                    type="button"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
+                    disabled={
+                      !row.websiteUrl ||
+                      openingWebsite === `${row.stationId}:${row.channelId}`
+                    }
+                    onClick={() => void onRegister(row)}
                   >
-                    {t('discovery.list.details')}
-                  </Link>
-                  <Link
-                    to="/"
-                    search={{
-                      add: true,
-                      stationId: row.stationId,
-                      channelId: row.channelId,
-                      modelId: row.modelId,
-                      stationName: row.stationName,
-                      channelName: row.channelName,
-                    }}
-                    className={cn(
-                      buttonVariants({ size: 'sm' }),
-                      'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88'
-                    )}
-                  >
-                    {t('configure.actions.connect')}
-                  </Link>
+                    {t('discovery.list.register')}
+                    <HugeiconsIcon
+                      icon={LinkSquare01Icon}
+                      strokeWidth={1.8}
+                      className="size-3.5"
+                    />
+                  </button>
+                  {isEasy ? (
+                    <button
+                      type="button"
+                      className={cn(
+                        buttonVariants({ size: 'sm' }),
+                        'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88'
+                      )}
+                      onClick={() => {
+                        setEasyWizardStation(row)
+                        setEasyWizardOpen(true)
+                      }}
+                    >
+                      {t('configure.actions.connect')}
+                    </button>
+                  ) : (
+                    <Link
+                      to="/"
+                      search={{
+                        add: true,
+                        stationId: row.stationId,
+                        channelId: row.channelId,
+                        modelId: row.modelId,
+                        stationName: row.stationName,
+                        channelName: row.channelName,
+                      }}
+                      className={cn(
+                        buttonVariants({ size: 'sm' }),
+                        'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88'
+                      )}
+                    >
+                      {t('configure.actions.connect')}
+                    </Link>
+                  )}
                 </div>
               </article>
             ))}
           </div>
         )}
-        <Link
-          to="/methods"
-          className="inline-block px-1 text-[13px] text-brand-signal underline-offset-2 hover:underline"
-        >
-          {t('discovery.methods.link')}
-        </Link>
+        {!isEasy ? (
+          <Link
+            to="/methods"
+            className="inline-block px-1 text-[13px] text-brand-signal underline-offset-2 hover:underline"
+          >
+            {t('discovery.methods.link')}
+          </Link>
+        ) : null}
       </section>
+
+      {isEasy ? (
+        <EasyAddWizard
+          open={easyWizardOpen}
+          tools={tools.data ?? []}
+          initialToolId=""
+          initialStation={easyWizardStation}
+          requireToolSelection
+          onOpenChange={(open) => {
+            setEasyWizardOpen(open)
+            if (!open) setEasyWizardStation(null)
+          }}
+        />
+      ) : null}
     </div>
   )
 }

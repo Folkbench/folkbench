@@ -4,7 +4,7 @@
       "add": "Add service",
       "addFavorite": "Add to favorite services",
       "addShort": "Add",
-      "close": "Close",
+      "close": "Stop using",
       "edit": "Edit",
       "enable": "Enable",
       "enabled": "In use",
@@ -44,7 +44,7 @@
     "connect": {
       "address": "Address",
       "checking": "Checking public run data…",
-      "description": "This link includes an API Key. After you confirm, the Key stays only on this computer.",
+      "description": "Save this route to Folkbench Switch",
       "group": "Group",
       "invalidDescription": "The link is missing a required field, or the address is not one this app can save.",
       "invalidTitle": "This link cannot be used",
@@ -52,11 +52,12 @@
       "keyAttached": "Included",
       "matched": "Public availability and price will show for this group.",
       "model": "Model",
+      "import": "Import",
       "saveFailed": "Could not save this route.",
+      "switchFailed": "Saved, but writing the tool config failed. Switch again from Home.",
       "station": "Station",
       "title": "Save this route?",
-      "tool": "After saving, {{tool}} is selected. This does not enable it.",
-      "unavailable": "Public run data could not be loaded. The route can still be saved.",
+      "tool": "Will import into the {{tool}} service list. It only archives the route and does not switch the current service.",
       "unmatched": "No public run data for this group."
     },
     "binding": {
@@ -187,7 +188,6 @@
       "allServices": "All services",
       "channel": "Channel / group",
       "chooseForTool": "Choose a service for {{tool}}",
-      "chooseService": "Choose a saved service",
       "current": "In use · {{tool}}",
       "currentMissing": "The tool's current configuration does not match a saved service",
       "description": "Enabling a service writes it to this tool's local configuration.",
@@ -218,7 +218,6 @@
     "switchResult": {
       "description": "{{name}} was written to the local {{tool}} configuration.",
       "effect": "Takes effect: {{effect}}",
-      "rollback": "Restore previous configuration",
       "scope": "The configuration write completed. No model request was sent with your Key. Restart the tool session if required before using it.",
       "title": "Tool configuration written"
     },
@@ -235,7 +234,6 @@
       "importRetry": "Retry import status check",
       "importStatusUnavailable": "Could not check whether the current tool configuration changed.",
       "reachable": "Reachable ({{ms}} ms)",
-      "restored": "The previous tool configuration was restored.",
       "saved": "Service updated.",
       "switched": "Wrote {{tool}} ({{effect}}).",
       "unreachable": "Unreachable",
@@ -259,8 +257,288 @@
     },
     "backup": {
       "title": "Backup channels",
-      "reorder": "Drag to reorder",
-      "priceMeta": "In {{input}} · Out {{output}}"
+      "reorder": "Drag to reorder"
+    },
+    "easyAdd": {
+      "title": "Add a service",
+      "stepTool": "Choose a tool",
+      "stepStation": "Choose a station or custom",
+      "stepCredentials": "API Key and model",
+      "register": "Register / create Key",
+      "registerHint": "Pick a station or enter a custom config. No account yet? Register on the station site and create a Key.",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "sk-...",
+      "model": "Model",
+      "modelPlaceholder": "After filling the key, choose the default model",
+      "next": "Next",
+      "saveAndSwitch": "Save and switch",
+      "noStations": "No stations with an API address yet.",
+      "noTools": "No tools available yet.",
+      "needKey": "Enter an API Key.",
+      "needModel": "Select or enter a model.",
+      "needStation": "Pick a station.",
+      "switched": "Saved and written to {{tool}}.",
+      "savedSwitchFailed": "Service saved, but writing the tool config failed. Enable it from Home.",
+      "openingWebsite": "Opening station…",
+      "custom": "Custom configuration",
+      "customHint": "You already created a Key on another site—fill in the config yourself.",
+      "nameOptional": "Display name",
+      "namePlaceholder": "Required — shown in the service list",
+      "needBaseUrl": "Enter an API Base URL.",
+      "needName": "Enter a display name.",
+      "invalidBaseUrl": "Enter a URL that starts with http:// or https://.",
+      "modelHint": "Make sure the group for this key can call the model you selected. If unsure, confirm on the station site.",
+      "nameLabel": "Display name"
+    },
+    "easyHome": {
+      "changeStation": "Switch provider",
+      "changeLine": "Change line",
+      "broken": "This line can't be reached right now. Try another provider.",
+      "emptyHint": "No services yet. Tap Add service, pick a site and paste your key.",
+      "stopTitle": "Stop using this service in {{tool}}?",
+      "stopConfirm": "{{tool}} will no longer go through the relay and returns to its unconnected state. The service stays saved, so you can use it again anytime."
+    },
+    "guide": {
+      "title": "Usage guide",
+      "titleFor": "How to use {{tool}}",
+      "claude-code": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `claude --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Claude Code from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `claude` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `/help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `claude --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Claude Code from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `claude` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `/help` if needed."
+        }
+      },
+      "codex": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `codex --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Codex from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `codex` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `codex --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `codex --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Codex from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `codex` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `codex --help` if needed."
+        }
+      },
+      "gemini-cli": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `gemini --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Gemini CLI from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `gemini` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `/help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `gemini --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Gemini CLI from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `gemini` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `/help` if needed."
+        }
+      },
+      "grok-build": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `grok --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Grok from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `grok` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `grok --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `grok --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Grok from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `grok` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `grok --help` if needed."
+        }
+      },
+      "opencode": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `opencode --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install OpenCode from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `opencode` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `opencode --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `opencode --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install OpenCode from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `opencode` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `opencode --help` if needed."
+        }
+      },
+      "openclaw": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `openclaw --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install OpenClaw from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `openclaw` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `openclaw --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `openclaw --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install OpenClaw from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `openclaw` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `openclaw --help` if needed."
+        }
+      },
+      "hermes": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `hermes --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Hermes from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `hermes` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `hermes --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `hermes --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Hermes from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `hermes` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `hermes --help` if needed."
+        }
+      },
+      "pi": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `pi --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Pi from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `pi` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `pi --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `pi --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Pi from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `pi` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `pi --help` if needed."
+        }
+      },
+      "minimax-code": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `mcode --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install MiniMax Code from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `mcode` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `mcode --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `mcode --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install MiniMax Code from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `mcode` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `mcode --help` if needed."
+        }
+      },
+      "dsh": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `dsh --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install DeepSeek Harness from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `dsh` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `dsh --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `dsh --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install DeepSeek Harness from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `dsh` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `dsh --help` if needed."
+        }
+      },
+      "qwen-code": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `qwen --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Qwen Code from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `qwen` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `/help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `qwen --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Qwen Code from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `qwen` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `/help` if needed."
+        }
+      },
+      "kimi-cli": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `kimi --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Kimi CLI from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `kimi` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `kimi --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `kimi --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Kimi CLI from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `kimi` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `kimi --help` if needed."
+        }
+      },
+      "aider": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "In Terminal, run `aider --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Aider from the official site.",
+          "runCommand": "Run `cd /path/to/your/project`, then `aider` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `aider --help` if needed."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for this tool in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "In the window, run `aider --version`. If the command is missing, open Switch, select this tool, and use One-click install—or install Aider from the official site.",
+          "runCommand": "Run `cd \\path\\to\\your\\project`, then `aider` to start (Folkbench Switch already wrote the address and Key).",
+          "startChat": "When the prompt appears, type your question to start chatting; use `aider --help` if needed."
+        }
+      },
+      "generic": {
+        "mac": {
+          "ensureService": "Before using, make sure you have successfully added a service for {{tool}} in Folkbench Switch.",
+          "openTerminal": "Open Terminal: press Command + Space, type Terminal, and press Return.",
+          "ensureInstalled": "Make sure {{tool}} is installed; in Switch you can use One-click install for this tool, or follow the official docs.",
+          "runCommand": "Change into your project directory, then run the launch command from the {{tool}} docs (Folkbench Switch already wrote the address and Key).",
+          "startChat": "Once it starts, begin chatting with the AI; check the {{tool}} docs if something fails."
+        },
+        "win": {
+          "ensureService": "Before using, make sure you have successfully added a service for {{tool}} in Folkbench Switch.",
+          "openTerminal": "Open PowerShell: press the Windows key, search for PowerShell or Terminal, and press Enter.",
+          "ensureInstalled": "Make sure {{tool}} is installed; in Switch you can use One-click install for this tool, or follow the official docs.",
+          "runCommand": "Change into your project directory, then run the launch command from the {{tool}} docs (Folkbench Switch already wrote the address and Key).",
+          "startChat": "Once it starts, begin chatting with the AI; check the {{tool}} docs if something fails."
+        }
+      }
+    },
+    "dock": {
+      "notInstalled": "Not installed"
+    },
+    "toolRuntime": {
+      "installTitle": "{{tool}} is not installed",
+      "installDesc": "Install {{tool}} on this computer before adding a service for it. Click below to install automatically; it refreshes when done.",
+      "install": "Install",
+      "installing": "Installing…",
+      "updateMessage": "A new version of {{tool}} is available ({{local}} → {{latest}})",
+      "updateMessageShort": "A new version of {{tool}} is available",
+      "update": "Update",
+      "updating": "Updating…",
+      "actionFailed": "Action failed, please try again"
     }
   }
 }

@@ -45,6 +45,8 @@ If you need benchmark data for a specific model across different providers, expl
 
 A beginner-friendly setup tool for AI coding assistants. Set up Claude Code, Codex, Gemini CLI and more in one click — simple and easy. [Download for macOS / Windows](https://github.com/Folkbench/folkbench/releases).
 
+macOS: Apple Silicon / Intel (`.dmg`); Windows: x64 (`.exe`). Get installers and SHA256 checksums from [Releases](https://github.com/Folkbench/folkbench/releases).
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/switch-en-dark.png">
   <img src="docs/images/features/switch-en-light.png" width="100%" alt="Folkbench Switch">

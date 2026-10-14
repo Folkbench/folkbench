@@ -1,5 +1,18 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.3 — Beta
+
+- 增加简易模式与首次使用引导，集中完成服务接入、配置切换和工具启动；保留专业模式及明暗主题。
+- 打开工具时选择本次工作文件夹，不将工作文件夹保存或绑定到服务。
+- 支持同站多 Key 备注、已保存服务列表、模型列表加载与本机用量展示。
+- 完善显示名、深链导入、工具页运行环境检测和首页线路列表。
+- 修复 Claude API 地址与模型写入、Codex 中转服务鉴权配置及 Hermes 配置识别。
+- 修复 macOS 红色关闭按钮与 Dock 重新打开的行为。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable；不启用自动更新。
+
 ## 0.1.0-beta.2 — Beta
 
 - 增加服务模型列表获取和 Provider ID 配置，切换时保留已保存的完整模型设置。

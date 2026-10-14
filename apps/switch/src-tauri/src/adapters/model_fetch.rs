@@ -154,6 +154,11 @@ pub(crate) fn models_url_candidates(
     if !crate::services::allowed_service_base_url(trimmed) {
         return Vec::new();
     }
+    // Caller already built the list URL (easy mode: `{apiBase}/models`, e.g.
+    // `https://modelflare.dev/v1/models`). Use that single URL — no second try.
+    if trimmed.ends_with("/models") {
+        return vec![trimmed.to_string()];
+    }
     let mut candidates = Vec::new();
     if ends_with_version_segment(trimmed) {
         candidates.push(format!("{trimmed}/models"));
@@ -259,11 +264,9 @@ pub(crate) fn fetch(
         let code = status.as_u16();
         if status.is_success() {
             let Ok(body) = response.json::<serde_json::Value>() else {
-                return result(
-                    ModelFetchStatus::Unavailable,
-                    Some(url),
-                    Some(code),
-                );
+                // HTML SPA or non-JSON 200 — try the next candidate.
+                last_missing = Some((url, code));
+                continue;
             };
             let mut models = parse_models_list(&body);
             if models.is_empty() {
@@ -445,6 +448,32 @@ mod tests {
     }
 
     #[test]
+    fn candidates_keep_prebuilt_models_url() {
+        assert_eq!(
+            completions("https://x.com/models"),
+            vec!["https://x.com/models"]
+        );
+        assert_eq!(
+            completions("https://x.com/v1/models/"),
+            vec!["https://x.com/v1/models"]
+        );
+        // Easy mode: API base with `/v1` + append `/models` — single URL.
+        assert_eq!(
+            completions("https://modelflare.dev/v1/models"),
+            vec!["https://modelflare.dev/v1/models"]
+        );
+    }
+
+    #[test]
+    fn candidates_prebuilt_models_url_is_not_rewritten() {
+        // Do not invent a second `/v1/models` candidate from a bare `/models`.
+        assert_eq!(
+            completions("https://modelflare.dev/models"),
+            vec!["https://modelflare.dev/models"]
+        );
+    }
+
+    #[test]
     fn candidates_strip_anthropic_compat_suffix() {
         assert_eq!(
             models_url_candidates(
@@ -573,6 +602,42 @@ mod tests {
             }
         });
         format!("http://127.0.0.1:{port}")
+    }
+
+    #[test]
+    fn fetch_uses_prebuilt_v1_models_url_once() {
+        let base = serve(vec![
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 22\r\nConnection: close\r\n\r\n{\"data\":[{\"id\":\"ok\"}]}",
+        ]);
+        // Easy mode passes `{apiBase}/models` (apiBase usually ends in `/v1`).
+        let r = fetch(
+            &format!("{base}/v1/models"),
+            "sk-test",
+            ServiceProtocol::OpenaiCompletions,
+            FORM_TIMEOUT,
+        );
+        assert_eq!(r.status, ModelFetchStatus::Ready);
+        assert_eq!(r.models[0].id, "ok");
+        assert_eq!(
+            r.endpoint.as_deref(),
+            Some(format!("{base}/v1/models").as_str())
+        );
+    }
+
+    #[test]
+    fn fetch_prebuilt_models_url_does_not_retry_v1() {
+        let base = serve(vec![
+            "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 13\r\nConnection: close\r\n\r\n<html></html>",
+        ]);
+        // Single candidate: HTML at `/models` must not fall through to `/v1/models`.
+        let r = fetch(
+            &format!("{base}/models"),
+            "sk-test",
+            ServiceProtocol::OpenaiCompletions,
+            FORM_TIMEOUT,
+        );
+        assert_ne!(r.status, ModelFetchStatus::Ready);
+        assert!(r.models.is_empty());
     }
 
     #[test]

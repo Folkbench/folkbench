@@ -6,19 +6,14 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Reorder,
-  useDragControls,
-  useReducedMotion,
-} from 'motion/react'
-import ArrowRight01Icon from '@hugeicons/core-free-icons/ArrowRight01Icon'
+import { Reorder, useDragControls, useReducedMotion } from 'motion/react'
+import ArrowLeftRightIcon from '@hugeicons/core-free-icons/ArrowLeftRightIcon'
 import DragDropVerticalIcon from '@hugeicons/core-free-icons/DragDropVerticalIcon'
 import { HugeiconsIcon } from '@hugeicons/react'
 import type { MyService, PublishedStation } from '@/bridge'
 import { StationAvatar } from '@/components/station-avatar'
 import { Button } from '@/components/ui/button'
 import { ServiceMenu } from './ServiceMenu'
-import { formatPublishedPrice } from '@/lib/published-format'
 
 export type ComparisonLine = {
   key: string
@@ -45,12 +40,13 @@ export function LineComparison({
   onReorder,
   onSwitch,
   onConnect,
-  onDetails,
   onVerify,
   onBalance,
   onEdit,
   onRemove,
+  simple = false,
 }: {
+  simple?: boolean
   lines: ComparisonLine[]
   currentId: string | null
   busy: boolean
@@ -58,7 +54,6 @@ export function LineComparison({
   onReorder?: (orderedKeys: string[]) => void
   onSwitch: (service: MyService) => void
   onConnect: (published: PublishedStation) => void
-  onDetails: (published: PublishedStation) => void
   onVerify: (service: MyService) => void
   onBalance: (service: MyService) => void
   onEdit: (service: MyService) => void
@@ -66,9 +61,9 @@ export function LineComparison({
 }) {
   const { t } = useTranslation()
   const reduceMotion = useReducedMotion()
-  const canReorder = Boolean(onReorder) && lines.length > 1
+  const canReorder = !simple && Boolean(onReorder) && lines.length > 1
   const [orderedKeys, setOrderedKeys] = useState(() =>
-    lines.map((line) => line.key),
+    lines.map((line) => line.key)
   )
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const draggingRef = useRef(false)
@@ -127,11 +122,11 @@ export function LineComparison({
             }}
             onSwitch={onSwitch}
             onConnect={onConnect}
-            onDetails={onDetails}
             onVerify={onVerify}
             onBalance={onBalance}
             onEdit={onEdit}
             onRemove={onRemove}
+            simple={simple}
           />
         )
       })}
@@ -151,12 +146,13 @@ function BackupSwitcherRow({
   onDragEnd,
   onSwitch,
   onConnect,
-  onDetails,
   onVerify,
   onBalance,
   onEdit,
   onRemove,
+  simple,
 }: {
+  simple: boolean
   line: ComparisonLine
   currentId: string | null
   busy: boolean
@@ -168,7 +164,6 @@ function BackupSwitcherRow({
   onDragEnd: () => void
   onSwitch: (service: MyService) => void
   onConnect: (published: PublishedStation) => void
-  onDetails: (published: PublishedStation) => void
   onVerify: (service: MyService) => void
   onBalance: (service: MyService) => void
   onEdit: (service: MyService) => void
@@ -182,15 +177,6 @@ function BackupSwitcherRow({
   const station = published?.stationName ?? service?.baseUrl ?? ''
   const model = published?.modelId || service?.modelId || ''
   const subtitle = [station, model].filter(Boolean).join(' · ')
-  const input = formatPublishedPrice(published?.inputPrice ?? null)
-  const output = formatPublishedPrice(published?.outputPrice ?? null)
-  const priceMeta =
-    input || output
-      ? t('configure.backup.priceMeta', {
-          input: input ?? '—',
-          output: output ?? '—',
-        })
-      : null
 
   function startDrag(event: ReactPointerEvent<HTMLButtonElement>) {
     if (!canReorder) return
@@ -247,14 +233,6 @@ function BackupSwitcherRow({
           </p>
         ) : null}
       </div>
-      {priceMeta ? (
-        <span
-          className="backup-switcher-meta"
-          title={t('configure.comparison.priceUnit')}
-        >
-          {priceMeta}
-        </span>
-      ) : null}
       <div className="backup-switcher-actions">
         {active ? (
           <Button size="sm" variant="ghost" disabled>
@@ -266,6 +244,11 @@ function BackupSwitcherRow({
             disabled={busy || !canWrite}
             onClick={() => onSwitch(service)}
           >
+            <HugeiconsIcon
+              icon={ArrowLeftRightIcon}
+              strokeWidth={1.7}
+              aria-hidden="true"
+            />
             {t('configure.actions.switch')}
           </Button>
         ) : published ? (
@@ -278,26 +261,15 @@ function BackupSwitcherRow({
             {t('configure.actions.connect')}
           </Button>
         ) : null}
-        {published ? (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            className="text-muted-foreground"
-            aria-label={t('configure.actions.detailsFor', { name })}
-            title={t('configure.actions.details')}
-            onClick={() => onDetails(published)}
-          >
-            <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.7} />
-          </Button>
-        ) : null}
         {service ? (
           <ServiceMenu
             service={service}
             onVerify={onVerify}
-            onBalance={onBalance}
-            onEdit={onEdit}
+            onBalance={simple ? undefined : onBalance}
+            onEdit={simple ? undefined : onEdit}
             onRemove={onRemove}
             compact
+            simple={simple}
           />
         ) : null}
       </div>

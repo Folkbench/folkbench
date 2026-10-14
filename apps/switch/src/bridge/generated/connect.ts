@@ -10,7 +10,7 @@ export type ConnectNotice = { invalid: boolean, preview: ConnectPreview | null, 
  *
  * The API Key stays in Rust. This type has nowhere to put it.
  */
-export type ConnectPreview = { id: string, name: string, stationId: string, stationName: string | null, modelId: string, groupName: string, baseUrl: string, toolId: string | null, keyAttached: boolean, publicStatus: ConnectPublicStatus, };
+export type ConnectPreview = { id: string, name: string, stationId: string, stationName: string | null, modelId: string, groupName: string, baseUrl: string, toolId: string, keyAttached: boolean, publicStatus: ConnectPublicStatus, };
 
 /**
  * Whether the pending link lined up with one published rankings row.

@@ -15,7 +15,9 @@ pub(crate) fn is_model_id(value: &str) -> bool {
         return false;
     }
     bytes[1..].iter().all(|byte| {
-        byte.is_ascii_lowercase() || byte.is_ascii_digit() || *byte == b'-'
+        byte.is_ascii_lowercase()
+            || byte.is_ascii_digit()
+            || matches!(*byte, b'-' | b'.' | b'_')
     })
 }
 

@@ -30,7 +30,7 @@ pub struct ConnectPreview {
     pub model_id: String,
     pub group_name: String,
     pub base_url: String,
-    pub tool_id: Option<String>,
+    pub tool_id: String,
     pub key_attached: bool,
     pub public_status: ConnectPublicStatus,
 }

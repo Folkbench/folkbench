@@ -136,12 +136,14 @@ pub fn known_tool(tool_id: &str) -> bool {
 /// Tools whose adapters write the model id into a required config slot.
 /// An empty id there produces an invalid tool config (e.g. OpenClaw
 /// `models[0].id: ""`), so add/edit/switch must carry a chosen model.
-/// Claude/Codex/Gemini keep their own model setting; OpenCode can use an
-/// archived model list (and probes only when that list is empty).
+/// Claude Code writes top-level `settings.json` `"model"`. Codex/Gemini keep
+/// their own model setting; OpenCode can use an archived model list (and
+/// probes only when that list is empty).
 pub fn model_required(tool_id: &str) -> bool {
     matches!(
         tool_id,
-        "grok-build"
+        "claude-code"
+            | "grok-build"
             | "openclaw"
             | "hermes"
             | "pi"
@@ -256,6 +258,7 @@ fn apply_inner(
             request.api_protocol,
             request.base_url,
             request.api_key,
+            request.model_id,
         )?,
         "codex" => codex::apply(
             &dir,
@@ -627,6 +630,56 @@ mod tests {
     }
 
     #[test]
+    fn claude_writes_selected_model_to_settings() {
+        let home = TempHome::new();
+        let dir = home.0.join(".claude");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(
+            dir.join("settings.json"),
+            "{\n  \"permissions\": { \"allow_file_access\": true }\n}\n",
+        )
+        .unwrap();
+        let mut req = request(&home.0, "claude-code", "svc-1");
+        req.model_id = "claude-opus-4-8";
+        apply(req).expect("apply");
+        let value: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(dir.join("settings.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(value["model"], "claude-opus-4-8");
+        assert!(value["permissions"]["allow_file_access"].as_bool().unwrap());
+        assert_eq!(value["env"]["ANTHROPIC_BASE_URL"], "https://example.com");
+    }
+
+    #[test]
+    fn claude_strips_trailing_v1_from_anthropic_base_url() {
+        let home = TempHome::new();
+        let dir = home.0.join(".claude");
+        fs::create_dir_all(&dir).unwrap();
+
+        let cases = [
+            ("https://modelflare.dev/v1", "https://modelflare.dev"),
+            ("https://modelflare.dev/v1/", "https://modelflare.dev"),
+            ("https://modelflare.dev", "https://modelflare.dev"),
+            ("https://api.ikuncode.cc", "https://api.ikuncode.cc"),
+        ];
+        for (input, expected) in cases {
+            let mut req = request(&home.0, "claude-code", "svc-1");
+            req.base_url = input;
+            apply(req).expect(input);
+            let value: serde_json::Value = serde_json::from_str(
+                &fs::read_to_string(dir.join("settings.json")).unwrap(),
+            )
+            .unwrap();
+            assert_eq!(
+                value["env"]["ANTHROPIC_BASE_URL"].as_str(),
+                Some(expected),
+                "input={input}"
+            );
+        }
+    }
+
+    #[test]
     fn claude_keeps_unknown_fields_when_settings_have_comments() {
         let home = TempHome::new();
         let dir = home.0.join(".claude");
@@ -701,7 +754,8 @@ mod tests {
         assert!(config.contains("model_provider = \"folkbench-switch-svc-1\""));
         assert!(config.contains("[model_providers.folkbench-switch-svc-1]"));
         assert!(config.contains("base_url = \"https://example.com/v1\""));
-        assert!(config.contains("requires_openai_auth = true"));
+        assert!(config.contains("requires_openai_auth = false"));
+        assert!(config.contains("experimental_bearer_token = \"sk-test\""));
         assert!(config.contains("[mcp_servers.fetch]"));
         assert!(config.contains("model = \"gpt-5-6-sol\""));
         let live = inspect("codex", &home.0, Some("svc-1")).unwrap();
@@ -1130,6 +1184,22 @@ requires_openai_auth = true
     }
 
     #[test]
+    fn hermes_inspect_without_provider_id_follows_active_custom_provider() {
+        let home = TempHome::new();
+        let dir = home.0.join(".hermes");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("config.yaml"), "").unwrap();
+        let mut req = request(&home.0, "hermes", "svc-1");
+        req.provider_id = "modelflare";
+        req.api_protocol = ServiceProtocol::OpenaiResponses;
+        apply(req).expect("apply");
+        // import_status / inspect_for_import pass None; must still see live creds.
+        let live = inspect("hermes", &home.0, None).unwrap();
+        assert_eq!(live.base_url.as_deref(), Some("https://example.com/v1"));
+        assert_eq!(live.api_key.as_deref(), Some("sk-test"));
+    }
+
+    #[test]
     fn minimax_adds_only_one_custom_provider() {
         let home = TempHome::new();
         let dir = home.0.join(".minimax");
@@ -1497,6 +1567,7 @@ requires_openai_auth = true
         assert!(!raw.contains("ANTHROPIC_BASE_URL"));
         assert!(!raw.contains("ANTHROPIC_API_KEY"));
         assert!(!raw.contains("sk-test"));
+        assert!(!raw.contains("\"model\""));
     }
 
     #[test]
@@ -1524,7 +1595,14 @@ requires_openai_auth = true
     #[test]
     fn apply_rejects_empty_model_for_tools_that_need_one() {
         let home = TempHome::new();
-        for tool in ["openclaw", "pi", "dsh", "kimi-cli", "grok-build"] {
+        for tool in [
+            "claude-code",
+            "openclaw",
+            "pi",
+            "dsh",
+            "kimi-cli",
+            "grok-build",
+        ] {
             let mut req = request(&home.0, tool, "svc-1");
             req.model_id = "  ";
             assert_eq!(
@@ -1533,6 +1611,7 @@ requires_openai_auth = true
                 "{tool}"
             );
         }
+        assert!(model_required("claude-code"));
         assert!(!model_required("codex"));
         assert!(!model_required("opencode"));
     }
@@ -1551,7 +1630,7 @@ requires_openai_auth = true
         let home = TempHome::new();
         apply(request(&home.0, "claude-code", "svc-1")).expect("apply");
         let live = inspect("claude-code", &home.0, Some("svc-1")).unwrap();
-        assert_eq!(live.base_url.as_deref(), Some("https://example.com/v1"));
+        assert_eq!(live.base_url.as_deref(), Some("https://example.com"));
         assert_eq!(live.api_key.as_deref(), Some("sk-test"));
     }
 

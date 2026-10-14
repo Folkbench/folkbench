@@ -12,7 +12,6 @@ const MAX_STATION_ID_BYTES: usize = 128;
 const MAX_GROUP_CHARS: usize = 120;
 const MAX_BASE_URL_BYTES: usize = 2048;
 const MAX_API_KEY_BYTES: usize = 4096;
-const MAX_STATION_NAME_CHARS: usize = 80;
 
 /// A rankings row reduced to the fields a connect link can match.
 pub(crate) struct CatalogGroup {
@@ -29,11 +28,13 @@ struct RejectedLink;
 
 struct ParsedLink {
     station_id: String,
+    /// Service list display name from the link `name` query (falls back to groupName).
+    name: String,
     model_id: String,
     group_name: String,
     base_url: String,
     api_key: String,
-    tool_id: Option<String>,
+    tool_id: String,
 }
 
 struct Pending {
@@ -47,7 +48,7 @@ struct Pending {
     group_name: String,
     base_url: String,
     api_key: String,
-    tool_id: Option<String>,
+    tool_id: String,
     public_status: ConnectPublicStatus,
 }
 
@@ -176,16 +177,7 @@ impl ConnectSlot {
         // Fetch first; only the local save participates in the shared lock.
         let _configuration = super::configuration_lock::lock();
         let pending = self.take(id)?;
-        let tool_id = pending
-            .tool_id
-            .clone()
-            .filter(|tool| adapters::writable(tool))
-            .or_else(|| {
-                super::preferences::load(config_dir)
-                    .last_tool_id
-                    .filter(|tool| adapters::writable(tool))
-            })
-            .unwrap_or_else(|| "claude-code".to_string());
+        let tool_id = pending.tool_id.clone();
         let provider_id = if crate::adapters::provider_id_required(&tool_id) {
             super::archive::derive_provider_id(&pending.name, &pending.base_url)
         } else {
@@ -301,15 +293,23 @@ fn parse_connect_url(raw: &str) -> Result<ParsedLink, RejectedLink> {
     let station_id = required(&pairs, "stationId")?;
     let model_id = required(&pairs, "modelId")?;
     let group_name = required(&pairs, "groupName")?;
+    // Optional display name (CCS `name`). Empty / missing → groupName.
+    let display_name = optional(&pairs, "name")?
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_string)
+        .unwrap_or_else(|| group_name.clone());
     let base_url = required(&pairs, "baseUrl")?;
     let api_key = required(&pairs, "apiKey")?;
-    let tool = optional(&pairs, "tool")?;
+    let tool = required(&pairs, "tool")?;
 
     if station_id.len() > MAX_STATION_ID_BYTES
         || has_control(&station_id)
         || !catalog::is_model_id(&model_id)
         || group_name.chars().count() > MAX_GROUP_CHARS
         || has_control(&group_name)
+        || display_name.chars().count() > MAX_GROUP_CHARS
+        || has_control(&display_name)
     {
         return Err(RejectedLink);
     }
@@ -317,12 +317,14 @@ fn parse_connect_url(raw: &str) -> Result<ParsedLink, RejectedLink> {
     if api_key.len() > MAX_API_KEY_BYTES || has_control(&api_key) {
         return Err(RejectedLink);
     }
-    let tool_id = tool
-        .filter(|value| adapters::writable(value))
-        .map(str::to_string);
+    if !adapters::writable(&tool) {
+        return Err(RejectedLink);
+    }
+    let tool_id = tool;
 
     Ok(ParsedLink {
         station_id,
+        name: display_name,
         model_id,
         group_name,
         base_url,
@@ -386,6 +388,7 @@ fn has_control(value: &str) -> bool {
 
 fn same_request(pending: &Pending, parsed: &ParsedLink) -> bool {
     pending.station_id == parsed.station_id
+        && pending.name == parsed.name
         && pending.model_id == parsed.model_id
         && pending.group_name == parsed.group_name
         && pending.base_url == parsed.base_url
@@ -398,7 +401,7 @@ fn checking_pending(
     id: String,
     generation: u64,
 ) -> Pending {
-    let name = clip(&parsed.group_name, MAX_GROUP_CHARS);
+    let name = clip(&parsed.name, MAX_GROUP_CHARS);
     Pending {
         generation,
         id,
@@ -431,7 +434,6 @@ fn preview_of(pending: &Pending) -> ConnectPreview {
 }
 
 struct Decision {
-    name: String,
     station_name: Option<String>,
     channel_id: String,
     status: ConnectPublicStatus,
@@ -441,13 +443,13 @@ fn apply_rows(pending: &mut Pending, rows: Result<Vec<CatalogGroup>, ()>) {
     let decision = match &rows {
         Ok(rows) => match_rows(pending, rows),
         Err(()) => Decision {
-            name: clip(&pending.group_name, MAX_GROUP_CHARS),
             station_name: None,
             channel_id: String::new(),
             status: ConnectPublicStatus::Unavailable,
         },
     };
-    pending.name = decision.name;
+    // Display name stays the link `name` (or groupName fallback). Catalog only
+    // fills station/channel for ranking match.
     pending.station_name = decision.station_name;
     pending.channel_id = decision.channel_id;
     pending.public_status = decision.status;
@@ -476,7 +478,6 @@ fn match_rows(pending: &Pending, rows: &[CatalogGroup]) -> Decision {
             .find_map(|row| non_empty(&row.station_name))
     };
     Decision {
-        name: service_name(station_name.as_deref(), &pending.group_name),
         station_name,
         channel_id: if unique {
             name_matches[0].channel_id.trim().to_string()
@@ -488,17 +489,6 @@ fn match_rows(pending: &Pending, rows: &[CatalogGroup]) -> Decision {
         } else {
             ConnectPublicStatus::Unmatched
         },
-    }
-}
-
-fn service_name(station_name: Option<&str>, group_name: &str) -> String {
-    match station_name {
-        Some(station) => format!(
-            "{} {}",
-            clip(station, MAX_STATION_NAME_CHARS),
-            clip(group_name, MAX_GROUP_CHARS)
-        ),
-        None => clip(group_name, MAX_GROUP_CHARS),
     }
 }
 
@@ -555,6 +545,7 @@ mod tests {
             ("groupName", "openai-stable"),
             ("baseUrl", "https://example.com/v1"),
             ("apiKey", "sk-secret-value"),
+            ("tool", "claude-code"),
         ]
     }
 
@@ -630,29 +621,32 @@ mod tests {
     }
 
     #[test]
-    fn unknown_tool_is_dropped() {
-        let mut kept = sample_pairs();
-        kept.push(("tool", "claude-code"));
-        let parsed = parse_connect_url(&connect_url(&kept)).unwrap();
-        assert_eq!(parsed.tool_id.as_deref(), Some("claude-code"));
+    fn missing_tool_is_rejected() {
+        let pairs = [
+            ("stationId", "merchant-a"),
+            ("modelId", "gpt-6-sol"),
+            ("groupName", "openai-stable"),
+            ("baseUrl", "https://example.com/v1"),
+            ("apiKey", "sk-secret-value"),
+        ];
+        assert!(parse_connect_url(&connect_url(&pairs)).is_err());
+    }
+
+    #[test]
+    fn unknown_or_non_writable_tool_is_rejected() {
+        let parsed = parse_connect_url(&connect_url(&sample_pairs())).unwrap();
+        assert_eq!(parsed.tool_id, "claude-code");
 
         let mut desktop = sample_pairs();
-        desktop.push(("tool", "claude-desktop"));
-        assert!(
-            parse_connect_url(&connect_url(&desktop))
-                .unwrap()
-                .tool_id
-                .is_none()
-        );
+        // Replace the tool value (last pair).
+        let last = desktop.len() - 1;
+        desktop[last] = ("tool", "claude-desktop");
+        assert!(parse_connect_url(&connect_url(&desktop)).is_err());
 
         let mut unknown = sample_pairs();
-        unknown.push(("tool", "not-a-tool"));
-        assert!(
-            parse_connect_url(&connect_url(&unknown))
-                .unwrap()
-                .tool_id
-                .is_none()
-        );
+        let last = unknown.len() - 1;
+        unknown[last] = ("tool", "not-a-tool");
+        assert!(parse_connect_url(&connect_url(&unknown)).is_err());
     }
 
     #[test]
@@ -684,6 +678,23 @@ mod tests {
     }
 
     #[test]
+    fn link_name_becomes_the_saved_service_display_name() {
+        let mut pairs = sample_pairs();
+        pairs.push(("name", "claude-first-topup"));
+        let slot = ConnectSlot::default();
+        let (id, preview, _) = ready(slot.open_link(&connect_url(&pairs)));
+        assert_eq!(preview.name, "claude-first-topup");
+        let dir = TempDir::new();
+        let saved = slot
+            .resolve_catalog_then_save(&dir.0, &id, |_| {
+                Ok(vec![board_row("catalog-board")])
+            })
+            .unwrap();
+        assert_eq!(saved.name, "claude-first-topup");
+        assert_eq!(saved.channel_id, "catalog-board");
+    }
+
+    #[test]
     fn duplicate_group_names_save_with_an_empty_channel() {
         let slot = ConnectSlot::default();
         let (id, _, _) = ready(slot.open_link(&connect_url(&sample_pairs())));
@@ -694,7 +705,7 @@ mod tests {
             })
             .unwrap();
         assert_eq!(saved.channel_id, "");
-        assert_eq!(saved.name, "Modelflare openai-stable");
+        assert_eq!(saved.name, "openai-stable");
         let notice = crate::domain::ConnectNotice {
             invalid: false,
             preview: slot.current_preview(),

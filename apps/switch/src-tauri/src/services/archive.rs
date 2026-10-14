@@ -619,7 +619,14 @@ pub fn backfill_live_for_tool(
                 .iter_mut()
                 .find(|row| row.tool_id == tool_id && row.id == id)
             {
-                stored.base_url = trimmed;
+                // Claude Code live omits trailing `/v1`; keep the OpenAI-style
+                // archive URL when both normalize to the same Anthropic host.
+                let equivalent = tool_id == "claude-code"
+                    && crate::adapters::anthropic_base_url(&stored.base_url)
+                        == crate::adapters::anthropic_base_url(&trimmed);
+                if !equivalent {
+                    stored.base_url = trimmed;
+                }
             }
             write_json_atomically(config_dir, FILE_NAME, &archive)
                 .map_err(|_| ServiceError::WriteFailed)?;

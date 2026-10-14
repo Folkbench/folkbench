@@ -14,6 +14,9 @@ mod preferences;
 mod session_usage;
 pub(crate) mod share_image;
 mod switch;
+pub(crate) mod tool_launch;
+mod tool_runtime;
+pub(crate) mod window_layout;
 
 pub use account::{
     begin_authorization, cancel_authorization, complete_authorization,
@@ -25,10 +28,19 @@ pub use bootstrap::bootstrap_state;
 pub use catalog::{list_published_stations, resolve_published_station_website};
 pub use catalog_asset::resolve_catalog_asset;
 pub use session_usage::list as list_session_usage;
+pub use tool_runtime::{
+    inspect_runtime as inspect_tool_runtime,
+    install_for_easy as install_tool_for_easy,
+    install_tool as install_tool_runtime,
+    list_catalog as list_tool_runtime_catalog,
+    list_runtimes as list_tool_runtimes,
+    probe_prerequisites as probe_tool_runtime_prerequisites,
+    probe_runtime as probe_tool_runtime, upgrade_tool as upgrade_tool_runtime,
+};
 
 use crate::domain::{
     FetchedModel, MyService, PreferenceError, Preferences, PreferredLanguage,
-    PreferredTheme, ServiceError, ServiceProtocol, SwitchResult,
+    PreferredTheme, ServiceError, ServiceProtocol, SwitchResult, UiMode,
 };
 use std::path::Path;
 
@@ -77,10 +89,14 @@ locked_api! {
     fn load_preferences(config_dir: &Path) -> Preferences = preferences::load;
     fn complete_account_onboarding(config_dir: &Path)
         -> Result<Preferences, PreferenceError> = preferences::complete_account_onboarding;
+    fn complete_easy_onboarding(config_dir: &Path)
+        -> Result<Preferences, PreferenceError> = preferences::complete_easy_onboarding;
     fn save_preferred_language(config_dir: &Path, language: PreferredLanguage)
         -> Result<Preferences, PreferenceError> = preferences::save_language;
     fn save_preferred_theme(config_dir: &Path, theme: PreferredTheme)
         -> Result<Preferences, PreferenceError> = preferences::save_theme;
+    fn save_ui_mode(config_dir: &Path, ui_mode: UiMode)
+        -> Result<Preferences, PreferenceError> = preferences::save_ui_mode;
     fn save_last_tool_id(config_dir: &Path, tool_id: String)
         -> Result<Preferences, PreferenceError> = preferences::save_last_tool_id;
     fn save_favorite_tool_ids(config_dir: &Path, tool_ids: Vec<String>)

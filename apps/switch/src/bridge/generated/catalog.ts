@@ -6,66 +6,38 @@
  * The UI maps these to localized copy. No URL, status body, or host detail
  * crosses the IPC boundary.
  */
-export type CatalogError =
-  'invalidModel' | 'unavailable' | 'invalidResponse' | 'websiteUnavailable'
+export type CatalogError = "invalidModel" | "unavailable" | "invalidResponse" | "websiteUnavailable";
 
 /**
  * A public model that can be selected in the published catalog.
  */
-export type CatalogModel = {
-  id: string
-  name: string
-  vendorId: string | null
-  vendorName: string | null
-  /**
-   * Site-relative public logo, for example `/api/public/vendor-logos/openai`.
-   */
-  vendorLogoPath: string | null
-}
+export type CatalogModel = { id: string, name: string, vendorId: string | null, vendorName: string | null,
+/**
+ * Site-relative public logo, for example `/api/public/vendor-logos/openai`.
+ */
+vendorLogoPath: string | null, };
 
 /**
  * Published ranking list for one Folkbench model.
  */
-export type PublishedCatalog = {
-  origin: string
-  modelId: string
-  modelName: string
-  models: Array<CatalogModel>
-  stations: Array<PublishedStation>
-}
+export type PublishedCatalog = { origin: string, modelId: string, modelName: string, models: Array<CatalogModel>, stations: Array<PublishedStation>, };
 
 /**
  * Published price per million tokens. The amount crosses IPC as a decimal
  * string rather than an imprecise floating-point bill.
  */
-export type PublishedPrice = { amount: string; currency: string }
+export type PublishedPrice = { amount: string, currency: string, };
 
 /**
  * One published Folkbench ranking row.
  */
-export type PublishedStation = {
-  rank: number | null
-  channelId: string
-  channelName: string
-  stationId: string
-  stationName: string
-  stationAvatarPath: string | null
-  modelId: string
-  websiteUrl: string | null
-  /**
-   * HTTPS API base published with the station. Never taken from the website.
-   */
-  baseUrl: string | null
-  measuredAt: string | null
-  publishedAt: string
-  availabilityBps: number | null
-  statusWindows: Array<PublishedStatusState>
-  sampleSize: number | null
-  inputPrice: PublishedPrice | null
-  outputPrice: PublishedPrice | null
-}
+export type PublishedStation = { rank: number | null, channelId: string, channelName: string, stationId: string, stationName: string, stationAvatarPath: string | null, modelId: string, websiteUrl: string | null,
+/**
+ * HTTPS API base published with the station. Never taken from the website.
+ */
+baseUrl: string | null, measuredAt: string | null, publishedAt: string, availabilityBps: number | null, statusWindows: Array<PublishedStatusState>, sampleSize: number | null, inputPrice: PublishedPrice | null, outputPrice: PublishedPrice | null, };
 
 /**
  * One hourly state in the public 24-hour channel window.
  */
-export type PublishedStatusState = 'ok' | 'delayed' | 'down' | 'not_provided'
+export type PublishedStatusState = "ok" | "delayed" | "down" | "not_provided";

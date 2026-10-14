@@ -2,6 +2,7 @@ import type {
   Preferences,
   PreferredLanguage,
   PreferredTheme,
+  UiMode,
 } from '@/bridge/generated/preferences'
 import { invokeCommand } from '@/bridge/invoke'
 
@@ -54,4 +55,13 @@ export async function setFavoriteServiceIds(
 
 export async function completeAccountOnboarding(): Promise<Preferences> {
   return invokeCommand<Preferences>('complete_account_onboarding')
+}
+
+export function completeEasyOnboarding(): Promise<Preferences> {
+  return invokeCommand<Preferences>('complete_easy_onboarding')
+}
+
+/** Stores Easy / Pro interface density. */
+export async function setUiMode(uiMode: UiMode): Promise<Preferences> {
+  return invokeCommand<Preferences>('set_ui_mode', { uiMode })
 }

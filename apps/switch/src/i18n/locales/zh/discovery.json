@@ -55,7 +55,8 @@
       "refreshFailed": "更新失败，展示 {{time}} 获取的榜单；价格和排名可能已变化。",
       "statusWindow": "{{station}} · {{channel}} 最近 24 小时渠道状态",
       "updating": "正在更新榜单…",
-      "title": "已发布渠道"
+      "title": "已发布渠道",
+      "register": "去注册"
     },
     "methods": {
       "description": "榜单表现、本机连通性与个人 Key 验证不是同一件事。",
@@ -75,6 +76,10 @@
       "rank": "榜单位次",
       "title": "排序"
     },
-    "title": "发现服务"
+    "title": "发现服务",
+    "easy": {
+      "title": "找服务",
+      "description": "从已发布站点接入。先注册拿到 Key，再点接入。"
+    }
   }
 }

@@ -48,6 +48,8 @@
 
 对新手友好的 AI 编程助手配置工具，Claude Code、Codex、Gemini CLI 等一键配好，简单易用。[下载 macOS / Windows 版](https://github.com/Folkbench/folkbench/releases)。
 
+macOS：Apple Silicon / Intel（`.dmg`）；Windows：x64（`.exe`）。安装包与 SHA256 校验文件统一在 [Releases](https://github.com/Folkbench/folkbench/releases) 下载。
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/switch-dark.png">
   <img src="docs/images/features/switch-light.png" width="100%" alt="Folkbench Switch 示意">

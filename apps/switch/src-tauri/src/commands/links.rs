@@ -7,6 +7,7 @@ use crate::domain::{ExternalLink, ExternalLinkError};
 fn destination(link: ExternalLink) -> &'static str {
     match link {
         ExternalLink::SignUp => "https://folkbench.com/register",
+        ExternalLink::Website => "https://folkbench.com",
     }
 }
 
@@ -29,10 +30,11 @@ mod tests {
     /// resolving links in Rust.
     #[test]
     fn destinations_are_https_folkbench_urls() {
-        for link in [ExternalLink::SignUp] {
+        for link in [ExternalLink::SignUp, ExternalLink::Website] {
             let url = destination(link);
             assert!(
-                url.starts_with("https://folkbench.com/"),
+                url == "https://folkbench.com"
+                    || url.starts_with("https://folkbench.com/"),
                 "unexpected destination: {url}"
             );
         }

@@ -20,8 +20,18 @@
       "services": "My routes",
       "settings": "Settings",
       "tools": "Tools",
-      "usage": "Local usage"
+      "usage": "Local usage",
+      "discoverEasy": "Find services",
+      "usageEasy": "Usage",
+      "servicesEasy": "Home"
     },
-    "primary": "Primary navigation"
+    "primary": "Primary navigation",
+    "mode": {
+      "label": "Interface mode",
+      "easy": "Easy",
+      "pro": "Pro",
+      "toPro": "Pro mode",
+      "toEasy": "Easy mode"
+    }
   }
 }

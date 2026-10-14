@@ -55,7 +55,8 @@
       "refreshFailed": "Refresh failed. Showing rankings loaded at {{time}}; prices and rank may have changed.",
       "statusWindow": "{{station}} · {{channel}} channel status over the last 24 hours",
       "updating": "Updating rankings…",
-      "title": "Published channels"
+      "title": "Published channels",
+      "register": "Register"
     },
     "methods": {
       "description": "Ranking performance, host reachability, and personal Key checks are different signals.",
@@ -75,6 +76,10 @@
       "rank": "Ranking",
       "title": "Sort"
     },
-    "title": "Discover services"
+    "title": "Discover services",
+    "easy": {
+      "title": "Find services",
+      "description": "Connect from published stations. Register for a Key, then connect."
+    }
   }
 }
