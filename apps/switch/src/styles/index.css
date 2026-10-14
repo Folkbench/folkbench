@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './easy-mode.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -426,6 +427,30 @@ html[data-os='macos'] .switch-navigation a > span {
   cursor: default;
   opacity: 0.5;
 }
+.switch-mode-segmented {
+  flex: none;
+  background: color-mix(in srgb, var(--muted) 70%, var(--background));
+}
+.switch-mode-segmented button {
+  min-height: 1.75rem;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.switch-mode-segmented button[aria-pressed='true'] {
+  background: var(--brand-signal);
+  color: var(--brand-signal-foreground);
+  box-shadow: none;
+  font-weight: 600;
+}
+.switch-mode-segmented button[aria-pressed='true']:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--ring);
+}
+.switch-mode-segmented button[aria-pressed='false']:hover {
+  color: var(--foreground);
+}
 .agent-dock-wrap {
   position: relative;
   display: flex;
@@ -473,6 +498,11 @@ html[data-os='macos'] .switch-navigation a > span {
 .agent-dock-icon:disabled {
   cursor: default;
 }
+.agent-dock-icon[data-runtime='notInstalled'] {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
 .agent-dock-current {
   position: absolute;
   bottom: 1px;
@@ -900,13 +930,6 @@ html[data-os='macos'] .switch-navigation a > span {
   background: color-mix(in srgb, var(--brand-signal) 14%, var(--card));
   color: var(--brand-signal);
 }
-.backup-switcher-meta {
-  flex: none;
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-  color: var(--muted-foreground);
-  white-space: nowrap;
-}
 .backup-switcher-actions {
   display: flex;
   flex: none;
@@ -915,11 +938,6 @@ html[data-os='macos'] .switch-navigation a > span {
 }
 .backup-switcher-actions > [data-slot='button']:first-child {
   margin-right: 0.25rem;
-}
-@media (width < 720px) {
-  .backup-switcher-meta {
-    display: none;
-  }
 }
 .status-window-state-ok {
   background: #489f79;

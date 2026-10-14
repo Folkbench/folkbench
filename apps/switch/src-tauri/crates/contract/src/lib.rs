@@ -14,6 +14,8 @@ mod links;
 mod my_service;
 mod preferences;
 mod session;
+mod tool_launch;
+mod tool_runtime;
 mod usage;
 
 pub use bootstrap::{AdapterMaturity, BootstrapState, ToolDescriptor};
@@ -30,11 +32,18 @@ pub use my_service::{
     SwitchResult, VerifyResult,
 };
 pub use preferences::{
-    PreferenceError, Preferences, PreferredLanguage, PreferredTheme, SwitchUndo,
+    PreferenceError, Preferences, PreferredLanguage, PreferredTheme,
+    SwitchUndo, UiMode,
 };
 pub use session::{
     AuthorizationError, AuthorizationSupport, SessionState, SessionStatus,
     SessionUser,
+};
+pub use tool_launch::{WorkFolder, WorkFolderListing};
+pub use tool_runtime::{
+    ToolInstallChannel, ToolRuntimeActionResult, ToolRuntimeCatalogEntry,
+    ToolRuntimeInstall, ToolRuntimeKind, ToolRuntimePrerequisites,
+    ToolRuntimeStatus,
 };
 pub use usage::{
     DailyUsageSummary, HourModelUsage, HourlyUsageSummary, SessionUsageSummary,

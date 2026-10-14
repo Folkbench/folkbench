@@ -12,8 +12,9 @@ import {
   setLastToolId,
   setPreferredLanguage,
   setPreferredTheme,
+  setUiMode,
 } from '@/bridge'
-import type { PreferredLanguage } from '@/bridge'
+import type { PreferredLanguage, UiMode } from '@/bridge'
 import { setLanguage } from '@/i18n'
 
 /**
@@ -99,4 +100,15 @@ export function useCompleteAccountOnboarding() {
   })
 }
 
-export type { PreferredLanguage }
+
+export function useSetUiMode() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: setUiMode,
+    onSuccess: (preferences) => {
+      queryClient.setQueryData(preferencesQueryOptions.queryKey, preferences)
+    },
+  })
+}
+
+export type { PreferredLanguage, UiMode }

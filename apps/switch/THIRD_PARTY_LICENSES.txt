@@ -1,6 +1,6 @@
 Folkbench Switch — third-party license texts
 
-Generated for 0.1.0-beta.2 from the locked dependency set.
+Generated for 0.1.0-beta.3 from the locked dependency set.
 
 This inventory includes runtime dependencies and some build-time dependencies.
 
@@ -198,6 +198,24 @@ Source: https://www.npmjs.com/package/@tauri-apps/api/v/2.11.1
 LICENSE_APACHE-2.0: LICENSE-0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
 
 LICENSE_MIT: LICENSE-9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d
+
+
+===== npm: @tauri-apps/plugin-dialog@2.7.3 (MIT OR Apache-2.0) =====
+
+Source: https://www.npmjs.com/package/@tauri-apps/plugin-dialog/v/2.7.3
+
+LICENSE.spdx: LICENSE-9c1db6b7e7eb83e1cb2af973b5df2bdc63651ede0f38506ab98dfa0940487759
+
+
+===== npm: @tauri-apps/api@2.12.3 (Apache-2.0 OR MIT) =====
+
+Source: https://www.npmjs.com/package/@tauri-apps/api/v/2.12.3
+
+LICENSE-APACHE-2.0: LICENSE-0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
+
+LICENSE-MIT: LICENSE-9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d
+
+LICENSE.spdx: LICENSE-5e834fe9788c524210deda859c46a550ffa5aa0cba9ea0572f0d81120e97c008
 
 
 ===== npm: class-variance-authority@0.7.1 (Apache-2.0) =====
@@ -1950,6 +1968,13 @@ LICENSE-APACHE: LICENSE-751963a8b88c0e3a9f27e98933079fbcf09b9998b2c13ac49c2e4d58
 LICENSE-MIT: LICENSE-917c0fe02296eec634820b2758519e39278716bb0104f055cfee771bd7a4c534
 
 
+===== crate: rfd@0.16.0 (MIT) =====
+
+Source archive: https://crates.io/api/v1/crates/rfd/0.16.0/download
+
+LICENSE: LICENSE-65fc947f4bac882a2cd104ef73c246b1b037059df9f2b3a58b7f77f0b9e56071
+
+
 ===== crate: rusqlite@0.37.0 (MIT) =====
 
 Source archive: https://crates.io/api/v1/crates/rusqlite/0.37.0/download
@@ -2419,6 +2444,28 @@ LICENSE_MIT: LICENSE-9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055
 ===== crate: tauri-plugin-deep-link@2.4.10 (Apache-2.0 OR MIT) =====
 
 Source archive: https://crates.io/api/v1/crates/tauri-plugin-deep-link/2.4.10/download
+
+LICENSE.spdx: LICENSE-9c1db6b7e7eb83e1cb2af973b5df2bdc63651ede0f38506ab98dfa0940487759
+
+LICENSE_APACHE-2.0: LICENSE-0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
+
+LICENSE_MIT: LICENSE-9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d
+
+
+===== crate: tauri-plugin-dialog@2.7.3 (Apache-2.0 OR MIT) =====
+
+Source archive: https://crates.io/api/v1/crates/tauri-plugin-dialog/2.7.3/download
+
+LICENSE.spdx: LICENSE-9c1db6b7e7eb83e1cb2af973b5df2bdc63651ede0f38506ab98dfa0940487759
+
+LICENSE_APACHE-2.0: LICENSE-0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
+
+LICENSE_MIT: LICENSE-9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d
+
+
+===== crate: tauri-plugin-fs@2.5.2 (Apache-2.0 OR MIT) =====
+
+Source archive: https://crates.io/api/v1/crates/tauri-plugin-fs/2.5.2/download
 
 LICENSE.spdx: LICENSE-9c1db6b7e7eb83e1cb2af973b5df2bdc63651ede0f38506ab98dfa0940487759
 
@@ -4119,6 +4166,54 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+
+===== LICENSE-9c1db6b7e7eb83e1cb2af973b5df2bdc63651ede0f38506ab98dfa0940487759 =====
+SPDXVersion: SPDX-2.1
+DataLicense: CC0-1.0
+PackageName: tauri
+DataFormat: SPDXRef-1
+PackageSupplier: Organization: The Tauri Programme in the Commons Conservancy
+PackageHomePage: https://tauri.app
+PackageLicenseDeclared: Apache-2.0
+PackageLicenseDeclared: MIT
+PackageCopyrightText: 2019-2022, The Tauri Programme in the Commons Conservancy
+PackageSummary: <text>Tauri is a rust project that enables developers to make secure
+and small desktop applications using a web frontend.
+                </text>
+PackageComment: <text>The package includes the following libraries; see
+Relationship information.
+                </text>
+Created: 2019-05-20T09:00:00Z
+PackageDownloadLocation: git://github.com/tauri-apps/tauri
+PackageDownloadLocation: git+https://github.com/tauri-apps/tauri.git
+PackageDownloadLocation: git+ssh://github.com/tauri-apps/tauri.git
+Creator: Person: Daniel Thompson-Yvetot
+
+
+
+===== LICENSE-5e834fe9788c524210deda859c46a550ffa5aa0cba9ea0572f0d81120e97c008 =====
+SPDXVersion: SPDX-2.1
+DataLicense: CC0-1.0
+PackageName: tauri
+DataFormat: SPDXRef-1
+PackageSupplier: Organization: The Tauri Programme in the Commons Conservancy
+PackageHomePage: https://tauri.app
+PackageLicenseDeclared: Apache-2.0
+PackageLicenseDeclared: MIT
+PackageCopyrightText: 2019-2025, The Tauri Programme in the Commons Conservancy
+PackageSummary: <text>Tauri is a rust project that enables developers to make secure
+and small desktop applications using a web frontend.
+                </text>
+PackageComment: <text>The package includes the following libraries; see
+Relationship information.
+                </text>
+Created: 2019-05-20T09:00:00Z
+PackageDownloadLocation: git://github.com/tauri-apps/tauri
+PackageDownloadLocation: git+https://github.com/tauri-apps/tauri.git
+PackageDownloadLocation: git+ssh://github.com/tauri-apps/tauri.git
+Creator: Person: Daniel Thompson-Yvetot
 
 
 
@@ -13958,6 +14053,31 @@ THE SOFTWARE.
 
 
 
+===== LICENSE-65fc947f4bac882a2cd104ef73c246b1b037059df9f2b3a58b7f77f0b9e56071 =====
+MIT License
+
+Copyright (c) 2022 Bartłomiej Maryńczak
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
 ===== LICENSE-45fd05c4865e7c350b98ad7ac50e1b15462d49af4a91e9b0c9dd933dc9a69742 =====
                               Apache License
                         Version 2.0, January 2004
@@ -15366,54 +15486,6 @@ Created: 2020-05-20T09:00:00Z
 PackageDownloadLocation: git://github.com/tauri-apps/tao
 PackageDownloadLocation: git+https://github.com/tauri-apps/tao.git
 PackageDownloadLocation: git+ssh://github.com/tauri-apps/tao.git
-Creator: Person: Daniel Thompson-Yvetot
-
-
-
-===== LICENSE-5e834fe9788c524210deda859c46a550ffa5aa0cba9ea0572f0d81120e97c008 =====
-SPDXVersion: SPDX-2.1
-DataLicense: CC0-1.0
-PackageName: tauri
-DataFormat: SPDXRef-1
-PackageSupplier: Organization: The Tauri Programme in the Commons Conservancy
-PackageHomePage: https://tauri.app
-PackageLicenseDeclared: Apache-2.0
-PackageLicenseDeclared: MIT
-PackageCopyrightText: 2019-2025, The Tauri Programme in the Commons Conservancy
-PackageSummary: <text>Tauri is a rust project that enables developers to make secure
-and small desktop applications using a web frontend.
-                </text>
-PackageComment: <text>The package includes the following libraries; see
-Relationship information.
-                </text>
-Created: 2019-05-20T09:00:00Z
-PackageDownloadLocation: git://github.com/tauri-apps/tauri
-PackageDownloadLocation: git+https://github.com/tauri-apps/tauri.git
-PackageDownloadLocation: git+ssh://github.com/tauri-apps/tauri.git
-Creator: Person: Daniel Thompson-Yvetot
-
-
-
-===== LICENSE-9c1db6b7e7eb83e1cb2af973b5df2bdc63651ede0f38506ab98dfa0940487759 =====
-SPDXVersion: SPDX-2.1
-DataLicense: CC0-1.0
-PackageName: tauri
-DataFormat: SPDXRef-1
-PackageSupplier: Organization: The Tauri Programme in the Commons Conservancy
-PackageHomePage: https://tauri.app
-PackageLicenseDeclared: Apache-2.0
-PackageLicenseDeclared: MIT
-PackageCopyrightText: 2019-2022, The Tauri Programme in the Commons Conservancy
-PackageSummary: <text>Tauri is a rust project that enables developers to make secure
-and small desktop applications using a web frontend.
-                </text>
-PackageComment: <text>The package includes the following libraries; see
-Relationship information.
-                </text>
-Created: 2019-05-20T09:00:00Z
-PackageDownloadLocation: git://github.com/tauri-apps/tauri
-PackageDownloadLocation: git+https://github.com/tauri-apps/tauri.git
-PackageDownloadLocation: git+ssh://github.com/tauri-apps/tauri.git
 Creator: Person: Daniel Thompson-Yvetot
 
 

@@ -3,131 +3,78 @@
 /**
  * One model id returned by a provider's model-list endpoint.
  */
-export type FetchedModel = { id: string; name: string }
+export type FetchedModel = { id: string, name: string, };
 
 /**
  * Folkbench published-channel binding for one saved service.
  */
-export type FolkbenchBinding =
-  | { unverified: { reason: string } }
-  | { verified: { rank: number | null; measuredAt: string | null } }
+export type FolkbenchBinding = { "unverified": { reason: string, } } | { "verified": { rank: number | null, measuredAt: string | null, } };
 
 /**
  * Model list for the add/edit form. The Key never appears on this type.
  */
-export type ModelFetchResult = {
-  status: ModelFetchStatus
-  models: Array<FetchedModel>
-  endpoint: string | null
-  httpStatus: number | null
-}
+export type ModelFetchResult = { status: ModelFetchStatus, models: Array<FetchedModel>, endpoint: string | null, httpStatus: number | null, };
 
 /**
  * Outcome of an on-demand model-list fetch for the add/edit service form.
  */
-export type ModelFetchStatus =
-  | 'ready'
-  | 'empty'
-  | 'missingKey'
-  | 'invalidUrl'
-  | 'unauthorized'
-  | 'endpointNotFound'
-  | 'unreachable'
-  | 'unavailable'
+export type ModelFetchStatus = "ready" | "empty" | "missingKey" | "invalidUrl" | "unauthorized" | "endpointNotFound" | "unreachable" | "unavailable";
 
 /**
  * One locally saved API service. The Key never appears on this type.
  */
-export type MyService = {
-  id: string
-  name: string
-  stationId: string
-  channelId: string
-  modelId: string
-  /**
-   * Provider model list captured when the user pulled/selected models.
-   * Empty means legacy archive or no fetch yet; adapters may probe.
-   */
-  models: Array<FetchedModel>
-  /**
-   * Tool-facing provider key (e.g. models.providers.<id>). Empty falls back to `id`.
-   */
-  providerId: string
-  apiProtocol: ServiceProtocol
-  baseUrl: string
-  hasCredential: boolean
-  binding: FolkbenchBinding
-  balanceStatus: string
-}
+export type MyService = { id: string, name: string, stationId: string, channelId: string, modelId: string,
+/**
+ * Provider model list captured when the user pulled/selected models.
+ * Empty means legacy archive or no fetch yet; adapters may probe.
+ */
+models: Array<FetchedModel>,
+/**
+ * Tool-facing provider key (e.g. models.providers.<id>). Empty falls back to `id`.
+ */
+providerId: string, apiProtocol: ServiceProtocol, baseUrl: string, hasCredential: boolean, binding: FolkbenchBinding, balanceStatus: string, };
 
 /**
  * One on-demand balance read. Nothing here is stored.
  */
-export type ServiceBalance = {
-  serviceId: string
-  status: ServiceBalanceStatus
-  remaining: string | null
-  unit: ServiceBalanceUnit | null
-  window: ServiceBalanceWindow | null
-}
+export type ServiceBalance = { serviceId: string, status: ServiceBalanceStatus, remaining: string | null, unit: ServiceBalanceUnit | null, window: ServiceBalanceWindow | null, };
 
 /**
  * Whether a balance query for one saved service produced a number.
  *
  * The saved model Key stays in Rust. This result never carries it.
  */
-export type ServiceBalanceStatus =
-  'ready' | 'notAdapted' | 'missingKey' | 'unauthorized' | 'unavailable'
+export type ServiceBalanceStatus = "ready" | "notAdapted" | "missingKey" | "unauthorized" | "unavailable";
 
 /**
  * Currency or a remaining-percent quota. `remaining` is a decimal string.
  */
-export type ServiceBalanceUnit = 'cny' | 'usd' | 'percent'
+export type ServiceBalanceUnit = "cny" | "usd" | "percent";
 
 /**
  * Which quota window a percent result describes.
  */
-export type ServiceBalanceWindow = 'fiveHour' | 'weekly' | 'monthly'
+export type ServiceBalanceWindow = "fiveHour" | "weekly" | "monthly";
 
 /**
  * Stable machine codes for the local service archive and switch commands.
  */
-export type ServiceError =
-  | 'invalidInput'
-  | 'notFound'
-  | 'locationUnavailable'
-  | 'writeFailed'
-  | 'credentialMissing'
-  | 'toolUnknown'
-  | 'applyUnsupported'
-  | 'inUse'
-  | 'driftDetected'
+export type ServiceError = "invalidInput" | "notFound" | "locationUnavailable" | "writeFailed" | "credentialMissing" | "toolUnknown" | "applyUnsupported" | "inUse" | "driftDetected";
 
 /**
  * API wire protocol a saved service exposes to coding tools.
  */
-export type ServiceProtocol =
-  | 'auto'
-  | 'openai-completions'
-  | 'openai-responses'
-  | 'anthropic-messages'
-  | 'gemini'
+export type ServiceProtocol = "auto" | "openai-completions" | "openai-responses" | "anthropic-messages" | "gemini";
 
 /**
  * How a switch takes effect on the selected tool.
  */
-export type SwitchEffect = 'hotReload' | 'requiresRestart' | 'notImplemented'
+export type SwitchEffect = "hotReload" | "requiresRestart" | "notImplemented";
 
 /**
  * Result of applying a saved service to one coding tool.
  */
-export type SwitchResult = {
-  toolId: string
-  serviceId: string
-  effect: SwitchEffect
-  configDirFound: boolean
-  rollbackAvailable: boolean
-}
+export type SwitchResult = { toolId: string, serviceId: string, effect: SwitchEffect, configDirFound: boolean, rollbackAvailable: boolean, };
 
 /**
  * Result of an on-demand HTTP reachability check that does not send the Key.
@@ -135,9 +82,4 @@ export type SwitchResult = {
  * Any HTTP response status counts as reachable. Network failures do not.
  * `latency_ms` is time-to-first-response-header when reachable.
  */
-export type VerifyResult = {
-  serviceId: string
-  reachable: boolean
-  latencyMs: number | null
-  degraded: boolean
-}
+export type VerifyResult = { serviceId: string, reachable: boolean, latencyMs: number | null, degraded: boolean, };

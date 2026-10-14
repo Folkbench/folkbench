@@ -24,11 +24,53 @@
         "success": "Configuration verified."
       }
     },
-    "description": "Real configuration read/write is available for 13 tools. Changes hot-reload or take effect after restart according to each tool's native behavior.",
+    "description": "Install and update Dock CLI tools, and inspect local versus latest versions.",
     "effect": {
       "hotReload": "Takes effect in the current session after switch.",
       "notImplemented": "This version cannot write this tool's configuration yet.",
       "requiresRestart": "Restart the tool after writing configuration."
+    },
+    "runtime": {
+      "title": "Tools",
+      "checking": "Checking",
+      "checkingProgress": "Checking {{done}}/{{total}}",
+      "scanFailed": "Scan failed. Try again later.",
+      "versionUnknown": "—",
+      "status": {
+        "probeFailed": "Scan failed"
+      },
+      "actions": {
+        "install": "Install",
+        "update": "Update",
+        "updateAll": "Update all",
+        "copyInstall": "Copy install command",
+        "copyNodeInstall": "Copy Node install command",
+        "copyBrewInstall": "Copy Homebrew install command",
+        "copyOfficialDownload": "Copy official download link"
+      },
+      "toast": {
+        "actionFailed": "Action failed. Try again later.",
+        "copiedInstall": "Install command copied.",
+        "copyFailed": "Copy failed.",
+        "grokInstallRisk": "That command downloads and runs an install script. Confirm it in your terminal before running.",
+        "updateAllSuccess": "Updated {{count}} tools.",
+        "updateAllSummary": "Update all finished: {{ok}} succeeded, {{fail}} failed.",
+        "copiedPrereq": "Install command copied.",
+        "brewInstallRisk": "That command downloads and runs the Homebrew install script. Confirm it in your terminal before running."
+      },
+      "updatesAvailable": "{{count}} updatable",
+      "updatesNone": "Up to date",
+      "versionCurrent": "Current",
+      "versionLatest": "Latest",
+      "installPrimary": "Primary",
+      "installMultiBanner": "{{count}} installs found on this machine",
+      "prereq": {
+        "missingNpm": "Node.js / npm was not found on this machine. Some tools cannot be installed or updated via npm.",
+        "missingBrew": "Homebrew was not found on this machine. Some tools cannot be installed or updated via brew.",
+        "blocked": "Missing runtime",
+        "restartHint": "After installing, fully quit Folkbench and open it again",
+        "officialDownloadUrl": "https://nodejs.org/en/download"
+      }
     },
     "search": {
       "placeholder": "Search tools"

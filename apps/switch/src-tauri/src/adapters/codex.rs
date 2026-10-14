@@ -255,8 +255,11 @@ pub fn apply(
     );
     provider.insert("base_url", toml_edit::value(base_url));
     provider.insert("wire_api", toml_edit::value("responses"));
-    provider.insert("requires_openai_auth", toml_edit::value(true));
-    provider.remove("experimental_bearer_token");
+    // Gateway / relay providers must not use OpenAI login UI. Codex ignores
+    // env_key when requires_openai_auth is true and shows Sign in with ChatGPT
+    // unless auth.json already has a session. Bearer on the provider skips that.
+    provider.insert("requires_openai_auth", toml_edit::value(false));
+    provider.insert("experimental_bearer_token", toml_edit::value(api_key));
     provider.remove("env_key");
     document["model_provider"] = toml_edit::value(provider_id.as_str());
     if !model_id.trim().is_empty() {

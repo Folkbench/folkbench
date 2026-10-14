@@ -52,6 +52,24 @@ pub enum PreferredTheme {
     Dark,
 }
 
+/// Interface density preference: simplified first-run vs full console.
+#[derive(
+    Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq, Serialize,
+)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(
+    feature = "generate-bindings",
+    ts(export, export_to = "preferences.ts")
+)]
+#[serde(rename_all = "lowercase")]
+pub enum UiMode {
+    /// Simplified tabs and add flow for first-time users.
+    #[default]
+    Easy,
+    /// Full console with every tab and advanced controls.
+    Pro,
+}
+
 /// Local, non-secret application preferences owned by the Rust core.
 ///
 /// This structure never carries credentials, account identifiers, or server
@@ -72,6 +90,8 @@ pub struct Preferences {
     pub current_by_tool: BTreeMap<String, String>,
     pub undo_by_tool: BTreeMap<String, SwitchUndo>,
     pub account_onboarding_completed: bool,
+    pub easy_onboarding_completed: bool,
+    pub ui_mode: UiMode,
 }
 
 /// Stable machine codes for preference failures.

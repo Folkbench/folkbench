@@ -6,7 +6,7 @@
  * The WebView names a destination; Rust owns the actual URL. This keeps the
  * trust boundary intact without exposing a general opener command.
  */
-export type ExternalLink = "signUp";
+export type ExternalLink = "signUp" | "website";
 
 /**
  * Stable machine code for a failed external navigation.

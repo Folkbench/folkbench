@@ -5,7 +5,8 @@ use std::{
 };
 
 use crate::domain::{
-    PreferenceError, Preferences, PreferredLanguage, PreferredTheme, SwitchUndo,
+    PreferenceError, Preferences, PreferredLanguage, PreferredTheme,
+    SwitchUndo, UiMode,
 };
 
 const FILE_NAME: &str = "preferences.json";
@@ -37,6 +38,15 @@ pub fn load(config_dir: &Path) -> Preferences {
     {
         preferences.account_onboarding_completed = true;
     }
+    // Existing installations predate Easy Mode and should keep the full console
+    // until the user explicitly chooses the simplified layout.
+    if serde_json::from_str::<serde_json::Value>(&contents)
+        .ok()
+        .and_then(|value| value.get("uiMode").cloned())
+        .is_none()
+    {
+        preferences.ui_mode = UiMode::Pro;
+    }
     preferences
 }
 
@@ -45,6 +55,15 @@ pub fn complete_account_onboarding(
 ) -> Result<Preferences, PreferenceError> {
     let mut preferences = load(config_dir);
     preferences.account_onboarding_completed = true;
+    write_atomically(config_dir, &preferences)?;
+    Ok(preferences)
+}
+
+pub fn complete_easy_onboarding(
+    config_dir: &Path,
+) -> Result<Preferences, PreferenceError> {
+    let mut preferences = load(config_dir);
+    preferences.easy_onboarding_completed = true;
     write_atomically(config_dir, &preferences)?;
     Ok(preferences)
 }
@@ -65,6 +84,16 @@ pub fn save_theme(
 ) -> Result<Preferences, PreferenceError> {
     let mut preferences = load(config_dir);
     preferences.theme = theme;
+    write_atomically(config_dir, &preferences)?;
+    Ok(preferences)
+}
+
+pub fn save_ui_mode(
+    config_dir: &Path,
+    ui_mode: UiMode,
+) -> Result<Preferences, PreferenceError> {
+    let mut preferences = load(config_dir);
+    preferences.ui_mode = ui_mode;
     write_atomically(config_dir, &preferences)?;
     Ok(preferences)
 }
@@ -431,11 +460,13 @@ mod tests {
             [
                 "accountOnboardingCompleted",
                 "currentByTool",
+                "easyOnboardingCompleted",
                 "favoriteServiceIdsByTool",
                 "favoriteToolIds",
                 "language",
                 "lastToolId",
                 "theme",
+                "uiMode",
                 "undoByTool",
             ]
             .into_iter()
@@ -449,6 +480,23 @@ mod tests {
         assert_eq!(value["currentByTool"], serde_json::json!({}));
         assert_eq!(value["undoByTool"], serde_json::json!({}));
         assert_eq!(value["accountOnboardingCompleted"], false);
+        assert_eq!(value["easyOnboardingCompleted"], false);
+        assert_eq!(value["uiMode"], "easy");
+    }
+
+    #[test]
+    fn easy_guide_completion_does_not_complete_account_onboarding_or_store_a_folder()
+     {
+        let dir = TempDir::new();
+        assert!(!load(&dir.0).easy_onboarding_completed);
+        let preferences =
+            complete_easy_onboarding(&dir.0).expect("complete easy guide");
+        assert!(preferences.easy_onboarding_completed);
+        assert!(!preferences.account_onboarding_completed);
+        assert!(load(&dir.0).easy_onboarding_completed);
+        let raw = fs::read_to_string(preferences_path(&dir.0)).unwrap();
+        assert!(!raw.contains("workFolder"));
+        assert!(!raw.contains("project"));
     }
 
     #[test]
@@ -491,6 +539,28 @@ mod tests {
         assert!(!load(&dir.0).account_onboarding_completed);
         complete_account_onboarding(&dir.0).expect("complete onboarding");
         assert!(load(&dir.0).account_onboarding_completed);
+    }
+
+    #[test]
+    fn existing_preferences_keep_pro_ui_mode() {
+        let dir = TempDir::new();
+        fs::write(
+            preferences_path(&dir.0),
+            r#"{"language":"zh","lastToolId":null,"currentByTool":{},"undoByTool":{}}"#,
+        )
+        .expect("seed legacy preferences");
+
+        assert_eq!(load(&dir.0).ui_mode, UiMode::Pro);
+    }
+
+    #[test]
+    fn saving_ui_mode_persists_the_choice() {
+        let dir = TempDir::new();
+        assert_eq!(load(&dir.0).ui_mode, UiMode::Easy);
+        save_ui_mode(&dir.0, UiMode::Pro).expect("pro");
+        assert_eq!(load(&dir.0).ui_mode, UiMode::Pro);
+        save_ui_mode(&dir.0, UiMode::Easy).expect("easy");
+        assert_eq!(load(&dir.0).ui_mode, UiMode::Easy);
     }
 
     #[test]

@@ -2,6 +2,7 @@ import apiKeys from './apiKeys.json'
 import changes from './changes.json'
 import common from './common.json'
 import configure from './configure.json'
+import easy from './easy.json'
 import discovery from './discovery.json'
 import errors from './errors.json'
 import navigation from './navigation.json'
@@ -18,6 +19,7 @@ export const en = {
   ...changes,
   ...common,
   ...configure,
+  ...easy,
   ...discovery,
   ...errors,
   ...navigation,

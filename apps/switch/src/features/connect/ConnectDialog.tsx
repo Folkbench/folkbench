@@ -9,6 +9,7 @@ import {
   confirmConnectLink,
   dismissConnectLink,
   getConnectPreview,
+  switchMyService,
 } from '@/bridge'
 import type {
   ConnectNotice,
@@ -40,6 +41,7 @@ export function ConnectDialog() {
   const [invalid, setInvalid] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveFailed, setSaveFailed] = useState(false)
+  const [switchFailed, setSwitchFailed] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -91,6 +93,7 @@ export function ConnectDialog() {
       if (event.payload.preview) {
         setInvalid(false)
         setSaveFailed(false)
+        setSwitchFailed(false)
         setPreview(event.payload.preview)
       }
     }).then((stop) => {
@@ -107,6 +110,7 @@ export function ConnectDialog() {
   async function dismiss(id: string) {
     setPreview((current) => (current?.id === id ? null : current))
     setSaveFailed(false)
+    setSwitchFailed(false)
     try {
       await dismissConnectLink(id)
     } catch {
@@ -114,26 +118,26 @@ export function ConnectDialog() {
     }
   }
 
+  async function afterSaved(current: ConnectPreview, toolId: string) {
+    await queryClient.invalidateQueries({
+      queryKey: ['my-services', toolId],
+    })
+    await queryClient.invalidateQueries({
+      queryKey: preferencesQueryOptions.queryKey,
+    })
+    // The route is already stored. Selecting the tool must not trap the dialog.
+    await setLastTool.mutateAsync(toolId).catch(() => undefined)
+    setPreview((existing) => (existing?.id === current.id ? null : existing))
+    await navigate({ to: '/' })
+  }
+
   async function save(current: ConnectPreview) {
     setSaving(true)
     setSaveFailed(false)
+    setSwitchFailed(false)
     try {
-      const saved = await confirmConnectLink(current.id)
-      const toolId = current.toolId
-      if (toolId) {
-        await queryClient.invalidateQueries({
-          queryKey: ['my-services', toolId],
-        })
-        await queryClient.invalidateQueries({
-          queryKey: preferencesQueryOptions.queryKey,
-        })
-        // The route is already stored. Selecting the tool must not trap the dialog.
-        await setLastTool.mutateAsync(toolId).catch(() => undefined)
-      } else {
-        await queryClient.invalidateQueries({ queryKey: ['my-services'] })
-      }
-      setPreview((existing) => (existing?.id === current.id ? null : existing))
-      await navigate({ to: '/' })
+      await confirmConnectLink(current.id)
+      await afterSaved(current, current.toolId)
     } catch {
       setSaveFailed(true)
     } finally {
@@ -141,7 +145,7 @@ export function ConnectDialog() {
     }
   }
 
-  const toolName = preview?.toolId
+  const toolName = preview
     ? (tools.data?.tools.find((tool) => tool.id === preview.toolId)
         ?.displayName ?? preview.toolId)
     : null
@@ -163,12 +167,10 @@ export function ConnectDialog() {
                   {t('configure.connect.description')}
                 </DialogDescription>
               </DialogHeader>
-              <p className="truncate text-[15px] font-medium">{preview.name}</p>
               <dl className="grid gap-2 text-[13px]">
                 <Field
-                  label={t('configure.connect.station')}
-                  value={preview.stationName ?? preview.stationId}
-                  detail={preview.stationName ? preview.stationId : undefined}
+                  label={t('configure.form.name')}
+                  value={preview.name}
                 />
                 <Field
                   label={t('configure.connect.model')}
@@ -190,9 +192,11 @@ export function ConnectDialog() {
                   />
                 ) : null}
               </dl>
-              <p className="text-[13px] text-muted-foreground">
-                {publicStatusCopy(preview.publicStatus, t)}
-              </p>
+              {preview.publicStatus !== 'unavailable' ? (
+                <p className="text-[13px] text-muted-foreground">
+                  {publicStatusCopy(preview.publicStatus, t)}
+                </p>
+              ) : null}
               {toolName ? (
                 <p className="text-[13px] text-muted-foreground">
                   {t('configure.connect.tool', { tool: toolName })}
@@ -203,22 +207,41 @@ export function ConnectDialog() {
                   {t('configure.connect.saveFailed')}
                 </p>
               ) : null}
+              {switchFailed ? (
+                <p className="text-[13px] text-destructive">
+                  {t('configure.connect.switchFailed')}
+                </p>
+              ) : null}
               <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={saving}
-                  onClick={() => void dismiss(preview.id)}
-                >
-                  {t('common.actions.cancel')}
-                </Button>
-                <Button
-                  type="button"
-                  disabled={saving || preview.publicStatus === 'checking'}
-                  onClick={() => void save(preview)}
-                >
-                  {t('common.actions.save')}
-                </Button>
+                {switchFailed ? (
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setPreview(null)
+                      void navigate({ to: '/' })
+                    }}
+                  >
+                    {t('common.actions.close')}
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={saving}
+                      onClick={() => void dismiss(preview.id)}
+                    >
+                      {t('common.actions.cancel')}
+                    </Button>
+                    <Button
+                      type="button"
+                      disabled={saving || preview.publicStatus === 'checking'}
+                      onClick={() => void save(preview)}
+                    >
+                      {t('configure.connect.import')}
+                    </Button>
+                  </>
+                )}
               </DialogFooter>
             </>
           ) : null}
@@ -277,6 +300,5 @@ function Field({
 function publicStatusCopy(status: ConnectPublicStatus, t: TFunction) {
   if (status === 'checking') return t('configure.connect.checking')
   if (status === 'matched') return t('configure.connect.matched')
-  if (status === 'unavailable') return t('configure.connect.unavailable')
   return t('configure.connect.unmatched')
 }

@@ -3,7 +3,9 @@ use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
 use crate::{
-    domain::{PreferenceError, Preferences, PreferredLanguage, PreferredTheme},
+    domain::{
+        PreferenceError, Preferences, PreferredLanguage, PreferredTheme, UiMode,
+    },
     services,
 };
 
@@ -72,4 +74,23 @@ pub fn complete_account_onboarding(
     app: AppHandle,
 ) -> Result<Preferences, PreferenceError> {
     services::complete_account_onboarding(&config_dir(&app)?)
+}
+
+#[tauri::command]
+pub fn complete_easy_onboarding(
+    app: AppHandle,
+) -> Result<Preferences, PreferenceError> {
+    services::complete_easy_onboarding(&config_dir(&app)?)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub fn set_ui_mode(
+    app: AppHandle,
+    ui_mode: UiMode,
+) -> Result<Preferences, PreferenceError> {
+    let preferences = services::save_ui_mode(&config_dir(&app)?, ui_mode)?;
+    if let Some(window) = app.get_webview_window("main") {
+        services::window_layout::apply(&window, ui_mode);
+    }
+    Ok(preferences)
 }

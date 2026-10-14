@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Minimum capability for the read-only foundation",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": ["core:default", "dialog:allow-open"]
 }

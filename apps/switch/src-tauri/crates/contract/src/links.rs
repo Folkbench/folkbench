@@ -10,6 +10,8 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "camelCase")]
 pub enum ExternalLink {
     SignUp,
+    /// Folkbench public homepage.
+    Website,
 }
 
 /// Stable machine code for a failed external navigation.

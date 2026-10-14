@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.3",
   "hashes": {
-    "package.json": "d690912101d9e7f91288932f4fd6d4554976b72ad33ddd91d4ee15cb913dd68a",
-    "bun.lock": "e75623cec0461195bfd9f92349286bf0d5983d5130ef4564c975fb86040493bf",
-    "src-tauri/Cargo.lock": "f9b8d0c0dd3a3d52b513a2ff4d4f36080a86cf1eb36a3fd9dcc2fec12fb852fc"
+    "package.json": "fad191675e34690a1258cde7f4c5679d40fed16acc67aca985c85c459db2c1ee",
+    "bun.lock": "73de7f779a673e9075f438e72cd45dc8d376bf52bcf03836e8b706fa2a086de4",
+    "src-tauri/Cargo.lock": "e9a854f3b253b91c71460790b9fa45c3933957358b3cbe9cb0ba575f7528f034"
   },
   "packages": [
     {
@@ -167,6 +167,18 @@
       "ecosystem": "npm",
       "name": "@tauri-apps/api",
       "version": "2.11.1",
+      "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@tauri-apps/plugin-dialog",
+      "version": "2.7.3",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@tauri-apps/api",
+      "version": "2.12.3",
       "license": "Apache-2.0 OR MIT"
     },
     {
@@ -1443,6 +1455,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "rfd",
+      "version": "0.16.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "rusqlite",
       "version": "0.37.0",
       "license": "MIT"
@@ -1769,6 +1787,18 @@
       "ecosystem": "crates.io",
       "name": "tauri-plugin-deep-link",
       "version": "2.4.10",
+      "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "tauri-plugin-dialog",
+      "version": "2.7.3",
+      "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "tauri-plugin-fs",
+      "version": "2.5.2",
       "license": "Apache-2.0 OR MIT"
     },
     {

@@ -14,7 +14,7 @@ export type PreferenceError = "locationUnavailable" | "writeFailed";
  * This structure never carries credentials, account identifiers, or server
  * state, so it is safe to persist in plain form on the local machine.
  */
-export type Preferences = { language: PreferredLanguage, theme: PreferredTheme, lastToolId: string | null, favoriteToolIds: Array<string>, favoriteServiceIdsByTool: { [key in string]: Array<string> }, currentByTool: { [key in string]: string }, undoByTool: { [key in string]: SwitchUndo }, accountOnboardingCompleted: boolean, };
+export type Preferences = { language: PreferredLanguage, theme: PreferredTheme, lastToolId: string | null, favoriteToolIds: Array<string>, favoriteServiceIdsByTool: { [key in string]: Array<string> }, currentByTool: { [key in string]: string }, undoByTool: { [key in string]: SwitchUndo }, accountOnboardingCompleted: boolean, easyOnboardingCompleted: boolean, uiMode: UiMode, };
 
 /**
  * Language the user chose, mirroring `i18n/manifest.json`.
@@ -34,3 +34,8 @@ export type PreferredTheme = "system" | "light" | "dark";
  * Service identifiers are local archive references and contain no Key.
  */
 export type SwitchUndo = { currentServiceId: string, previousServiceId: string | null, };
+
+/**
+ * Interface density preference: simplified first-run vs full console.
+ */
+export type UiMode = "easy" | "pro";

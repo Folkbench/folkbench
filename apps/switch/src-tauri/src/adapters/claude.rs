@@ -31,11 +31,26 @@ pub fn inspect(dir: &Path) -> Result<LiveProjection, ServiceError> {
     Ok(LiveProjection { base_url, api_key })
 }
 
+/// Claude Code's Anthropic SDK builds `{ANTHROPIC_BASE_URL}/v1/messages`.
+/// Official default is `https://api.anthropic.com` (no `/v1`). Folkbench
+/// archives keep OpenAI-style `…/v1` for model fetch / other tools; strip
+/// only the trailing `/v1` segment when writing Claude settings.
+pub(crate) fn anthropic_base_url(base_url: &str) -> String {
+    let trimmed = base_url.trim().trim_end_matches('/');
+    match trimmed.strip_suffix("/v1") {
+        Some(root) if !root.is_empty() => {
+            root.trim_end_matches('/').to_string()
+        }
+        _ => trimmed.to_string(),
+    }
+}
+
 pub fn apply(
     dir: &Path,
     protocol: ServiceProtocol,
     base_url: &str,
     api_key: &str,
+    model_id: &str,
 ) -> Result<(), ServiceError> {
     if !matches!(
         protocol,
@@ -53,7 +68,7 @@ pub fn apply(
     };
     map.insert(
         "ANTHROPIC_BASE_URL".to_string(),
-        serde_json::Value::String(base_url.to_string()),
+        serde_json::Value::String(anthropic_base_url(base_url)),
     );
     // Preserve an existing API_KEY-only gateway mode. Otherwise use Claude
     // Code's default AUTH_TOKEN mode, and never leave both credentials set.
@@ -69,6 +84,18 @@ pub fn apply(
         },
         serde_json::Value::String(api_key.to_string()),
     );
+    // Official Claude Code settings schema: top-level "model" pins the
+    // default model id (same as /model). Empty should not reach here when
+    // model_required("claude-code") is enforced at apply time.
+    let trimmed_model = model_id.trim();
+    if trimmed_model.is_empty() {
+        root.remove("model");
+    } else {
+        root.insert(
+            "model".to_string(),
+            serde_json::Value::String(trimmed_model.to_string()),
+        );
+    }
     write_json(&path, &root)
 }
 
@@ -88,5 +115,65 @@ pub fn clear(dir: &Path) -> Result<(), ServiceError> {
             root.remove("env");
         }
     }
+    // Undo the model pin we wrote on apply so Claude Code falls back to its
+    // own default after "停止使用".
+    root.remove("model");
     write_json(&path, &root)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::anthropic_base_url;
+
+    #[test]
+    fn strips_trailing_openai_style_v1() {
+        assert_eq!(
+            anthropic_base_url("https://modelflare.dev/v1"),
+            "https://modelflare.dev"
+        );
+        assert_eq!(
+            anthropic_base_url("https://modelflare.dev/v1/"),
+            "https://modelflare.dev"
+        );
+        assert_eq!(
+            anthropic_base_url("  https://example.com/v1  "),
+            "https://example.com"
+        );
+    }
+
+    #[test]
+    fn leaves_hosts_without_v1_unchanged() {
+        assert_eq!(
+            anthropic_base_url("https://modelflare.dev"),
+            "https://modelflare.dev"
+        );
+        assert_eq!(
+            anthropic_base_url("https://api.ikuncode.cc"),
+            "https://api.ikuncode.cc"
+        );
+        assert_eq!(
+            anthropic_base_url("https://api.anthropic.com"),
+            "https://api.anthropic.com"
+        );
+        assert_eq!(
+            anthropic_base_url("https://api.ikuncode.cc/"),
+            "https://api.ikuncode.cc"
+        );
+    }
+
+    #[test]
+    fn does_not_strip_non_v1_suffixes() {
+        assert_eq!(
+            anthropic_base_url("https://example.com/v10"),
+            "https://example.com/v10"
+        );
+        assert_eq!(
+            anthropic_base_url("https://example.com/v1beta"),
+            "https://example.com/v1beta"
+        );
+        assert_eq!(
+            anthropic_base_url("https://example.com/v1/messages"),
+            "https://example.com/v1/messages"
+        );
+    }
 }

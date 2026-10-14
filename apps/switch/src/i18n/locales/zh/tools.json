@@ -24,11 +24,53 @@
         "success": "配置已验证。"
       }
     },
-    "description": "当前支持 13 个工具的真实配置读写；不同工具会按原生能力热切换或在重启后生效。",
+    "description": "安装、更新 Dock 栏里的本机 CLI，并查看本地与最新版本。",
     "effect": {
       "hotReload": "切换后当前会话即可生效。",
       "notImplemented": "这一版还不能写入该工具的配置。",
       "requiresRestart": "写入后需要重启该工具。"
+    },
+    "runtime": {
+      "title": "工具",
+      "checking": "检测中",
+      "checkingProgress": "正在检测 {{done}}/{{total}}",
+      "scanFailed": "检测失败，请稍后重试。",
+      "versionUnknown": "—",
+      "status": {
+        "probeFailed": "检测失败"
+      },
+      "actions": {
+        "install": "安装",
+        "update": "更新",
+        "updateAll": "全部更新",
+        "copyInstall": "复制安装命令",
+        "copyNodeInstall": "复制 Node 安装命令",
+        "copyBrewInstall": "复制 Homebrew 安装命令",
+        "copyOfficialDownload": "复制官网下载链接"
+      },
+      "toast": {
+        "actionFailed": "操作失败，请稍后重试。",
+        "copiedInstall": "安装命令已复制到剪贴板。",
+        "copyFailed": "复制失败。",
+        "grokInstallRisk": "该命令会从网络下载并执行安装脚本，请在终端自行确认后运行。",
+        "updateAllSuccess": "已更新 {{count}} 个工具。",
+        "updateAllSummary": "全部更新完成：成功 {{ok}}，失败 {{fail}}。",
+        "copiedPrereq": "安装命令已复制到剪贴板。",
+        "brewInstallRisk": "该命令会从网络下载并执行 Homebrew 安装脚本，请在终端自行确认后运行。"
+      },
+      "updatesAvailable": "{{count}} 个可更新",
+      "updatesNone": "全部最新",
+      "versionCurrent": "当前",
+      "versionLatest": "最新",
+      "installPrimary": "主用",
+      "installMultiBanner": "本机检测到 {{count}} 处安装",
+      "prereq": {
+        "missingNpm": "本机未检测到 Node.js / npm，无法通过 npm 安装或更新部分工具。",
+        "missingBrew": "本机未检测到 Homebrew，无法通过 brew 安装或更新部分工具。",
+        "blocked": "缺少运行环境",
+        "restartHint": "装完请完全退出 Folkbench 再打开",
+        "officialDownloadUrl": "https://nodejs.org/zh-cn/download"
+      }
     },
     "search": {
       "placeholder": "搜索工具"

@@ -494,7 +494,7 @@ pub fn import_from_live(
     if let Some(existing) = archive::list_for_tool(config_dir, tool_id)?
         .into_iter()
         .find(|row| {
-            row.base_url == normalized_base_url
+            base_urls_equivalent(tool_id, &row.base_url, normalized_base_url)
                 && credentials::get_for_tool(config_dir, tool_id, &row.id)
                     .as_deref()
                     == Some(api_key.trim())
@@ -525,7 +525,7 @@ pub fn import_status(
     let already_saved = archive::list_for_tool(config_dir, tool_id)?
         .into_iter()
         .any(|row| {
-            row.base_url == normalized_base_url
+            base_urls_equivalent(tool_id, &row.base_url, normalized_base_url)
                 && credentials::get_for_tool(config_dir, tool_id, &row.id)
                     .as_deref()
                     == Some(api_key.trim())
@@ -602,7 +602,7 @@ fn resolve_previous_state(
         _ => return Err(ServiceError::DriftDetected),
     };
 
-    if url == target_url && secret == target_key {
+    if base_urls_equivalent(tool_id, &url, target_url) && secret == target_key {
         return Ok(PreviousState::SameTarget);
     }
     if let Some(current_id) = current_id {
@@ -616,7 +616,7 @@ fn resolve_previous_state(
         return Ok(PreviousState::Service(current_id));
     }
     for row in archive::list_for_tool(config_dir, tool_id)? {
-        if row.base_url == url
+        if base_urls_equivalent(tool_id, &row.base_url, &url)
             && credentials::get_for_tool(config_dir, tool_id, &row.id)
                 .as_deref()
                 == Some(secret.as_str())
@@ -645,18 +645,27 @@ fn previous_from_url_only(
         if let Some(record) =
             archive::get_for_tool(config_dir, tool_id, current_id)?
         {
-            if endpoint(record.base_url()) == url {
+            if base_urls_equivalent(tool_id, record.base_url(), &url) {
                 return Ok(PreviousState::Service(current_id.to_string()));
             }
         }
     }
     let mut matches = archive::list_for_tool(config_dir, tool_id)?
         .into_iter()
-        .filter(|row| endpoint(&row.base_url) == url)
+        .filter(|row| base_urls_equivalent(tool_id, &row.base_url, &url))
         .map(|row| row.id);
     match (matches.next(), matches.next()) {
         (Some(id), None) => Ok(PreviousState::Service(id)),
         _ => Err(ServiceError::DriftDetected),
+    }
+}
+
+fn base_urls_equivalent(tool_id: &str, left: &str, right: &str) -> bool {
+    if tool_id == "claude-code" {
+        adapters::anthropic_base_url(left)
+            == adapters::anthropic_base_url(right)
+    } else {
+        endpoint(left) == endpoint(right)
     }
 }
 
@@ -716,8 +725,16 @@ fn live_matches_service(
         .ok_or(ServiceError::CredentialMissing)?;
     let provider_id = archive::resolve_provider_id(&record.row);
     let live = adapters::inspect(tool_id, home, Some(&provider_id))?;
-    Ok(live.base_url.as_deref() == Some(record.base_url())
-        && live.api_key.as_deref() == Some(key.as_str()))
+    let url_matches = match live.base_url.as_deref() {
+        Some(live_url) if tool_id == "claude-code" => {
+            // Claude apply strips trailing `/v1`; archive keeps OpenAI-style URLs.
+            adapters::anthropic_base_url(live_url)
+                == adapters::anthropic_base_url(record.base_url())
+        }
+        Some(live_url) => live_url == record.base_url(),
+        None => false,
+    };
+    Ok(url_matches && live.api_key.as_deref() == Some(key.as_str()))
 }
 
 pub fn remove_for_tool(
@@ -823,7 +840,7 @@ mod tests {
             "Relay".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/v1".into(),
             "sk-a".into(),
@@ -854,7 +871,7 @@ mod tests {
             "Legacy".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/v1".into(),
             "synthetic-preserved-key".into(),
@@ -1004,9 +1021,14 @@ mod tests {
             let live =
                 adapters::inspect(tool_id, &dir.home, Some(&provider_key))
                     .unwrap_or_else(|error| panic!("{tool_id}: {error:?}"));
+            let expected_live = if tool_id == "claude-code" {
+                "https://example.com"
+            } else {
+                "https://example.com/v1"
+            };
             assert_eq!(
                 live.base_url.as_deref(),
-                Some("https://example.com/v1"),
+                Some(expected_live),
                 "{tool_id}"
             );
             assert_eq!(live.api_key.as_deref(), Some("sk-a"), "{tool_id}");
@@ -1021,7 +1043,7 @@ mod tests {
             "One".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/one".into(),
             "sk-one".into(),
@@ -1033,7 +1055,7 @@ mod tests {
             "Two".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/two".into(),
             "sk-two".into(),
@@ -1069,7 +1091,7 @@ mod tests {
             "Relay".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/v1".into(),
             "sk-a".into(),
@@ -1123,7 +1145,7 @@ mod tests {
             "Relay".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/v1".into(),
             "sk-a".into(),
@@ -1158,7 +1180,7 @@ mod tests {
             "Relay".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/v1".into(),
             "sk-a".into(),
@@ -1199,7 +1221,7 @@ mod tests {
             "One".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/one".into(),
             "sk-one".into(),
@@ -1211,7 +1233,7 @@ mod tests {
             "Two".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/two".into(),
             "sk-two".into(),
@@ -1252,7 +1274,7 @@ mod tests {
             "One".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/one".into(),
             "sk-one".into(),
@@ -1264,7 +1286,7 @@ mod tests {
             "Two".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/two".into(),
             "sk-two".into(),
@@ -1420,7 +1442,7 @@ requires_openai_auth = true
             "Relay".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/v1".into(),
             "sk-a".into(),
@@ -1451,7 +1473,7 @@ requires_openai_auth = true
             "Relay".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://example.com/v1".into(),
             "sk-a".into(),
@@ -1500,7 +1522,7 @@ requires_openai_auth = true
             "Other".into(),
             "".into(),
             "".into(),
-            "".into(),
+            "example-model".into(),
             ServiceProtocol::Auto,
             "https://other.example/v1".into(),
             "synthetic-other-key".into(),
@@ -1524,7 +1546,7 @@ requires_openai_auth = true
         .unwrap();
 
         let live = adapters::inspect("claude-code", &dir.home, None).unwrap();
-        assert_eq!(live.base_url.as_deref(), Some("https://new.example/v1"));
+        assert_eq!(live.base_url.as_deref(), Some("https://new.example"));
         assert_eq!(live.api_key.as_deref(), Some("synthetic-new-key"));
         unswitch(&dir.config, &dir.home, "claude-code").unwrap();
         switch(&dir.config, &dir.home, "claude-code", &current.id).unwrap();
@@ -1560,7 +1582,7 @@ requires_openai_auth = true
         )
         .unwrap();
         let live = adapters::inspect("claude-code", &dir.home, None).unwrap();
-        assert_eq!(live.base_url.as_deref(), Some("https://new.example/v1"));
+        assert_eq!(live.base_url.as_deref(), Some("https://new.example"));
         assert_eq!(live.api_key.as_deref(), Some("synthetic-old-key"));
     }
 
@@ -1658,7 +1680,7 @@ requires_openai_auth = true
         let live =
             adapters::inspect("claude-code", &dir.home, Some(&current.id))
                 .unwrap();
-        assert_eq!(live.base_url.as_deref(), Some("https://new.example/v1"));
+        assert_eq!(live.base_url.as_deref(), Some("https://new.example"));
         assert_eq!(live.api_key.as_deref(), Some("synthetic-new-key"));
         assert!(
             archive::get_for_tool(&dir.config, "codex", &current.id)

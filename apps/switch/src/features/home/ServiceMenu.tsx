@@ -1,6 +1,10 @@
 import { Menu } from '@base-ui/react/menu'
 import { useTranslation } from 'react-i18next'
+import Delete02Icon from '@hugeicons/core-free-icons/Delete02Icon'
 import MoreHorizontalIcon from '@hugeicons/core-free-icons/MoreHorizontalIcon'
+import PencilEdit02Icon from '@hugeicons/core-free-icons/PencilEdit02Icon'
+import Pulse01Icon from '@hugeicons/core-free-icons/Pulse01Icon'
+import Wallet01Icon from '@hugeicons/core-free-icons/Wallet01Icon'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Button } from '@/components/ui/button'
@@ -14,17 +18,19 @@ export function ServiceMenu({
   onEdit,
   onRemove,
   compact = false,
+  simple = false,
 }: {
   service: MyService
   compact?: boolean
+  simple?: boolean
   onVerify: (service: MyService) => void
   onBalance?: (service: MyService) => void
-  onEdit: (service: MyService) => void
+  onEdit?: (service: MyService) => void
   onRemove: (service: MyService) => void
 }) {
   const { t } = useTranslation()
   const itemClass =
-    'flex min-h-9 w-full cursor-pointer items-center rounded-md px-3 text-[13px] outline-none data-highlighted:bg-muted data-disabled:opacity-50'
+    'flex min-h-8 w-full cursor-pointer items-center whitespace-nowrap rounded-md px-2.5 text-[13px] outline-none data-highlighted:bg-muted data-disabled:opacity-50'
   return (
     <Menu.Root>
       <Menu.Trigger
@@ -47,27 +53,53 @@ export function ServiceMenu({
           align="end"
           className="z-50 outline-none"
         >
-          <Menu.Popup className="min-w-44 rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-[var(--shadow-overlay)] outline-none">
+          <Menu.Popup className="w-max min-w-0 rounded-xl border bg-popover p-1 text-popover-foreground shadow-[var(--shadow-overlay)] outline-none">
             <Menu.Item className={itemClass} onClick={() => onVerify(service)}>
+              <HugeiconsIcon
+                icon={Pulse01Icon}
+                strokeWidth={1.7}
+                aria-hidden="true"
+                className="mr-2 size-4 shrink-0"
+              />
               {t('configure.actions.verify')}
             </Menu.Item>
-            {onBalance &&
-            serviceBalanceAvailable(service.baseUrl) &&
-            service.hasCredential ? (
+            {simple ? null : onBalance &&
+              serviceBalanceAvailable(service.baseUrl) &&
+              service.hasCredential ? (
               <Menu.Item
                 className={itemClass}
                 onClick={() => onBalance(service)}
               >
+                <HugeiconsIcon
+                  icon={Wallet01Icon}
+                  strokeWidth={1.7}
+                  aria-hidden="true"
+                  className="mr-2 size-4 shrink-0"
+                />
                 {t('configure.balance.action')}
               </Menu.Item>
             ) : null}
-            <Menu.Item className={itemClass} onClick={() => onEdit(service)}>
-              {t('configure.actions.edit')}
-            </Menu.Item>
+            {!simple && onEdit ? (
+              <Menu.Item className={itemClass} onClick={() => onEdit(service)}>
+                <HugeiconsIcon
+                  icon={PencilEdit02Icon}
+                  strokeWidth={1.7}
+                  aria-hidden="true"
+                  className="mr-2 size-4 shrink-0"
+                />
+                {t('configure.actions.edit')}
+              </Menu.Item>
+            ) : null}
             <Menu.Item
               className={itemClass + ' text-destructive'}
               onClick={() => onRemove(service)}
             >
+              <HugeiconsIcon
+                icon={Delete02Icon}
+                strokeWidth={1.7}
+                aria-hidden="true"
+                className="mr-2 size-4 shrink-0"
+              />
               {t('configure.actions.remove')}
             </Menu.Item>
           </Menu.Popup>

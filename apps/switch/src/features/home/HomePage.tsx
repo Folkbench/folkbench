@@ -5,10 +5,14 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import CircleQuestionMarkIcon from '@hugeicons/core-free-icons/CircleQuestionMarkIcon'
 import { Autocomplete } from '@base-ui/react/autocomplete'
+import Add01Icon from '@hugeicons/core-free-icons/Add01Icon'
 import ArrowDown01Icon from '@hugeicons/core-free-icons/ArrowDown01Icon'
+import ArrowLeftRightIcon from '@hugeicons/core-free-icons/ArrowLeftRightIcon'
 import CheckmarkCircle02Icon from '@hugeicons/core-free-icons/CheckmarkCircle02Icon'
 import EyeIcon from '@hugeicons/core-free-icons/EyeIcon'
+import StopCircleIcon from '@hugeicons/core-free-icons/StopCircleIcon'
 import ViewOffIcon from '@hugeicons/core-free-icons/ViewOffIcon'
+import Pulse01Icon from '@hugeicons/core-free-icons/Pulse01Icon'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import {
@@ -66,7 +70,6 @@ import {
   useFetchServiceModels,
   useImportMyServiceFromLive,
   useRemoveMyService,
-  useRollbackMyServiceSwitch,
   useSwitchMyService,
   useUnswitchMyService,
   useUpdateMyService,
@@ -80,20 +83,31 @@ import {
 } from '@/features/home/effects'
 import { SharePosterDialog } from './SharePosterDialog'
 import { ToolDock } from './ToolDock'
+import {
+  toolRuntimeQueryOptions,
+  useInstallTool,
+  useUpgradeTool,
+} from '@/features/tools/queries'
+import { UsageGuideCard } from './UsageGuideCard'
 import { BalanceControl, balanceLabel } from './BalanceControl'
 import { ServiceMenu } from './ServiceMenu'
 import { LineComparison } from './LineComparison'
 import { AddSourceChoice } from './AddSourceChoice'
 import { PublishedServicePicker } from './PublishedServicePicker'
+import { EasyAddWizard, type EasyWizardStep } from './EasyAddWizard'
 import type { ComparisonLine } from './LineComparison'
+import type { ToolRuntimeStatus } from '@/bridge/commands/toolRuntime'
 import {
   preferencesQueryOptions,
   useSetFavoriteServiceIds,
   useSetLastToolId,
 } from '@/features/preferences/queries'
 import { sessionUsageQueryOptions } from '@/features/usage/queries'
-import type { UsageWindow } from '@/lib/usage'
+import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
+import { matchPublishedStation } from './easy-model'
+import type { UsageWindow } from '@/lib/usage'
+import { EasyHomePage } from './EasyHomePage'
 
 type FormState = {
   targetToolId: string
@@ -163,7 +177,11 @@ function slugifyProviderId(raw: string): string {
   let out = ''
   for (const c of raw.trim()) {
     if (/[a-zA-Z0-9]/.test(c)) out += c.toLowerCase()
-    else if ((c === '-' || c === '_' || /\s/.test(c)) && out && !out.endsWith('-'))
+    else if (
+      (c === '-' || c === '_' || /\s/.test(c)) &&
+      out &&
+      !out.endsWith('-')
+    )
       out += '-'
   }
   while (out.endsWith('-')) out = out.slice(0, -1)
@@ -189,7 +207,7 @@ function deriveProviderId(baseUrl: string): string {
     labels.shift()
   }
   const brand =
-    labels.length >= 2 ? labels[labels.length - 2]! : labels[0] ?? ''
+    labels.length >= 2 ? labels[labels.length - 2]! : (labels[0] ?? '')
   return slugifyProviderId(brand)
 }
 
@@ -312,6 +330,7 @@ function defaultProtocolForTool(toolId: string): ServiceProtocol {
  * into a required config slot, so an empty id would break the tool config. */
 function modelRequiredForTool(toolId: string): boolean {
   switch (toolId) {
+    case 'claude-code':
     case 'grok-build':
     case 'openclaw':
     case 'hermes':
@@ -359,7 +378,6 @@ function protocolHelpKey(toolId: string): ProtocolHelpToolId {
       return 'default'
   }
 }
-
 
 function addInputFromForm(form: FormState) {
   const { targetToolId, ...service } = form
@@ -436,6 +454,18 @@ function isServiceError(error: unknown, code: ServiceError) {
 }
 
 export function HomePage() {
+  const preferences = useQuery(preferencesQueryOptions)
+  if (preferences.isPending)
+    return (
+      <div className="easy-workspace" role="status">
+        …
+      </div>
+    )
+  if (preferences.data?.uiMode === 'easy') return <EasyHomePage />
+  return <ProHomePage />
+}
+
+function ProHomePage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const tools = useQuery(switchToolsQueryOptions)
@@ -444,7 +474,6 @@ export function HomePage() {
   const importService = useImportMyServiceFromLive()
   const updateService = useUpdateMyService()
   const removeService = useRemoveMyService()
-  const rollbackSwitch = useRollbackMyServiceSwitch()
   const switchService = useSwitchMyService()
   const unswitchService = useUnswitchMyService()
   const verifyService = useVerifyMyService()
@@ -458,6 +487,18 @@ export function HomePage() {
 
   const [form, setForm] = useState(emptyForm)
   const [dialog, setDialog] = useState<'add' | 'edit' | null>(null)
+  const [easyWizardOpen, setEasyWizardOpen] = useState(false)
+  const [easyWizardStation, setEasyWizardStation] =
+    useState<PublishedStation | null>(null)
+  const [easyWizardStep, setEasyWizardStep] = useState<
+    EasyWizardStep | undefined
+  >(undefined)
+  const [easyWizardRequireTool, setEasyWizardRequireTool] = useState(false)
+  const [confirmStop, setConfirmStop] = useState(false)
+  // Last connectivity probe per service; drives the easy-mode "broken" state.
+  const [verifyState, setVerifyState] = useState<
+    Record<string, 'ok' | 'slow' | 'bad'>
+  >({})
   const [addSource, setAddSource] = useState<
     'choose' | 'pick' | 'manual' | 'catalog'
   >('choose')
@@ -502,6 +543,7 @@ export function HomePage() {
     () => resolveToolId(preferences.data?.lastToolId ?? null, toolList),
     [preferences.data?.lastToolId, toolList]
   )
+  const isEasy = preferences.data?.uiMode === 'easy'
   const queryBalance = useQueryServiceBalance(toolId)
   const services = useQuery(myServicesQueryOptions(toolId))
   const targetTools = toolList.filter(
@@ -542,6 +584,56 @@ export function HomePage() {
     if (!search.add) {
       openedCatalogAdd.current = ''
       filledCatalogBase.current = ''
+      return
+    }
+    // Easy mode: Discovery 接入 → EasyAddWizard (tool → credentials), never the pro dialog.
+    if (isEasy) {
+      if (
+        search.stationId &&
+        search.channelId &&
+        search.modelId &&
+        linkedCatalog.isPending
+      ) {
+        return
+      }
+      if (openedCatalogAdd.current === catalogAddKey) return
+      openedCatalogAdd.current = catalogAddKey
+      const stationFromCatalog =
+        linkedCatalog.data?.stations.find(
+          (row) =>
+            row.stationId === search.stationId &&
+            row.channelId === search.channelId &&
+            row.modelId === search.modelId
+        ) ?? null
+      const fallbackStation: PublishedStation | null =
+        search.stationId && search.channelId && search.modelId
+          ? {
+              rank: null,
+              channelId: search.channelId,
+              channelName: search.channelName ?? '',
+              stationId: search.stationId,
+              stationName: search.stationName ?? '',
+              stationAvatarPath: null,
+              modelId: search.modelId,
+              websiteUrl: null,
+              baseUrl: publishedBaseUrl || null,
+              measuredAt: null,
+              publishedAt: '',
+              availabilityBps: null,
+              statusWindows: [],
+              sampleSize: null,
+              inputPrice: null,
+              outputPrice: null,
+            }
+          : null
+      const station = stationFromCatalog ?? fallbackStation
+      if (station?.baseUrl) {
+        setEasyWizardStation(station)
+        setEasyWizardStep(undefined)
+        setEasyWizardRequireTool(true)
+        setEasyWizardOpen(true)
+      }
+      void navigate({ to: '/', search: {} })
       return
     }
     const targetToolId = defaultTargetToolId
@@ -601,10 +693,9 @@ export function HomePage() {
     }
     setAddSource('catalog')
     {
-      const catalogName = search.stationName?.trim() || ''
       setForm({
         ...defaults,
-        name: catalogName,
+        name: '',
         stationId: search.stationId,
         channelId: search.channelId,
         // Ranking modelId is only for catalog lookup; form model stays empty.
@@ -620,6 +711,10 @@ export function HomePage() {
   }, [
     catalogAddKey,
     defaultTargetToolId,
+    isEasy,
+    linkedCatalog.data?.stations,
+    linkedCatalog.isPending,
+    navigate,
     publishedBaseUrl,
     search.add,
     search.channelId,
@@ -686,6 +781,13 @@ export function HomePage() {
       catalogQueries[index]?.data,
     ])
   )
+  // Same as easy mode: match by stationId only so catalog / quick-add
+  // services show the site logo; custom "其他服务" keep initials.
+  const publicCatalog = useQuery(
+    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID)
+  )
+  const publicStations = publicCatalog.data?.stations ?? []
+  const publicOrigin = publicCatalog.data?.origin
   const currentService = rows.find((row) => row.id === currentId)
   const importStatus = useQuery(myServiceImportStatusQueryOptions(toolId))
   const currentPublished = currentService
@@ -694,7 +796,6 @@ export function HomePage() {
         catalogByModel.get(currentService.modelId)
       )
     : undefined
-  const rollbackAvailable = Boolean(preferences.data?.undoByTool?.[toolId])
   const rowById = new Map(rows.map((row) => [row.id, row]))
   const rowIds = new Set(rows.map((row) => row.id))
   const storedServiceOrder =
@@ -718,12 +819,87 @@ export function HomePage() {
           ]
     ).filter((id) => rowIds.has(id))
     const seen = new Set(ordered)
-    const missing = rows
-      .map((row) => row.id)
-      .filter((id) => !seen.has(id))
+    const missing = rows.map((row) => row.id).filter((id) => !seen.has(id))
     return [...ordered, ...missing]
   })()
   const readyTools = switcherTools(toolList)
+  const install = useInstallTool()
+  const upgrade = useUpgradeTool()
+  const [installPrompt, setInstallPrompt] = useState<string | null>(null)
+  const runtimeQueries = useQueries({
+    queries: readyTools.map((tool) => toolRuntimeQueryOptions(tool.id)),
+  })
+  const runtimeById: Record<string, ToolRuntimeStatus | undefined> = {}
+  const dockRuntime: Record<string, 'notInstalled' | undefined> = {}
+  runtimeQueries.forEach((query) => {
+    const row = query.data
+    if (!row) return
+    runtimeById[row.toolId] = row
+    if (row.status === 'notInstalled') dockRuntime[row.toolId] = 'notInstalled'
+  })
+  const selectedRuntime = runtimeById[toolId]
+  const selectedUpdatable =
+    selectedRuntime?.status === 'updateAvailable' && selectedRuntime.canUpgrade
+  const promptRuntime = installPrompt ? runtimeById[installPrompt] : undefined
+  const promptToolName =
+    readyTools.find((tool) => tool.id === installPrompt)?.displayName ??
+    promptRuntime?.displayName ??
+    ''
+  const runtimeBusy = install.isPending || upgrade.isPending
+
+  /** Returns true (and opens the install dialog) when the tool is missing. */
+  function guardNotInstalled(id: string): boolean {
+    if (runtimeById[id]?.status !== 'notInstalled') return false
+    setInstallPrompt(id)
+    return true
+  }
+
+  async function onInstallTool(id: string) {
+    try {
+      const result = await install.mutateAsync(id)
+      if (result.ok) {
+        toast.success(result.message)
+        setInstallPrompt(null)
+      } else toast.error(result.message)
+    } catch {
+      toast.error(t('configure.toolRuntime.actionFailed'))
+    }
+  }
+
+  async function onUpgradeTool(id: string) {
+    try {
+      const result = await upgrade.mutateAsync(id)
+      if (result.ok) toast.success(result.message)
+      else toast.error(result.message)
+    } catch {
+      toast.error(t('configure.toolRuntime.actionFailed'))
+    }
+  }
+
+  const updateNotice = selectedUpdatable ? (
+    <div className="mb-3 flex items-center justify-between gap-3 rounded-lg border border-brand-signal/30 bg-brand-signal/5 px-3 py-2">
+      <p className="min-w-0 text-[12px] text-foreground">
+        {selectedRuntime.localVersion && selectedRuntime.latestVersion
+          ? t('configure.toolRuntime.updateMessage', {
+              tool: toolName,
+              local: selectedRuntime.localVersion,
+              latest: selectedRuntime.latestVersion,
+            })
+          : t('configure.toolRuntime.updateMessageShort', { tool: toolName })}
+      </p>
+      <Button
+        size="sm"
+        className="shrink-0"
+        disabled={runtimeBusy}
+        aria-busy={upgrade.isPending}
+        onClick={() => void onUpgradeTool(toolId)}
+      >
+        {upgrade.isPending
+          ? t('configure.toolRuntime.updating')
+          : t('configure.toolRuntime.update')}
+      </Button>
+    </div>
+  ) : null
   const currentCatalog = currentService?.modelId
     ? catalogByModel.get(currentService.modelId)
     : undefined
@@ -733,17 +909,18 @@ export function HomePage() {
     .map((service) => ({
       key: service.id,
       service,
-      published: currentPublishedStation(
+      published:
+        currentPublishedStation(service, catalogByModel.get(service.modelId)) ??
+        matchPublishedStation(service, publicStations),
+      origin: currentPublishedStation(
         service,
         catalogByModel.get(service.modelId)
-      ),
-      origin: catalogByModel.get(service.modelId)?.origin,
+      )
+        ? catalogByModel.get(service.modelId)?.origin
+        : publicOrigin,
     }))
   const canWrite = effect !== 'notImplemented'
-  const switchBusy =
-    switchService.isPending ||
-    unswitchService.isPending ||
-    rollbackSwitch.isPending
+  const switchBusy = switchService.isPending || unswitchService.isPending
 
   const loadError =
     services.error instanceof BridgeError
@@ -802,6 +979,14 @@ export function HomePage() {
   }
 
   function openAdd() {
+    if (guardNotInstalled(toolId)) return
+    if (isEasy) {
+      setEasyWizardStation(null)
+      setEasyWizardStep('station')
+      setEasyWizardRequireTool(false)
+      setEasyWizardOpen(true)
+      return
+    }
     resetModelPicker()
     setEditing(null)
     setAddSource('choose')
@@ -815,15 +1000,22 @@ export function HomePage() {
     setDialog('add')
   }
 
+  function openChangeStation() {
+    if (guardNotInstalled(toolId)) return
+    setEasyWizardStation(null)
+    setEasyWizardStep('station')
+    setEasyWizardRequireTool(false)
+    setEasyWizardOpen(true)
+  }
+
   function choosePublished(station: PublishedStation) {
     const targetToolId = defaultTargetToolId
-    const name = station.stationName
     const baseUrl = station.baseUrl ?? ''
     setForm({
       ...emptyForm,
       targetToolId,
       apiProtocol: defaultProtocolForTool(targetToolId),
-      name,
+      name: '',
       stationId: station.stationId,
       channelId: station.channelId,
       // Keep model empty — user selects after credentials, same as manual add.
@@ -903,6 +1095,10 @@ export function HomePage() {
   async function onSave(event: React.FormEvent) {
     event.preventDefault()
     if (isCatalogAdd && catalogStep === 'result') return
+    if (!form.name.trim()) {
+      toast.error(t('configure.easyAdd.needName'))
+      return
+    }
     if (modelRequired && !form.modelId.trim()) {
       toast.error(
         t('configure.form.modelRequired', {
@@ -924,31 +1120,40 @@ export function HomePage() {
       toast.error(t('configure.form.providerIdInvalid'))
       return
     }
-    if (isCatalogAdd && catalogStep === 'entry') {
-      setCatalogStep('review')
-      return
-    }
     try {
-      if (isCatalogAdd && catalogStep === 'review') {
+      if (isCatalogAdd && catalogStep !== 'result') {
         const saved = await addService.mutateAsync(addInputFromForm(form))
         setForm((current) => ({ ...current, apiKey: '' }))
-        let reachable: boolean | null = null
-        let latencyMs: number | null = null
-        let degraded = false
-        try {
-          const probe = await verifyService.mutateAsync({
-            toolId: form.targetToolId,
-            serviceId: saved.id,
-          })
-          reachable = probe.reachable
-          latencyMs = probe.latencyMs
-          degraded = probe.degraded
-        } catch {
-          // The service was saved. A failed reachability check is not a Key
-          // or model verdict and must not be presented as one.
+        if (isEasy) {
+          try {
+            await switchService.mutateAsync({
+              toolId: form.targetToolId,
+              serviceId: saved.id,
+            })
+            toast.success(
+              t('configure.easyAdd.switched', {
+                tool:
+                  toolList.find((tool) => tool.id === form.targetToolId)
+                    ?.displayName ?? form.targetToolId,
+              })
+            )
+            closeDialog()
+          } catch {
+            toast.error(t('configure.easyAdd.savedSwitchFailed'))
+            setCatalogResult({
+              name: saved.name,
+              reachable: null,
+              latencyMs: null,
+              degraded: false,
+            })
+            setCatalogStep('result')
+          }
+          return
         }
-        setCatalogResult({ name: saved.name, reachable, latencyMs, degraded })
-        setCatalogStep('result')
+        // Pro mode: save straight into the local list. No review step, no
+        // success dialog, no reachability probe; "检查连接" stays separate.
+        toast.success(t('discovery.connect.result.title'))
+        await viewSavedServices()
         return
       }
       if (dialog === 'edit' && editing) {
@@ -965,10 +1170,7 @@ export function HomePage() {
           baseUrl: form.baseUrl,
           apiKey: form.apiKey.trim() ? form.apiKey : undefined,
         })
-        if (
-          effect === 'requiresRestart' &&
-          currentId === editing.id
-        ) {
+        if (effect === 'requiresRestart' && currentId === editing.id) {
           toast.success(
             t('configure.status.restartToApply', { tool: toolName })
           )
@@ -1032,9 +1234,7 @@ export function HomePage() {
         serviceId: service.id,
       })
       if (result.effect === 'requiresRestart') {
-        toast.success(
-          t('configure.status.restartToApply', { tool: toolName })
-        )
+        toast.success(t('configure.status.restartToApply', { tool: toolName }))
       } else {
         toast.success(
           t('configure.status.switched', {
@@ -1063,21 +1263,20 @@ export function HomePage() {
     }
   }
 
-  async function onRollbackSwitch() {
-    try {
-      await rollbackSwitch.mutateAsync(toolId)
-      toast.success(t('configure.status.restored'))
-    } catch (error) {
-      toast.error(serviceErrorMessage(error, t))
-    }
-  }
-
   async function onVerify(service: MyService) {
     try {
       const result = await verifyService.mutateAsync({
         toolId,
         serviceId: service.id,
       })
+      setVerifyState((current) => ({
+        ...current,
+        [service.id]: !result.reachable
+          ? 'bad'
+          : result.degraded
+            ? 'slow'
+            : 'ok',
+      }))
       if (!result.reachable) {
         toast.error(t('configure.status.unreachable'))
         return
@@ -1089,6 +1288,7 @@ export function HomePage() {
         toast.success(t('configure.status.reachable', { ms }))
       }
     } catch (error) {
+      setVerifyState((current) => ({ ...current, [service.id]: 'bad' }))
       toast.error(serviceErrorMessage(error, t))
     }
   }
@@ -1264,12 +1464,6 @@ export function HomePage() {
         )
   }
 
-  const focusBackupList = () => {
-    document
-      .querySelector('.home-list-scroll')
-      ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }
-
   function showDetails(published: PublishedStation) {
     void navigate({
       to: '/discover/$stationId/$channelId',
@@ -1303,7 +1497,11 @@ export function HomePage() {
             tools={readyTools}
             toolId={toolId}
             pending={setLastTool.isPending || switchBusy}
-            onSelect={(id) => setLastTool.mutate(id)}
+            runtime={dockRuntime}
+            onSelect={(id) => {
+              if (id !== toolId) setLastTool.mutate(id)
+              guardNotInstalled(id)
+            }}
           />
         </div>
         <div className="home-tool-actions">
@@ -1313,14 +1511,16 @@ export function HomePage() {
               : (effectExplanation(toolId, toolName, effect, t) ??
                 effectLabel(effect, t))}
           </span>
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={importDisabled}
-            onClick={() => void onImport()}
-          >
-            {importActionLabel}
-          </Button>
+          {!isEasy ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={importDisabled}
+              onClick={() => void onImport()}
+            >
+              {importActionLabel}
+            </Button>
+          ) : null}
         </div>
       </div>
       {loadError ? (
@@ -1340,10 +1540,17 @@ export function HomePage() {
           </section>
         ) : currentService ? (
           <section className="line-focus">
+            {updateNotice}
             <div className="line-focus-grid">
               <div className="min-w-0">
                 <p className="flex items-center gap-2 text-[12px] text-muted-foreground">
-                  <span className="size-1.5 rounded-full bg-success" />
+                  <span
+                    className={`size-1.5 rounded-full ${
+                      isEasy && verifyState[currentService.id] === 'bad'
+                        ? 'bg-destructive'
+                        : 'bg-success'
+                    }`}
+                  />
                   <ToolLogo toolId={toolId} className="size-3.5" />
                   {t('configure.home.current', { tool: toolName })}
                 </p>
@@ -1353,7 +1560,7 @@ export function HomePage() {
                   </span>
                   <div className="min-w-0">
                     <h2 className="truncate text-[20px] font-semibold tracking-tight">
-                      {currentPublished?.stationName ?? currentService.name}
+                      {currentService.name}
                     </h2>
                     <p className="mt-1 truncate text-[12px] text-muted-foreground">
                       {[
@@ -1375,81 +1582,174 @@ export function HomePage() {
                 >
                   {currentService.baseUrl}
                 </p>
-                <BalanceControl
-                  className="mt-1"
-                  service={currentService}
-                  balance={balances[currentService.id]}
-                  pending={
-                    queryBalance.isPending &&
-                    queryBalance.variables === currentService.id
-                  }
-                  onQuery={(service) => void onBalance(service)}
-                />
+                {isEasy ? (
+                  verifyState[currentService.id] === 'bad' ? (
+                    <p
+                      className="mt-1 text-[12px] text-destructive"
+                      role="alert"
+                    >
+                      {t('configure.easyHome.broken')}
+                    </p>
+                  ) : null
+                ) : (
+                  <BalanceControl
+                    className="mt-1"
+                    service={currentService}
+                    balance={balances[currentService.id]}
+                    pending={
+                      queryBalance.isPending &&
+                      queryBalance.variables === currentService.id
+                    }
+                    onQuery={(service) => void onBalance(service)}
+                  />
+                )}
               </div>
-              <div className="flex shrink-0 flex-wrap items-center gap-1.5">
-                {rollbackAvailable ? (
+              {isEasy ? (
+                <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+                  {verifyState[currentService.id] === 'bad' ? (
+                    <Button
+                      size="sm"
+                      disabled={switchBusy || targetTools.length === 0}
+                      onClick={openChangeStation}
+                    >
+                      <HugeiconsIcon
+                        icon={ArrowLeftRightIcon}
+                        strokeWidth={1.7}
+                        aria-hidden="true"
+                      />
+                      {t('configure.easyHome.changeLine')}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-brand-signal/35 bg-card text-brand-signal"
+                      disabled={switchBusy || targetTools.length === 0}
+                      onClick={openChangeStation}
+                    >
+                      <HugeiconsIcon
+                        icon={ArrowLeftRightIcon}
+                        strokeWidth={1.7}
+                        aria-hidden="true"
+                      />
+                      {t('configure.easyHome.changeStation')}
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"
                     className="border-foreground/20 bg-card"
-                    disabled={switchBusy}
-                    onClick={() => void onRollbackSwitch()}
+                    disabled={switchBusy || verifyService.isPending}
+                    onClick={() => void onVerify(currentService)}
                   >
-                    {t('configure.switchResult.rollback')}
+                    <HugeiconsIcon
+                      icon={Pulse01Icon}
+                      strokeWidth={1.7}
+                      aria-hidden="true"
+                    />
+                    {t('configure.actions.verify')}
                   </Button>
-                ) : null}
-                {currentPublished ? (
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-brand-signal/35 bg-card text-brand-signal"
-                    onClick={() => showDetails(currentPublished)}
+                    className="border-foreground/20 bg-card"
+                    disabled={!canWrite || switchBusy}
+                    onClick={() => setConfirmStop(true)}
                   >
-                    {t('configure.actions.details')}
+                    <HugeiconsIcon
+                      icon={StopCircleIcon}
+                      strokeWidth={1.7}
+                      aria-hidden="true"
+                    />
+                    {t('configure.actions.close')}
                   </Button>
-                ) : null}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-foreground/20 bg-card"
-                  disabled={!canWrite || switchBusy}
-                  onClick={() => void onClose()}
-                >
-                  {t('configure.actions.close')}
-                </Button>
-                <ServiceMenu
-                  service={currentService}
-                  onVerify={onVerify}
-                  onBalance={onBalance}
-                  onEdit={openEdit}
-                  onRemove={requestDelete}
-                />
-              </div>
+                </div>
+              ) : (
+                <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+                  {!isEasy && currentPublished ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-brand-signal/35 bg-card text-brand-signal"
+                      onClick={() => showDetails(currentPublished)}
+                    >
+                      {t('configure.actions.details')}
+                    </Button>
+                  ) : null}
+                  {!isEasy ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-foreground/20 bg-card"
+                      disabled={!canWrite || switchBusy}
+                      onClick={() => void onClose()}
+                    >
+                      <HugeiconsIcon
+                        icon={StopCircleIcon}
+                        strokeWidth={1.7}
+                        aria-hidden="true"
+                      />
+                      {t('configure.actions.close')}
+                    </Button>
+                  ) : null}
+                  {!isEasy ? (
+                    <ServiceMenu
+                      service={currentService}
+                      onVerify={onVerify}
+                      onBalance={onBalance}
+                      onEdit={openEdit}
+                      onRemove={requestDelete}
+                    />
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-foreground/20 bg-card"
+                      disabled={switchBusy}
+                      onClick={() => void onVerify(currentService)}
+                    >
+                      <HugeiconsIcon
+                        icon={Pulse01Icon}
+                        strokeWidth={1.7}
+                        aria-hidden="true"
+                      />
+                      {t('configure.actions.verify')}
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           </section>
         ) : (
           <section className="line-focus line-focus-idle">
+            {updateNotice}
             <div className="flex items-start justify-between gap-3">
               <h2 className="min-w-0 text-[14px] font-medium tracking-tight">
                 {t('configure.home.chooseForTool', { tool: toolName })}
               </h2>
-              <Button
-                variant="outline"
-                size="sm"
-                className="shrink-0"
-                onClick={rows.length ? focusBackupList : openAdd}
-              >
-                {t(
-                  rows.length
-                    ? 'configure.home.chooseService'
-                    : 'configure.empty.action'
-                )}
-              </Button>
+              {rows.length ? null : (
+                <Button
+                  variant={isEasy ? 'default' : 'outline'}
+                  size="sm"
+                  className="shrink-0"
+                  disabled={isEasy && targetTools.length === 0}
+                  onClick={openAdd}
+                >
+                  <HugeiconsIcon
+                    icon={Add01Icon}
+                    strokeWidth={1.7}
+                    aria-hidden="true"
+                  />
+                  {t('configure.empty.action')}
+                </Button>
+              )}
             </div>
             <p className="text-[12px] text-muted-foreground">
-              {currentId
-                ? t('configure.home.currentMissing')
-                : t('configure.home.notEnabled')}
+              {isEasy && !rows.length
+                ? t('configure.easyHome.emptyHint')
+                : currentId
+                  ? t('configure.home.currentMissing')
+                  : t('configure.home.notEnabled')}
             </p>
             <div className="line-focus-empty-flow mt-auto" aria-hidden="true">
               <div className="line-focus-empty-node">
@@ -1465,25 +1765,29 @@ export function HomePage() {
           </section>
         )}
 
-        <UsageTrendCard
-          toolName={toolName}
-          toolId={toolId}
-          row={usageRow}
-          locale={numberLocale}
-          loading={usage.isPending && usageSupported}
-          error={usageError}
-          supported={usageSupported}
-          onShare={(windowUsage) =>
-            setShareSummary({
-              toolId,
-              toolName,
-              usage: windowUsage,
-            })
-          }
-          onViewAll={() => navigate({ to: '/usage', search: {} })}
-          onRefresh={() => void usage.refetch()}
-          refreshing={usage.isFetching}
-        />
+        {isEasy ? (
+          <UsageGuideCard toolId={toolId} toolName={toolName} />
+        ) : (
+          <UsageTrendCard
+            toolName={toolName}
+            toolId={toolId}
+            row={usageRow}
+            locale={numberLocale}
+            loading={usage.isPending && usageSupported}
+            error={usageError}
+            supported={usageSupported}
+            onShare={(windowUsage) =>
+              setShareSummary({
+                toolId,
+                toolName,
+                usage: windowUsage,
+              })
+            }
+            onViewAll={() => navigate({ to: '/usage', search: {} })}
+            onRefresh={() => void usage.refetch()}
+            refreshing={usage.isFetching}
+          />
+        )}
       </div>
       {rows.length > 0 ? (
         <section className="home-comparison flex min-w-0 flex-col gap-3">
@@ -1494,6 +1798,11 @@ export function HomePage() {
               disabled={targetTools.length === 0}
               onClick={openAdd}
             >
+              <HugeiconsIcon
+                icon={Add01Icon}
+                strokeWidth={1.7}
+                aria-hidden="true"
+              />
               {t('configure.actions.add')}
             </Button>
           </div>
@@ -1512,11 +1821,11 @@ export function HomePage() {
                 onReorder={(keys) => void onReorderBackupServices(keys)}
                 onSwitch={(service) => void onEnable(service)}
                 onConnect={connectPublished}
-                onDetails={showDetails}
                 onVerify={onVerify}
                 onBalance={onBalance}
                 onEdit={openEdit}
                 onRemove={requestDelete}
+                simple={isEasy}
               />
             ) : !services.isPending ? (
               <p className="rounded-xl border bg-card px-4 py-4 text-[13px] text-muted-foreground">
@@ -1804,12 +2113,92 @@ export function HomePage() {
         </DialogContent>
       </Dialog>
 
-
+      <EasyAddWizard
+        open={easyWizardOpen}
+        tools={toolList}
+        initialToolId={defaultTargetToolId}
+        initialStation={easyWizardStation}
+        initialStep={easyWizardStep}
+        requireToolSelection={easyWizardRequireTool}
+        onOpenChange={(open) => {
+          setEasyWizardOpen(open)
+          if (!open) {
+            setEasyWizardStation(null)
+            setEasyWizardStep(undefined)
+            setEasyWizardRequireTool(false)
+          }
+        }}
+      />
       <SharePosterDialog
         summary={shareSummary}
         locale={numberLocale}
         onClose={() => setShareSummary(null)}
       />
+
+      <AlertDialog
+        open={installPrompt !== null}
+        onOpenChange={(open) => {
+          if (!open && !install.isPending) setInstallPrompt(null)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('configure.toolRuntime.installTitle', {
+                tool: promptToolName,
+              })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {promptRuntime?.hint ??
+                t('configure.toolRuntime.installDesc', {
+                  tool: promptToolName,
+                })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button
+              disabled={runtimeBusy || promptRuntime?.canInstall === false}
+              aria-busy={install.isPending}
+              onClick={() => {
+                if (installPrompt) void onInstallTool(installPrompt)
+              }}
+            >
+              {install.isPending
+                ? t('configure.toolRuntime.installing')
+                : t('configure.toolRuntime.install')}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={confirmStop} onOpenChange={setConfirmStop}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('configure.easyHome.stopTitle', { tool: toolName })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('configure.easyHome.stopConfirm', { tool: toolName })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.actions.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setConfirmStop(false)
+                void onClose()
+              }}
+            >
+              <HugeiconsIcon
+                icon={StopCircleIcon}
+                strokeWidth={1.7}
+                aria-hidden="true"
+              />
+              {t('configure.actions.close')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog
         open={pendingDelete !== null}
@@ -2145,10 +2534,7 @@ function ProviderIdField({
           </Autocomplete.Trigger>
         </div>
         <Autocomplete.Portal>
-          <Autocomplete.Positioner
-            sideOffset={6}
-            className="z-50 outline-none"
-          >
+          <Autocomplete.Positioner sideOffset={6} className="z-50 outline-none">
             <Autocomplete.Popup className="min-w-[var(--anchor-width)] max-w-[calc(100vw-32px)] rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-[var(--shadow-overlay)] data-[empty]:hidden">
               <Autocomplete.List className="max-h-72 overflow-y-auto">
                 {(item: string) => (

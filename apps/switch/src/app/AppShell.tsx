@@ -17,6 +17,10 @@ import { Button } from '@/components/ui/button'
 import { useAppearance } from '@/components/appearance-provider'
 import { ConnectDialog } from '@/features/connect/ConnectDialog'
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
+import {
+  preferencesQueryOptions,
+  useSetUiMode,
+} from '@/features/preferences/queries'
 import { sessionQueryOptions } from '@/features/session/queries'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
 
@@ -26,9 +30,13 @@ export function AppShell() {
   const queryClient = useQueryClient()
   const appearance = useAppearance()
   const session = useQuery(sessionQueryOptions)
+  const preferences = useQuery(preferencesQueryOptions)
+  const setUiMode = useSetUiMode()
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
+  // Pending prefs: keep full nav to avoid flashing Easy for existing Pro users.
+  const isEasy = preferences.data?.uiMode === 'easy'
 
   useEffect(() => {
     void queryClient
@@ -36,10 +44,23 @@ export function AppShell() {
       .catch(() => {})
   }, [queryClient])
 
+  useEffect(() => {
+    if (!isEasy) return
+    if (
+      pathname === '/tools' ||
+      pathname === '/methods' ||
+      pathname === '/usage' ||
+      pathname.startsWith('/discover')
+    ) {
+      void navigate({ to: '/' })
+    }
+  }, [isEasy, navigate, pathname])
+
   return (
     <div
       className="switch-shell"
       data-page={pathname === '/' ? 'home' : 'other'}
+      data-ui-mode={isEasy ? 'easy' : 'pro'}
     >
       <header className="switch-header">
         <Link
@@ -61,27 +82,74 @@ export function AppShell() {
         </Link>
         <nav className="switch-navigation" aria-label={t('navigation.primary')}>
           <Link to="/" aria-current={pathname === '/' ? 'page' : undefined}>
-            <span>{t('navigation.items.services')}</span>
+            <span>
+              {t(
+                isEasy
+                  ? 'navigation.items.servicesEasy'
+                  : 'navigation.items.services'
+              )}
+            </span>
           </Link>
-          <Link
-            to="/discover"
-            search={{ modelId: DEFAULT_PUBLIC_MODEL_ID }}
-            aria-current={
-              pathname.startsWith('/discover') || pathname === '/methods'
-                ? 'page'
-                : undefined
-            }
-          >
-            <span>{t('navigation.items.discover')}</span>
-          </Link>
-          <Link
-            to="/usage"
-            aria-current={pathname === '/usage' ? 'page' : undefined}
-          >
-            <span>{t('navigation.items.usage')}</span>
-          </Link>
+          {!isEasy ? (
+            <Link
+              to="/discover"
+              search={{ modelId: DEFAULT_PUBLIC_MODEL_ID }}
+              aria-current={
+                pathname.startsWith('/discover') || pathname === '/methods'
+                  ? 'page'
+                  : undefined
+              }
+            >
+              <span>{t('navigation.items.discover')}</span>
+            </Link>
+          ) : null}
+          {!isEasy ? (
+            <Link
+              to="/usage"
+              aria-current={pathname === '/usage' ? 'page' : undefined}
+            >
+              <span>{t('navigation.items.usage')}</span>
+            </Link>
+          ) : null}
+          {!isEasy ? (
+            <Link
+              to="/tools"
+              aria-current={pathname === '/tools' ? 'page' : undefined}
+            >
+              <span>{t('navigation.items.tools')}</span>
+            </Link>
+          ) : null}
         </nav>
         <div className="flex shrink-0 items-center gap-1.5">
+          <div className="switch-mode-toggle">
+            <div
+              className="switch-segmented switch-mode-segmented"
+              role="group"
+              aria-label={t('navigation.mode.label')}
+            >
+              {(['easy', 'pro'] as const).map((mode) => {
+                const active = (mode === 'easy') === isEasy
+                return (
+                  <button
+                    key={mode}
+                    type="button"
+                    disabled={setUiMode.isPending || !preferences.data}
+                    aria-pressed={active}
+                    onClick={() => {
+                      if (active) return
+                      setUiMode.mutate(mode, {
+                        onSuccess: () => {
+                          void navigate({ to: '/' })
+                        },
+                      })
+                    }}
+                  >
+                    {t(`navigation.mode.${mode}`)}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -116,6 +184,7 @@ export function AppShell() {
           <Button
             variant="outline"
             size="sm"
+            className="switch-account-button"
             disabled={session.isPending}
             onClick={() =>
               navigate({

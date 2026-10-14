@@ -34,6 +34,7 @@ export {
   setLastToolId,
   setPreferredLanguage,
   setPreferredTheme,
+  setUiMode,
 } from '@/bridge/commands/preferences'
 export {
   cancelAccountSignIn,
@@ -42,6 +43,14 @@ export {
   startAccountSignIn,
 } from '@/bridge/commands/session'
 export { listSessionUsage } from '@/bridge/commands/sessionUsage'
+export {
+  installTool,
+  listToolRuntimeCatalog,
+  listToolRuntimes,
+  probeToolRuntime,
+  probeToolRuntimePrerequisites,
+  upgradeTool,
+} from '@/bridge/commands/toolRuntime'
 export { copyShareImage, saveShareImage } from '@/bridge/commands/shareImage'
 export { BRIDGE_ERROR, BridgeError } from '@/bridge/invoke'
 export type { BridgeErrorCode } from '@/bridge/invoke'
@@ -91,6 +100,7 @@ export type { ExternalLink, ExternalLinkError } from '@/bridge/generated/links'
 export type {
   PreferenceError,
   Preferences,
+  UiMode,
   PreferredLanguage,
   PreferredTheme,
   SwitchUndo,
@@ -111,3 +121,13 @@ export type {
   SessionUsageSummary,
   ToolUsageSummary,
 } from '@/bridge/generated/usage'
+
+export type {
+  ToolInstallChannel,
+  ToolRuntimeActionResult,
+  ToolRuntimeCatalogEntry,
+  ToolRuntimeKind,
+  ToolRuntimeInstall,
+  ToolRuntimePrerequisites,
+  ToolRuntimeStatus,
+} from '@/bridge/generated/toolRuntime'

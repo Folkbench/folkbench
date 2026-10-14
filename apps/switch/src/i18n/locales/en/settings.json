@@ -65,6 +65,14 @@
         "title": "Update channel"
       },
       "title": "Updates"
+    },
+    "uiMode": {
+      "title": "Interface mode",
+      "description": "Easy mode keeps core actions only; Pro shows every tab and advanced controls.",
+      "easy": "Easy mode",
+      "pro": "Pro mode",
+      "saved": "Interface mode saved.",
+      "saveFailed": "Could not save interface mode. Try again."
     }
   }
 }

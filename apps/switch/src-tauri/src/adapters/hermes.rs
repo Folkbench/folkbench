@@ -11,7 +11,11 @@ pub fn inspect(
     provider_id: Option<&str>,
 ) -> Result<LiveProjection, ServiceError> {
     let root = read_yaml_mapping(&dir.join("config.yaml"))?;
-    if let Some(provider_id) = provider_id.filter(|id| !id.trim().is_empty()) {
+    let lookup = provider_id
+        .filter(|id| !id.trim().is_empty())
+        .map(str::to_string)
+        .or_else(|| active_custom_provider_id(&root));
+    if let Some(provider_id) = lookup.as_deref() {
         if let Some(entry) = find_custom_provider(&root, provider_id) {
             return Ok(LiveProjection {
                 base_url: string(entry, "base_url"),
@@ -25,6 +29,26 @@ pub fn inspect(
         base_url: model.and_then(|map| string(map, "base_url")),
         api_key: model.and_then(|map| string(map, "api_key")),
     })
+}
+
+/// When import/status inspects without a service provider id, follow the active
+/// `model.provider: custom:<id>` pointer into `custom_providers`.
+fn active_custom_provider_id(root: &serde_yaml::Mapping) -> Option<String> {
+    let provider = string(mapping(root, "model")?, "provider")?;
+    let trimmed = provider.trim();
+    let bytes = trimmed.as_bytes();
+    const PREFIX: &[u8] = b"custom:";
+    if bytes.len() < PREFIX.len()
+        || !bytes[..PREFIX.len()].eq_ignore_ascii_case(PREFIX)
+    {
+        return None;
+    }
+    let id = trimmed[PREFIX.len()..].trim();
+    if id.is_empty() {
+        None
+    } else {
+        Some(id.to_string())
+    }
 }
 
 pub fn apply(

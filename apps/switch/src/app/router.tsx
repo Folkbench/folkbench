@@ -14,6 +14,7 @@ import { rootRoute } from '@/routes/root'
 import { settingsRoute } from '@/routes/settings'
 import { signInRoute } from '@/routes/signIn'
 import { stationRoute } from '@/routes/station'
+import { toolsRoute } from '@/routes/tools'
 import { usageRoute } from '@/routes/usage'
 
 function legacyRedirect(path: string) {
@@ -35,10 +36,10 @@ const routeTree = rootRoute.addChildren([
     methodsRoute,
     settingsRoute,
     usageRoute,
+    toolsRoute,
   ]),
   legacyRedirect('/overview'),
   legacyRedirect('/configure'),
-  legacyRedirect('/tools'),
 ])
 
 export function createAppRouter(queryClient: QueryClient) {

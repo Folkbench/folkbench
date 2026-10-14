@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
+import { HugeiconsIcon } from '@hugeicons/react'
 
-import { BRIDGE_ERROR, BridgeError } from '@/bridge'
+import { BRIDGE_ERROR, BridgeError, openPublishedStationWebsite } from '@/bridge'
 import type { PublishedStation } from '@/bridge'
 import { StationAvatar } from '@/components/station-avatar'
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
@@ -13,6 +17,7 @@ export function PublishedServicePicker({
   onSelect: (station: PublishedStation) => void
 }) {
   const { t } = useTranslation()
+  const [openingWebsite, setOpeningWebsite] = useState(false)
   const catalog = useQuery(publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID))
   // One row per station: logo + name only (no channel). Prefer ranked / with baseUrl.
   const rows = (() => {
@@ -42,6 +47,21 @@ export function PublishedServicePicker({
       ? t('errors.bridge.desktopUnavailable')
       : t('errors.catalog.unavailable')
 
+  async function onRegister(row: PublishedStation) {
+    setOpeningWebsite(true)
+    try {
+      await openPublishedStationWebsite({
+        modelId: row.modelId,
+        stationId: row.stationId,
+        channelId: row.channelId,
+      })
+    } catch {
+      toast.error(t('errors.catalog.websiteUnavailable'))
+    } finally {
+      setOpeningWebsite(false)
+    }
+  }
+
   return (
     <div className="grid gap-3">
       {catalog.isPending ? (
@@ -66,22 +86,39 @@ export function PublishedServicePicker({
           aria-label={t('discovery.list.title')}
         >
           {rows.map((row) => (
-            <button
+            <div
               key={row.stationId}
-              type="button"
               role="listitem"
-              className="flex w-full cursor-pointer items-center gap-3 border-b px-3 py-2.5 text-left last:border-b-0 hover:bg-muted/50"
-              onClick={() => onSelect(row)}
+              className="flex items-center gap-3 border-b px-3 py-2.5 last:border-b-0"
             >
-              <StationAvatar
-                name={row.stationName}
-                avatarPath={row.stationAvatarPath}
-                origin={catalog.data?.origin ?? 'https://folkbench.com'}
-              />
-              <span className="min-w-0 truncate text-[14px] font-medium">
-                {row.stationName}
-              </span>
-            </button>
+              <button
+                type="button"
+                className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left hover:opacity-90"
+                onClick={() => onSelect(row)}
+              >
+                <StationAvatar
+                  name={row.stationName}
+                  avatarPath={row.stationAvatarPath}
+                  origin={catalog.data?.origin ?? 'https://folkbench.com'}
+                />
+                <span className="min-w-0 truncate text-[14px] font-medium">
+                  {row.stationName}
+                </span>
+              </button>
+              <button
+                type="button"
+                className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
+                disabled={openingWebsite || !row.websiteUrl}
+                onClick={() => void onRegister(row)}
+              >
+                {t('configure.easyAdd.register')}
+                <HugeiconsIcon
+                  icon={LinkSquare01Icon}
+                  strokeWidth={1.8}
+                  className="size-3.5"
+                />
+              </button>
+            </div>
           ))}
         </div>
       )}
