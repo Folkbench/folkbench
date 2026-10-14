@@ -65,7 +65,7 @@ Operating history and after-sales support are its clearest selling points. The p
 
 A unified API aggregation platform for developers and teams, with published coverage for GPT, Claude, Grok, Gemini, and selected domestic models. Pay-as-you-go billing, packages, and balance top-ups are all documented. It is a newer site with limited independent evaluation data, so stability and scheduling should not be inferred from the site’s own description; start with a small trial for the model you need.
 
-<h3><a href="https://folkbench.com/en/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog" target="_blank" rel="noopener noreferrer">智流 FluxLane</a></h3>
+<h3><a href="https://folkbench.com/go/fluxlane?source=readme" target="_blank" rel="noopener noreferrer">智流 FluxLane</a></h3>
 
 Its published directory is large, covering a wide range of international and domestic models across multiple channels. Support for enterprise and university procurement, invoices, and related documents is a clear use-case advantage. The current profile still lacks enough independent experience and rating fields, so verify the site’s low-multiplier, stability, and TTFT claims against the model-specific rankings and current routes.
 

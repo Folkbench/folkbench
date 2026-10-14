@@ -145,7 +145,7 @@ Claude Code、Codex、Gemini CLI などのコーディング支援ツールの�
 
 複数モデルの統合ゲートウェイを提供。従量課金、月額パッケージ、残高チャージに対応しています。利用前には Folkbench で対象モデルの最新稼働率と遅延を確認することをおすすめします。
 
-### [FluxLane（智流）](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
+### [FluxLane（智流）](https://folkbench.com/go/fluxlane?source=readme)
 
 国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。
 
