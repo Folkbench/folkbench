@@ -3,3 +3,5 @@
 完整说明就是仓库首页：[README.md](README.md)。
 
 English: [README.en.md](README.en.md).
+
+Español: [README.es.md](../../README.es.md).

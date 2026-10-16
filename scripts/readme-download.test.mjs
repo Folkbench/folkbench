@@ -12,7 +12,7 @@ function checkDownloads(text) {
   for (const parameter of ['partner=TDN1QM6KKYX9', 'aff=TkeF', 'aff=Pk46', 'ref=XVuJ', 'aff=SGGQCGPZ2Z32', 'go/fluxlane?source=readme']) assert(text.includes(parameter))
 }
 
-for (const name of ['README.md', 'README.en.md']) {
+for (const name of ['README.md', 'README.en.md', 'README.es.md']) {
   test(`${name} uses a permanent release page instead of version-specific installers`, async () => {
     const text = await readFile(new URL(`../${name}`, import.meta.url), 'utf8')
     checkDownloads(text)

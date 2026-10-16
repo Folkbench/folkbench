@@ -18,7 +18,7 @@ AI API 回線リアルタイム実測ベンチマーク · 開発者向けロー
 [![Telegram](https://img.shields.io/badge/Telegram-Group-2BA2E0?logo=telegram&logoColor=white)](https://t.me/+ZCsDR_BEHLw1OGRl)
 [![QQ](https://img.shields.io/badge/QQ-Group-12B7F5?logo=tencentqq&logoColor=white)](https://qm.qq.com/q/71NzSTrPVK)
 
-[🌐 実測ベンチマーク](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch クライアント](#2-回线切替folkbench-switch-クライアント) · [📦 ダウンロード](#3-ダウンロードインストール) · [🔥 人気モデル](#人気モデル) · [💬 コミュニティ (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [💬 QQ グループ](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [English](README.en.md)
+[🌐 実測ベンチマーク](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch クライアント](#2-回线切替folkbench-switch-クライアント) · [📦 ダウンロード](#3-ダウンロードインストール) · [🔥 人気モデル](#人気モデル) · [💬 コミュニティ (TG)](https://t.me/+ZCsDR_BEHLw1OGRl) · [💬 QQ グループ](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md)
 
 </div>
 
