@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "version": "0.1.0-beta.3",
   "hashes": {
-    "package.json": "fad191675e34690a1258cde7f4c5679d40fed16acc67aca985c85c459db2c1ee",
-    "bun.lock": "73de7f779a673e9075f438e72cd45dc8d376bf52bcf03836e8b706fa2a086de4",
-    "src-tauri/Cargo.lock": "e9a854f3b253b91c71460790b9fa45c3933957358b3cbe9cb0ba575f7528f034"
+    "package.json": "6b2dab126694679de34050b2c4b058fee01d3c171262719cf164a5aaee562a63",
+    "bun.lock": "c2d1f26a87564bf54ce3104c21bfc7733d020fd0456c33b7a2aee18138f4a083",
+    "src-tauri/Cargo.lock": "b275e34072b704d711ddf4ab5f83d9a46313dd81b9a1c2b5df4c8da9d63d6926"
   },
   "packages": [
     {
@@ -180,6 +180,18 @@
       "name": "@tauri-apps/api",
       "version": "2.12.3",
       "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@tauri-apps/plugin-process",
+      "version": "2.3.1",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@tauri-apps/plugin-updater",
+      "version": "2.12.0",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "npm",
@@ -526,6 +538,12 @@
     {
       "ecosystem": "crates.io",
       "name": "core-foundation",
+      "version": "0.9.4",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "core-foundation",
       "version": "0.10.1",
       "license": "MIT OR Apache-2.0"
     },
@@ -729,6 +747,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "errno",
+      "version": "0.3.14",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "error-code",
       "version": "3.4.0",
       "license": "BSL-1.0"
@@ -761,6 +785,12 @@
       "ecosystem": "crates.io",
       "name": "fdeflate",
       "version": "0.3.7",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "filetime",
+      "version": "0.2.29",
       "license": "MIT OR Apache-2.0"
     },
     {
@@ -843,6 +873,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "futures-macro",
+      "version": "0.3.34",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "futures-sink",
       "version": "0.3.34",
       "license": "MIT OR Apache-2.0"
@@ -864,6 +900,12 @@
       "name": "generic-array",
       "version": "0.14.7",
       "license": "MIT"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "getrandom",
+      "version": "0.2.17",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "crates.io",
@@ -1155,6 +1197,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "minisign-verify",
+      "version": "0.2.5",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "miniz_oxide",
       "version": "0.8.9",
       "license": "MIT OR Zlib OR Apache-2.0"
@@ -1245,6 +1293,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "objc2-osa-kit",
+      "version": "0.3.2",
+      "license": "Zlib OR Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "objc2-quartz-core",
       "version": "0.3.2",
       "license": "Zlib OR Apache-2.0 OR MIT"
@@ -1272,6 +1326,12 @@
       "name": "option-ext",
       "version": "0.2.0",
       "license": "MPL-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "osakit",
+      "version": "0.3.1",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "crates.io",
@@ -1461,6 +1521,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "ring",
+      "version": "0.17.14",
+      "license": "Apache-2.0 AND ISC"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "rusqlite",
       "version": "0.37.0",
       "license": "MIT"
@@ -1476,6 +1542,12 @@
       "name": "rustc_version",
       "version": "0.4.1",
       "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "rustix",
+      "version": "1.1.4",
+      "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT"
     },
     {
       "ecosystem": "crates.io",
@@ -1749,9 +1821,27 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "system-configuration",
+      "version": "0.7.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "system-configuration-sys",
+      "version": "0.6.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "tao",
       "version": "0.35.3",
       "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "tar",
+      "version": "0.4.46",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "crates.io",
@@ -1809,8 +1899,20 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "tauri-plugin-process",
+      "version": "2.3.1",
+      "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "tauri-plugin-single-instance",
       "version": "2.4.5",
+      "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "tauri-plugin-updater",
+      "version": "2.12.0",
       "license": "Apache-2.0 OR MIT"
     },
     {
@@ -1836,6 +1938,12 @@
       "name": "tauri-winres",
       "version": "0.3.6",
       "license": "MIT"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "tempfile",
+      "version": "3.27.0",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "crates.io",
@@ -1908,6 +2016,12 @@
       "name": "tokio-rustls",
       "version": "0.26.5",
       "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "tokio-util",
+      "version": "0.7.19",
+      "license": "MIT"
     },
     {
       "ecosystem": "crates.io",
@@ -2361,6 +2475,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "xattr",
+      "version": "1.6.1",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "yoke",
       "version": "0.8.3",
       "license": "Unicode-3.0"
@@ -2418,6 +2538,12 @@
       "name": "zerovec-derive",
       "version": "0.11.6",
       "license": "Unicode-3.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "zip",
+      "version": "4.6.1",
+      "license": "MIT"
     },
     {
       "ecosystem": "crates.io",

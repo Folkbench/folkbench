@@ -75,14 +75,14 @@ test('native easy defaults use tool protocol without inventing model identifiers
   )
 })
 
-test('modelsFetchBaseUrl appends /models onto the API base without stripping /v1', () => {
+test('modelsFetchBaseUrl trims the API base and leaves /models candidate selection to Rust', () => {
   assert.equal(
     modelsFetchBaseUrl('https://modelflare.dev/v1'),
-    'https://modelflare.dev/v1/models'
+    'https://modelflare.dev/v1'
   )
   assert.equal(
     modelsFetchBaseUrl('https://modelflare.dev/v1/'),
-    'https://modelflare.dev/v1/models'
+    'https://modelflare.dev/v1'
   )
   assert.equal(
     modelsFetchBaseUrl('https://api.example.com/v1/models'),
@@ -95,7 +95,7 @@ test('modelsFetchBaseUrl appends /models onto the API base without stripping /v1
   assert.equal(modelsFetchBaseUrl('  '), '')
   assert.equal(
     modelsFetchBaseUrl('https://api.example.com'),
-    'https://api.example.com/models'
+    'https://api.example.com'
   )
 })
 
@@ -135,7 +135,7 @@ test('compact curve has seven stable bounded points and handles empty or zero re
   assert.ok(!compactCurve([0, 0, 0]).path.includes('NaN'))
 })
 
-test('work-folder state is per-launch and the easy window keeps its current dimensions', async () => {
+test('easy launch skips folder picking and the easy window keeps its current dimensions', async () => {
   const native = await readFile(
     new URL('src-tauri/tauri.conf.json', root),
     'utf8'
@@ -149,15 +149,16 @@ test('work-folder state is per-launch and the easy window keeps its current dime
   )
   assert.ok(!page.includes('project-label'))
   assert.ok(!page.includes('workFolder:'))
-  assert.ok(page.includes('pickWorkFolderAndLaunch'))
+  assert.ok(!page.includes('pickWorkFolderAndLaunch'))
+  assert.ok(page.includes('launchToolWithoutFolder'))
   const folder = await readFile(
     new URL('src/features/home/WorkFolderDialog.tsx', root),
     'utf8'
   )
   assert.ok(!folder.includes('localStorage'))
   assert.ok(!folder.includes('setPreferences'))
-  assert.ok(folder.includes('@tauri-apps/plugin-dialog'))
-  assert.ok(folder.includes('directory: true'))
+  assert.ok(folder.includes('launchToolInFolder'))
+  assert.ok(folder.includes('launchToolWithoutFolder'))
   const caps = await readFile(
     new URL('src-tauri/capabilities/default.json', root),
     'utf8'
