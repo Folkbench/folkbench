@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from 'react'
+import { useEffect, useId, useMemo, useState, type ReactNode } from 'react'
 import { Select } from '@base-ui/react/select'
 import ArrowDown01Icon from '@hugeicons/core-free-icons/ArrowDown01Icon'
 import CheckmarkCircle02Icon from '@hugeicons/core-free-icons/CheckmarkCircle02Icon'
@@ -9,11 +9,35 @@ import { Label } from '@/components/ui/label'
 export type ChoiceOption<T extends string> = {
   value: T
   label: string
+  /** Section header shown above this item (starts a new group). */
+  section?: string
   avatar?: {
     name: string
     path?: string | null
     origin: string
   } | null
+}
+
+type ChoiceGroup<T extends string> = {
+  label?: string
+  options: Array<ChoiceOption<T>>
+}
+
+function groupChoiceOptions<T extends string>(
+  options: Array<ChoiceOption<T>>,
+): Array<ChoiceGroup<T>> {
+  const groups: Array<ChoiceGroup<T>> = []
+  for (const option of options) {
+    if (option.section || groups.length === 0) {
+      groups.push({
+        label: option.section,
+        options: [{ ...option, section: undefined }],
+      })
+      continue
+    }
+    groups[groups.length - 1].options.push(option)
+  }
+  return groups
 }
 
 /** A shared, keyboard-accessible in-app selector; never an OS popup. */
@@ -42,13 +66,25 @@ export function ChoiceSelect<T extends string>({
   onChange: (value: T) => void
 }) {
   const id = useId()
+  const [open, setOpen] = useState(false)
+  const canShowPopup = options.length > 0 || notice != null
+  const groups = useMemo(() => groupChoiceOptions(options), [options])
+  // Base UI items registry: value/label only (section is UI metadata).
+  const items = useMemo(
+    () => options.map(({ value: itemValue, label: itemLabel }) => ({
+      value: itemValue,
+      label: itemLabel,
+    })),
+    [options],
+  )
+  useEffect(() => {
+    if (!canShowPopup && open) setOpen(false)
+  }, [canShowPopup, open])
   return (
     <div className="grid min-w-0 gap-1.5">
       <div
         className={
-          hideLabel
-            ? 'sr-only'
-            : 'flex min-w-0 items-center gap-1'
+          hideLabel ? 'sr-only' : 'flex min-w-0 items-center gap-1'
         }
       >
         <Label id={id}>{label}</Label>
@@ -56,8 +92,13 @@ export function ChoiceSelect<T extends string>({
       </div>
       <Select.Root<T>
         value={value}
-        items={options}
-        onOpenChange={(open) => onOpenChange?.(open)}
+        items={items}
+        open={open}
+        onOpenChange={(next) => {
+          if (next && !canShowPopup) return
+          setOpen(next)
+          onOpenChange?.(next)
+        }}
         onValueChange={(next) => {
           if (next !== null) onChange(next)
         }}
@@ -86,43 +127,59 @@ export function ChoiceSelect<T extends string>({
             />
           </Select.Icon>
         </Select.Trigger>
-        <Select.Portal>
-          <Select.Positioner
-            sideOffset={6}
-            alignItemWithTrigger={false}
-            className="z-50 outline-none"
-          >
-            <Select.Popup className="min-w-[var(--anchor-width)] max-w-[calc(100vw-32px)] rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-[var(--shadow-overlay)]">
-              {notice ? (
-                <div
-                  role="status"
-                  aria-live="polite"
-                  className="flex min-h-9 items-center gap-2 px-3 py-2 text-[13px] text-muted-foreground"
-                >
-                  {notice}
-                </div>
-              ) : null}
-              <Select.List className="max-h-72 overflow-y-auto">
-                {options.map((option) => (
-                  <Select.Item
-                    key={option.value}
-                    value={option.value}
-                    className="relative flex min-h-9 cursor-pointer items-center gap-2 rounded-md py-2 pr-3 pl-8 text-[13px] outline-none data-highlighted:bg-muted data-selected:text-brand-signal"
+        {canShowPopup ? (
+          <Select.Portal>
+            <Select.Positioner
+              sideOffset={6}
+              alignItemWithTrigger={false}
+              className="z-50 outline-none"
+            >
+              <Select.Popup className="min-w-[var(--anchor-width)] max-w-[calc(100vw-32px)] rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-[var(--shadow-overlay)]">
+                {notice ? (
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className="flex min-h-9 items-center gap-2 px-3 py-2 text-[13px] text-muted-foreground"
                   >
-                    <Select.ItemIndicator className="absolute left-2">
-                      <HugeiconsIcon
-                        icon={CheckmarkCircle02Icon}
-                        className="size-4"
-                        strokeWidth={1.7}
-                      />
-                    </Select.ItemIndicator>
-                    <ChoiceOptionLabel option={option} itemText />
-                  </Select.Item>
-                ))}
-              </Select.List>
-            </Select.Popup>
-          </Select.Positioner>
-        </Select.Portal>
+                    {notice}
+                  </div>
+                ) : null}
+                {options.length ? (
+                  <Select.List className="max-h-72 overflow-y-auto">
+                    {groups.map((group, groupIndex) => (
+                      <Select.Group key={`${group.label ?? 'items'}-${groupIndex}`}>
+                        {groupIndex > 0 ? (
+                          <Select.Separator className="choice-select-separator" />
+                        ) : null}
+                        {group.label ? (
+                          <Select.GroupLabel className="choice-select-section">
+                            {group.label}
+                          </Select.GroupLabel>
+                        ) : null}
+                        {group.options.map((option) => (
+                          <Select.Item
+                            key={option.value}
+                            value={option.value}
+                            className="relative flex min-h-9 cursor-pointer items-center gap-2 rounded-md py-2 pr-3 pl-8 text-[13px] outline-none data-highlighted:bg-muted data-selected:text-brand-signal"
+                          >
+                            <Select.ItemIndicator className="absolute left-2">
+                              <HugeiconsIcon
+                                icon={CheckmarkCircle02Icon}
+                                className="size-4"
+                                strokeWidth={1.7}
+                              />
+                            </Select.ItemIndicator>
+                            <ChoiceOptionLabel option={option} itemText />
+                          </Select.Item>
+                        ))}
+                      </Select.Group>
+                    ))}
+                  </Select.List>
+                ) : null}
+              </Select.Popup>
+            </Select.Positioner>
+          </Select.Portal>
+        ) : null}
       </Select.Root>
       {hint ? (
         <p className="text-[12px] text-muted-foreground">{hint}</p>

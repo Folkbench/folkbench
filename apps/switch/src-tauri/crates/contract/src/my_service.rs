@@ -18,6 +18,8 @@ pub enum ServiceError {
     ApplyUnsupported,
     InUse,
     DriftDetected,
+    /// Opening an external terminal for a CLI tool failed (not a config write).
+    TerminalLaunchFailed,
 }
 
 /// How a switch takes effect on the selected tool.

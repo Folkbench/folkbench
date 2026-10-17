@@ -15,7 +15,7 @@ mod session_usage;
 pub(crate) mod share_image;
 mod switch;
 pub(crate) mod tool_launch;
-mod tool_runtime;
+pub(crate) mod tool_runtime;
 pub(crate) mod window_layout;
 
 pub use account::{
@@ -29,6 +29,8 @@ pub use catalog::{list_published_stations, resolve_published_station_website};
 pub use catalog_asset::resolve_catalog_asset;
 pub use session_usage::list as list_session_usage;
 pub use tool_runtime::{
+    cancel_any_easy_install,
+    cancel_easy_install as cancel_easy_tool_install,
     inspect_runtime as inspect_tool_runtime,
     install_for_easy as install_tool_for_easy,
     install_tool as install_tool_runtime,

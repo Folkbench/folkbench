@@ -27,7 +27,10 @@ import {
 } from '@/features/tools/queries'
 import { cn } from '@/lib/utils'
 
-const GROK_INSTALL_COMMAND = 'curl -fsSL https://x.ai/cli/install.sh | bash'
+const GROK_INSTALL_COMMAND =
+  typeof navigator !== 'undefined' && /Win/i.test(navigator.platform)
+    ? 'irm https://x.ai/cli/install.ps1 | iex'
+    : 'curl -fsSL https://x.ai/cli/install.sh | bash'
 
 function shortenPath(path: string) {
   // Keep slim: collapse $HOME to ~
@@ -287,7 +290,10 @@ function ToolRuntimeRow({
   const actionBusy = installBusy || upgradeBusy || copyBusy
   const locked = actionBusy || checking || actionsLocked
   const showGrokInstall =
-    !!item && item.channel === 'grok' && item.status === 'notInstalled'
+    !!item &&
+    item.channel === 'grok' &&
+    item.status === 'notInstalled' &&
+    !item.canInstall
   const showInstall = !!item?.canInstall
   const showUpgrade = !!item?.canUpgrade
   const fallback = t('tools.runtime.versionUnknown')

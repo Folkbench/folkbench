@@ -12,6 +12,7 @@ pub enum ToolInstallChannel {
     Brew,
     Npm,
     Grok,
+    Pip,
 }
 
 /// CLI presence and update state for one Dock tool.

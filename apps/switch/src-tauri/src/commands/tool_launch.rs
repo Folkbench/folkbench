@@ -29,7 +29,7 @@ pub async fn launch_tool_in_folder(
     app: AppHandle,
     tool_id: String,
     service_id: String,
-    folder: String,
+    folder: Option<String>,
 ) -> Result<(), ServiceError> {
     let config = app
         .path()
@@ -46,7 +46,15 @@ pub async fn launch_tool_in_folder(
             &tool_id,
             &service_id,
         )?;
-        services::tool_launch::launch(&tool_id, &PathBuf::from(folder))
+        let target = match folder
+            .as_deref()
+            .map(str::trim)
+            .filter(|path| !path.is_empty())
+        {
+            Some(path) => PathBuf::from(path),
+            None => home.clone(),
+        };
+        services::tool_launch::launch(&tool_id, &target)
     })
     .await
     .map_err(|_| ServiceError::LocationUnavailable)?

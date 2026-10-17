@@ -499,8 +499,7 @@ html[data-os='macos'] .switch-navigation a > span {
   cursor: default;
 }
 .agent-dock-icon[data-runtime='notInstalled'] {
-  filter: grayscale(1);
-  opacity: 0.45;
+  /* Icons stay fully lit regardless of CLI install status. */
 }
 
 .agent-dock-current {
@@ -1216,4 +1215,40 @@ html[data-os='macos'] .switch-navigation a > span {
     transform: translate3d(-12%, 0, 0);
     animation: none !important;
   }
+}
+
+/* Folkbench dialog motion (Base UI data-starting-style / data-ending-style).
+ * Use individual `scale` + `opacity` only — never `transform`, which would
+ * overwrite Tailwind's translate(-50%, -50%) centering and pin the dialog
+ * to the top-left of the viewport.
+ */
+[data-slot='dialog-overlay'],
+[data-slot='alert-dialog-overlay'] {
+  opacity: 1;
+  transition: opacity var(--motion-normal) var(--ease-interface);
+}
+[data-slot='dialog-overlay'][data-starting-style],
+[data-slot='dialog-overlay'][data-ending-style],
+[data-slot='alert-dialog-overlay'][data-starting-style],
+[data-slot='alert-dialog-overlay'][data-ending-style] {
+  opacity: 0;
+}
+[data-slot='dialog-content'],
+[data-slot='alert-dialog-content'] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--motion-normal) var(--ease-enter),
+    scale var(--motion-normal) var(--ease-enter);
+}
+[data-slot='dialog-content'][data-starting-style],
+[data-slot='dialog-content'][data-ending-style],
+[data-slot='alert-dialog-content'][data-starting-style],
+[data-slot='alert-dialog-content'][data-ending-style] {
+  opacity: 0;
+  scale: 0.96;
+}
+[data-slot='dialog-content'][data-ending-style],
+[data-slot='alert-dialog-content'][data-ending-style] {
+  transition-timing-function: var(--ease-exit);
 }

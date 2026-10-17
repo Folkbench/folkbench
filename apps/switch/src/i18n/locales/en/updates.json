@@ -5,11 +5,11 @@
       "restartNow": "Restart now"
     },
     "available": {
-      "description": "A signed MF Switch update is available.",
+      "description": "A signed Folkbench Switch update is available.",
       "title": "Update available"
     },
     "downloading": "Downloading update…",
-    "none": "MF Switch is up to date.",
+    "none": "Folkbench Switch is up to date.",
     "ready": "The update is ready to install."
   }
 }

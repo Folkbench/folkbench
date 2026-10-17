@@ -134,6 +134,20 @@
   margin-top: 6px;
   font-size: 13px;
 }
+.easy-field-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: help;
+}
+.easy-field-info:hover {
+  color: var(--brand-signal);
+}
 .easy-form-label {
   display: flex;
   align-items: center;
@@ -201,51 +215,75 @@
 }
 .easy-config-heading {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   margin-bottom: 6px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .easy-config-heading h2 {
-  font-size: 13px;
-  font-weight: 550;
+  font-size: 16px;
+  font-weight: 600;
 }
 .easy-config-heading > span:not(.easy-verify-result) {
   color: var(--success);
+  font-size: 13px;
 }
-.easy-config-heading > button {
+.easy-heading-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
   margin-left: auto;
-  min-height: 24px;
-  color: var(--muted-foreground);
-  cursor: pointer;
 }
-.easy-config-heading > button:hover {
-  color: var(--brand-signal);
+.easy-heading-actions .easy-verify-result {
+  margin-left: 0;
+  font-size: 12px;
+  white-space: nowrap;
 }
-.easy-config-heading > button.easy-check-connection {
+.easy-heading-actions > button.easy-check-connection {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
-  border-radius: 6px;
+  gap: 5px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 8px;
   color: var(--brand-signal);
-  font-weight: 550;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
 }
-.easy-config-heading > button.easy-check-connection:hover {
+.easy-heading-actions > button.easy-check-connection:hover {
   background: color-mix(in srgb, var(--brand-signal) 8%, transparent);
   color: var(--brand-signal);
 }
-.easy-config-heading > button.easy-check-connection:disabled {
+.easy-heading-actions > button.easy-check-connection:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.easy-heading-actions > button.easy-cli-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: var(--brand-signal);
+  color: var(--brand-signal-foreground);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.easy-heading-actions > button.easy-cli-action:hover {
+  filter: brightness(1.05);
+}
+.easy-heading-actions > button.easy-cli-action:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 .easy-verify-result {
-  margin-left: auto;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
-}
-.easy-config-heading:has(.easy-verify-result) > button {
-  margin-left: 0;
 }
 .easy-verify-result--ok {
   color: var(--success);
@@ -772,4 +810,169 @@
 }
 .easy-saved-add:hover {
   background: color-mix(in srgb, var(--brand-signal) 10%, var(--card));
+}
+
+.easy-inline-phase {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
+
+
+.choice-select-section {
+  display: block;
+  padding: 10px 12px 6px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  user-select: none;
+  pointer-events: none;
+}
+.choice-select-separator {
+  display: block;
+  height: 0;
+  margin: 8px 8px 2px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: transparent;
+}
+
+/* Dedicated Easy CLI install window (secondary WebviewWindow body) */
+.easy-install-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+.easy-install-panel__card {
+  width: min(360px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  text-align: center;
+}
+.easy-install-panel__visual {
+  display: flex;
+  justify-content: center;
+  padding: 0.35rem 0 0.15rem;
+}
+.easy-spinner.easy-spinner--lg {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-width: 2.5px;
+}
+.easy-install-panel__phase {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.easy-install-panel__subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #6b7280);
+  line-height: 1.4;
+}
+.easy-install-panel__steps {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  border-radius: 0.65rem;
+  background: color-mix(in oklab, var(--muted, #f3f4f6) 70%, transparent);
+}
+.easy-install-panel__steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #6b7280);
+}
+.easy-install-panel__steps li.is-current {
+  color: var(--foreground, inherit);
+  font-weight: 600;
+}
+.easy-install-panel__steps li.is-done {
+  color: var(--foreground, inherit);
+  opacity: 0.72;
+}
+.easy-install-panel__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.35;
+  flex-shrink: 0;
+}
+.easy-install-panel__steps li.is-current .easy-install-panel__dot {
+  opacity: 1;
+  box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 22%, transparent);
+  animation: easy-install-pulse 1.2s ease-in-out infinite;
+}
+.easy-install-panel__steps li.is-done .easy-install-panel__dot {
+  opacity: 0.85;
+}
+@keyframes easy-install-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+.easy-install-panel__hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted-foreground, #6b7280);
+  line-height: 1.4;
+}
+.easy-install-panel__result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.25rem 0 0;
+}
+.easy-install-panel__result-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.easy-install-panel__result-body {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #6b7280);
+  line-height: 1.45;
+}
+.easy-install-panel__result.is-success .easy-install-panel__result-title {
+  color: var(--success, #15803d);
+}
+.easy-install-panel__result.is-failure .easy-install-panel__result-title {
+  color: var(--destructive, #b91c1c);
+}
+.easy-install-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+.easy-edit-delete {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in oklab, var(--border, #e5e7eb) 80%, transparent);
+}
+.easy-edit-delete .size-3\.5 {
+  margin-right: 0.35rem;
 }

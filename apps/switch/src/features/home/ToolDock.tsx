@@ -18,14 +18,11 @@ export function ToolDock({
   tools,
   toolId,
   pending,
-  runtime = {},
   onSelect,
 }: {
   tools: ToolDescriptor[]
   toolId: string
   pending: boolean
-  /** Not-installed tools render faded; updates are shown on the main card only. */
-  runtime?: Record<string, 'notInstalled' | undefined>
   onSelect: (toolId: string) => void
 }) {
   const { t } = useTranslation()
@@ -177,12 +174,7 @@ export function ToolDock({
             type="button"
             className="agent-dock-icon"
             role="radio"
-            aria-label={
-              runtime[tool.id] === 'notInstalled'
-                ? `${tool.displayName} (${t('configure.dock.notInstalled')})`
-                : tool.displayName
-            }
-            data-runtime={runtime[tool.id]}
+            aria-label={tool.displayName}
             aria-checked={tool.id === toolId}
             disabled={pending}
             onClick={() => onSelect(tool.id)}

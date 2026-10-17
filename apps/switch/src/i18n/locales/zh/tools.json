@@ -40,7 +40,7 @@
         "probeFailed": "检测失败"
       },
       "actions": {
-        "install": "安装",
+        "install": "安装 CLI",
         "update": "更新",
         "updateAll": "全部更新",
         "copyInstall": "复制安装命令",

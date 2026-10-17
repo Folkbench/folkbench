@@ -40,7 +40,7 @@
         "probeFailed": "Scan failed"
       },
       "actions": {
-        "install": "Install",
+        "install": "Install CLI",
         "update": "Update",
         "updateAll": "Update all",
         "copyInstall": "Copy install command",

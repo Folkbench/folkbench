@@ -6,7 +6,20 @@
       "channel": "发布通道",
       "beta": "Beta",
       "commit": "构建提交",
-      "unavailable": "版本信息暂时无法读取，请重新打开设置。"
+      "unavailable": "版本信息暂时无法读取，请重新打开设置。",
+      "update": {
+        "check": "检查更新",
+        "checking": "正在检查更新…",
+        "none": "已是最新版本。",
+        "available": "发现新版本 {{version}}。",
+        "install": "下载并安装",
+        "downloading": "正在下载更新… {{percent}}%",
+        "downloadingUnknown": "正在下载更新…",
+        "ready": "更新已安装，重启后生效。",
+        "restart": "立即重启",
+        "failed": "检查更新失败，请检查网络后重试。",
+        "installFailed": "更新安装失败，请稍后重试，或到 Releases 页面下载安装包。"
+      }
     },
     "account": {
       "checking": "正在检查账号…",

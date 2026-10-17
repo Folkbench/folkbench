@@ -6,7 +6,20 @@
       "channel": "Release channel",
       "beta": "Beta",
       "commit": "Build commit",
-      "unavailable": "Version information is unavailable. Reopen Settings to try again."
+      "unavailable": "Version information is unavailable. Reopen Settings to try again.",
+      "update": {
+        "check": "Check for updates",
+        "checking": "Checking for updates…",
+        "none": "You're on the latest version.",
+        "available": "Version {{version}} is available.",
+        "install": "Download and install",
+        "downloading": "Downloading update… {{percent}}%",
+        "downloadingUnknown": "Downloading update…",
+        "ready": "Update installed. Restart to apply it.",
+        "restart": "Restart now",
+        "failed": "Could not check for updates. Check your connection and try again.",
+        "installFailed": "Could not install the update. Try again later, or download the installer from Releases."
+      }
     },
     "account": {
       "checking": "Checking account…",

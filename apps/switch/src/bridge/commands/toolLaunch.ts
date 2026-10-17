@@ -8,14 +8,15 @@ export function listWorkFolders(path?: string) {
   })
 }
 
+/** Launch CLI. Omit folder (or pass null) to use the user home directory. */
 export function launchToolInFolder(
   toolId: string,
   serviceId: string,
-  folder: string
+  folder?: string | null
 ) {
   return invokeCommand<void>('launch_tool_in_folder', {
     toolId,
     serviceId,
-    folder,
+    folder: folder ?? null,
   })
 }

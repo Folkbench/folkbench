@@ -7,7 +7,7 @@ license = "Apache-2.0"
 repository = "https://github.com/Folkbench/folkbench"
 homepage = "https://folkbench.com"
 edition = "2024"
-rust-version = "1.88"
+rust-version = "1.90"
 
 [workspace]
 members = ["crates/contract"]
@@ -52,4 +52,6 @@ windows-sys = {
 }
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-process = "=2.3.1"
 tauri-plugin-single-instance = { version = "=2.4.5", features = ["deep-link"] }
+tauri-plugin-updater = "=2.12.0"
