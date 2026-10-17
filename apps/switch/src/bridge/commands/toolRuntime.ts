@@ -18,6 +18,11 @@ export function installToolForEasy(toolId: string) {
   })
 }
 
+/** Abort an in-flight Easy CLI install (kills npm/brew child process tree). */
+export function cancelEasyToolInstall(toolId: string) {
+  return invokeCommand<boolean>('cancel_easy_tool_install', { toolId })
+}
+
 /** Probe local + latest versions for Dock CLI tools. */
 export async function listToolRuntimes(): Promise<ToolRuntimeStatus[]> {
   return invokeCommand<ToolRuntimeStatus[]>('list_tool_runtimes')

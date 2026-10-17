@@ -32,15 +32,16 @@
       "timeout": "请求超时。"
     },
     "service": {
-      "applyUnsupported": "这一版还不能写入该工具。",
+      "applyUnsupported": "当前操作不被支持，或本版尚未适配该工具。",
       "credentialMissing": "这条服务没有保存的 Key。",
       "driftDetected": "当前工具配置已被修改，为避免覆盖你的改动，这次操作已停止。",
       "inUse": "请先关闭或改用其他服务，再删除这一条。",
-      "invalidInput": "名称、URL 或 Key 缺失或不允许。",
+      "invalidInput": "输入无效：名称、URL、Key 或工作目录不符合要求。",
       "locationUnavailable": "找不到本地配置目录。",
       "notFound": "这条服务已经不在本地存档里。",
       "toolUnknown": "目录里没有这个工具。",
-      "writeFailed": "无法写入配置，原始文件已保留。"
+      "writeFailed": "无法写入配置，原始文件已保留。",
+      "terminalLaunchFailed": "无法打开终端启动该 CLI。请确认本机已安装可用终端（Windows 使用 PowerShell；Mac 可使用「终端」或 iTerm）。"
     }
   }
 }

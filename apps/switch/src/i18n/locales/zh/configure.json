@@ -104,8 +104,8 @@
     },
     "empty": {
       "action": "添加服务",
-      "import": "同步本机已有配置",
-      "imported": "当前配置已导入",
+      "import": "从本机 CLI 导入",
+      "imported": "已从本机 CLI 导入",
       "title": "还没有保存的服务",
       "preview": {
         "service": "已保存的服务"
@@ -114,6 +114,7 @@
     "form": {
       "addHint": "显示名、Base URL 和 Key 必填。",
       "apiKey": "API Key",
+      "getApiKeyOnWebsite": "去官网获取 API Key",
       "apiKeyReplace": "API Key",
       "showApiKey": "显示 API Key",
       "hideApiKey": "隐藏 API Key",
@@ -182,7 +183,8 @@
         "endpointNotFound": "该地址没有提供模型列表接口，请手动填写模型 ID。",
         "unreachable": "无法连接到该地址，请检查 Base URL 或网络。",
         "unavailable": "获取模型列表失败（{{status}}），可稍后重试或手动填写。"
-      }
+      },
+      "modelNeedKey": "请先填写 API Key"
     },
     "home": {
       "allServices": "全部服务",
@@ -305,14 +307,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `claude --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Claude Code 官网完成安装。",
+          "ensureInstalled": "在终端输入 `claude --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Claude Code 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `claude` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `/help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `claude --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Claude Code 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `claude --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Claude Code 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `claude` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `/help`。"
         }
@@ -321,14 +323,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `codex --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Codex 官网完成安装。",
+          "ensureInstalled": "在终端输入 `codex --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Codex 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `codex` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `codex --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `codex --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Codex 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `codex --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Codex 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `codex` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `codex --help`。"
         }
@@ -337,14 +339,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `gemini --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Gemini CLI 官网完成安装。",
+          "ensureInstalled": "在终端输入 `gemini --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Gemini CLI 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `gemini` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `/help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `gemini --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Gemini CLI 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `gemini --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Gemini CLI 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `gemini` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `/help`。"
         }
@@ -353,14 +355,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `grok --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Grok 官网完成安装。",
+          "ensureInstalled": "在终端输入 `grok --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Grok 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `grok` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `grok --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `grok --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Grok 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `grok --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Grok 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `grok` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `grok --help`。"
         }
@@ -369,14 +371,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `opencode --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 OpenCode 官网完成安装。",
+          "ensureInstalled": "在终端输入 `opencode --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 OpenCode 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `opencode` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `opencode --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `opencode --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 OpenCode 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `opencode --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 OpenCode 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `opencode` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `opencode --help`。"
         }
@@ -385,14 +387,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `openclaw --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 OpenClaw 官网完成安装。",
+          "ensureInstalled": "在终端输入 `openclaw --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 OpenClaw 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `openclaw` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `openclaw --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `openclaw --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 OpenClaw 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `openclaw --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 OpenClaw 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `openclaw` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `openclaw --help`。"
         }
@@ -401,14 +403,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `hermes --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Hermes 官网完成安装。",
+          "ensureInstalled": "在终端输入 `hermes --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Hermes 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `hermes` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `hermes --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `hermes --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Hermes 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `hermes --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Hermes 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `hermes` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `hermes --help`。"
         }
@@ -417,14 +419,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `pi --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Pi 官网完成安装。",
+          "ensureInstalled": "在终端输入 `pi --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Pi 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `pi` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `pi --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `pi --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Pi 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `pi --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Pi 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `pi` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `pi --help`。"
         }
@@ -433,14 +435,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `mcode --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 MiniMax Code 官网完成安装。",
+          "ensureInstalled": "在终端输入 `mcode --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 MiniMax Code 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `mcode` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `mcode --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `mcode --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 MiniMax Code 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `mcode --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 MiniMax Code 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `mcode` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `mcode --help`。"
         }
@@ -449,14 +451,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `dsh --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 DeepSeek Harness 官网完成安装。",
+          "ensureInstalled": "在终端输入 `dsh --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 DeepSeek Harness 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `dsh` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `dsh --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `dsh --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 DeepSeek Harness 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `dsh --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 DeepSeek Harness 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `dsh` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `dsh --help`。"
         }
@@ -465,14 +467,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `qwen --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Qwen Code 官网完成安装。",
+          "ensureInstalled": "在终端输入 `qwen --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Qwen Code 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `qwen` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `/help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `qwen --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Qwen Code 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `qwen --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Qwen Code 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `qwen` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `/help`。"
         }
@@ -481,14 +483,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `kimi --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Kimi CLI 官网完成安装。",
+          "ensureInstalled": "在终端输入 `kimi --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Kimi CLI 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `kimi` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `kimi --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `kimi --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Kimi CLI 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `kimi --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Kimi CLI 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `kimi` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `kimi --help`。"
         }
@@ -497,14 +499,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "在终端输入 `aider --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Aider 官网完成安装。",
+          "ensureInstalled": "在终端输入 `aider --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Aider 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `aider` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `aider --help`。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为该工具成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "在窗口输入 `aider --version`。若提示找不到命令，先回到 Switch 点该工具用「一键安装」，或按 Aider 官网完成安装。",
+          "ensureInstalled": "在窗口输入 `aider --version`。若提示找不到命令，先回到 Switch 点该工具用「安装 CLI」，或按 Aider 官网完成安装。",
           "runCommand": "输入 `cd 你的项目路径` 进入项目，再输入 `aider` 回车启动（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "出现提示后直接打字提问，即可开始和 AI 对话；需要帮助可输入 `aider --help`。"
         }
@@ -513,14 +515,14 @@
         "mac": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为 {{tool}} 成功添加服务。",
           "openTerminal": "打开「终端」：按 Command + 空格，输入「终端」或 Terminal，回车。",
-          "ensureInstalled": "确认本机已安装 {{tool}}；若不确定，可在 Switch 里对该工具使用「一键安装」，或按官方文档安装。",
+          "ensureInstalled": "确认本机已安装 {{tool}}；若不确定，可在 Switch 里对该工具使用「安装 CLI」，或按官方文档安装。",
           "runCommand": "进入你的项目目录后，按 {{tool}} 官方文档中的启动命令运行（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "启动后即可开始和 AI 对话；遇到问题请查看 {{tool}} 官方文档。"
         },
         "win": {
           "ensureService": "使用前请先确保您已在 Folkbench Switch 里为 {{tool}} 成功添加服务。",
           "openTerminal": "打开 PowerShell：按 Win 键搜索「PowerShell」或「终端」，回车打开。",
-          "ensureInstalled": "确认本机已安装 {{tool}}；若不确定，可在 Switch 里对该工具使用「一键安装」，或按官方文档安装。",
+          "ensureInstalled": "确认本机已安装 {{tool}}；若不确定，可在 Switch 里对该工具使用「安装 CLI」，或按官方文档安装。",
           "runCommand": "进入你的项目目录后，按 {{tool}} 官方文档中的启动命令运行（Folkbench Switch 已写好地址和 Key）。",
           "startChat": "启动后即可开始和 AI 对话；遇到问题请查看 {{tool}} 官方文档。"
         }
@@ -532,7 +534,8 @@
     "toolRuntime": {
       "installTitle": "还没安装 {{tool}}",
       "installDesc": "需要先在本机安装 {{tool}}，才能为它添加服务。点击下方按钮自动安装，装好后会自动刷新。",
-      "install": "一键安装",
+      "install": "安装 CLI",
+      "skip": "跳过",
       "installing": "正在安装…",
       "updateMessage": "{{tool}} 有新版本可更新（{{local}} → {{latest}}）",
       "updateMessageShort": "{{tool}} 有新版本可更新",

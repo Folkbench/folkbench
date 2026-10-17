@@ -5,9 +5,10 @@
 
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output, Stdio};
-use std::sync::mpsc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{mpsc, Arc, Mutex, OnceLock};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use crate::adapters;
 use crate::domain::{
@@ -16,20 +17,165 @@ use crate::domain::{
     ToolRuntimePrerequisites, ToolRuntimeStatus,
 };
 
+
+struct EasyInstallSlot {
+    tool_id: String,
+    cancel: AtomicBool,
+    pid: Mutex<Option<u32>>,
+}
+
+fn easy_install_slot() -> &'static Mutex<Option<Arc<EasyInstallSlot>>> {
+    static SLOT: OnceLock<Mutex<Option<Arc<EasyInstallSlot>>>> = OnceLock::new();
+    SLOT.get_or_init(|| Mutex::new(None))
+}
+
+fn pending_easy_cancel() -> &'static Mutex<Option<String>> {
+    static PENDING: OnceLock<Mutex<Option<String>>> = OnceLock::new();
+    PENDING.get_or_init(|| Mutex::new(None))
+}
+
+fn begin_easy_install(tool_id: &str) -> Arc<EasyInstallSlot> {
+    let pre_cancelled = pending_easy_cancel()
+        .lock()
+        .ok()
+        .and_then(|mut pending| {
+            if pending.as_deref() == Some(tool_id) {
+                pending.take();
+                Some(true)
+            } else {
+                None
+            }
+        })
+        .unwrap_or(false);
+    let slot = Arc::new(EasyInstallSlot {
+        tool_id: tool_id.to_string(),
+        cancel: AtomicBool::new(pre_cancelled),
+        pid: Mutex::new(None),
+    });
+    if let Ok(mut guard) = easy_install_slot().lock() {
+        *guard = Some(Arc::clone(&slot));
+    }
+    slot
+}
+
+fn end_easy_install(tool_id: &str) {
+    if let Ok(mut guard) = easy_install_slot().lock() {
+        if guard
+            .as_ref()
+            .is_some_and(|slot| slot.tool_id == tool_id)
+        {
+            *guard = None;
+        }
+    }
+    if let Ok(mut pending) = pending_easy_cancel().lock() {
+        if pending.as_deref() == Some(tool_id) {
+            pending.take();
+        }
+    }
+}
+
+fn register_easy_install_pid(pid: u32) {
+    if let Ok(guard) = easy_install_slot().lock() {
+        if let Some(slot) = guard.as_ref() {
+            if let Ok(mut current) = slot.pid.lock() {
+                *current = Some(pid);
+            }
+        }
+    }
+}
+
+fn clear_easy_install_pid(pid: u32) {
+    if let Ok(guard) = easy_install_slot().lock() {
+        if let Some(slot) = guard.as_ref() {
+            if let Ok(mut current) = slot.pid.lock() {
+                if *current == Some(pid) {
+                    *current = None;
+                }
+            }
+        }
+    }
+}
+
+fn easy_install_cancelled() -> bool {
+    easy_install_slot()
+        .lock()
+        .ok()
+        .and_then(|guard| guard.as_ref().map(|slot| slot.cancel.load(Ordering::SeqCst)))
+        .unwrap_or(false)
+}
+
+/// Cancel an in-flight Easy CLI install (kills the npm/brew child tree on Windows via taskkill /T).
+pub fn cancel_easy_install(tool_id: &str) -> bool {
+    if let Ok(mut pending) = pending_easy_cancel().lock() {
+        *pending = Some(tool_id.to_string());
+    }
+    let Ok(guard) = easy_install_slot().lock() else {
+        return true;
+    };
+    let Some(slot) = guard.as_ref() else {
+        return true;
+    };
+    if slot.tool_id != tool_id {
+        return true;
+    }
+    slot.cancel.store(true, Ordering::SeqCst);
+    let pid = slot.pid.lock().ok().and_then(|p| *p);
+    drop(guard);
+    if let Some(pid) = pid {
+        terminate_pid(pid);
+    }
+    true
+}
+/// Cancel whatever Easy CLI install is in flight (used when the main window quits).
+pub fn cancel_any_easy_install() {
+    let tool_id = easy_install_slot()
+        .lock()
+        .ok()
+        .and_then(|guard| guard.as_ref().map(|slot| slot.tool_id.clone()));
+    if let Some(tool_id) = tool_id {
+        let _ = cancel_easy_install(&tool_id);
+    }
+}
+
+
 const PROBE_TIMEOUT: Duration = Duration::from_secs(20);
 const ACTION_TIMEOUT: Duration = Duration::from_secs(600);
 
-const GROK_INSTALL_HINT: &str = "curl -fsSL https://x.ai/cli/install.sh | bash";
+const GROK_INSTALL_HINT_UNIX: &str = "curl -fsSL https://x.ai/cli/install.sh | bash";
+const GROK_INSTALL_HINT_WINDOWS: &str =
+    "irm https://x.ai/cli/install.ps1 | iex";
+const AIDER_INSTALL_HINT_UNIX: &str = "curl -LsSf https://aider.chat/install.sh | sh";
+const AIDER_INSTALL_HINT_WINDOWS: &str =
+    "powershell -ExecutionPolicy ByPass -c \"irm https://aider.chat/install.ps1 | iex\"";
 const NODE_VIA_BREW: &str = "brew install node";
 const NODE_VIA_OFFICIAL_MAC: &str = "open \"https://nodejs.org/en/download\"";
 const NODE_VIA_WINGET: &str = "winget install -e --id OpenJS.NodeJS.LTS";
 const BREW_INSTALL_HINT: &str = "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"";
 
+/// Declared install sources. Runtime picks an OS-appropriate plan so Windows
+/// never requires Homebrew and Mac can still prefer brew when present.
 #[derive(Clone, Copy)]
 enum ChannelSpec {
+    #[allow(dead_code)]
     Brew { formula: &'static str },
     Npm { package: &'static str },
-    Grok,
+    /// Prefer Homebrew on macOS/Linux when brew exists; npm otherwise (always on Windows).
+    BrewOrNpm {
+        formula: &'static str,
+        package: &'static str,
+    },
+    /// Cross-platform: npm when available, else official install script.
+    Grok { npm_package: &'static str },
+    /// Python tool: uv/pip when available, else OS install-script hint.
+    Pip { package: &'static str },
+}
+
+#[derive(Clone, Copy)]
+enum InstallPlan {
+    Brew { formula: &'static str },
+    Npm { package: &'static str },
+    Pip { package: &'static str },
+    GrokScript,
 }
 
 #[derive(Clone, Copy)]
@@ -64,34 +210,40 @@ const TOOLS: &[ToolSpec] = &[
     ToolSpec {
         id: "grok-build",
         binary: "grok",
-        channel: ChannelSpec::Grok,
+        channel: ChannelSpec::Grok {
+            npm_package: "@xai-official/grok",
+        },
     },
     ToolSpec {
         id: "opencode",
         binary: "opencode",
-        channel: ChannelSpec::Brew {
+        channel: ChannelSpec::BrewOrNpm {
             formula: "opencode",
+            package: "@opencode/cli",
         },
     },
     ToolSpec {
         id: "openclaw",
         binary: "openclaw",
-        channel: ChannelSpec::Brew {
+        channel: ChannelSpec::BrewOrNpm {
             formula: "openclaw-cli",
+            package: "openclaw",
         },
     },
     ToolSpec {
         id: "hermes",
         binary: "hermes",
-        channel: ChannelSpec::Brew {
+        channel: ChannelSpec::BrewOrNpm {
             formula: "hermes-agent",
+            package: "hermes-agent",
         },
     },
     ToolSpec {
         id: "pi",
         binary: "pi",
-        channel: ChannelSpec::Brew {
+        channel: ChannelSpec::BrewOrNpm {
             formula: "pi-coding-agent",
+            package: "@mariozechner/pi-coding-agent",
         },
     },
     ToolSpec {
@@ -111,21 +263,25 @@ const TOOLS: &[ToolSpec] = &[
     ToolSpec {
         id: "qwen-code",
         binary: "qwen",
-        channel: ChannelSpec::Brew {
+        channel: ChannelSpec::BrewOrNpm {
             formula: "qwen-code",
+            package: "@qwen-code/qwen-code",
         },
     },
     ToolSpec {
         id: "kimi-cli",
         binary: "kimi",
-        channel: ChannelSpec::Brew {
+        channel: ChannelSpec::BrewOrNpm {
             formula: "kimi-code",
+            package: "@moonshot-ai/kimi-code",
         },
     },
     ToolSpec {
         id: "aider",
         binary: "aider",
-        channel: ChannelSpec::Brew { formula: "aider" },
+        channel: ChannelSpec::Pip {
+            package: "aider-chat",
+        },
     },
 ];
 
@@ -133,11 +289,82 @@ fn find_spec(tool_id: &str) -> Option<&'static ToolSpec> {
     TOOLS.iter().find(|spec| spec.id == tool_id)
 }
 
+fn grok_install_hint() -> &'static str {
+    if cfg!(windows) {
+        GROK_INSTALL_HINT_WINDOWS
+    } else {
+        GROK_INSTALL_HINT_UNIX
+    }
+}
+
+fn aider_install_hint() -> &'static str {
+    if cfg!(windows) {
+        AIDER_INSTALL_HINT_WINDOWS
+    } else {
+        AIDER_INSTALL_HINT_UNIX
+    }
+}
+
+fn resolve_plan(
+    channel: ChannelSpec,
+    npm_ok: bool,
+    brew_ok: bool,
+    pip_ok: bool,
+) -> Option<InstallPlan> {
+    match channel {
+        ChannelSpec::Npm { package } => npm_ok.then_some(InstallPlan::Npm { package }),
+        ChannelSpec::Brew { formula } => {
+            if cfg!(windows) {
+                None
+            } else {
+                brew_ok.then_some(InstallPlan::Brew { formula })
+            }
+        }
+        ChannelSpec::BrewOrNpm { formula, package } => {
+            if cfg!(windows) {
+                npm_ok.then_some(InstallPlan::Npm { package })
+            } else if brew_ok {
+                Some(InstallPlan::Brew { formula })
+            } else {
+                npm_ok.then_some(InstallPlan::Npm { package })
+            }
+        }
+        ChannelSpec::Grok { npm_package } => {
+            if npm_ok {
+                Some(InstallPlan::Npm {
+                    package: npm_package,
+                })
+            } else {
+                Some(InstallPlan::GrokScript)
+            }
+        }
+        ChannelSpec::Pip { package } => {
+            if pip_ok {
+                Some(InstallPlan::Pip { package })
+            } else {
+                None
+            }
+        }
+    }
+}
+
 fn channel_of(spec: &ToolSpec) -> ToolInstallChannel {
-    match spec.channel {
-        ChannelSpec::Brew { .. } => ToolInstallChannel::Brew,
-        ChannelSpec::Npm { .. } => ToolInstallChannel::Npm,
-        ChannelSpec::Grok => ToolInstallChannel::Grok,
+    let npm_ok = program_on_expanded_path("npm");
+    let brew_ok = program_on_expanded_path("brew");
+    let pip_ok = pip_available();
+    match resolve_plan(spec.channel, npm_ok, brew_ok, pip_ok) {
+        Some(InstallPlan::Brew { .. }) => ToolInstallChannel::Brew,
+        Some(InstallPlan::Npm { .. }) => ToolInstallChannel::Npm,
+        Some(InstallPlan::Pip { .. }) => ToolInstallChannel::Pip,
+        Some(InstallPlan::GrokScript) => ToolInstallChannel::Grok,
+        None => match spec.channel {
+            ChannelSpec::Brew { .. } => ToolInstallChannel::Brew,
+            ChannelSpec::Npm { .. } | ChannelSpec::BrewOrNpm { .. } => {
+                ToolInstallChannel::Npm
+            }
+            ChannelSpec::Grok { .. } => ToolInstallChannel::Grok,
+            ChannelSpec::Pip { .. } => ToolInstallChannel::Pip,
+        },
     }
 }
 
@@ -290,10 +517,23 @@ fn resolve_program_on_path(program: &str) -> String {
     program.to_string()
 }
 
+/// Windows: keep helper processes (probes, npm, taskkill) from opening a
+/// console window. A GUI app spawning console programs otherwise gets a new
+/// black terminal per child.
+pub(crate) fn hide_console(command: &mut Command) -> &mut Command {
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+        command.creation_flags(CREATE_NO_WINDOW);
+    }
+    command
+}
+
 fn terminate_pid(pid: u32) {
     #[cfg(windows)]
     {
-        let _ = Command::new("taskkill")
+        let _ = hide_console(&mut Command::new("taskkill"))
             .args(["/PID", &pid.to_string(), "/T", "/F"])
             .stdin(Stdio::null())
             .stdout(Stdio::null())
@@ -336,7 +576,7 @@ fn run_timed(
         command
     };
 
-    command
+    hide_console(&mut command)
         .env("PATH", &path)
         .env("HOMEBREW_NO_AUTO_UPDATE", "1")
         .env("HOMEBREW_NO_ENV_HINTS", "1")
@@ -344,23 +584,51 @@ fn run_timed(
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
 
+    if easy_install_cancelled() {
+        return Err("cancelled".into());
+    }
+
     let child = command
         .spawn()
         .map_err(|error| format!("无法启动 {program}: {error}"))?;
     let pid = child.id();
+    register_easy_install_pid(pid);
 
     let (tx, rx) = mpsc::channel();
     thread::spawn(move || {
         let _ = tx.send(child.wait_with_output());
     });
 
-    match rx.recv_timeout(timeout) {
-        Ok(Ok(output)) => Ok(output),
-        Ok(Err(error)) => Err(format!("命令失败: {error}")),
-        Err(_) => {
+    let deadline = Instant::now() + timeout;
+    loop {
+        if easy_install_cancelled() {
             terminate_pid(pid);
             let _ = rx.recv_timeout(Duration::from_secs(2));
-            Err(format!("{program} 超时（{}s）", timeout.as_secs()))
+            clear_easy_install_pid(pid);
+            return Err("cancelled".into());
+        }
+        let remaining = deadline.saturating_duration_since(Instant::now());
+        if remaining.is_zero() {
+            terminate_pid(pid);
+            let _ = rx.recv_timeout(Duration::from_secs(2));
+            clear_easy_install_pid(pid);
+            return Err(format!("{program} 超时（{}s）", timeout.as_secs()));
+        }
+        let slice = remaining.min(Duration::from_millis(400));
+        match rx.recv_timeout(slice) {
+            Ok(Ok(output)) => {
+                clear_easy_install_pid(pid);
+                return Ok(output);
+            }
+            Ok(Err(error)) => {
+                clear_easy_install_pid(pid);
+                return Err(format!("命令失败: {error}"));
+            }
+            Err(mpsc::RecvTimeoutError::Timeout) => continue,
+            Err(mpsc::RecvTimeoutError::Disconnected) => {
+                clear_easy_install_pid(pid);
+                return Err("命令失败: channel closed".into());
+            }
         }
     }
 }
@@ -496,7 +764,7 @@ fn login_shell_path() -> Option<String> {
             }
         });
     let flag = default_flag_for_shell(&shell);
-    let output = Command::new(&shell)
+    let output = hide_console(&mut Command::new(&shell))
         .arg(flag)
         .arg("/usr/bin/env")
         .stdin(Stdio::null())
@@ -529,7 +797,7 @@ fn resolve_path_default(binary: &str) -> Option<PathBuf> {
         });
     let flag = default_flag_for_shell(&shell);
     let mut command = Command::new(&shell);
-    command
+    hide_console(&mut command)
         .arg(flag)
         .arg(format!("command -v {binary}"))
         .stdin(Stdio::null())
@@ -794,32 +1062,40 @@ pub fn inspect_runtime(
         },
         local_version: None,
         latest_version: None,
-        binary_path: binary.map(|path| path.to_string_lossy().into_owned()),
+        binary_path: binary
+            .as_ref()
+            .map(|path| path.to_string_lossy().into_owned()),
         installs: vec![],
         hint: None,
-        can_install: !matches!(spec.channel, ChannelSpec::Grok) && {
-            channel_prereq_ok(
-                spec.channel,
-                program_on_expanded_path("npm"),
-                program_on_expanded_path("brew"),
-            )
+        can_install: {
+            let npm_ok = program_on_expanded_path("npm");
+            let brew_ok = program_on_expanded_path("brew");
+            let pip_ok = pip_available();
+            resolve_plan(spec.channel, npm_ok, brew_ok, pip_ok).is_some()
+                && binary.is_none()
         },
         can_upgrade: false,
     })
 }
 
 /// Same installer as Pro; skip the network update re-probe after installing.
+/// Supports [`cancel_easy_install`] while npm/brew is running.
 pub fn install_for_easy(
     tool_id: &str,
 ) -> Result<ToolRuntimeActionResult, ServiceError> {
     let spec = find_spec(tool_id).ok_or(ServiceError::ToolUnknown)?;
+    let _slot = begin_easy_install(tool_id);
     let result = install_spec(spec);
+    end_easy_install(tool_id);
+    let cancelled = matches!(&result, Err(message) if message == "cancelled");
     let status = inspect_runtime(tool_id)?;
     let ok = result.is_ok() && status.binary_path.is_some();
     Ok(ToolRuntimeActionResult {
         tool_id: tool_id.into(),
         ok,
-        message: if ok {
+        message: if cancelled {
+            "cancelled".into()
+        } else if ok {
             "installed".into()
         } else {
             "installFailed".into()
@@ -949,27 +1225,42 @@ fn program_on_expanded_path(binary: &str) -> bool {
     false
 }
 
-fn channel_prereq_ok(
-    channel: ChannelSpec,
-    npm_ok: bool,
-    brew_ok: bool,
-) -> bool {
-    match channel {
-        ChannelSpec::Npm { .. } => npm_ok,
-        ChannelSpec::Brew { .. } => brew_ok,
-        ChannelSpec::Grok => true,
-    }
+fn pip_available() -> bool {
+    program_on_expanded_path("uv")
+        || program_on_expanded_path("pip")
+        || program_on_expanded_path("pip3")
+        || program_on_expanded_path("python")
+        || program_on_expanded_path("python3")
 }
 
 fn missing_prereq_message(channel: ChannelSpec) -> String {
     match channel {
-        ChannelSpec::Npm { .. } => {
-            "本机未检测到 npm，无法通过 npm 安装或更新。请先安装 Node.js / npm。".into()
+        ChannelSpec::Npm { .. } | ChannelSpec::BrewOrNpm { .. } => {
+            if cfg!(windows) {
+                "本机未检测到 npm，无法安装该工具。请先安装 Node.js / npm（可用 winget：winget install -e --id OpenJS.NodeJS.LTS）。".into()
+            } else {
+                "本机未检测到可用的安装方式（npm 或 Homebrew）。请先安装 Node.js / npm，或在 macOS/Linux 上安装 Homebrew。".into()
+            }
         }
         ChannelSpec::Brew { .. } => {
-            "本机未检测到 Homebrew，无法通过 brew 安装或更新。请先安装 Homebrew。".into()
+            if cfg!(windows) {
+                "该工具在 Windows 上暂不支持通过本应用一键安装。".into()
+            } else {
+                "本机未检测到 Homebrew，无法通过 brew 安装或更新。请先安装 Homebrew。".into()
+            }
         }
-        ChannelSpec::Grok => String::new(),
+        ChannelSpec::Grok { .. } => {
+            format!(
+                "无法自动安装 Grok Build。请在终端运行：{}",
+                grok_install_hint()
+            )
+        }
+        ChannelSpec::Pip { .. } => {
+            format!(
+                "本机未检测到 Python（pip/uv）。可先安装 Python，或在终端运行官方安装脚本：{}",
+                aider_install_hint()
+            )
+        }
     }
 }
 
@@ -1084,8 +1375,13 @@ fn probe_one(spec: &ToolSpec) -> ToolRuntimeStatus {
             installs.iter().find_map(|install| install.version.clone());
     }
 
-    match spec.channel {
-        ChannelSpec::Brew { formula } => match latest_brew(formula) {
+    let npm_ok = program_on_expanded_path("npm");
+    let brew_ok = program_on_expanded_path("brew");
+    let pip_ok = pip_available();
+    let plan = resolve_plan(spec.channel, npm_ok, brew_ok, pip_ok);
+
+    match plan {
+        Some(InstallPlan::Brew { formula }) => match latest_brew(formula) {
             Ok(version) => latest_version_value = Some(version),
             Err(error) => {
                 if binary_path.is_none() || local_version_value.is_none() {
@@ -1097,7 +1393,7 @@ fn probe_one(spec: &ToolSpec) -> ToolRuntimeStatus {
                 });
             }
         },
-        ChannelSpec::Npm { package } => match latest_npm(package) {
+        Some(InstallPlan::Npm { package }) => match latest_npm(package) {
             Ok(version) => latest_version_value = Some(version),
             Err(error) => {
                 if binary_path.is_none() || local_version_value.is_none() {
@@ -1109,7 +1405,19 @@ fn probe_one(spec: &ToolSpec) -> ToolRuntimeStatus {
                 });
             }
         },
-        ChannelSpec::Grok => {
+        Some(InstallPlan::Pip { package }) => {
+            // pip/uv has no cheap "latest" probe here; keep local only.
+            let _ = package;
+            if binary_path.is_none() {
+                hint = Some(format!(
+                    "未检测到 aider。将通过 pip/uv 安装；也可手动运行：{}",
+                    aider_install_hint()
+                ));
+            }
+        }
+        Some(InstallPlan::GrokScript) | None
+            if matches!(spec.channel, ChannelSpec::Grok { .. }) =>
+        {
             match latest_grok(local_version_value.as_deref()) {
                 Ok(version) => latest_version_value = version,
                 Err(error) => {
@@ -1119,9 +1427,26 @@ fn probe_one(spec: &ToolSpec) -> ToolRuntimeStatus {
             }
             if binary_path.is_none() {
                 hint = Some(format!(
-                    "未检测到 grok。请在终端运行官方安装脚本（有风险）：{GROK_INSTALL_HINT}"
+                    "未检测到 grok。可一键安装，或在终端运行：{}",
+                    grok_install_hint()
                 ));
             }
+        }
+        None => {
+            if binary_path.is_none() {
+                hint = Some(missing_prereq_message(spec.channel));
+            }
+        }
+        _ => {}
+    }
+
+    // If Grok is installed via npm plan, still try update-check when present.
+    if matches!(spec.channel, ChannelSpec::Grok { .. })
+        && local_version_value.is_some()
+        && latest_version_value.is_none()
+    {
+        if let Ok(version) = latest_grok(local_version_value.as_deref()) {
+            latest_version_value = version;
         }
     }
 
@@ -1156,14 +1481,19 @@ fn probe_one(spec: &ToolSpec) -> ToolRuntimeStatus {
         ToolRuntimeKind::Installed
     };
 
-    let npm_ok = program_on_expanded_path("npm");
-    let brew_ok = program_on_expanded_path("brew");
-    let prereq_ok = channel_prereq_ok(spec.channel, npm_ok, brew_ok);
-    let can_install = !matches!(spec.channel, ChannelSpec::Grok)
-        && binary_path.is_none()
-        && prereq_ok;
-    let can_upgrade =
-        matches!(status, ToolRuntimeKind::UpdateAvailable) && prereq_ok;
+    let can_install = binary_path.is_none() && plan.is_some();
+    let can_upgrade = match status {
+        ToolRuntimeKind::UpdateAvailable => match plan {
+            Some(InstallPlan::Brew { .. } | InstallPlan::Npm { .. } | InstallPlan::Pip { .. }) => {
+                true
+            }
+            Some(InstallPlan::GrokScript) => binary_path.is_some(),
+            None => {
+                matches!(spec.channel, ChannelSpec::Grok { .. }) && binary_path.is_some()
+            }
+        },
+        _ => false,
+    };
 
     ToolRuntimeStatus {
         tool_id: spec.id.to_string(),
@@ -1236,51 +1566,201 @@ fn summarize_output(output: &Output, fallback: &str) -> String {
     summary
 }
 
+fn install_npm_package(package: &str) -> Result<(), String> {
+    let output =
+        run_timed("npm", &["install", "-g", package], ACTION_TIMEOUT)?;
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(summarize_output(&output, "npm install 失败"))
+    }
+}
+
+fn install_brew_formula(formula: &str) -> Result<(), String> {
+    let output = run_timed("brew", &["install", formula], ACTION_TIMEOUT)?;
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(summarize_output(&output, "brew install 失败"))
+    }
+}
+
+fn install_pip_package(package: &str) -> Result<(), String> {
+    if program_on_expanded_path("uv") {
+        let package_latest = format!("{package}@latest");
+        let output = run_timed(
+            "uv",
+            &[
+                "tool",
+                "install",
+                "--force",
+                "--python",
+                "python3.12",
+                "--with",
+                "pip",
+                &package_latest,
+            ],
+            ACTION_TIMEOUT,
+        )?;
+        if output.status.success() {
+            return Ok(());
+        }
+        return Err(summarize_output(&output, "uv tool install 失败"));
+    }
+    if program_on_expanded_path("pip3") {
+        let output = run_timed(
+            "pip3",
+            &["install", "-U", "--upgrade-strategy", "only-if-needed", package],
+            ACTION_TIMEOUT,
+        )?;
+        if output.status.success() {
+            return Ok(());
+        }
+        return Err(summarize_output(&output, "pip install 失败"));
+    }
+    if program_on_expanded_path("pip") {
+        let output = run_timed(
+            "pip",
+            &["install", "-U", "--upgrade-strategy", "only-if-needed", package],
+            ACTION_TIMEOUT,
+        )?;
+        if output.status.success() {
+            return Ok(());
+        }
+        return Err(summarize_output(&output, "pip install 失败"));
+    }
+    if program_on_expanded_path("python3") {
+        let output = run_timed(
+            "python3",
+            &[
+                "-m",
+                "pip",
+                "install",
+                "-U",
+                "--upgrade-strategy",
+                "only-if-needed",
+                package,
+            ],
+            ACTION_TIMEOUT,
+        )?;
+        if output.status.success() {
+            return Ok(());
+        }
+        return Err(summarize_output(&output, "pip install 失败"));
+    }
+    if program_on_expanded_path("python") {
+        let output = run_timed(
+            "python",
+            &[
+                "-m",
+                "pip",
+                "install",
+                "-U",
+                "--upgrade-strategy",
+                "only-if-needed",
+                package,
+            ],
+            ACTION_TIMEOUT,
+        )?;
+        if output.status.success() {
+            return Ok(());
+        }
+        return Err(summarize_output(&output, "pip install 失败"));
+    }
+    Err(format!(
+        "本机未检测到 Python（pip/uv）。可先安装 Python，或在终端运行：{}",
+        aider_install_hint()
+    ))
+}
+
+fn install_grok_script() -> Result<(), String> {
+    #[cfg(windows)]
+    {
+        let script = r#"
+$ErrorActionPreference = 'Stop'
+irm https://x.ai/cli/install.ps1 | iex
+"#;
+        let output = run_timed(
+            "powershell.exe",
+            &[
+                "-NoProfile",
+                "-NonInteractive",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                script,
+            ],
+            ACTION_TIMEOUT,
+        )?;
+        if output.status.success() {
+            Ok(())
+        } else {
+            Err(summarize_output(
+                &output,
+                &format!(
+                    "Grok 安装失败。也可手动运行：{}",
+                    GROK_INSTALL_HINT_WINDOWS
+                ),
+            ))
+        }
+    }
+    #[cfg(not(windows))]
+    {
+        let output = run_timed(
+            "bash",
+            &[
+                "-lc",
+                "curl -fsSL https://x.ai/cli/install.sh | bash",
+            ],
+            ACTION_TIMEOUT,
+        )?;
+        if output.status.success() {
+            Ok(())
+        } else {
+            Err(summarize_output(
+                &output,
+                &format!(
+                    "Grok 安装失败。也可手动运行：{}",
+                    GROK_INSTALL_HINT_UNIX
+                ),
+            ))
+        }
+    }
+}
+
+fn run_install_plan(plan: InstallPlan) -> Result<(), String> {
+    match plan {
+        InstallPlan::Brew { formula } => install_brew_formula(formula),
+        InstallPlan::Npm { package } => install_npm_package(package),
+        InstallPlan::Pip { package } => install_pip_package(package),
+        InstallPlan::GrokScript => install_grok_script(),
+    }
+}
+
 fn install_spec(spec: &ToolSpec) -> Result<(), String> {
     let npm_ok = program_on_expanded_path("npm");
     let brew_ok = program_on_expanded_path("brew");
-    if !channel_prereq_ok(spec.channel, npm_ok, brew_ok) {
+    let pip_ok = pip_available();
+    let Some(plan) = resolve_plan(spec.channel, npm_ok, brew_ok, pip_ok) else {
         return Err(missing_prereq_message(spec.channel));
-    }
-    match spec.channel {
-        ChannelSpec::Brew { formula } => {
-            let output =
-                run_timed("brew", &["install", formula], ACTION_TIMEOUT)?;
-            if output.status.success() {
-                Ok(())
-            } else {
-                Err(summarize_output(&output, "brew install 失败"))
-            }
-        }
-        ChannelSpec::Npm { package } => {
-            let output =
-                run_timed("npm", &["install", "-g", package], ACTION_TIMEOUT)?;
-            if output.status.success() {
-                Ok(())
-            } else {
-                Err(summarize_output(&output, "npm install 失败"))
-            }
-        }
-        ChannelSpec::Grok => Err(format!(
-            "Grok Build 需手动安装。在终端运行：{GROK_INSTALL_HINT}"
-        )),
-    }
+    };
+    run_install_plan(plan)
 }
 
 fn upgrade_spec(spec: &ToolSpec) -> Result<(), String> {
     let npm_ok = program_on_expanded_path("npm");
     let brew_ok = program_on_expanded_path("brew");
-    if !channel_prereq_ok(spec.channel, npm_ok, brew_ok) {
+    let pip_ok = pip_available();
+    let Some(plan) = resolve_plan(spec.channel, npm_ok, brew_ok, pip_ok) else {
         return Err(missing_prereq_message(spec.channel));
-    }
-    match spec.channel {
-        ChannelSpec::Brew { formula } => {
+    };
+    match plan {
+        InstallPlan::Brew { formula } => {
             let output =
                 run_timed("brew", &["upgrade", formula], ACTION_TIMEOUT)?;
             if output.status.success() {
                 Ok(())
             } else {
-                // Already up-to-date is still success-ish for brew.
                 let text = combined_text(&output);
                 if text.to_lowercase().contains("already installed")
                     || text.to_lowercase().contains("latest")
@@ -1291,7 +1771,7 @@ fn upgrade_spec(spec: &ToolSpec) -> Result<(), String> {
                 }
             }
         }
-        ChannelSpec::Npm { package } => {
+        InstallPlan::Npm { package } => {
             let pkg_latest = format!("{package}@latest");
             let output = run_timed(
                 "npm",
@@ -1304,12 +1784,17 @@ fn upgrade_spec(spec: &ToolSpec) -> Result<(), String> {
                 Err(summarize_output(&output, "npm 升级失败"))
             }
         }
-        ChannelSpec::Grok => {
-            let output = run_timed("grok", &["update"], ACTION_TIMEOUT)?;
-            if output.status.success() {
-                Ok(())
+        InstallPlan::Pip { package } => install_pip_package(package),
+        InstallPlan::GrokScript => {
+            if resolve_binary("grok").is_some() {
+                let output = run_timed("grok", &["update"], ACTION_TIMEOUT)?;
+                if output.status.success() {
+                    Ok(())
+                } else {
+                    Err(summarize_output(&output, "grok update 失败"))
+                }
             } else {
-                Err(summarize_output(&output, "grok update 失败"))
+                install_grok_script()
             }
         }
     }
@@ -1348,7 +1833,7 @@ pub fn upgrade_tool(
 ) -> Result<ToolRuntimeActionResult, ServiceError> {
     let spec = find_spec(tool_id).ok_or(ServiceError::ToolUnknown)?;
     if resolve_binary(spec.binary).is_none()
-        && !matches!(spec.channel, ChannelSpec::Grok)
+        && !matches!(spec.channel, ChannelSpec::Grok { .. })
     {
         return Ok(ToolRuntimeActionResult {
             tool_id: tool_id.to_string(),

@@ -16,6 +16,7 @@ import { signInRoute } from '@/routes/signIn'
 import { stationRoute } from '@/routes/station'
 import { toolsRoute } from '@/routes/tools'
 import { usageRoute } from '@/routes/usage'
+import { easyCliInstallRoute } from '@/routes/easyCliInstall'
 
 function legacyRedirect(path: string) {
   return createRoute({
@@ -29,6 +30,7 @@ function legacyRedirect(path: string) {
 
 const routeTree = rootRoute.addChildren([
   signInRoute,
+  easyCliInstallRoute,
   consoleRoute.addChildren([
     homeRoute,
     discoverRoute,

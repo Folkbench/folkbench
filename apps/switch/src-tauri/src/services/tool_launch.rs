@@ -6,6 +6,20 @@ use std::time::{Duration, Instant};
 use crate::domain::{ServiceError, WorkFolder, WorkFolderListing};
 use base64::Engine;
 
+/// Windows `canonicalize` yields `\\?\C:\...` / `\\?\UNC\server\share`.
+/// PowerShell `-WorkingDirectory`, CMD, and some terminals mishandle those
+/// verbatim prefixes (UNC / "path not supported"). Strip before launch cwd.
+pub(crate) fn strip_verbatim_prefix(path: PathBuf) -> PathBuf {
+    let raw = path.to_string_lossy();
+    if let Some(rest) = raw.strip_prefix(r"\\?\UNC\") {
+        PathBuf::from(format!(r"\\{rest}"))
+    } else if let Some(rest) = raw.strip_prefix(r"\\?\") {
+        PathBuf::from(rest.to_string())
+    } else {
+        path
+    }
+}
+
 pub fn checked_folder(path: &Path) -> Result<PathBuf, ServiceError> {
     if !path.is_absolute()
         || path.to_string_lossy().chars().any(char::is_control)
@@ -17,6 +31,7 @@ pub fn checked_folder(path: &Path) -> Result<PathBuf, ServiceError> {
     }
     let folder =
         std::fs::canonicalize(path).map_err(|_| ServiceError::InvalidInput)?;
+    let folder = strip_verbatim_prefix(folder);
     if !folder.is_dir()
         || folder.to_string_lossy().chars().any(char::is_control)
     {
@@ -112,7 +127,7 @@ fn plans(platform: Platform, binary: &str, folder: &str) -> Vec<LaunchPlan> {
                 posix_quote(folder),
                 posix_quote(binary)
             );
-            vec![LaunchPlan {
+            let terminal = LaunchPlan {
                 program: "/usr/bin/osascript",
                 args: vec![
                     "-e".into(),
@@ -124,7 +139,18 @@ fn plans(platform: Platform, binary: &str, folder: &str) -> Vec<LaunchPlan> {
                     "tell application \"Terminal\" to activate".into(),
                 ],
                 wait: true,
-            }]
+            };
+            // iTerm2 / iTerm — used when Terminal.app is missing or disabled.
+            let iterm_script = format!(
+                "tell application \"iTerm\"\nactivate\nif (count of windows) = 0 then\ncreate window with default profile\nelse\ntell current window\ncreate tab with default profile\nend tell\nend if\ntell current session of current window\nwrite text {}\nend tell\nend tell",
+                apple_quote(&command)
+            );
+            let iterm = LaunchPlan {
+                program: "/usr/bin/osascript",
+                args: vec!["-e".into(), iterm_script],
+                wait: true,
+            };
+            vec![terminal, iterm]
         }
         Platform::Windows => {
             // EncodedCommand is UTF-16LE; paths never become cmd.exe syntax.
@@ -201,9 +227,18 @@ pub fn launch(tool_id: &str, folder: &Path) -> Result<(), ServiceError> {
         &folder.to_string_lossy(),
     ) {
         let mut command = Command::new(plan.program);
+        // The launcher (powershell Start-Process) opens the visible terminal
+        // itself; the launcher process must not get its own console.
+        #[cfg(windows)]
+        crate::services::tool_runtime::hide_console(&mut command);
+        // Agent/CI parents sometimes set TERM=dumb / NO_COLOR; interactive
+        // CLIs (Codex TUI) misbehave if those leak into the new terminal.
         command
             .args(&plan.args)
             .current_dir(&folder)
+            .env_remove("TERM")
+            .env_remove("NO_COLOR")
+            .env_remove("FORCE_COLOR")
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null());
@@ -212,7 +247,7 @@ pub fn launch(tool_id: &str, folder: &Path) -> Result<(), ServiceError> {
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
                 continue;
             }
-            Err(_) => return Err(ServiceError::WriteFailed),
+            Err(_) => return Err(ServiceError::TerminalLaunchFailed),
         };
         if !plan.wait {
             std::thread::spawn(move || {
@@ -227,22 +262,23 @@ pub fn launch(tool_id: &str, folder: &Path) -> Result<(), ServiceError> {
                     return if status.success() {
                         Ok(())
                     } else {
-                        Err(ServiceError::WriteFailed)
+                        // Try next terminal plan (e.g. Terminal.app missing → iTerm).
+                        break;
                     };
                 }
-                Err(_) => return Err(ServiceError::WriteFailed),
+                Err(_) => return Err(ServiceError::TerminalLaunchFailed),
                 Ok(None) if Instant::now() < deadline => {
                     std::thread::sleep(Duration::from_millis(25))
                 }
                 Ok(None) => {
                     let _ = child.kill();
                     let _ = child.wait();
-                    return Err(ServiceError::WriteFailed);
+                    return Err(ServiceError::TerminalLaunchFailed);
                 }
             }
         }
     }
-    Err(ServiceError::ApplyUnsupported)
+    Err(ServiceError::TerminalLaunchFailed)
 }
 
 #[cfg(test)]
@@ -363,6 +399,14 @@ mod tests {
         std::fs::remove_dir_all(dir).unwrap();
     }
     #[test]
+    fn mac_plans_include_terminal_and_iterm() {
+        let plan = plans(Platform::Mac, "/usr/bin/claude", "/tmp/work");
+        assert_eq!(plan.len(), 2);
+        assert!(plan[0].args.iter().any(|a| a.contains("Terminal")));
+        assert!(plan[1].args.iter().any(|a| a.contains("iTerm")));
+    }
+
+    #[test]
     fn shell_quotes_keep_metacharacters_in_one_argument() {
         assert_eq!(posix_quote("a'b;$(whoami)"), "'a'\\''b;$(whoami)'");
         assert_eq!(powershell_quote("a'b"), "'a''b'");
@@ -386,6 +430,21 @@ mod tests {
         assert!(code.contains("C:\\工作 '' $(); folder"));
         assert!(!code.contains("ExecutionPolicy"));
         assert!(!code.contains("c'odex"));
+    }
+    #[test]
+    fn strips_windows_verbatim_prefix_for_shell_cwd() {
+        assert_eq!(
+            strip_verbatim_prefix(PathBuf::from(r"\\?\C:\Users\demo")),
+            PathBuf::from(r"C:\Users\demo")
+        );
+        assert_eq!(
+            strip_verbatim_prefix(PathBuf::from(r"\\?\UNC\server\share\folder")),
+            PathBuf::from(r"\\server\share\folder")
+        );
+        assert_eq!(
+            strip_verbatim_prefix(PathBuf::from("/Users/demo/project")),
+            PathBuf::from("/Users/demo/project")
+        );
     }
     #[test]
     fn linux_passes_paths_as_separate_arguments() {

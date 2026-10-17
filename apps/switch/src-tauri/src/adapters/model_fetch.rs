@@ -138,6 +138,22 @@ fn ends_with_version_segment(url: &str) -> bool {
     !digits.is_empty() && matches!(&rest[digits.len()..], "" | "beta" | "alpha")
 }
 
+
+fn looks_like_insufficient_balance(http_status: u16, body: &str) -> bool {
+    if http_status == 402 {
+        return true;
+    }
+    let lower = body.to_ascii_lowercase();
+    lower.contains("insufficient_balance")
+        || lower.contains("insufficient balance")
+        || lower.contains("insufficient_quota")
+        || lower.contains("insufficient quota")
+        || lower.contains("余额不足")
+        || lower.contains("额度不足")
+        || lower.contains("quota_exceeded")
+        || lower.contains("quota exceeded")
+        || lower.contains("payment_required")
+}
 fn strip_compat_suffix(base: &str) -> Option<&str> {
     KNOWN_COMPAT_SUFFIXES
         .iter()
@@ -285,6 +301,11 @@ pub(crate) fn fetch(
         {
             last_missing = Some((url, code));
             continue;
+        }
+        let body = response.text().unwrap_or_default();
+        if looks_like_insufficient_balance(code, &body) {
+            // Signal balance to the UI via HTTP 402 (Payment Required).
+            return result(ModelFetchStatus::Unavailable, Some(url), Some(402));
         }
         let kind = if status == StatusCode::UNAUTHORIZED
             || status == StatusCode::FORBIDDEN

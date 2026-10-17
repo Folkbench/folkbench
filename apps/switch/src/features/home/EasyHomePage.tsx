@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+﻿import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
@@ -22,15 +22,17 @@ import {
   openExternalLink,
   openPublishedStationWebsite,
 } from '@/bridge'
-import {
-  inspectToolRuntime,
-  installToolForEasy,
-} from '@/bridge/commands/toolRuntime'
 import { ToolLogo } from '@/components/tool-logo'
 import { StationAvatar } from '@/components/station-avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { ChoiceSelect, type ChoiceOption } from '@/components/choice-select'
 import {
   AlertDialog,
@@ -57,6 +59,7 @@ import {
   useFetchServiceModels,
   useRemoveMyService,
   useSwitchMyService,
+  useUnswitchMyService,
   useUpdateMyService,
   useVerifyMyService,
 } from '@/features/catalog/queries'
@@ -68,20 +71,30 @@ import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
 import {
   activeEasyService,
-  easyDefaultModel,
+  easyCliLabel,
   easyProtocol,
   easyProviderId,
   easyStationAvatar,
   easyTools,
   matchPublishedStation,
+  matchStationByBaseUrl,
+  easyModelsFetchError,
+  groupEasyModelChoices,
   modelsFetchBaseUrl,
   uniqueEasyStations,
 } from './easy-model'
-import { pickWorkFolderAndLaunch } from './WorkFolderDialog'
+import { launchToolWithoutFolder } from './WorkFolderDialog'
+import {
+  isEasyCliInstallWindowOpen,
+  openEasyCliInstallWindow,
+} from './easy-cli-install-window'
 import { ServiceMenu } from './ServiceMenu'
 import { completeEasyOnboarding } from '@/bridge/commands/preferences'
 import { EasyUsage } from './EasyUsage'
-import { toolRuntimeCatalogQueryOptions } from '@/features/tools/queries'
+import {
+  toolRuntimeCatalogQueryOptions,
+  toolRuntimeQueryOptions,
+} from '@/features/tools/queries'
 
 const CUSTOM = 'custom'
 const blank = { source: '', name: '', note: '', baseUrl: '', key: '', model: '' }
@@ -110,6 +123,8 @@ function serviceErrorMessage(error: unknown, t: (key: string) => string) {
       return t('errors.service.toolUnknown')
     case 'writeFailed':
       return t('errors.service.writeFailed')
+    case 'terminalLaunchFailed':
+      return t('errors.service.terminalLaunchFailed')
     default:
       return t('errors.bridge.commandFailed')
   }
@@ -188,6 +203,7 @@ export function EasyHomePage() {
         <div className="easy-heading-copy">
           <h1>{t('easy.title', { tool: tool.displayName })}</h1>
           <p>{t('easy.description')}</p>
+          <p>{t('easy.boundary')}</p>
         </div>
         <button
           type="button"
@@ -280,10 +296,12 @@ function EasyTool({
   onAutoAddHandled?: () => void
 }) {
   const { t } = useTranslation()
+  const cliLabel = easyCliLabel(tool.displayName)
   const navigate = useNavigate()
   const search = useSearch({ from: '/console/' })
   const prefs = useQuery(preferencesQueryOptions)
   const services = useQuery(myServicesQueryOptions(tool.id))
+  const client = useQueryClient()
   // Same public ranking as Discovery (default model), not filtered by tool model.
   // Tool-specific model catalogs often only list one relay (e.g. Modelflare).
   const catalog = useQuery(
@@ -298,21 +316,46 @@ function EasyTool({
   const add = useAddMyService(),
     update = useUpdateMyService(),
     apply = useSwitchMyService(),
-    removeService = useRemoveMyService()
+    removeService = useRemoveMyService(),
+    unswitchService = useUnswitchMyService()
   const verify = useVerifyMyService(),
     fetchModels = useFetchServiceModels()
   const current = activeEasyService(
     services.data ?? [],
     prefs.data?.currentByTool[tool.id]
   )
+  const runtimeStatus = useQuery({
+    ...toolRuntimeQueryOptions(tool.id),
+    enabled: Boolean(current),
+  })
+  const cliReady = Boolean(runtimeStatus.data?.binaryPath)
+  const [cliInstalling, setCliInstalling] = useState(false)
+
+  useEffect(() => {
+    let alive = true
+    const sync = async () => {
+      try {
+        const open = await isEasyCliInstallWindowOpen(tool.id)
+        if (alive) setCliInstalling(open)
+      } catch {
+        if (alive) setCliInstalling(false)
+      }
+    }
+    void sync()
+    const timer = window.setInterval(() => void sync(), 700)
+    return () => {
+      alive = false
+      window.clearInterval(timer)
+    }
+  }, [tool.id])
   const [draft, setDraft] = useState<Draft>(blank)
   const [editing, setEditing] = useState(false)
   const [editTargetId, setEditTargetId] = useState<string | null>(null)
   const [revealed, setRevealed] = useState(false)
   const [chooseService, setChooseService] = useState(false)
   const [installConsent, setInstallConsent] = useState(false)
-  const [installReason, setInstallReason] = useState<'prepare' | 'launch'>(
-    'prepare'
+  const [installReason, setInstallReason] = useState<'install' | 'launch'>(
+    'install'
   )
   const [noKey, setNoKey] = useState(false)
   const [pendingDelete, setPendingDelete] = useState<MyService | null>(null)
@@ -321,12 +364,6 @@ function EasyTool({
   const [failure, setFailure] = useState('')
   const [modelOptions, setModelOptions] = useState<FetchedModel[]>([])
   const [opened, setOpened] = useState(false)
-  const [verifyState, setVerifyState] = useState<
-    Record<string, 'ok' | 'slow' | 'bad'>
-  >({})
-  const [verifyLatency, setVerifyLatency] = useState<Record<string, number>>(
-    {}
-  )
   const gate = useRef(false),
     cancelled = useRef(false),
     alive = useRef(true)
@@ -369,9 +406,7 @@ function EasyTool({
         baseUrl: station.baseUrl || '',
         name: station.stationName || '',
         note: '',
-        model: prefix.test(station.modelId)
-          ? station.modelId
-          : easyDefaultModel(tool.id),
+        model: prefix.test(station.modelId) ? station.modelId : '',
       })
       setEditing(true)
       userSelectedSource.current = true
@@ -402,8 +437,7 @@ function EasyTool({
       baseUrl: nextUrl,
       name: savedItem?.name || stationItem?.stationName || '',
       note: '',
-      model:
-        savedItem?.modelId || stationModel || easyDefaultModel(tool.id),
+      model: savedItem?.modelId || stationModel || '',
     })
     if (savedItem?.models?.length) setModelOptions(savedItem.models)
     else if (nextUrl && (savedItem?.hasCredential || draft.key.trim()))
@@ -461,12 +495,31 @@ function EasyTool({
         .querySelector('.easy-workspace form, .easy-workspace select, .easy-workspace input')
         ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
   }, [autoAdd, services.isSuccess, prefs.isSuccess, busy, current])
+
+  // If the user picks 「其他服务」 then types a catalogued API base, promote
+  // 「使用的服务」 to that station so avatar / stationId match the library.
+  useEffect(() => {
+    if (editTargetId) return
+    if (draft.source !== CUSTOM) return
+    const url = draft.baseUrl.trim()
+    if (!modelsFetchBaseUrl(url)) return
+    const matched = matchStationByBaseUrl(url, catalogStations)
+    if (!matched) return
+    setDraft((value) => {
+      if (value.source !== CUSTOM) return value
+      return {
+        ...value,
+        source: `station:${matched.stationId}`,
+        name: value.name || matched.stationName || '',
+      }
+    })
+  }, [draft.baseUrl, draft.source, editTargetId, catalogStations])
   function errorCopy(error: unknown) {
     if (error instanceof BridgeError && error.serviceError === 'driftDetected')
       return t('easy.driftError')
     return t('easy.prepareError')
   }
-  async function prepare(allowInstall = false) {
+  async function prepare() {
     if (gate.current) return
     if (!draft.source) {
       setFailure(t('easy.needService'))
@@ -505,29 +558,9 @@ function EasyTool({
     gate.current = true
     cancelled.current = false
     setFailure('')
-    setPhase('checking')
+    // Connect / save service only — CLI install happens on the service page.
+    setPhase('saving')
     try {
-      const runtime = editing ? null : await inspectToolRuntime(tool.id)
-      if (!canContinue()) return
-      if (runtime && !runtime.binaryPath) {
-        if (!runtime.canInstall) {
-          setFailure(t('easy.manualInstall'))
-          return
-        }
-        if (!allowInstall) {
-          setInstallReason('prepare')
-          setInstallConsent(true)
-          return
-        }
-        setPhase('installing')
-        const result = await installToolForEasy(tool.id)
-        if (!canContinue()) return
-        if (!result.ok) {
-          setFailure(t('easy.installError'))
-          return
-        }
-      }
-      setPhase('saving')
       let service: MyService
       // Only update when explicitly editing a saved service (editTargetId set).
       // Selecting a catalog station or custom always adds a new config so the
@@ -543,8 +576,16 @@ function EasyTool({
           toolId: tool.id,
           serviceId: updateTarget.id,
           name: resolvedName,
-          stationId: published?.stationId ?? updateTarget.stationId ?? '',
-          channelId: published?.channelId ?? updateTarget.channelId ?? '',
+          stationId:
+            published?.stationId ||
+            matchStationByBaseUrl(baseUrl, catalogStations)?.stationId ||
+            updateTarget.stationId ||
+            '',
+          channelId:
+            published?.channelId ||
+            matchStationByBaseUrl(baseUrl, catalogStations)?.channelId ||
+            updateTarget.channelId ||
+            '',
           modelId: model,
           models: modelOptions.length
             ? modelOptions
@@ -576,8 +617,14 @@ function EasyTool({
           service = await add.mutateAsync({
             toolId: tool.id,
             name: resolvedName,
-            stationId: published?.stationId ?? '',
-            channelId: published?.channelId ?? '',
+            stationId:
+              published?.stationId ||
+              matchStationByBaseUrl(baseUrl, catalogStations)?.stationId ||
+              '',
+            channelId:
+              published?.channelId ||
+              matchStationByBaseUrl(baseUrl, catalogStations)?.channelId ||
+              '',
             modelId: model,
             models: modelOptions,
             providerId: easyProviderId(tool.id, baseUrl)
@@ -605,7 +652,7 @@ function EasyTool({
       update.reset()
       if (search.add) void navigate({ to: '/', search: {}, replace: true })
       if (wasEditing) toast.success(t('easy.saved'))
-      else toast.success(t('easy.ready', { tool: tool.displayName }))
+      else toast.success(t('easy.ready', { tool: cliLabel }))
     } catch (error) {
       if (canContinue()) setFailure(errorCopy(error))
     } finally {
@@ -620,20 +667,7 @@ function EasyTool({
         toolId: tool.id,
         serviceId: service.id,
       })
-      const nextState = !result.reachable
-        ? 'bad'
-        : result.degraded
-          ? 'slow'
-          : 'ok'
-      setVerifyState((currentState) => ({
-        ...currentState,
-        [service.id]: nextState,
-      }))
       const ms = result.latencyMs ?? 0
-      setVerifyLatency((currentLatency) => ({
-        ...currentLatency,
-        [service.id]: ms,
-      }))
       if (!result.reachable) {
         toast.error(t('configure.status.unreachable'))
         return
@@ -644,30 +678,37 @@ function EasyTool({
         toast.success(t('configure.status.reachable', { ms }))
       }
     } catch (error) {
-      setVerifyState((currentState) => ({
-        ...currentState,
-        [service.id]: 'bad',
-      }))
       toast.error(serviceErrorMessage(error, t))
     }
   }
 
   function requestDelete(service: MyService) {
-    if (current?.id === service.id) {
-      toast.error(t('errors.service.inUse'))
-      return
-    }
     setPendingDelete(service)
   }
 
   async function confirmDelete() {
     if (!pendingDelete) return
     try {
+      const wasCurrent = current?.id === pendingDelete.id
+      // Active service: clear live CLI/App config files first, then drop archive.
+      if (wasCurrent) {
+        await unswitchService.mutateAsync(tool.id)
+      }
       await removeService.mutateAsync({
         toolId: tool.id,
         serviceId: pendingDelete.id,
       })
+      const deletedId = pendingDelete.id
       setPendingDelete(null)
+      if (editTargetId === deletedId) {
+        setEditing(false)
+        setEditTargetId(null)
+        setDraft(blank)
+        setRevealed(false)
+        setFailure('')
+        setModelOptions([])
+      }
+      toast.success(t(wasCurrent ? 'easy.deleted' : 'easy.deletedSaved'))
     } catch (error) {
       toast.error(serviceErrorMessage(error, t))
     }
@@ -718,42 +759,37 @@ function EasyTool({
   }
 
   async function openCurrent(allowInstall = false) {
-    if (!current || gate.current) return
+    if (!current || gate.current || cliInstalling) return
+    if (!cliReady) {
+      if (!allowInstall) {
+        setInstallReason('launch')
+        setInstallConsent(true)
+        return
+      }
+      setCliInstalling(true)
+      const ok = await openEasyCliInstallWindow({
+        toolId: tool.id,
+        cliLabel,
+        title: t('easy.installWindowTitle', { tool: cliLabel }),
+        wait: true,
+      })
+      setCliInstalling(false)
+      if (ok) {
+        await runtimeStatus.refetch()
+      }
+      if (!ok || !alive.current || !canContinue()) return
+    }
     gate.current = true
     cancelled.current = false
     setFailure('')
-    setPhase('checking')
     try {
-      const runtime = await inspectToolRuntime(tool.id)
-      if (!canContinue()) return
-      if (!runtime.binaryPath) {
-        if (!runtime.canInstall) {
-          setFailure(t('easy.manualInstall'))
-          return
-        }
-        if (!allowInstall) {
-          setInstallReason('launch')
-          setInstallConsent(true)
-          return
-        }
-        setPhase('installing')
-        const result = await installToolForEasy(tool.id)
-        if (!canContinue()) return
-        if (!result.ok) {
-          setFailure(t('easy.installError'))
-          return
-        }
-      }
-      const result = await pickWorkFolderAndLaunch({
+      await launchToolWithoutFolder({
         toolId: tool.id,
         serviceId: current.id,
-        title: t('easy.folder.title'),
       })
       if (!canContinue()) return
-      if (result === 'launched') {
-        setOpened(true)
-        toast.success(t('easy.opened', { tool: tool.displayName }))
-      }
+      setOpened(true)
+      toast.success(t('easy.opened', { tool: cliLabel }))
     } catch (error) {
       if (canContinue()) {
         setFailure(
@@ -764,8 +800,27 @@ function EasyTool({
       }
     } finally {
       gate.current = false
-      if (alive.current) setPhase(null)
     }
+  }
+
+  /** Open a dedicated OS window for CLI install (main window stays usable). */
+  function installCli(allowInstall = false) {
+    if (cliInstalling) return
+    if (!allowInstall) {
+      setInstallReason('install')
+      setInstallConsent(true)
+      return
+    }
+    setCliInstalling(true)
+    void openEasyCliInstallWindow({
+      toolId: tool.id,
+      cliLabel,
+      title: t('easy.installWindowTitle', { tool: cliLabel }),
+      wait: false,
+    }).finally(() => {
+      // Window stays open; polling keeps cliInstalling in sync.
+      void runtimeStatus.refetch()
+    })
   }
   const hasKey = Boolean(
     draft.key.trim() ||
@@ -824,10 +879,12 @@ function EasyTool({
           if (candidate) return { ...value, model: candidate.id }
           return value
         })
-      } else setFailure(t('easy.modelsError'))
+      } else {
+        setFailure(easyModelsFetchError(result, t))
+      }
     } catch {
       if (alive.current && request === modelRequest.current)
-        setFailure(t('easy.modelsError'))
+        setFailure(t('easy.modelsErrorUnreachable'))
     }
   }
   const catalogOrigin = catalog.data?.origin ?? 'https://folkbench.com'
@@ -1000,17 +1057,48 @@ function EasyTool({
         </div>
         <ChoiceSelect
           label={t('easy.modelLabel')}
+          labelAccessory={
+            <TooltipProvider delay={200}>
+              <Tooltip>
+                <TooltipTrigger
+                  type="button"
+                  className="easy-field-info"
+                  aria-label={t('easy.modelInfoAria')}
+                >
+                  <HugeiconsIcon
+                    icon={CircleQuestionMarkIcon}
+                    size={14}
+                    strokeWidth={1.7}
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[260px] text-left leading-snug">
+                  {t('easy.modelInfo')}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          }
           value={draft.model}
-          options={[
-            ...(draft.model &&
-            !modelOptions.some((model) => model.id === draft.model)
-              ? [{ value: draft.model, label: draft.model }]
-              : []),
-            ...modelOptions.map((model) => ({
+          options={(() => {
+            if (!hasKey) return []
+            const orphan =
+              draft.model &&
+              !modelOptions.some((model) => model.id === draft.model)
+                ? [{ value: draft.model, label: draft.model }]
+                : []
+            const rows = modelOptions.map((model) => ({
               value: model.id,
               label: model.name || model.id,
-            })),
-          ]}
+            }))
+            return [
+              ...orphan,
+              ...groupEasyModelChoices(
+                tool.id,
+                tool.displayName,
+                rows,
+                t,
+              ),
+            ]
+          })()}
           placeholder={t(
             !hasKey
               ? 'easy.modelNeedKey'
@@ -1045,21 +1133,25 @@ function EasyTool({
             {failure}
           </p>
         ) : null}
+        {busy && phase ? (
+          <p className="easy-inline-phase" role="status" aria-live="polite">
+            <span className="easy-spinner easy-spinner--sm" aria-hidden="true" />
+            {t(`easy.phase.${phase}`)}
+          </p>
+        ) : null}
         <Button
           type="submit"
           className="easy-primary"
           disabled={busy || services.isPending}
         >
-          {t(editing ? 'easy.saveChanges' : 'easy.prepare', {
-            tool: tool.displayName,
-          })}
+          {t(editing ? 'easy.saveChanges' : 'easy.connectService')}
         </Button>
       </fieldset>
     </form>
   )
   return (
     <>
-      {busy ? (
+      {busy && !editing ? (
         <div className="easy-preparing" role="status" aria-live="polite">
           <span className="easy-spinner easy-spinner--sm" aria-hidden="true" />
           <h2>{t(`easy.phase.${phase}`)}</h2>
@@ -1164,47 +1256,57 @@ function EasyTool({
         <>
           <div className="easy-config-heading">
             <h2>{t('easy.current')}</h2>
-            <span>{t(opened ? 'easy.openRequested' : 'easy.configured')}</span>
-            {current && verifyState[current.id] ? (
-              <span
-                className={
-                  verifyState[current.id] === 'bad'
-                    ? 'easy-verify-result easy-verify-result--bad'
-                    : verifyState[current.id] === 'slow'
-                      ? 'easy-verify-result easy-verify-result--slow'
-                      : 'easy-verify-result easy-verify-result--ok'
-                }
-                role="status"
-              >
-                {verifyState[current.id] === 'bad'
-                  ? t('configure.status.unreachable')
-                  : verifyState[current.id] === 'slow'
-                    ? t('configure.status.reachableSlow', {
-                        ms: verifyLatency[current.id] ?? 0,
-                      })
-                    : t('configure.status.reachable', {
-                        ms: verifyLatency[current.id] ?? 0,
-                      })}
-              </span>
+            {opened ? (
+              <span>{t('easy.openRequested')}</span>
+            ) : cliReady ? (
+              <span>{t('easy.configured')}</span>
             ) : null}
-            <button
-              type="button"
-              className="easy-check-connection"
-              disabled={verify.isPending}
-              onClick={() => void checkConnection()}
-            >
-              <HugeiconsIcon
-                icon={Pulse01Icon}
-                strokeWidth={1.7}
-                aria-hidden="true"
-                className="size-3.5"
-              />
-              {t(
-                verify.isPending
-                  ? 'easy.checkingConnection'
-                  : 'easy.checkConnection'
-              )}
-            </button>
+            <div className="easy-heading-actions">
+              <button
+                type="button"
+                className="easy-check-connection"
+                disabled={verify.isPending}
+                onClick={() => void checkConnection()}
+              >
+                <HugeiconsIcon
+                  icon={Pulse01Icon}
+                  strokeWidth={1.7}
+                  aria-hidden="true"
+                  className="size-4"
+                />
+                {t(
+                  verify.isPending
+                    ? 'easy.checkingConnection'
+                    : 'easy.checkConnection'
+                )}
+              </button>
+              <button
+                type="button"
+                className="easy-cli-action"
+                disabled={
+                  busy ||
+                  cliInstalling ||
+                  (!cliReady && !runtimeStatus.isSuccess)
+                }
+                onClick={() =>
+                  void (cliReady ? openCurrent() : installCli())
+                }
+              >
+                {cliInstalling ? (
+                  <>
+                    <span
+                      className="easy-spinner easy-spinner--sm"
+                      aria-hidden="true"
+                    />
+                    {t('easy.installingCli')}
+                  </>
+                ) : cliReady ? (
+                  t('easy.openTool', { tool: cliLabel })
+                ) : (
+                  t('easy.oneClickInstall', { tool: cliLabel })
+                )}
+              </button>
+            </div>
           </div>
           <div className="easy-config-row">
             <div className="easy-config-main">
@@ -1250,9 +1352,6 @@ function EasyTool({
               {failure}
             </p>
           ) : null}
-          <Button className="easy-primary" onClick={() => void openCurrent()}>
-            {t('easy.openTool', { tool: tool.displayName })}
-          </Button>
           <EasyUsage
             key={tool.id}
             toolId={tool.id}
@@ -1262,16 +1361,16 @@ function EasyTool({
       )}
       <Dialog
         open={editing}
+        disablePointerDismissal={busy}
         onOpenChange={(next) => {
-          if (!busy) {
-            setEditing(next)
-            if (!next) {
-              setDraft(blank)
-              setRevealed(false)
-              setEditTargetId(null)
-              setFailure('')
-              setModelOptions([])
-            }
+          if (busy) return
+          setEditing(next)
+          if (!next) {
+            setDraft(blank)
+            setRevealed(false)
+            setEditTargetId(null)
+            setFailure('')
+            setModelOptions([])
           }
         }}
       >
@@ -1343,7 +1442,7 @@ function EasyTool({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {t('easy.installTitle', { tool: tool.displayName })}
+              {t('easy.installTitle', { tool: cliLabel })}
             </DialogTitle>
             <DialogDescription>
               {t('easy.installDescription')}
@@ -1358,7 +1457,7 @@ function EasyTool({
                 setInstallConsent(false)
                 void (installReason === 'launch'
                   ? openCurrent(true)
-                  : prepare(true))
+                  : installCli(true))
               }}
             >
               {t('easy.allowInstall')}
@@ -1421,7 +1520,7 @@ function EasyTool({
               })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {t('configure.delete.confirm')}
+              {t('easy.deleteConfirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

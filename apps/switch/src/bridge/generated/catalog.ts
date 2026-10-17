@@ -11,7 +11,7 @@ export type CatalogError = "invalidModel" | "unavailable" | "invalidResponse" | 
 /**
  * A public model that can be selected in the published catalog.
  */
-export type CatalogModel = { id: string, name: string, vendorId: string | null, vendorName: string | null,
+export type CatalogModel = { id: string, name: string, vendorId: string | null, vendorName: string | null, 
 /**
  * Site-relative public logo, for example `/api/public/vendor-logos/openai`.
  */
@@ -31,7 +31,7 @@ export type PublishedPrice = { amount: string, currency: string, };
 /**
  * One published Folkbench ranking row.
  */
-export type PublishedStation = { rank: number | null, channelId: string, channelName: string, stationId: string, stationName: string, stationAvatarPath: string | null, modelId: string, websiteUrl: string | null,
+export type PublishedStation = { rank: number | null, channelId: string, channelName: string, stationId: string, stationName: string, stationAvatarPath: string | null, modelId: string, websiteUrl: string | null, 
 /**
  * HTTPS API base published with the station. Never taken from the website.
  */

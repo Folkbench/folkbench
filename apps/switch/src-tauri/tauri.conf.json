@@ -33,16 +33,35 @@
       "desktop": {
         "schemes": ["folkbench"]
       }
+    },
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEE4QTU1MDE2OURFMzE4MjAKUldRZ0dPT2RGbENscUJNdU1qcU5DZVVmTDFScnY5WjdMeDZtUWFXSkVNNkpvc0Zpa3F0MXNwcmwK",
+      "endpoints": [
+        "https://github.com/Folkbench/folkbench/releases/download/switch-updater-beta/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "macOS": {
       "dmg": {
         "background": "../assets/dmg/background.png",
-        "windowSize": { "width": 802, "height": 514 },
-        "appPosition": { "x": 206, "y": 248 },
-        "applicationFolderPosition": { "x": 598, "y": 248 }
+        "windowSize": {
+          "width": 802,
+          "height": 514
+        },
+        "appPosition": {
+          "x": 206,
+          "y": 248
+        },
+        "applicationFolderPosition": {
+          "x": 598,
+          "y": 248
+        }
       }
     },
     "resources": {

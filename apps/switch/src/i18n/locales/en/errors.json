@@ -32,15 +32,16 @@
       "timeout": "The request timed out."
     },
     "service": {
-      "applyUnsupported": "This version cannot write this tool yet.",
+      "applyUnsupported": "This action is not supported, or this tool is not adapted yet.",
       "credentialMissing": "This service has no saved Key.",
       "driftDetected": "The tool configuration changed, so this action stopped instead of overwriting your changes.",
       "inUse": "Close this service or enable another one before deleting it.",
-      "invalidInput": "Name, URL, or Key is missing or not allowed.",
+      "invalidInput": "Invalid input: name, URL, Key, or working folder is missing or not allowed.",
       "locationUnavailable": "The local config location is not available.",
       "notFound": "That service is no longer saved.",
       "toolUnknown": "That tool is not in this catalog.",
-      "writeFailed": "The configuration could not be written. The original file was preserved."
+      "writeFailed": "The configuration could not be written. The original file was preserved.",
+      "terminalLaunchFailed": "Could not open a terminal for this CLI. On Windows use PowerShell; on Mac install Terminal.app or iTerm."
     }
   }
 }

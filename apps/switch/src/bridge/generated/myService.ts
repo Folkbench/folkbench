@@ -23,12 +23,12 @@ export type ModelFetchStatus = "ready" | "empty" | "missingKey" | "invalidUrl" |
 /**
  * One locally saved API service. The Key never appears on this type.
  */
-export type MyService = { id: string, name: string, stationId: string, channelId: string, modelId: string,
+export type MyService = { id: string, name: string, stationId: string, channelId: string, modelId: string, 
 /**
  * Provider model list captured when the user pulled/selected models.
  * Empty means legacy archive or no fetch yet; adapters may probe.
  */
-models: Array<FetchedModel>,
+models: Array<FetchedModel>, 
 /**
  * Tool-facing provider key (e.g. models.providers.<id>). Empty falls back to `id`.
  */
@@ -59,7 +59,7 @@ export type ServiceBalanceWindow = "fiveHour" | "weekly" | "monthly";
 /**
  * Stable machine codes for the local service archive and switch commands.
  */
-export type ServiceError = "invalidInput" | "notFound" | "locationUnavailable" | "writeFailed" | "credentialMissing" | "toolUnknown" | "applyUnsupported" | "inUse" | "driftDetected";
+export type ServiceError = "invalidInput" | "notFound" | "locationUnavailable" | "writeFailed" | "credentialMissing" | "toolUnknown" | "applyUnsupported" | "inUse" | "driftDetected" | "terminalLaunchFailed";
 
 /**
  * API wire protocol a saved service exposes to coding tools.

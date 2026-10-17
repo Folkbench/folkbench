@@ -3,7 +3,7 @@
 /**
  * How Folkbench Switch installs or upgrades a Dock CLI tool.
  */
-export type ToolInstallChannel = "brew" | "npm" | "grok";
+export type ToolInstallChannel = "brew" | "npm" | "grok" | "pip";
 
 /**
  * Outcome of a whitelisted install or upgrade.
@@ -18,7 +18,7 @@ export type ToolRuntimeCatalogEntry = { toolId: string, displayName: string, bin
 /**
  * One discovered CLI binary install (deduped by realpath).
  */
-export type ToolRuntimeInstall = { path: string, version: string | null,
+export type ToolRuntimeInstall = { path: string, version: string | null, 
 /**
  * Login-shell `command -v` hit (cc-switch `is_path_default`); sole install
  * falls back when PATH default cannot be resolved. Drives status / upgrade.
@@ -34,11 +34,11 @@ export type ToolRuntimeKind = "notInstalled" | "installed" | "updateAvailable" |
 /**
  * Host prerequisites for npm / Homebrew install channels (probe once per page).
  */
-export type ToolRuntimePrerequisites = { nodeAvailable: boolean, npmAvailable: boolean, brewAvailable: boolean,
+export type ToolRuntimePrerequisites = { nodeAvailable: boolean, npmAvailable: boolean, brewAvailable: boolean, 
 /**
  * Copyable install hint when Node/npm is missing; None when both present.
  */
-nodeInstallCommand: string | null,
+nodeInstallCommand: string | null, 
 /**
  * Copyable Homebrew install hint when brew is missing; None when present
  * or when Homebrew is not applicable on this platform.
@@ -48,11 +48,11 @@ brewInstallCommand: string | null, };
 /**
  * Scan result for one Dock CLI tool (config-dir `installed` is unrelated).
  */
-export type ToolRuntimeStatus = { toolId: string, displayName: string, binaryName: string, channel: ToolInstallChannel, status: ToolRuntimeKind, localVersion: string | null, latestVersion: string | null, binaryPath: string | null,
+export type ToolRuntimeStatus = { toolId: string, displayName: string, binaryName: string, channel: ToolInstallChannel, status: ToolRuntimeKind, localVersion: string | null, latestVersion: string | null, binaryPath: string | null, 
 /**
  * All installs found across search dirs (deduped by realpath). PATH-default primary first.
  */
-installs: Array<ToolRuntimeInstall>,
+installs: Array<ToolRuntimeInstall>, 
 /**
  * Short UI hint (Node major warning, Grok install command, probe error).
  */

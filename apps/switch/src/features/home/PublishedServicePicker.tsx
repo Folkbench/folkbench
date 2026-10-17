@@ -89,11 +89,11 @@ export function PublishedServicePicker({
             <div
               key={row.stationId}
               role="listitem"
-              className="flex items-center gap-3 border-b px-3 py-2.5 last:border-b-0"
+              className="flex cursor-pointer items-center gap-3 border-b border-l-2 border-l-transparent px-3 py-2.5 last:border-b-0 transition-all hover:border-l-brand-signal hover:bg-accent hover:shadow-md active:bg-accent/80"
             >
               <button
                 type="button"
-                className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left hover:opacity-90"
+                className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={() => onSelect(row)}
               >
                 <StationAvatar

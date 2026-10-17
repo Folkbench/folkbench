@@ -24,7 +24,11 @@ export const rootRoute = createRootRouteWithContext<RouterContext>()({
       // the application from starting; the English default stands, and the
       // session guard still reports a genuine bridge failure.
     }
-    if (!accountOnboardingCompleted && location.pathname !== '/sign-in') {
+    if (
+      !accountOnboardingCompleted &&
+      location.pathname !== '/sign-in' &&
+      location.pathname !== '/easy-cli-install'
+    ) {
       throw redirect({ to: '/sign-in' })
     }
   },

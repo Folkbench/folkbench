@@ -16,6 +16,8 @@ import { normalizeLocale } from '@/i18n/config'
 import type { SupportedLocale } from '@/i18n/config'
 import { cn } from '@/lib/utils'
 
+import { AppUpdateCheck } from './AppUpdateCheck'
+
 const LOCALES: SupportedLocale[] = ['zh', 'en']
 
 export function SettingsPage() {
@@ -87,7 +89,9 @@ export function SettingsPage() {
         <h2 className="switch-section-title">{t('settings.uiMode.title')}</h2>
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card px-5 py-4">
           <div>
-            <p className="text-[14px] font-medium">{t('settings.uiMode.title')}</p>
+            <p className="text-[14px] font-medium">
+              {t('settings.uiMode.title')}
+            </p>
             <p className="mt-1 text-[12px] text-muted-foreground">
               {t('settings.uiMode.description')}
             </p>
@@ -199,26 +203,44 @@ export function SettingsPage() {
           {t('settings.privacy.body')}
         </p>
       </section>
-      <section className="flex min-w-0 flex-col gap-2" aria-labelledby="switch-about-heading">
+      <section
+        className="flex min-w-0 flex-col gap-2"
+        aria-labelledby="switch-about-heading"
+      >
         <h2 id="switch-about-heading" className="switch-section-title">
           {t('settings.about.title')}
         </h2>
         <div className="rounded-xl border bg-card px-4 py-3">
           <p className="text-[15px] font-medium">Folkbench Switch</p>
           {bootstrap.isPending ? (
-            <p className="mt-2 text-[13px] text-muted-foreground">{t('common.status.loading')}</p>
+            <p className="mt-2 text-[13px] text-muted-foreground">
+              {t('common.status.loading')}
+            </p>
           ) : bootstrap.data ? (
             <dl className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-5 gap-y-2 text-[13px]">
-              <dt className="text-muted-foreground">{t('settings.about.version')}</dt>
-              <dd className="break-words font-mono">{bootstrap.data.appVersion}</dd>
-              <dt className="text-muted-foreground">{t('settings.about.channel')}</dt>
+              <dt className="text-muted-foreground">
+                {t('settings.about.version')}
+              </dt>
+              <dd className="break-words font-mono">
+                {bootstrap.data.appVersion}
+              </dd>
+              <dt className="text-muted-foreground">
+                {t('settings.about.channel')}
+              </dt>
               <dd>{t('settings.about.beta')}</dd>
-              <dt className="text-muted-foreground">{t('settings.about.commit')}</dt>
-              <dd className="break-words font-mono">{bootstrap.data.buildCommit}</dd>
+              <dt className="text-muted-foreground">
+                {t('settings.about.commit')}
+              </dt>
+              <dd className="break-words font-mono">
+                {bootstrap.data.buildCommit}
+              </dd>
             </dl>
           ) : (
-            <p role="alert" className="mt-2 text-[13px] text-destructive">{t('settings.about.unavailable')}</p>
+            <p role="alert" className="mt-2 text-[13px] text-destructive">
+              {t('settings.about.unavailable')}
+            </p>
           )}
+          <AppUpdateCheck />
         </div>
       </section>
     </div>

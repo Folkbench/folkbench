@@ -17,6 +17,11 @@ pub fn run() {
             }
         },
     ));
+    // Signed in-app updates; the WebView may check/download/install and restart.
+    #[cfg(desktop)]
+    let builder = builder
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init());
     builder
         // Registered so Rust can open fixed Modelflare URLs. No opener
         // permission is granted to the WebView.
@@ -36,21 +41,41 @@ pub fn run() {
             commands::connect::install(app.handle());
             Ok(())
         })
-        // On macOS, red closes the visible window instead of acting like yellow.
-        // Keep the main window alive for Dock reopen; Cmd+Q still exits normally.
-        // Preserve the existing minimize-on-close behavior on other platforms.
+        // Window close policy:
+        // - macOS main: hide (Dock reopen); Cmd+Q still exits.
+        // - Windows/Linux main: EXIT the process. Previously this path called
+        //   prevent_close()+minimize(), which left Folkbench alive in the
+        //   taskbar after the user clicked X (no tray product).
+        // - Install helper windows (easy-cli-install-*): allow normal close;
+        //   the WebView cancels the npm/brew job via cancel_easy_tool_install.
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                let label = window.label();
+                // Install helper: allow OS close, and cancel npm/brew even if
+                // the WebView has not attached its onCloseRequested handler yet.
+                if let Some(tool_id) = label.strip_prefix("easy-cli-install-") {
+                    let _ = services::cancel_easy_tool_install(tool_id);
+                    return;
+                }
                 #[cfg(target_os = "macos")]
                 {
-                    if window.label() == "main" && window.hide().is_ok() {
+                    if label == "main" && window.hide().is_ok() {
                         api.prevent_close();
                     }
                 }
                 #[cfg(not(target_os = "macos"))]
                 {
-                    api.prevent_close();
-                    let _ = window.minimize();
+                    if label == "main" {
+                        api.prevent_close();
+                        let app = window.app_handle().clone();
+                        services::cancel_any_easy_install();
+                        for (other_label, other) in app.webview_windows() {
+                            if other_label != "main" {
+                                let _ = other.destroy();
+                            }
+                        }
+                        app.exit(0);
+                    }
                 }
             }
         })
@@ -99,6 +124,7 @@ pub fn run() {
             commands::tool_runtime::upgrade_tool,
             commands::tool_runtime::inspect_tool_runtime,
             commands::tool_runtime::install_tool_for_easy,
+            commands::tool_runtime::cancel_easy_tool_install,
             commands::tool_launch::list_work_folders,
             commands::tool_launch::launch_tool_in_folder,
             commands::share_image::copy_share_image,

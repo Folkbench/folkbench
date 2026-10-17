@@ -21,6 +21,7 @@ const SERVICE_ERRORS = [
   'applyUnsupported',
   'inUse',
   'driftDetected',
+  'terminalLaunchFailed',
 ] as const satisfies readonly ServiceError[]
 
 export type BridgeErrorCode = (typeof BRIDGE_ERROR)[keyof typeof BRIDGE_ERROR]
