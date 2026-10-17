@@ -138,7 +138,6 @@ fn ends_with_version_segment(url: &str) -> bool {
     !digits.is_empty() && matches!(&rest[digits.len()..], "" | "beta" | "alpha")
 }
 
-
 fn looks_like_insufficient_balance(http_status: u16, body: &str) -> bool {
     if http_status == 402 {
         return true;

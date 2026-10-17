@@ -6,7 +6,7 @@
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{mpsc, Arc, Mutex, OnceLock};
+use std::sync::{Arc, Mutex, OnceLock, mpsc};
 use std::thread;
 use std::time::{Duration, Instant};
 
@@ -17,7 +17,6 @@ use crate::domain::{
     ToolRuntimePrerequisites, ToolRuntimeStatus,
 };
 
-
 struct EasyInstallSlot {
     tool_id: String,
     cancel: AtomicBool,
@@ -25,7 +24,8 @@ struct EasyInstallSlot {
 }
 
 fn easy_install_slot() -> &'static Mutex<Option<Arc<EasyInstallSlot>>> {
-    static SLOT: OnceLock<Mutex<Option<Arc<EasyInstallSlot>>>> = OnceLock::new();
+    static SLOT: OnceLock<Mutex<Option<Arc<EasyInstallSlot>>>> =
+        OnceLock::new();
     SLOT.get_or_init(|| Mutex::new(None))
 }
 
@@ -60,10 +60,7 @@ fn begin_easy_install(tool_id: &str) -> Arc<EasyInstallSlot> {
 
 fn end_easy_install(tool_id: &str) {
     if let Ok(mut guard) = easy_install_slot().lock() {
-        if guard
-            .as_ref()
-            .is_some_and(|slot| slot.tool_id == tool_id)
-        {
+        if guard.as_ref().is_some_and(|slot| slot.tool_id == tool_id) {
             *guard = None;
         }
     }
@@ -100,7 +97,11 @@ fn easy_install_cancelled() -> bool {
     easy_install_slot()
         .lock()
         .ok()
-        .and_then(|guard| guard.as_ref().map(|slot| slot.cancel.load(Ordering::SeqCst)))
+        .and_then(|guard| {
+            guard
+                .as_ref()
+                .map(|slot| slot.cancel.load(Ordering::SeqCst))
+        })
         .unwrap_or(false)
 }
 
@@ -137,16 +138,16 @@ pub fn cancel_any_easy_install() {
     }
 }
 
-
 const PROBE_TIMEOUT: Duration = Duration::from_secs(20);
 const ACTION_TIMEOUT: Duration = Duration::from_secs(600);
 
-const GROK_INSTALL_HINT_UNIX: &str = "curl -fsSL https://x.ai/cli/install.sh | bash";
+const GROK_INSTALL_HINT_UNIX: &str =
+    "curl -fsSL https://x.ai/cli/install.sh | bash";
 const GROK_INSTALL_HINT_WINDOWS: &str =
     "irm https://x.ai/cli/install.ps1 | iex";
-const AIDER_INSTALL_HINT_UNIX: &str = "curl -LsSf https://aider.chat/install.sh | sh";
-const AIDER_INSTALL_HINT_WINDOWS: &str =
-    "powershell -ExecutionPolicy ByPass -c \"irm https://aider.chat/install.ps1 | iex\"";
+const AIDER_INSTALL_HINT_UNIX: &str =
+    "curl -LsSf https://aider.chat/install.sh | sh";
+const AIDER_INSTALL_HINT_WINDOWS: &str = "powershell -ExecutionPolicy ByPass -c \"irm https://aider.chat/install.ps1 | iex\"";
 const NODE_VIA_BREW: &str = "brew install node";
 const NODE_VIA_OFFICIAL_MAC: &str = "open \"https://nodejs.org/en/download\"";
 const NODE_VIA_WINGET: &str = "winget install -e --id OpenJS.NodeJS.LTS";
@@ -157,17 +158,25 @@ const BREW_INSTALL_HINT: &str = "/bin/bash -c \"$(curl -fsSL https://raw.githubu
 #[derive(Clone, Copy)]
 enum ChannelSpec {
     #[allow(dead_code)]
-    Brew { formula: &'static str },
-    Npm { package: &'static str },
+    Brew {
+        formula: &'static str,
+    },
+    Npm {
+        package: &'static str,
+    },
     /// Prefer Homebrew on macOS/Linux when brew exists; npm otherwise (always on Windows).
     BrewOrNpm {
         formula: &'static str,
         package: &'static str,
     },
     /// Cross-platform: npm when available, else official install script.
-    Grok { npm_package: &'static str },
+    Grok {
+        npm_package: &'static str,
+    },
     /// Python tool: uv/pip when available, else OS install-script hint.
-    Pip { package: &'static str },
+    Pip {
+        package: &'static str,
+    },
 }
 
 #[derive(Clone, Copy)]
@@ -312,7 +321,9 @@ fn resolve_plan(
     pip_ok: bool,
 ) -> Option<InstallPlan> {
     match channel {
-        ChannelSpec::Npm { package } => npm_ok.then_some(InstallPlan::Npm { package }),
+        ChannelSpec::Npm { package } => {
+            npm_ok.then_some(InstallPlan::Npm { package })
+        }
         ChannelSpec::Brew { formula } => {
             if cfg!(windows) {
                 None
@@ -1484,12 +1495,15 @@ fn probe_one(spec: &ToolSpec) -> ToolRuntimeStatus {
     let can_install = binary_path.is_none() && plan.is_some();
     let can_upgrade = match status {
         ToolRuntimeKind::UpdateAvailable => match plan {
-            Some(InstallPlan::Brew { .. } | InstallPlan::Npm { .. } | InstallPlan::Pip { .. }) => {
-                true
-            }
+            Some(
+                InstallPlan::Brew { .. }
+                | InstallPlan::Npm { .. }
+                | InstallPlan::Pip { .. },
+            ) => true,
             Some(InstallPlan::GrokScript) => binary_path.is_some(),
             None => {
-                matches!(spec.channel, ChannelSpec::Grok { .. }) && binary_path.is_some()
+                matches!(spec.channel, ChannelSpec::Grok { .. })
+                    && binary_path.is_some()
             }
         },
         _ => false,
@@ -1567,8 +1581,7 @@ fn summarize_output(output: &Output, fallback: &str) -> String {
 }
 
 fn install_npm_package(package: &str) -> Result<(), String> {
-    let output =
-        run_timed("npm", &["install", "-g", package], ACTION_TIMEOUT)?;
+    let output = run_timed("npm", &["install", "-g", package], ACTION_TIMEOUT)?;
     if output.status.success() {
         Ok(())
     } else {
@@ -1610,7 +1623,13 @@ fn install_pip_package(package: &str) -> Result<(), String> {
     if program_on_expanded_path("pip3") {
         let output = run_timed(
             "pip3",
-            &["install", "-U", "--upgrade-strategy", "only-if-needed", package],
+            &[
+                "install",
+                "-U",
+                "--upgrade-strategy",
+                "only-if-needed",
+                package,
+            ],
             ACTION_TIMEOUT,
         )?;
         if output.status.success() {
@@ -1621,7 +1640,13 @@ fn install_pip_package(package: &str) -> Result<(), String> {
     if program_on_expanded_path("pip") {
         let output = run_timed(
             "pip",
-            &["install", "-U", "--upgrade-strategy", "only-if-needed", package],
+            &[
+                "install",
+                "-U",
+                "--upgrade-strategy",
+                "only-if-needed",
+                package,
+            ],
             ACTION_TIMEOUT,
         )?;
         if output.status.success() {
@@ -1708,10 +1733,7 @@ irm https://x.ai/cli/install.ps1 | iex
     {
         let output = run_timed(
             "bash",
-            &[
-                "-lc",
-                "curl -fsSL https://x.ai/cli/install.sh | bash",
-            ],
+            &["-lc", "curl -fsSL https://x.ai/cli/install.sh | bash"],
             ACTION_TIMEOUT,
         )?;
         if output.status.success() {

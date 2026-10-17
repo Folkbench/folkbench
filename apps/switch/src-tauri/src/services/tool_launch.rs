@@ -438,7 +438,9 @@ mod tests {
             PathBuf::from(r"C:\Users\demo")
         );
         assert_eq!(
-            strip_verbatim_prefix(PathBuf::from(r"\\?\UNC\server\share\folder")),
+            strip_verbatim_prefix(PathBuf::from(
+                r"\\?\UNC\server\share\folder"
+            )),
             PathBuf::from(r"\\server\share\folder")
         );
         assert_eq!(
