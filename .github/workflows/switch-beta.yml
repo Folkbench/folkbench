@@ -139,6 +139,7 @@ jobs:
           APPLE_SIGNING_IDENTITY: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_SIGNING_IDENTITY || '' }}
           APPLE_API_KEY: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_API_KEY || '' }}
           APPLE_API_ISSUER: ${{ runner.os == 'macOS' && needs.validate.outputs.notarize == 'true' && secrets.APPLE_API_ISSUER || '' }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           NOTARIZE: ${{ needs.validate.outputs.notarize }}
           TARGET: ${{ matrix.target }}
           BUNDLE: ${{ matrix.bundle }}
