@@ -1,5 +1,17 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.4 — Beta
+
+- 设置页支持应用内检查更新；正式安装包可通过 updater 签名通道接收后续 Beta。
+- 简易版增加按系统适配的 CLI 安装窗口，并改进模型列表与工具启动体验。
+- 专业版完善添加服务流程：站点卡片展示、未安装工具可跳过强制安装并保留一键安装入口。
+- 工具页检测 Node/npm/Homebrew 缺失并提供可复制安装命令；Windows 改进路径探测并隐藏后台检测终端闪窗。
+- 修复 Windows 退出行为、工具启动错误，以及 OS 感知的安装/前置检测。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.3 — Beta
 
 - 增加简易模式与首次使用引导，集中完成服务接入、配置切换和工具启动；保留专业模式及明暗主题。
