@@ -8,7 +8,7 @@ description: "整理 GPT-6.1 Sol 的模型页规格、272K 上下的官网标价
 category: models
 tags: [pricing, benchmarks, api]
 authorId: iris-wu
-modelIds: [gpt-6.1-sol, gpt-6-sol, gpt-6-astra, gpt-6-luna]
+modelIds: [gpt-6-1-sol, gpt-6-sol, gpt-6-astra, gpt-6-luna]
 benchmarkSlugs: []
 relatedSlugs: [claude-opus-5-5-review-pricing, claude-sonnet-5-5-review-pricing]
 publishedAt: '2026-10-02'

@@ -8,7 +8,7 @@ description: "Especificaciones oficiales, precios de lista y la tabla de benchma
 category: modelos
 tags: [precios, benchmarks, api]
 authorId: iris-wu
-modelIds: [claude-opus-5-5, claude-opus-5, claude-fable-5-1, claude-sonnet-5-5, gpt-6-astra, gpt-5.6-sol]
+modelIds: [claude-opus-5-5, claude-opus-5, claude-fable-5-1, claude-sonnet-5-5, gpt-6-astra, gpt-5-6-sol]
 benchmarkSlugs: []
 relatedSlugs: [claude-sonnet-5-5-review-pricing, gpt-6-1-sol-review-pricing]
 publishedAt: '2026-10-02'

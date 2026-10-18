@@ -8,7 +8,7 @@ description: "整理 Grok 4.7 的模型名、500K 上下文、200K 上下的官�
 category: 模型
 tags: [定价, 基准, API]
 authorId: iris-wu
-modelIds: [grok-4.7, grok-4-7, grok-4.6]
+modelIds: [grok-4-7, grok-4-6]
 benchmarkSlugs: []
 relatedSlugs: [gpt-6-1-sol-review-pricing, claude-opus-5-5-review-pricing, claude-sonnet-5-5-review-pricing]
 publishedAt: '2026-10-02'

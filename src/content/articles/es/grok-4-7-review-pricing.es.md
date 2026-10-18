@@ -8,7 +8,7 @@ description: "Nombre oficial del modelo, contexto de 500K, precios de lista por 
 category: Modelos
 tags: [precios, benchmarks, api]
 authorId: iris-wu
-modelIds: [grok-4.7, grok-4-7, grok-4.6]
+modelIds: [grok-4-7, grok-4-6]
 benchmarkSlugs: []
 relatedSlugs: [gpt-6-1-sol-review-pricing, claude-opus-5-5-review-pricing, claude-sonnet-5-5-review-pricing]
 publishedAt: '2026-10-02'
