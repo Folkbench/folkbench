@@ -137,7 +137,7 @@ Switch は各ツールの設定ファイルパスやフォーマット仕様に�
 
 海外ユーザー向けに設計され、米ドル決済と多言語に対応。GPT、Claude、Grok、DeepSeek などを低額デポジットから利用できます。比較的新しいプロバイダーながら、Folkbench プローブでも良好な稼働実績を記録しています。
 
-### [IKunCode](https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
+### [IKunCode](https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
 
 Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。
 

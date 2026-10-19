@@ -94,7 +94,7 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
      CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
      Apiporter: https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
      Cloudbridge: https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     IKunCode: https://ikunapi.cc/register?aff=SGGQCGPZ2Z32&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     IKunCode: https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
      境Ai: https://folkbench.com/services/jingai?utm_source=github&utm_campaign=readme
      智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
 -->
