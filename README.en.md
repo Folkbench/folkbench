@@ -20,6 +20,40 @@ Hands-on relay benchmarks, and Folkbench Switch.
 
 ---
 
+## Sponsors
+
+These relays support Folkbench's ongoing benchmarks. [Become a sponsor →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_en)
+
+<!-- 顶级赞助位预留：确定档位后在此放置单独一行大 Logo / Reserved for a top-tier sponsor once tiers exist -->
+
+<!-- /go 跳转上线前的原始链接 / Original links before /go went live:
+     Modelflare: https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     IKunCode: https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
+-->
+
+<table>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" alt="Modelflare" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/modelflare?source=readme_en"><b>Modelflare</b></a><br>Operated by US-based Havenbyte LLC. Supports major models (GPT, Claude, Gemini, Grok) and standard OpenAI-compatible protocols, alongside 40+ image and video generation models. Features ordered fallback across multiple models per single API Key, secondary pool groups, and comprehensive request audit logs tracking status, latency, tokens, and actual expenditures.<br><br>Cache compensation guarantee: Select OpenAI pools guarantee daily cache hit rates of 65% (Price-optimized), 75% (Stable), and 85% (Premium); qualifying requests falling below these thresholds receive compensatory credits. First-time top-ups unlock discounted tiers: a $20 deposit unlocks the GPT discount pool (GPT-5.6-Sol at approx. ¥0.51 input / ¥3.01 output per 1M tokens with no upper limit); a $50 deposit unlocks the Claude discount pool.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" alt="CheapAI" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/cheapai?source=readme_en"><b>CheapAI</b></a><br>Focused squarely on budget efficiency, particularly through its discounted pools. Features an innovative dynamic multiplier pool that adjusts rates in real time based on pool capacity—dropping rates when resources are plentiful and balancing cost versus availability during peak periods.<br><br>Offers discount tiers for cost-sensitive developers alongside Stable, Pro, and direct Official Key pools to accommodate varying workload criticalities.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" alt="IKunCode" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/ikuncode?source=readme_en"><b>IKunCode</b></a><br>Optimized for seamless integration into AI coding CLIs (Claude Code, Codex, Gemini CLI). Provides comprehensive support channels including email, QQ groups, and Telegram with attentive human assistance for beginners.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/fluxlane?source=readme_en"><b>FluxLane (智流)</b></a><br>Extensive model catalog spanning international and domestic options with direct OpenAI SDK compatibility. Features platform-level routing, usage monitoring, latency tracking, and formal procurement support (invoices, corporate contracts, and purchase orders) for enterprises and academic institutions.</td>
+</tr>
+</table>
+
+---
+
 ## Relay Rankings
 
 So many relays — which are stable, which are cheap, which leave your data alone? Success rate, latency, price and data-security level, all on one board. [Overall](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=readme_en) · [stability](https://folkbench.com/rankings/board?metric=availability&utm_source=github&utm_campaign=readme_en) · [value](https://folkbench.com/rankings/board?metric=price&utm_source=github&utm_campaign=readme_en).
@@ -82,53 +116,6 @@ Switch adapts to the configuration schemes and directory conventions of each too
 ## Community
 
 File bugs and feature requests in [GitHub Issues](https://github.com/Folkbench/folkbench/issues), or join [Telegram](https://t.me/+-h3yj4eOYmw0ZTNl) or the [QQ group](https://qm.qq.com/q/71NzSTrPVK) (203286875).
-
-## Sponsors
-
-These relays support Folkbench's ongoing benchmarks. [Become a sponsor →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_en)
-
-<!-- 顶级赞助位预留：确定档位后在此放置单独一行大 Logo / Reserved for a top-tier sponsor once tiers exist -->
-
-<!-- /go 跳转上线前的原始链接 / Original links before /go went live:
-     Modelflare: https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     Apiporter: https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     Cloudbridge: https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     IKunCode: https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     境Ai: https://folkbench.com/services/jingai?utm_source=github&utm_campaign=readme
-     智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
--->
-
-<table>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" alt="Modelflare" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/modelflare?source=readme_en"><b>Modelflare</b></a><br>Operated by US-based Havenbyte LLC. Supports major models (GPT, Claude, Gemini, Grok) and standard OpenAI-compatible protocols, alongside 40+ image and video generation models. Features ordered fallback across multiple models per single API Key, secondary pool groups, and comprehensive request audit logs tracking status, latency, tokens, and actual expenditures.<br><br>Cache compensation guarantee: Select OpenAI pools guarantee daily cache hit rates of 65% (Price-optimized), 75% (Stable), and 85% (Premium); qualifying requests falling below these thresholds receive compensatory credits. First-time top-ups unlock discounted tiers: a $20 deposit unlocks the GPT discount pool (GPT-5.6-Sol at approx. ¥0.51 input / ¥3.01 output per 1M tokens with no upper limit); a $50 deposit unlocks the Claude discount pool.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" alt="CheapAI" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/cheapai?source=readme_en"><b>CheapAI</b></a><br>Focused squarely on budget efficiency, particularly through its discounted pools. Features an innovative dynamic multiplier pool that adjusts rates in real time based on pool capacity—dropping rates when resources are plentiful and balancing cost versus availability during peak periods.<br><br>Offers discount tiers for cost-sensitive developers alongside Stable, Pro, and direct Official Key pools to accommodate varying workload criticalities.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/apiporter?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/apiporter-dark.png"><img src="docs/images/sponsors/apiporter-light.png" alt="Apiporter" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/apiporter?source=readme_en"><b>Apiporter</b></a><br>Tailored for enterprise teams and multi-channel aggregation in mainland China. Low entry threshold with a ¥5 minimum recharge, support for micro-amount VAT invoicing, enterprise WeChat integration, and live customer service. Enables flexible internal resource segregation with per-key quota limits and custom expiration dates.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/cloudbridge?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cloudbridge-dark.png"><img src="docs/images/sponsors/cloudbridge-light.png" alt="Cloudbridge" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/cloudbridge?source=readme_en"><b>Cloudbridge</b></a><br>Geared toward global developers seeking USD billing and multi-language support with low recharge minimums. Offers access to GPT, Claude, Grok, and DeepSeek endpoints. A newer provider with solid initial uptime performance on Folkbench probes.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" alt="IKunCode" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/ikuncode?source=readme_en"><b>IKunCode</b></a><br>Optimized for seamless integration into AI coding CLIs (Claude Code, Codex, Gemini CLI). Provides comprehensive support channels including email, QQ groups, and Telegram with attentive human assistance for beginners.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/jingai?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/jingai-dark.png"><img src="docs/images/sponsors/jingai-light.png" alt="境Ai" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/jingai?source=readme_en"><b>JingAI (境Ai)</b></a><br>Unified multi-model aggregator covering GPT, Claude, Grok, Gemini, and select domestic foundation models. Supports on-demand billing, subscription packages, and direct balance recharges. Check Folkbench probes for latest route latency and uptime.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/fluxlane?source=readme_en"><b>FluxLane (智流)</b></a><br>Extensive model catalog spanning international and domestic options with direct OpenAI SDK compatibility. Features platform-level routing, usage monitoring, latency tracking, and formal procurement support (invoices, corporate contracts, and purchase orders) for enterprises and academic institutions.</td>
-</tr>
-</table>
 
 ## License
 
