@@ -33,6 +33,30 @@ Folkbench は、この2つのステップを1つのスムーズな開発ワー�
 
 ---
 
+## 一部プロバイダーの詳細紹介と割引情報
+
+### [Modelflare](https://folkbench.com/go/modelflare?source=readme_ja)
+
+米国の Havenbyte LLC が運営。GPT、Claude、Gemini、Grok などの主要モデルと標準互換プロトコルに対応し、40種以上の画像・動画生成モデルもカバー。単一の API Key で複数モデルのフォールバック制御や予備グループの設定が可能で、リクエストログから遅延や実消費コストを確認できます。
+
+キャッシュ補償制度も特徴で、対象の OpenAI プールでキャッシュヒット率保証（65%〜85%）を下回った場合に補填が行われます。初回チャージ特典として、$20 以上のチャージで GPT 特別プール（GPT-5.6-Sol が上限なしで大幅割引）、$50 以上のチャージで Claude 特別プールがアンロックされます。
+
+### [CheapAI](https://folkbench.com/go/cheapai?source=readme_ja)
+
+圧倒的な低価格を重視したサービス。リアルタイムの回線状況に応じて倍率を自動調整する「動的倍率プール」を備え、リソースに余裕がある時間帯はさらに安価に利用可能です。
+
+コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。
+
+### [IKunCode](https://folkbench.com/go/ikuncode?source=readme_ja)
+
+Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。
+
+### [FluxLane（智流）](https://folkbench.com/go/fluxlane?source=readme_ja)
+
+国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。
+
+---
+
 ## 1. 回線を選ぶ：Web 実測ベンチマーク
 
 公開プローブによる継続的な自動リクエストを通じて、各リレー・APIプロバイダーのモニタリングデータをありのまま公開しています。ブラックボックスや誇大表記を排除した客観的指標です。
@@ -112,42 +136,6 @@ Switch は各ツールの設定ファイルパスやフォーマット仕様に�
 - **完全ローカル管理**：Switch の設定および API Key は、すべてユーザーのローカル環境（ホームディレクトリ配下）にのみ保存されます。外部サーバーへの送信は一切行いません。
 - **コード・プロンプトの非収集**：利用量集計機能はローカルのログのみを解析します。ソースコード、プロンプト、会話コンテキストの読み取りやアップロードは一切行われません。
 - **セキュリティ上の注意**：GitHub Issues への投稿やログのスクリーンショットを共有する際は、ご自身的 API Key が映り込まないようマスキングをお願いします。
-
----
-
-## 一部プロバイダーの詳細紹介と割引情報
-
-### [Modelflare](https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-米国の Havenbyte LLC が運営。GPT、Claude、Gemini、Grok などの主要モデルと標準互換プロトコルに対応し、40種以上の画像・動画生成モデルもカバー。単一の API Key で複数モデルのフォールバック制御や予備グループの設定が可能で、リクエストログから遅延や実消費コストを確認できます。
-
-キャッシュ補償制度も特徴で、対象の OpenAI プールでキャッシュヒット率保証（65%〜85%）を下回った場合に補填が行われます。初回チャージ特典として、$20 以上のチャージで GPT 特別プール（GPT-5.6-Sol が上限なしで大幅割引）、$50 以上のチャージで Claude 特別プールがアンロックされます。
-
-### [CheapAI](https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-圧倒的な低価格を重視したサービス。リアルタイムの回線状況に応じて倍率を自動調整する「動的倍率プール」を備え、リソースに余裕がある時間帯はさらに安価に利用可能です。
-
-コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。
-
-### [Apiporter](https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-中国国内の法人利用やマルチチャネル集約に最適化。最低5元からの少額チャージ、インボイス対応、オンライン窓口や企業WeChatによる手厚いサポートを提供。API Key ごとの利用上限や有効期限設定が可能で、チーム運用に適しています。
-
-### [Cloudbridge](https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-海外ユーザー向けに設計され、米ドル決済と多言語に対応。GPT、Claude、Grok、DeepSeek などを低額デポジットから利用できます。比較的新しいプロバイダーながら、Folkbench プローブでも良好な稼働実績を記録しています。
-
-### [IKunCode](https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme)
-
-Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。
-
-### [JingAI（境Ai）](https://folkbench.com/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)
-
-複数モデルの統合ゲートウェイを提供。従量課金、月額パッケージ、残高チャージに対応しています。利用前には Folkbench で対象モデルの最新稼働率と遅延を確認することをおすすめします。
-
-### [FluxLane（智流）](https://folkbench.com/go/fluxlane?source=readme)
-
-国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。
 
 ---
 

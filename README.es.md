@@ -20,6 +20,40 @@ Mediciones reales de estaciones, y Folkbench Switch.
 
 ---
 
+## Patrocinadores
+
+Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinador →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_es)
+
+<!-- 顶级赞助位预留：确定档位后在此放置单独一行大 Logo / Reserved for a top-tier sponsor once tiers exist -->
+
+<!-- /go 跳转上线前的原始链接 / Original links before /go went live:
+     Modelflare: https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     IKunCode: https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
+     智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
+-->
+
+<table>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" alt="Modelflare" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/modelflare?source=readme_es"><b>Modelflare</b></a><br>Modelflare está operado por Havenbyte LLC, en Estados Unidos. Cubre modelos principales como GPT, Claude, Gemini y Grok, además de los protocolos compatibles habituales, y también más de 40 modelos de imagen y vídeo. Una API Key puede configurar un fallback ordenado y llamar a varios modelos; la Key también puede tener un grupo de reserva. En el registro de solicitudes se ven el estado, la latencia, los tokens y el coste real.<br><br>La compensación de caché es otro punto de este sitio: algunos grupos de OpenAI —el de precio prioritario, el estable y el premium— garantizan cada día una tasa de aciertos de caché del 65%, el 75% y el 85%, respectivamente. Si una solicitud de API que cumple las condiciones no alcanza esa tasa, la plataforma añade el complemento correspondiente.<br><br>Ahora hay una promoción de primera recarga que desbloquea grupos de oferta. Una sola recarga de US$20 desbloquea el grupo de oferta de GPT; después, GPT-5.6-Sol cuesta aproximadamente ¥0.51 (entrada) / ¥3.01 (salida) por millón de tokens, sin límite de uso. Una sola recarga de US$50 desbloquea el grupo de oferta de Claude.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" alt="CheapAI" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/cheapai?source=readme_es"><b>CheapAI</b></a><br>El nombre lo dice: el foco es el precio bajo, sobre todo en el grupo de oferta, donde el precio está muy contenido. También tiene un grupo de multiplicador dinámico. Según el soporte, este grupo ajusta el multiplicador según las cuentas disponibles en ese momento. Cuando hay recursos de sobra, el precio puede bajar más; cuando escasean, se ajusta. El equilibrio entre precio y disponibilidad se hace en tiempo real.<br><br>Quien busque relación calidad-precio puede elegir el grupo de oferta, con mejor multiplicador de descuento. Quien busque estabilidad puede elegir el grupo estable o el grupo Pro. El sitio también ofrece un grupo de clave oficial, así que cubre usos distintos.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" alt="IKunCode" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/ikuncode?source=readme_es"><b>IKunCode</b></a><br>IKunCode encaja bien con las herramientas de programación: Claude Code, Codex y Gemini CLI tienen soporte propio. Los canales de soporte y consulta están bastante completos; el sitio publica el correo de atención, un grupo de QQ y Telegram. El soporte humano es atento, y sirve para quien empieza.</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/fluxlane?source=readme_es"><b>智流 FluxLane</b></a><br>智流 FluxLane tiene muchos modelos y rutas, tanto internacionales como de China, y la forma de conexión es uniforme: compatible directamente con el SDK de OpenAI. Además de esa cobertura, la plataforma incluye enrutado, uso, coste y latencia, así que encaja con desarrolladores y equipos que se quedan. Para compras de empresas y universidades tiene una ventaja clara: puede emitir factura, contrato y orden de compra.</td>
+</tr>
+</table>
+
+---
+
 ## Clasificación de estaciones
 
 Hay muchas estaciones. ¿Cuál es estable, cuál es barata y cuál no toca tus datos? La tasa de éxito, la velocidad de respuesta, el precio y el nivel de seguridad de datos se ven en una sola clasificación. [General](https://folkbench.com/es/rankings/board?utm_source=github&utm_campaign=readme_es) · [Estabilidad](https://folkbench.com/es/rankings/board?metric=availability&utm_source=github&utm_campaign=readme_es) · [Relación calidad-precio](https://folkbench.com/es/rankings/board?metric=price&utm_source=github&utm_campaign=readme_es).
@@ -82,53 +116,6 @@ Switch adapta la ruta y los campos de cada herramienta. Al cambiar, solo cubre l
 ## Comunidad
 
 Los errores y las ideas de funciones van a [GitHub Issues](https://github.com/Folkbench/folkbench/issues). También puedes entrar en [Telegram](https://t.me/+-h3yj4eOYmw0ZTNl) o en el [grupo de QQ](https://qm.qq.com/q/71NzSTrPVK) (203286875).
-
-## Patrocinadores
-
-Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinador →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_es)
-
-<!-- 顶级赞助位预留：确定档位后在此放置单独一行大 Logo / Reserved for a top-tier sponsor once tiers exist -->
-
-<!-- /go 跳转上线前的原始链接 / Original links before /go went live:
-     Modelflare: https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     Apiporter: https://apiporter.com/sign-up?aff=Pk46&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     Cloudbridge: https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     IKunCode: https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     境Ai: https://folkbench.com/services/jingai?utm_source=github&utm_campaign=readme
-     智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
--->
-
-<table>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" alt="Modelflare" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/modelflare?source=readme_es"><b>Modelflare</b></a><br>Modelflare está operado por Havenbyte LLC, en Estados Unidos. Cubre modelos principales como GPT, Claude, Gemini y Grok, además de los protocolos compatibles habituales, y también más de 40 modelos de imagen y vídeo. Una API Key puede configurar un fallback ordenado y llamar a varios modelos; la Key también puede tener un grupo de reserva. En el registro de solicitudes se ven el estado, la latencia, los tokens y el coste real.<br><br>La compensación de caché es otro punto de este sitio: algunos grupos de OpenAI —el de precio prioritario, el estable y el premium— garantizan cada día una tasa de aciertos de caché del 65%, el 75% y el 85%, respectivamente. Si una solicitud de API que cumple las condiciones no alcanza esa tasa, la plataforma añade el complemento correspondiente.<br><br>Ahora hay una promoción de primera recarga que desbloquea grupos de oferta. Una sola recarga de US$20 desbloquea el grupo de oferta de GPT; después, GPT-5.6-Sol cuesta aproximadamente ¥0.51 (entrada) / ¥3.01 (salida) por millón de tokens, sin límite de uso. Una sola recarga de US$50 desbloquea el grupo de oferta de Claude.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" alt="CheapAI" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/cheapai?source=readme_es"><b>CheapAI</b></a><br>El nombre lo dice: el foco es el precio bajo, sobre todo en el grupo de oferta, donde el precio está muy contenido. También tiene un grupo de multiplicador dinámico. Según el soporte, este grupo ajusta el multiplicador según las cuentas disponibles en ese momento. Cuando hay recursos de sobra, el precio puede bajar más; cuando escasean, se ajusta. El equilibrio entre precio y disponibilidad se hace en tiempo real.<br><br>Quien busque relación calidad-precio puede elegir el grupo de oferta, con mejor multiplicador de descuento. Quien busque estabilidad puede elegir el grupo estable o el grupo Pro. El sitio también ofrece un grupo de clave oficial, así que cubre usos distintos.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/apiporter?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/apiporter-dark.png"><img src="docs/images/sponsors/apiporter-light.png" alt="Apiporter" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/apiporter?source=readme_es"><b>Apiporter</b></a><br>Apiporter se orienta a empresas de China y a reunir varios canales. Encaja con quien valora la factura y una prueba de importe bajo. El recargo mínimo es de ¥5, admite factura por importes pequeños y por cualquier importe, y tiene atención en línea y WeChat empresarial. Probar una ruta con un recargo pequeño no sale caro.<br><br>Tiene varios grupos de canal, con distinto equilibrio entre precio y estabilidad. Cada API Key puede llevar su propio cupo y su propia caducidad, lo que resulta práctico para un equipo o para separar proyectos.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/cloudbridge?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cloudbridge-dark.png"><img src="docs/images/sponsors/cloudbridge-light.png" alt="Cloudbridge" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/cloudbridge?source=readme_es"><b>Cloudbridge</b></a><br>Cloudbridge se inclina al uso fuera de China: facturación en dólares, varios idiomas y un recargo mínimo bajo. Entre los modelos publicados están GPT, Claude, Grok y DeepSeek, así que liquidar en dólares resulta directo.<br><br>Es un sitio relativamente nuevo, y el historial largo no es tan amplio como el de sitios más antiguos. Folkbench ya tiene mediciones reales, y algunas rutas muestran una buena disponibilidad.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" alt="IKunCode" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/ikuncode?source=readme_es"><b>IKunCode</b></a><br>IKunCode encaja bien con las herramientas de programación: Claude Code, Codex y Gemini CLI tienen soporte propio. Los canales de soporte y consulta están bastante completos; el sitio publica el correo de atención, un grupo de QQ y Telegram. El soporte humano es atento, y sirve para quien empieza.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/jingai?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/jingai-dark.png"><img src="docs/images/sponsors/jingai-light.png" alt="境Ai" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/jingai?source=readme_es"><b>境Ai</b></a><br>境Ai se centra en un acceso unificado a varios modelos. La información pública actual cubre GPT, Claude, Grok, Gemini y algunos modelos chinos, con entradas de pago por uso, planes y recarga de saldo. Es un sitio reciente: conviene decidir primero el modelo y luego mirar en Folkbench la disponibilidad, la latencia y el precio recientes de esa ruta.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/fluxlane?source=readme_es"><b>智流 FluxLane</b></a><br>智流 FluxLane tiene muchos modelos y rutas, tanto internacionales como de China, y la forma de conexión es uniforme: compatible directamente con el SDK de OpenAI. Además de esa cobertura, la plataforma incluye enrutado, uso, coste y latencia, así que encaja con desarrolladores y equipos que se quedan. Para compras de empresas y universidades tiene una ventaja clara: puede emitir factura, contrato y orden de compra.</td>
-</tr>
-</table>
 
 ## Licencia
 
