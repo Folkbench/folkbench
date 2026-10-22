@@ -1,5 +1,14 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.5 — Beta
+
+- 修复服务卡片副标题显示榜单默认模型、盖住用户所选模型的问题；本地已保存的模型 id 优先展示。
+- 站点匹配在用户所选模型不在榜单时仍可回退默认榜单以保留头像等信息。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.4 — Beta
 
 - 设置页支持应用内检查更新；正式安装包可通过 updater 签名通道接收后续 Beta。

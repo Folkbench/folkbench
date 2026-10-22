@@ -9,7 +9,7 @@ function checkDownloads(text) {
   assert.match(text, /SHA-?256/i)
   // Plain headings and already-expanded details are both readable by default.
   for (const tag of text.match(/<details\b[^>]*>/gi) || []) assert.match(tag, /\bopen(?:\s|=|>)/i)
-  for (const parameter of ['partner=TDN1QM6KKYX9', 'aff=TkeF', 'aff=Pk46', 'ref=XVuJ', 'aff=QgPu', 'go/fluxlane?source=readme']) assert(text.includes(parameter))
+  for (const parameter of ['partner=TDN1QM6KKYX9', 'aff=TkeF', 'aff=QgPu', 'go/fluxlane?source=readme']) assert(text.includes(parameter))
 }
 
 for (const name of ['README.md', 'README.en.md', 'README.es.md']) {

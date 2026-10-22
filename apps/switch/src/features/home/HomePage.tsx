@@ -116,6 +116,10 @@ import {
 } from './easy-model'
 import type { UsageWindow } from '@/lib/usage'
 import { EasyHomePage } from './EasyHomePage'
+import {
+  resolvePublishedStationRow,
+  serviceCardModelLabel,
+} from './service-display'
 
 type FormState = {
   targetToolId: string
@@ -398,14 +402,10 @@ function addInputFromForm(form: FormState) {
 
 function currentPublishedStation(
   service: MyService,
-  catalog: PublishedCatalog | undefined
+  primary: PublishedCatalog | undefined,
+  fallback?: PublishedCatalog | undefined
 ) {
-  return catalog?.stations.find(
-    (row) =>
-      row.stationId === service.stationId &&
-      row.channelId === service.channelId &&
-      row.modelId === service.modelId
-  )
+  return resolvePublishedStationRow(service, primary, fallback)
 }
 
 function effectLabel(effect: SwitchEffect, t: (key: string) => string) {
@@ -772,11 +772,14 @@ function ProHomePage() {
   )
   const rows = services.data ?? []
   const catalogModelIds = [
-    ...new Set(
-      rows
+    ...new Set([
+      ...rows
         .filter((row) => row.stationId && row.channelId && row.modelId)
-        .map((row) => row.modelId)
-    ),
+        .map((row) => row.modelId),
+      // Fallback ranking so station avatar/price still resolve when the
+      // saved model is not on that model's public board.
+      DEFAULT_PUBLIC_MODEL_ID,
+    ]),
   ].sort()
   const catalogQueries = useQueries({
     queries: catalogModelIds.map((modelId) => ({
@@ -820,7 +823,8 @@ function ProHomePage() {
   const currentPublished = currentService
     ? currentPublishedStation(
         currentService,
-        catalogByModel.get(currentService.modelId)
+        catalogByModel.get(currentService.modelId),
+        catalogByModel.get(DEFAULT_PUBLIC_MODEL_ID)
       )
     : undefined
   const rowById = new Map(rows.map((row) => [row.id, row]))
@@ -963,19 +967,20 @@ function ProHomePage() {
   const backupLines: ComparisonLine[] = homeServiceIds
     .map((id) => rowById.get(id))
     .filter((service): service is MyService => service !== undefined)
-    .map((service) => ({
-      key: service.id,
-      service,
-      published:
-        currentPublishedStation(service, catalogByModel.get(service.modelId)) ??
-        matchPublishedStation(service, publicStations),
-      origin: currentPublishedStation(
+    .map((service) => {
+      const primary = catalogByModel.get(service.modelId)
+      const fallback = catalogByModel.get(DEFAULT_PUBLIC_MODEL_ID)
+      const fromCatalog = currentPublishedStation(service, primary, fallback)
+      return {
+        key: service.id,
         service,
-        catalogByModel.get(service.modelId)
-      )
-        ? catalogByModel.get(service.modelId)?.origin
-        : publicOrigin,
-    }))
+        published:
+          fromCatalog ?? matchPublishedStation(service, publicStations),
+        origin: fromCatalog
+          ? (primary?.origin ?? fallback?.origin)
+          : publicOrigin,
+      }
+    })
   const canWrite = effect !== 'notImplemented'
   const switchBusy = switchService.isPending || unswitchService.isPending
 
@@ -1655,7 +1660,7 @@ function ProHomePage() {
                     <p className="mt-1 truncate text-[12px] text-muted-foreground">
                       {[
                         currentPublished?.channelName ?? currentService.name,
-                        currentCatalog?.modelName ?? currentService.modelId,
+                        serviceCardModelLabel(currentService, currentCatalog),
                       ]
                         .filter(Boolean)
                         .join(' · ')}

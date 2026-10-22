@@ -14,6 +14,7 @@ import type { MyService, PublishedStation } from '@/bridge'
 import { StationAvatar } from '@/components/station-avatar'
 import { Button } from '@/components/ui/button'
 import { ServiceMenu } from './ServiceMenu'
+import { serviceCardModelId } from './service-display'
 
 export type ComparisonLine = {
   key: string
@@ -175,7 +176,7 @@ function BackupSwitcherRow({
   const active = Boolean(service && service.id === currentId)
   const name = service?.name ?? published?.channelName ?? ''
   const station = published?.stationName ?? service?.baseUrl ?? ''
-  const model = published?.modelId || service?.modelId || ''
+  const model = serviceCardModelId(service, published)
   const subtitle = [station, model].filter(Boolean).join(' · ')
 
   function startDrag(event: ReactPointerEvent<HTMLButtonElement>) {
