@@ -35,7 +35,7 @@ The following sites are listed in the current display order. Click a site name t
 
 <h3><a href="https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">🌟 Modelflare</a></h3>
 
-The site currently offers special access tiers. A single US$20 top-up unlocks the GPT discount group at a multiplier of only 0.015; after unlocking it, GPT-5.6-Sol is priced at about ¥0.51 input / ¥3.01 output per million tokens, and the site’s support team says there is no usage cap. A single US$50 top-up unlocks the Claude discount group at a multiplier of only 0.03.
+The site currently also runs a first-top-up offer that unlocks discount groups. A single US$20 top-up unlocks the 0.015-multiplier GPT discount group; after unlocking it, GPT-5.6-Sol is priced at about ¥0.51 input / ¥3.01 output per million tokens, with no usage cap. A single US$50 top-up unlocks the 0.03-multiplier Claude discount group.
 
 The site is operated by the US LLC Havenbyte LLC and supports GPT, Claude, Gemini, Grok, common compatible protocols, and more than 40 image and video models. API keys can be configured with ordered fallback, while request records show tokens, latency, status, and actual cost.
 
