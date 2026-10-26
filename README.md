@@ -6,9 +6,9 @@
 
 中转站实测评测，与 Folkbench Switch。
 
-[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+-h3yj4eOYmw0ZTNl) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
+[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+C_E8eL1ZevM4MTY9) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
 
-[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=readme) · [⚡ Switch 客户端](#folkbench-switch) · [📦 下载安装](https://github.com/Folkbench/folkbench/releases) · [🔥 热门模型](#热门模型) · [💬 交流群 (TG)](https://t.me/+-h3yj4eOYmw0ZTNl) · [💬 QQ 群](https://qm.qq.com/q/71NzSTrPVK) · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md)
+[🌐 在线评测大盘](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=readme) · [⚡ Switch 客户端](#folkbench-switch) · [📦 下载安装](https://github.com/Folkbench/folkbench/releases) · [🔥 热门模型](#热门模型) · [💬 交流群 (TG)](https://t.me/+C_E8eL1ZevM4MTY9) · [💬 QQ 群](https://qm.qq.com/q/71NzSTrPVK) · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png">
@@ -118,7 +118,7 @@ Switch 对各工具的配置路径与字段规范进行了适配，切换时仅�
 
 ## 社区与反馈
 
-Bug 与功能建议请提交 [GitHub Issues](https://github.com/Folkbench/folkbench/issues)，也欢迎加入 [Telegram](https://t.me/+-h3yj4eOYmw0ZTNl) 或 [QQ 群](https://qm.qq.com/q/71NzSTrPVK)（203286875）。
+Bug 与功能建议请提交 [GitHub Issues](https://github.com/Folkbench/folkbench/issues)，也欢迎加入 [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) 或 [QQ 群](https://qm.qq.com/q/71NzSTrPVK)（203286875）。
 
 ## 许可证
 

@@ -6,9 +6,9 @@
 
 Mediciones reales de estaciones, y Folkbench Switch.
 
-[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+-h3yj4eOYmw0ZTNl) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
+[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+C_E8eL1ZevM4MTY9) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
 
-[🌐 Clasificación en vivo](https://folkbench.com/es/rankings/board?utm_source=github&utm_campaign=readme_es) · [⚡ Cliente Switch](#folkbench-switch) · [📦 Descargas](https://github.com/Folkbench/folkbench/releases) · [🔥 Modelos populares](#modelos-populares) · [💬 Comunidad (TG)](https://t.me/+-h3yj4eOYmw0ZTNl) · [💬 Grupo QQ](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
+[🌐 Clasificación en vivo](https://folkbench.com/es/rankings/board?utm_source=github&utm_campaign=readme_es) · [⚡ Cliente Switch](#folkbench-switch) · [📦 Descargas](https://github.com/Folkbench/folkbench/releases) · [🔥 Modelos populares](#modelos-populares) · [💬 Comunidad (TG)](https://t.me/+C_E8eL1ZevM4MTY9) · [💬 Grupo QQ](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-en-dark.png"><img src="docs/images/hero-en-light.png" width="100%" alt="Clasificación de estaciones de Folkbench y cliente Switch"></picture>
 
@@ -115,7 +115,7 @@ Switch adapta la ruta y los campos de cada herramienta. Al cambiar, solo cubre l
 
 ## Comunidad
 
-Los errores y las ideas de funciones van a [GitHub Issues](https://github.com/Folkbench/folkbench/issues). También puedes entrar en [Telegram](https://t.me/+-h3yj4eOYmw0ZTNl) o en el [grupo de QQ](https://qm.qq.com/q/71NzSTrPVK) (203286875).
+Los errores y las ideas de funciones van a [GitHub Issues](https://github.com/Folkbench/folkbench/issues). También puedes entrar en [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) o en el [grupo de QQ](https://qm.qq.com/q/71NzSTrPVK) (203286875).
 
 ## Licencia
 
