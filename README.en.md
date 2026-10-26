@@ -6,9 +6,9 @@
 
 Hands-on relay benchmarks, and Folkbench Switch.
 
-[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+-h3yj4eOYmw0ZTNl) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
+[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+C_E8eL1ZevM4MTY9) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
 
-[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=readme_en) · [⚡ Switch Client](#folkbench-switch) · [📦 Downloads](https://github.com/Folkbench/folkbench/releases) · [🔥 Popular Models](#popular-models) · [💬 Community (TG)](https://t.me/+-h3yj4eOYmw0ZTNl) · [💬 QQ Group](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [日本語](README.ja.md) · [Español](README.es.md)
+[🌐 Live Benchmarks](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=readme_en) · [⚡ Switch Client](#folkbench-switch) · [📦 Downloads](https://github.com/Folkbench/folkbench/releases) · [🔥 Popular Models](#popular-models) · [💬 Community (TG)](https://t.me/+C_E8eL1ZevM4MTY9) · [💬 QQ Group](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [日本語](README.ja.md) · [Español](README.es.md)
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-en-dark.png"><img src="docs/images/hero-en-light.png" width="100%" alt="Folkbench relay rankings and Switch client"></picture>
 
@@ -115,7 +115,7 @@ Switch adapts to the configuration schemes and directory conventions of each too
 
 ## Community
 
-File bugs and feature requests in [GitHub Issues](https://github.com/Folkbench/folkbench/issues), or join [Telegram](https://t.me/+-h3yj4eOYmw0ZTNl) or the [QQ group](https://qm.qq.com/q/71NzSTrPVK) (203286875).
+File bugs and feature requests in [GitHub Issues](https://github.com/Folkbench/folkbench/issues), or join [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) or the [QQ group](https://qm.qq.com/q/71NzSTrPVK) (203286875).
 
 ## License
 
