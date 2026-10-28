@@ -57,10 +57,6 @@ Oriented toward domestic business users and multi-channel access. The minimum to
 
 Its main features are multi-channel access, an overseas site, multilingual support, and USD billing, with a $1 minimum top-up and published coverage for GPT, Claude, Grok, DeepSeek, and other models. Folkbench currently marks it as a newly opened site, so reliability and response speed need more data; it is useful for comparing overseas settlement and domestic-model pricing, while stability should be verified separately.
 
-<h3><a href="https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">IKunCode</a></h3>
-
-Operating history and after-sales support are its clearest selling points. The published profile says it has operated for more than a year; its current directory includes Claude and GPT routes, supports Alipay and WeChat Pay, and records positive recharge and refund experience. The current price groups and public model range are relatively limited, so confirm that the model you need is listed before topping up.
-
 <h3><a href="https://folkbench.com/en/services/jingai?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog" target="_blank" rel="noopener noreferrer">境Ai</a></h3>
 
 A unified API aggregation platform for developers and teams, with published coverage for GPT, Claude, Grok, Gemini, and selected domestic models. Pay-as-you-go billing, packages, and balance top-ups are all documented. It is a newer site with limited independent evaluation data, so stability and scheduling should not be inferred from the site’s own description; start with a small trial for the model you need.

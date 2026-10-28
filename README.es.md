@@ -29,7 +29,6 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 <!-- /go 跳转上线前的原始链接 / Original links before /go went live:
      Modelflare: https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
      CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     IKunCode: https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
      智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
 -->
 
@@ -41,10 +40,6 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 <tr>
 <td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" alt="CheapAI" width="180"></picture></a></td>
 <td><a href="https://folkbench.com/go/cheapai?source=readme_es"><b>CheapAI</b></a><br>El nombre lo dice: el foco es el precio bajo, sobre todo en el grupo de oferta, donde el precio está muy contenido. También tiene un grupo de multiplicador dinámico. Según el soporte, este grupo ajusta el multiplicador según las cuentas disponibles en ese momento. Cuando hay recursos de sobra, el precio puede bajar más; cuando escasean, se ajusta. El equilibrio entre precio y disponibilidad se hace en tiempo real.<br><br>Quien busque relación calidad-precio puede elegir el grupo de oferta, con mejor multiplicador de descuento. Quien busque estabilidad puede elegir el grupo estable o el grupo Pro. El sitio también ofrece un grupo de clave oficial, así que cubre usos distintos.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" alt="IKunCode" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/ikuncode?source=readme_es"><b>IKunCode</b></a><br>IKunCode encaja bien con las herramientas de programación: Claude Code, Codex y Gemini CLI tienen soporte propio. Los canales de soporte y consulta están bastante completos; el sitio publica el correo de atención, un grupo de QQ y Telegram. El soporte humano es atento, y sirve para quien empieza.</td>
 </tr>
 <tr>
 <td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>

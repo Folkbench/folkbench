@@ -47,10 +47,6 @@ Folkbench は、この2つのステップを1つのスムーズな開発ワー�
 
 コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。
 
-### [IKunCode](https://folkbench.com/go/ikuncode?source=readme_ja)
-
-Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。
-
 ### [FluxLane（智流）](https://folkbench.com/go/fluxlane?source=readme_ja)
 
 国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。
