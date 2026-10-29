@@ -63,6 +63,6 @@ A unified API aggregation platform for developers and teams, with published cove
 
 <h3><a href="https://folkbench.com/go/fluxlane?source=readme" target="_blank" rel="noopener noreferrer">智流 FluxLane</a></h3>
 
-Its published directory is large, covering a wide range of international and domestic models across multiple channels. Support for enterprise and university procurement, invoices, and related documents is a clear use-case advantage. The current profile still lacks enough independent experience and rating fields, so verify the site’s low-multiplier, stability, and TTFT claims against the model-specific rankings and current routes.
+FluxLane (智流) is an AI API gateway for developers and teams: it offers full-capability, stable access to global models, supporting GPT, Claude, Gemini, DeepSeek, GLM, and other mainstream models as well as major global model-vendor protocols. The platform provides policy-based routing and multi-route failover, making long-term integration and cost accounting easier for teams in China. For enterprise and university procurement in China, it can sign contracts, accept wire transfers, and provide invoices, purchase orders, and related materials (subject to commercial confirmation). It publishes model capability evaluation reports, with multipliers as low as 0.1×, and new registrants receive a $2 trial credit.
 
 Prices, available models, protocol support, and routes can change, so check each site’s current documentation, pricing page, and terms before use.
