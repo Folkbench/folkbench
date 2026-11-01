@@ -15,10 +15,10 @@
       {
         "label": "main",
         "title": "Folkbench Switch",
-        "width": 760,
-        "height": 680,
-        "minWidth": 720,
-        "minHeight": 660,
+        "width": 990,
+        "height": 780,
+        "minWidth": 660,
+        "minHeight": 520,
         "resizable": true,
         "fullscreen": false
       }

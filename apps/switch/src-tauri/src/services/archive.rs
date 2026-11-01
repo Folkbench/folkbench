@@ -1,7 +1,8 @@
 use std::path::Path;
 
 use crate::domain::{
-    FetchedModel, FolkbenchBinding, MyService, ServiceError, ServiceProtocol,
+    ClaudeRoleModels, FetchedModel, FolkbenchBinding, MyService, ServiceError,
+    ServiceProtocol,
 };
 use crate::services::atomic::write_json_atomically;
 use crate::services::catalog::parse_rankings_json;
@@ -27,6 +28,9 @@ pub(crate) struct StoredService {
     /// Full model list from the last successful form fetch (cc-switch style).
     #[serde(default)]
     pub models: Vec<FetchedModel>,
+    /// Claude Code role mapping; ignored for other tools.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub claude_role_models: Option<ClaudeRoleModels>,
     /// Tool-facing provider key under models.providers / model refs.
     /// Empty means resolve to the Folkbench service id at apply time.
     #[serde(default)]
@@ -345,6 +349,7 @@ fn to_public(
         channel_id: row.channel_id,
         model_id: row.model_id,
         models: row.models,
+        claude_role_models: row.claude_role_models,
         provider_id: row.provider_id,
         api_protocol: row.api_protocol,
         base_url: row.base_url,
@@ -420,6 +425,7 @@ pub fn add_for_tool(
     channel_id: String,
     model_id: String,
     models: Vec<FetchedModel>,
+    claude_role_models: Option<ClaudeRoleModels>,
     provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
@@ -461,6 +467,11 @@ pub fn add_for_tool(
         models,
         &trimmed_model,
     );
+    let stored_roles = crate::adapters::claude_roles::normalize_for_store(
+        claude_role_models,
+        &trimmed_model,
+        tool_id,
+    );
     let stored = StoredService {
         tool_id: tool_id.to_string(),
         id: id.clone(),
@@ -469,6 +480,7 @@ pub fn add_for_tool(
         channel_id: channel_id.trim().to_string(),
         model_id: trimmed_model,
         models: stored_models,
+        claude_role_models: stored_roles,
         provider_id: normalized_provider,
         api_protocol,
         base_url: normalized_base,
@@ -500,6 +512,7 @@ pub fn update_for_tool(
     channel_id: String,
     model_id: String,
     models: Vec<FetchedModel>,
+    claude_role_models: Option<ClaudeRoleModels>,
     provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
@@ -545,6 +558,12 @@ pub fn update_for_tool(
             models,
             &trimmed_model,
         );
+        stored.claude_role_models =
+            crate::adapters::claude_roles::normalize_for_store(
+                claude_role_models,
+                &trimmed_model,
+                tool_id,
+            );
         stored.model_id = trimmed_model;
         stored.provider_id = normalized_provider;
         stored.api_protocol = api_protocol;
@@ -718,6 +737,7 @@ pub fn add(
         channel_id,
         model_id,
         Vec::new(),
+        None,
         String::new(),
         api_protocol,
         base_url,
@@ -782,6 +802,7 @@ pub fn update(
         channel_id,
         model_id,
         Vec::new(),
+        None,
         String::new(),
         api_protocol,
         base_url,
@@ -1171,6 +1192,7 @@ mod provider_id_tests {
             channel_id: String::new(),
             model_id: "gpt".into(),
             models: Vec::new(),
+            claude_role_models: None,
             provider_id: String::new(),
             api_protocol: ServiceProtocol::Auto,
             base_url: "https://example.com".into(),
@@ -1200,6 +1222,7 @@ mod provider_id_tests {
             "".into(),
             "gpt-5.4".into(),
             Vec::new(),
+            None,
             String::new(),
             ServiceProtocol::OpenaiCompletions,
             "https://example.com/v1".into(),
@@ -1216,6 +1239,7 @@ mod provider_id_tests {
             "".into(),
             "gpt-5.4".into(),
             Vec::new(),
+            None,
             "modelflare".into(),
             ServiceProtocol::OpenaiCompletions,
             "https://example.com/v1".into(),
@@ -1266,6 +1290,7 @@ mod models_archive_tests {
             "".into(),
             "gpt-5.4".into(),
             models.clone(),
+            None,
             "modelflare".into(),
             ServiceProtocol::OpenaiCompletions,
             "https://example.com/v1".into(),
@@ -1291,6 +1316,7 @@ mod models_archive_tests {
                 id: "only".into(),
                 name: "Only".into(),
             }],
+            None,
             "modelflare".into(),
             ServiceProtocol::OpenaiCompletions,
             "https://example.com/v1".into(),

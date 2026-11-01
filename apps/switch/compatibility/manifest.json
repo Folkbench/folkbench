@@ -2,9 +2,18 @@
   "schemaVersion": 1,
   "updatedAt": "2026-09-24",
   "supportDefinition": "A catalog entry is not a support claim. A tool is supported only after its real configuration can be inspected, safely written, verified, and restored on the target operating system.",
-  "phaseOnePlatforms": ["macos", "windows"],
-  "deferredPlatforms": ["wsl", "linux"],
-  "platformPriority": ["macos", "windows"],
+  "phaseOnePlatforms": [
+    "macos",
+    "windows"
+  ],
+  "deferredPlatforms": [
+    "wsl",
+    "linux"
+  ],
+  "platformPriority": [
+    "macos",
+    "windows"
+  ],
   "tools": [
     {
       "id": "claude-code",
@@ -12,17 +21,23 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "anthropic-messages",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
     {
       "id": "claude-desktop",
       "displayName": "Claude Desktop",
-      "maturity": "planned",
+      "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "anthropic-messages",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -32,8 +47,13 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "responses",
-      "targetPlatforms": ["macos", "windows"],
-      "verifiedVersions": ["1.0.34"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
+      "verifiedVersions": [
+        "1.0.34"
+      ],
       "lastVerifiedAt": "2026-09-24"
     },
     {
@@ -42,7 +62,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "gemini",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -52,7 +75,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "responses",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -62,7 +88,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "openai-completions",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -72,7 +101,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -82,7 +114,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -92,7 +127,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -102,7 +140,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -112,7 +153,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -122,7 +166,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -132,7 +179,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     },
@@ -142,7 +192,10 @@
       "maturity": "experimental",
       "configurationMode": "direct",
       "protocol": "provider-defined",
-      "targetPlatforms": ["macos", "windows"],
+      "targetPlatforms": [
+        "macos",
+        "windows"
+      ],
       "verifiedVersions": [],
       "lastVerifiedAt": null
     }

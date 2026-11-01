@@ -320,6 +320,7 @@ mod tests {
             "".into(),
             "synthetic-claude-model".into(),
             vec![],
+            None,
             "".into(),
             crate::domain::ServiceProtocol::AnthropicMessages,
             "https://api.example.invalid".into(),

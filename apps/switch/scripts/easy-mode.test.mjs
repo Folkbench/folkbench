@@ -39,12 +39,20 @@ const tool = (id, switchEffect = 'hotReload') => ({
 })
 
 test('easy tabs keep at most four valid favorite tools without mutating input', () => {
-  const tools = ['claude-code', 'codex', 'gemini-cli', 'opencode', 'aider'].map(
-    (id) => tool(id)
-  )
+  const tools = [
+    'claude-desktop',
+    'codex',
+    'gemini-cli',
+    'opencode',
+    'aider',
+  ].map((id) => tool(id))
   assert.deepEqual(
     easyTools(tools, []).map((row) => row.id),
-    ['claude-code', 'codex', 'gemini-cli', 'opencode']
+    ['claude-desktop', 'codex', 'gemini-cli', 'opencode']
+  )
+  assert.deepEqual(
+    easyTools(tools, ['claude-code', 'codex']).map((row) => row.id),
+    ['claude-desktop', 'codex']
   )
   assert.deepEqual(
     easyTools(tools, ['missing', 'aider', 'codex']).map((row) => row.id),
@@ -59,6 +67,7 @@ test('easy tabs keep at most four valid favorite tools without mutating input', 
 })
 
 test('native easy defaults use tool protocol without inventing model identifiers', () => {
+  assert.equal(easyProtocol('claude-desktop'), 'anthropic-messages')
   assert.equal(easyProtocol('claude-code'), 'anthropic-messages')
   assert.equal(easyProtocol('codex'), 'openai-responses')
   assert.equal(easyProtocol('gemini-cli'), 'gemini')
@@ -141,8 +150,8 @@ test('easy launch skips folder picking and the easy window keeps its current dim
     'utf8'
   )
   const config = JSON.parse(native).app.windows[0]
-  assert.equal(config.width, 760)
-  assert.equal(config.height, 680)
+  assert.equal(config.width, 990)
+  assert.equal(config.height, 780)
   const page = await readFile(
     new URL('src/features/home/EasyHomePage.tsx', root),
     'utf8'

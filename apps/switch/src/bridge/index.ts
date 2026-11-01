@@ -13,8 +13,6 @@ export {
   addMyService,
   fetchServiceModels,
   getMyServiceCredential,
-  getMyServiceImportStatus,
-  importMyServiceFromLive,
   listMyServices,
   listSwitchTools,
   queryServiceBalance,
@@ -27,6 +25,14 @@ export {
 } from '@/bridge/commands/myServices'
 export { openExternalLink } from '@/bridge/commands/links'
 export {
+  detectToolDesktop,
+  launchToolDesktop,
+  launchToolInFolder,
+  listWorkFolders,
+  openToolDesktopDownload,
+  supportsDesktopLaunch,
+} from '@/bridge/commands/toolLaunch'
+export {
   completeAccountOnboarding,
   getPreferences,
   setFavoriteServiceIds,
@@ -35,6 +41,7 @@ export {
   setPreferredLanguage,
   setPreferredTheme,
   setUiMode,
+  fitWindowToContent,
 } from '@/bridge/commands/preferences'
 export {
   cancelAccountSignIn,
@@ -77,6 +84,8 @@ export type {
 } from '@/bridge/generated/connect'
 
 export type {
+  ClaudeRoleModel,
+  ClaudeRoleModels,
   FetchedModel,
   ModelFetchResult,
   ModelFetchStatus,
@@ -96,6 +105,11 @@ export type {
 } from '@/bridge/generated/myService'
 
 export type { ExternalLink, ExternalLinkError } from '@/bridge/generated/links'
+export type {
+  ToolDesktopApp,
+  WorkFolder,
+  WorkFolderListing,
+} from '@/bridge/generated/toolLaunch'
 
 export type {
   PreferenceError,

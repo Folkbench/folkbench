@@ -46,7 +46,8 @@
         "copyInstall": "复制安装命令",
         "copyNodeInstall": "复制 Node 安装命令",
         "copyBrewInstall": "复制 Homebrew 安装命令",
-        "copyOfficialDownload": "复制官网下载链接"
+        "copyOfficialDownload": "复制官网下载链接",
+        "updating": "正在更新…"
       },
       "toast": {
         "actionFailed": "操作失败，请稍后重试。",
@@ -70,7 +71,10 @@
         "blocked": "缺少运行环境",
         "restartHint": "装完请完全退出 Folkbench 再打开",
         "officialDownloadUrl": "https://nodejs.org/zh-cn/download"
-      }
+      },
+      "updateAvailable": "CLI 可更新",
+      "updateHint": "{{tool}} CLI 有新版本（{{local}} → {{latest}}）",
+      "updateHintShort": "{{tool}} CLI 有新版本可更新"
     },
     "search": {
       "placeholder": "搜索工具"

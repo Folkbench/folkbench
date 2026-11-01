@@ -10,10 +10,13 @@ mod configuration_lock;
 pub(crate) mod connect;
 mod credentials;
 mod journal;
+mod local_import;
 mod preferences;
 mod session_usage;
 pub(crate) mod share_image;
 mod switch;
+pub(crate) mod telemetry;
+pub(crate) mod tool_desktop;
 pub(crate) mod tool_launch;
 pub(crate) mod tool_runtime;
 pub(crate) mod window_layout;
@@ -40,8 +43,9 @@ pub use tool_runtime::{
 };
 
 use crate::domain::{
-    FetchedModel, MyService, PreferenceError, Preferences, PreferredLanguage,
-    PreferredTheme, ServiceError, ServiceProtocol, SwitchResult, UiMode,
+    ClaudeRoleModels, FetchedModel, MyService, PreferenceError, Preferences,
+    PreferredLanguage, PreferredTheme, ServiceError, ServiceProtocol,
+    SwitchResult, UiMode,
 };
 use std::path::Path;
 
@@ -59,9 +63,10 @@ macro_rules! locked_api {
 locked_api! {
     fn add_my_service_for_tool(config_dir: &Path, tool_id: &str, name: String,
         station_id: String, channel_id: String, model_id: String,
-        models: Vec<FetchedModel>, provider_id: String,
-        api_protocol: ServiceProtocol, base_url: String, api_key: String,
-        rankings_json: Option<&str>) -> Result<MyService, ServiceError> = archive::add_for_tool;
+        models: Vec<FetchedModel>, claude_role_models: Option<ClaudeRoleModels>,
+        provider_id: String, api_protocol: ServiceProtocol, base_url: String,
+        api_key: String, rankings_json: Option<&str>)
+        -> Result<MyService, ServiceError> = archive::add_for_tool;
     fn get_my_service_credential(config_dir: &Path, tool_id: &str, id: &str)
         -> Result<Option<String>, ServiceError> = archive::get_credential_for_tool;
     fn get_my_service_for_tool(config_dir: &Path, tool_id: &str, id: &str)
@@ -74,6 +79,8 @@ locked_api! {
         -> Result<&'static str, ServiceError> = switch::import_status;
     fn recover_interrupted_switch(config_dir: &Path, home: &Path)
         -> Result<(), ServiceError> = switch::recover_interrupted_switch;
+    fn auto_import_local_configs(config_dir: &Path, home: &Path)
+        -> Result<(), ServiceError> = local_import::auto_import_all;
     fn remove_my_service(config_dir: &Path, tool_id: &str, id: &str)
         -> Result<(), ServiceError> = switch::remove_for_tool;
     fn rollback_my_service_switch(config_dir: &Path, home: &Path, tool_id: &str)
@@ -84,9 +91,10 @@ locked_api! {
         -> Result<SwitchResult, ServiceError> = switch::unswitch;
     fn update_my_service(config_dir: &Path, home: &Path, tool_id: &str, id: &str,
         name: String, station_id: String, channel_id: String, model_id: String,
-        models: Vec<FetchedModel>, provider_id: String,
-        api_protocol: ServiceProtocol, base_url: String, api_key: Option<String>,
-        rankings_json: Option<&str>) -> Result<MyService, ServiceError> = switch::update_for_tool;
+        models: Vec<FetchedModel>, claude_role_models: Option<ClaudeRoleModels>,
+        provider_id: String, api_protocol: ServiceProtocol, base_url: String,
+        api_key: Option<String>, rankings_json: Option<&str>)
+        -> Result<MyService, ServiceError> = switch::update_for_tool;
     fn load_preferences(config_dir: &Path) -> Preferences = preferences::load;
     fn complete_account_onboarding(config_dir: &Path)
         -> Result<Preferences, PreferenceError> = preferences::complete_account_onboarding;

@@ -21,6 +21,7 @@ import { DiscoveryRefreshButton } from '@/features/discovery/DiscoveryRefreshBut
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { preferencesQueryOptions } from '@/features/preferences/queries'
 import { EasyAddWizard } from '@/features/home/EasyAddWizard'
+import { easySelectableTools } from '@/features/home/easy-model'
 import { switchToolsQueryOptions } from '@/features/catalog/queries'
 import { cn } from '@/lib/utils'
 
@@ -392,7 +393,7 @@ export function DiscoveryPage() {
       {isEasy ? (
         <EasyAddWizard
           open={easyWizardOpen}
-          tools={tools.data ?? []}
+          tools={easySelectableTools(tools.data ?? [])}
           initialToolId=""
           initialStation={easyWizardStation}
           requireToolSelection

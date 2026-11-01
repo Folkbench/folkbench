@@ -26,7 +26,7 @@
     "needModel": "Choose a model from the list, or leave the provider default.",
     "prepare": "Connect and prepare {{tool}}",
     "prepareError": "Setup did not finish. Saved information is retained; you can retry.",
-    "driftError": "Another program changed the tool configuration. Review it in Pro mode before connecting.",
+    "driftError": "Another program changed the tool configuration. Try connecting this service again here. If it still fails, check the tool's local config files and retry.",
     "manualInstall": "Install this tool's CLI first. Switch to Pro mode in Settings for installation options.",
     "installError": "CLI installation failed. Check your network and Node.js / npm（或本机已支持的安装方式） setup, then retry.",
     "installTitle": "Install {{tool}} first",
@@ -114,7 +114,7 @@
     "modelsErrorUnavailableGeneric": "Model list request failed. You can continue with a prefilled or default model, or retry later.",
     "modelGroupClaude": "Claude models",
     "modelGroupOther": "Other models",
-    "modelGroupOtherHint": "Other models (not for Claude Code)",
+    "modelGroupOtherHint": "Other models (not for Claude)",
     "modelGroupForTool": "{{tool}} models",
     "modelGroupOtherForTool": "Other models",
     "installingCli": "Installing…",
@@ -136,6 +136,10 @@
     "installPanelRetry": "Retry",
     "deleteConfirm": "Delete this service? If it is in use, Switch clears the matching CLI config on this machine first, then removes the service and Key.",
     "deleted": "Service deleted and matching CLI config cleared.",
-    "deletedSaved": "Service deleted."
+    "deletedSaved": "Service deleted.",
+    "openDesktop": "Open desktop",
+    "openingDesktop": "Opening…",
+    "openedDesktop": "Opened the desktop app.",
+    "openDesktopHint": "Open Claude desktop (ensures 3p gateway is applied; fully quit if already running)"
   }
 }

@@ -1,5 +1,17 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.6 — Beta
+
+- 拆分 Claude Desktop 独立配置与 Claude Code；支持桌面端角色路由与非 Claude 模型映射。
+- 首页统一「可更新」徽章与悬停详情；Claude Desktop / Codex / OpenCode / DSH 等支持一键打开桌面端。
+- 支持本机配置自动导入；完善可选使用统计与更新器升级结果记录。
+- 加宽添加服务对话框，模型 ID 下拉按内容展示完整名称；移除测评详情入口。
+- Windows 验收：经 Switch 配置后 Claude Desktop 与 Codex 可直达聊天，无登录墙。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.5 — Beta
 
 - 修复服务卡片副标题显示榜单默认模型、盖住用户所选模型的问题；本地已保存的模型 id 优先展示。

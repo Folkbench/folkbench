@@ -3,8 +3,9 @@ use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
 use crate::domain::{
-    FetchedModel, ModelFetchResult, ModelFetchStatus, MyService,
-    ServiceBalance, ServiceError, ServiceProtocol, SwitchResult, VerifyResult,
+    ClaudeRoleModels, FetchedModel, ModelFetchResult, ModelFetchStatus,
+    MyService, ServiceBalance, ServiceError, ServiceProtocol, SwitchResult,
+    VerifyResult,
 };
 use crate::{adapters, services};
 
@@ -46,27 +47,37 @@ pub fn add_my_service(
     channel_id: String,
     model_id: String,
     models: Option<Vec<FetchedModel>>,
+    claude_role_models: Option<ClaudeRoleModels>,
     provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
     api_key: String,
 ) -> Result<MyService, ServiceError> {
-    ensure_model(&tool_id, &model_id)?;
-    let dir = config_dir(&app)?;
-    services::add_my_service_for_tool(
-        &dir,
-        &tool_id,
-        name,
-        station_id,
-        channel_id,
-        model_id,
-        models.unwrap_or_default(),
-        provider_id,
-        api_protocol,
-        base_url,
-        api_key,
-        None,
-    )
+    let result = (|| {
+        ensure_model(&tool_id, &model_id)?;
+        let dir = config_dir(&app)?;
+        services::add_my_service_for_tool(
+            &dir,
+            &tool_id,
+            name,
+            station_id,
+            channel_id,
+            model_id,
+            models.unwrap_or_default(),
+            claude_role_models,
+            provider_id,
+            api_protocol,
+            base_url,
+            api_key,
+            None,
+        )
+    })();
+    services::telemetry::record_result(
+        services::telemetry::Kind::ServiceAdd,
+        &result,
+        Some(&tool_id),
+    );
+    result
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -89,6 +100,7 @@ pub fn update_my_service(
     channel_id: String,
     model_id: String,
     models: Option<Vec<FetchedModel>>,
+    claude_role_models: Option<ClaudeRoleModels>,
     provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
@@ -106,6 +118,7 @@ pub fn update_my_service(
         channel_id,
         model_id,
         models.unwrap_or_default(),
+        claude_role_models,
         provider_id,
         api_protocol,
         base_url,
@@ -120,8 +133,21 @@ pub fn switch_my_service(
     tool_id: String,
     service_id: String,
 ) -> Result<SwitchResult, ServiceError> {
-    let dir = config_dir(&app)?;
-    services::switch_my_service(&dir, &user_home(&app)?, &tool_id, &service_id)
+    let result = (|| {
+        let dir = config_dir(&app)?;
+        services::switch_my_service(
+            &dir,
+            &user_home(&app)?,
+            &tool_id,
+            &service_id,
+        )
+    })();
+    services::telemetry::record_result(
+        services::telemetry::Kind::ConfigurationApply,
+        &result,
+        Some(&tool_id),
+    );
+    result
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -148,7 +174,13 @@ pub fn import_my_service_from_live(
     tool_id: String,
 ) -> Result<MyService, ServiceError> {
     let dir = config_dir(&app)?;
-    services::import_from_live(&dir, &user_home(&app)?, &tool_id)
+    let result = services::import_from_live(&dir, &user_home(&app)?, &tool_id);
+    services::telemetry::record_result(
+        services::telemetry::Kind::ServiceAdd,
+        &result,
+        Some(&tool_id),
+    );
+    result
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -273,6 +305,7 @@ pub async fn query_service_balance(
 pub fn list_switch_tools(app: AppHandle) -> Vec<crate::domain::ToolDescriptor> {
     if let (Ok(dir), Ok(home)) = (config_dir(&app), user_home(&app)) {
         let _ = services::recover_interrupted_switch(&dir, &home);
+        let _ = services::auto_import_local_configs(&dir, &home);
     }
     let home = user_home(&app).ok();
     crate::adapters::tool_descriptors()

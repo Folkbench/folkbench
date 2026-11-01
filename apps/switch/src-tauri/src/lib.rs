@@ -33,9 +33,15 @@ pub fn run() {
             if let (Some(window), Ok(config)) =
                 (app.get_webview_window("main"), app.path().app_config_dir())
             {
-                services::window_layout::apply(
+                services::window_layout::apply_startup(
                     &window,
                     services::load_preferences(&config).ui_mode,
+                );
+            }
+            if let Ok(directory) = app.path().app_config_dir() {
+                services::telemetry::start(
+                    directory,
+                    app.package_info().version.to_string(),
                 );
             }
             commands::connect::install(app.handle());
@@ -49,6 +55,22 @@ pub fn run() {
         // - Install helper windows (easy-cli-install-*): allow normal close;
         //   the WebView cancels the npm/brew job via cancel_easy_tool_install.
         .on_window_event(|window, event| {
+            if window.label() == "main" {
+                if let tauri::WindowEvent::Resized(size) = event {
+                    services::window_layout::on_resized(window, *size);
+                }
+            }
+            if window.label() == "main"
+                && matches!(event, tauri::WindowEvent::Focused(true))
+            {
+                tauri::async_runtime::spawn_blocking(|| {
+                    services::telemetry::record(
+                        services::telemetry::Kind::AppActive,
+                        true,
+                        None,
+                    )
+                });
+            }
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 let label = window.label();
                 // Install helper: allow OS close, and cancel npm/brew even if
@@ -80,6 +102,10 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::telemetry::get_telemetry_status,
+            commands::telemetry::set_telemetry_enabled,
+            commands::telemetry::record_update_telemetry,
+            commands::telemetry::prepare_update_telemetry,
             commands::bootstrap::get_bootstrap_state,
             commands::catalog::list_published_stations,
             commands::catalog::open_published_station_website,
@@ -111,6 +137,7 @@ pub fn run() {
             commands::preferences::set_preferred_language,
             commands::preferences::set_preferred_theme,
             commands::preferences::set_ui_mode,
+            commands::preferences::fit_window_to_content,
             commands::session::get_session_state,
             commands::session::cancel_account_sign_in,
             commands::session::start_account_sign_in,
@@ -127,6 +154,9 @@ pub fn run() {
             commands::tool_runtime::cancel_easy_tool_install,
             commands::tool_launch::list_work_folders,
             commands::tool_launch::launch_tool_in_folder,
+            commands::tool_launch::detect_tool_desktop,
+            commands::tool_launch::launch_tool_desktop,
+            commands::tool_launch::open_tool_desktop_download,
             commands::share_image::copy_share_image,
             commands::share_image::save_share_image
         ])

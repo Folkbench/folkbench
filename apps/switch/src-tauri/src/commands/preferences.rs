@@ -80,7 +80,15 @@ pub fn complete_account_onboarding(
 pub fn complete_easy_onboarding(
     app: AppHandle,
 ) -> Result<Preferences, PreferenceError> {
-    services::complete_easy_onboarding(&config_dir(&app)?)
+    let result = services::complete_easy_onboarding(&config_dir(&app)?);
+    if result.is_ok() {
+        services::telemetry::record(
+            services::telemetry::Kind::OnboardingComplete,
+            true,
+            None,
+        );
+    }
+    result
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -89,8 +97,14 @@ pub fn set_ui_mode(
     ui_mode: UiMode,
 ) -> Result<Preferences, PreferenceError> {
     let preferences = services::save_ui_mode(&config_dir(&app)?, ui_mode)?;
-    if let Some(window) = app.get_webview_window("main") {
-        services::window_layout::apply(&window, ui_mode);
-    }
+    // Mode switches keep the current window size and zoom.
     Ok(preferences)
+}
+
+/// Fit the Pro window height to the measured page content (CSS px).
+#[tauri::command(rename_all = "camelCase")]
+pub fn fit_window_to_content(app: AppHandle, content_height: f64) {
+    if let Some(window) = app.get_webview_window("main") {
+        services::window_layout::fit_content(&window, content_height);
+    }
 }

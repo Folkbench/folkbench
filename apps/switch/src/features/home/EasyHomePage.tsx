@@ -53,6 +53,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import {
   myServicesQueryOptions,
   switchToolsQueryOptions,
   useAddMyService,
@@ -81,9 +88,15 @@ import {
   easyModelsFetchError,
   groupEasyModelChoices,
   modelsFetchBaseUrl,
+  normalizeEasyToolId,
   uniqueEasyStations,
 } from './easy-model'
 import { launchToolWithoutFolder } from './WorkFolderDialog'
+import {
+  openToolDesktopApp,
+  type ToolDesktopRestartChoice,
+} from './tool-desktop'
+import { supportsDesktopLaunch } from '@/bridge'
 import {
   isEasyCliInstallWindowOpen,
   openEasyCliInstallWindow,
@@ -149,19 +162,31 @@ export function EasyHomePage() {
       ),
   })
   const setTool = useSetLastToolId()
+  // CLI catalog covers installable CLIs; also keep desktop-launch tools (e.g. Claude Desktop).
   const picked = easyTools(
-    (tools.data ?? []).filter((tool) =>
-      cliCatalog.data?.some((item) => item.toolId === tool.id)
+    (tools.data ?? []).filter(
+      (tool) =>
+        cliCatalog.data?.some((item) => item.toolId === tool.id) ||
+        supportsDesktopLaunch(tool.id)
     ),
     prefs.data?.favoriteToolIds ?? []
   )
+  const lastEasyToolId = prefs.data?.lastToolId
+    ? normalizeEasyToolId(prefs.data.lastToolId)
+    : null
   const tool =
-    picked.find((item) => item.id === prefs.data?.lastToolId) ?? picked[0]
+    picked.find((item) => item.id === lastEasyToolId) ?? picked[0]
   const [busy, setBusy] = useState(false)
   const [welcome, setWelcome] = useState(false)
   const [autoAdd, setAutoAdd] = useState(false)
   const clearAutoAdd = useCallback(() => setAutoAdd(false), [])
   const guideSeen = useRef(false)
+  // Persist legacy Easy selection claude-code → claude-desktop once.
+  useEffect(() => {
+    if (prefs.data?.lastToolId === 'claude-code' && tool?.id === 'claude-desktop') {
+      setTool.mutate('claude-desktop')
+    }
+  }, [prefs.data?.lastToolId, tool?.id, setTool])
   const offerGuide = useCallback(() => {
     if (!guideSeen.current && !prefs.data?.easyOnboardingCompleted) {
       guideSeen.current = true
@@ -308,7 +333,7 @@ function EasyTool({
     publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID)
   )
   const prefix =
-    tool.id === 'claude-code'
+    tool.id === 'claude-code' || tool.id === 'claude-desktop'
       ? /^claude/i
       : tool.id === 'gemini-cli'
         ? /^gemini/i
@@ -364,6 +389,11 @@ function EasyTool({
   const [failure, setFailure] = useState('')
   const [modelOptions, setModelOptions] = useState<FetchedModel[]>([])
   const [opened, setOpened] = useState(false)
+  const [desktopOpening, setDesktopOpening] = useState(false)
+  const [desktopRestartOpen, setDesktopRestartOpen] = useState(false)
+  const desktopRestartResolver = useRef<
+    ((choice: ToolDesktopRestartChoice) => void) | null
+  >(null)
   const gate = useRef(false),
     cancelled = useRef(false),
     alive = useRef(true)
@@ -554,7 +584,8 @@ function EasyTool({
     const model =
       draft.model.trim() ||
       (existing?.baseUrl === baseUrl ? existing.modelId : '') ||
-      (published && prefix.test(published.modelId) ? published.modelId : '')
+      (published && prefix.test(published.modelId) ? published.modelId : '') ||
+      (tool.id === 'claude-code' || tool.id === 'claude-desktop' ? 'claude-sonnet-4-6' : '')
     gate.current = true
     cancelled.current = false
     setFailure('')
@@ -758,7 +789,47 @@ function EasyTool({
     }
   }
 
+  function askDesktopRestart(): Promise<ToolDesktopRestartChoice> {
+    return new Promise((resolve) => {
+      desktopRestartResolver.current = resolve
+      setDesktopRestartOpen(true)
+    })
+  }
+
+  function settleDesktopRestart(choice: ToolDesktopRestartChoice) {
+    const resolve = desktopRestartResolver.current
+    desktopRestartResolver.current = null
+    setDesktopRestartOpen(false)
+    resolve?.(choice)
+  }
+
+  async function openDesktopCurrent() {
+    if (!current || gate.current || desktopOpening) return
+    gate.current = true
+    setDesktopOpening(true)
+    setFailure('')
+    try {
+      const result = await openToolDesktopApp({
+        toolId: tool.id,
+        serviceId: current.id,
+        t,
+        askRestart: askDesktopRestart,
+      })
+      if (!canContinue()) return
+      if (result === 'opened') {
+        setOpened(true)
+      }
+    } finally {
+      gate.current = false
+      setDesktopOpening(false)
+    }
+  }
+
   async function openCurrent(allowInstall = false) {
+    if (supportsDesktopLaunch(tool.id)) {
+      await openDesktopCurrent()
+      return
+    }
     if (!current || gate.current || cliInstalling) return
     if (!cliReady) {
       if (!allowInstall) {
@@ -1055,6 +1126,7 @@ function EasyTool({
             </Button>
           </div>
         </div>
+        {tool.id === 'claude-code' || tool.id === 'claude-desktop' ? null : (
         <ChoiceSelect
           label={t('easy.modelLabel')}
           labelAccessory={
@@ -1128,6 +1200,7 @@ function EasyTool({
           }}
           onChange={(model) => setDraft((value) => ({ ...value, model }))}
         />
+        )}
         {failure ? (
           <p className="easy-error" role="alert">
             {failure}
@@ -1285,14 +1358,33 @@ function EasyTool({
                 className="easy-cli-action"
                 disabled={
                   busy ||
-                  cliInstalling ||
-                  (!cliReady && !runtimeStatus.isSuccess)
+                  desktopOpening ||
+                  (!supportsDesktopLaunch(tool.id) &&
+                    (cliInstalling ||
+                      (!cliReady && !runtimeStatus.isSuccess)))
                 }
-                onClick={() =>
+                aria-busy={desktopOpening || cliInstalling}
+                onClick={() => {
+                  if (supportsDesktopLaunch(tool.id)) {
+                    void openDesktopCurrent()
+                    return
+                  }
                   void (cliReady ? openCurrent() : installCli())
-                }
+                }}
               >
-                {cliInstalling ? (
+                {supportsDesktopLaunch(tool.id) ? (
+                  desktopOpening ? (
+                    <>
+                      <span
+                        className="easy-spinner easy-spinner--sm"
+                        aria-hidden="true"
+                      />
+                      {t('easy.openingDesktop')}
+                    </>
+                  ) : (
+                    t('easy.openDesktop')
+                  )
+                ) : cliInstalling ? (
                   <>
                     <span
                       className="easy-spinner easy-spinner--sm"
@@ -1360,7 +1452,7 @@ function EasyTool({
         </>
       )}
       <Dialog
-        open={editing}
+        open={editing && !editTargetId && Boolean(current)}
         disablePointerDismissal={busy}
         onOpenChange={(next) => {
           if (busy) return
@@ -1376,16 +1468,38 @@ function EasyTool({
       >
         <DialogContent className="easy-edit-dialog" showCloseButton={!busy}>
           <DialogHeader>
-            <DialogTitle>
-              {t(editTargetId ? 'easy.editTitle' : 'easy.addService')}
-            </DialogTitle>
-            {editTargetId ? (
-              <DialogDescription>{t('easy.editDescription')}</DialogDescription>
-            ) : null}
+            <DialogTitle>{t('easy.addService')}</DialogTitle>
           </DialogHeader>
           {form}
         </DialogContent>
       </Dialog>
+      <Sheet
+        open={editing && Boolean(editTargetId)}
+        disablePointerDismissal={busy}
+        onOpenChange={(next) => {
+          if (busy) return
+          setEditing(next)
+          if (!next) {
+            setDraft(blank)
+            setRevealed(false)
+            setEditTargetId(null)
+            setFailure('')
+            setModelOptions([])
+          }
+        }}
+      >
+        <SheetContent
+          side="bottom"
+          showCloseButton={!busy}
+          className="easy-edit-sheet flex w-full max-w-3xl flex-col gap-0 overflow-hidden rounded-t-2xl rounded-b-none border-x border-b-0 p-0 shadow-[0_-8px_32px_rgba(0,0,0,0.12)] duration-[320ms] data-[side=bottom]:h-[calc(100dvh-5rem)] data-[side=bottom]:max-h-[calc(100dvh-5rem)]"
+        >
+          <SheetHeader className="shrink-0 border-b px-4 py-3 pr-12 text-left sm:px-5">
+            <SheetTitle>{t('easy.editTitle')}</SheetTitle>
+            <SheetDescription>{t('easy.editDescription')}</SheetDescription>
+          </SheetHeader>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5">{form}</div>
+        </SheetContent>
+      </Sheet>
       <Dialog open={chooseService} onOpenChange={setChooseService}>
         <DialogContent>
           <DialogHeader>
@@ -1506,6 +1620,39 @@ function EasyTool({
           )}
         </DialogContent>
       </Dialog>
+
+      <AlertDialog
+        open={desktopRestartOpen}
+        onOpenChange={(open) => {
+          if (!open) settleDesktopRestart('cancel')
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('configure.desktop.restartTitle')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('configure.desktop.restartDescription')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => settleDesktopRestart('cancel')}>
+              {t('common.actions.cancel')}
+            </AlertDialogCancel>
+            <Button
+              variant="outline"
+              onClick={() => settleDesktopRestart('activate')}
+            >
+              {t('configure.desktop.activate')}
+            </Button>
+            <AlertDialogAction onClick={() => settleDesktopRestart('restart')}>
+              {t('configure.desktop.restart')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <AlertDialog
         open={pendingDelete !== null}
         onOpenChange={(open) => {

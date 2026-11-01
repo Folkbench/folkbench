@@ -1,5 +1,14 @@
 {
   "settings": {
+    "telemetry": {
+      "title": "Usage statistics",
+      "label": "Help improve Switch (optional)",
+      "description": "Off by default. When enabled, sends version, operating system, tool identifiers and operation results to FolkBench. Your random installation ID is not a hardware fingerprint.",
+      "excluded": "Never includes API keys, passwords, chats, project paths, custom API addresses or local token/cost totals.",
+      "disable": "Turning this off clears queued events and stops future reports. A request already in progress may finish; sent records follow the server retention policy.",
+      "queue": "Queued events: {{count}}",
+      "error": "Unable to read or save this setting. Your previous choice is retained."
+    },
     "about": {
       "title": "About",
       "version": "Version",

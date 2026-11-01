@@ -13,6 +13,8 @@
   display: none;
 }
 .switch-shell[data-ui-mode='easy'][data-page='home'] > .switch-canvas {
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
 }
 .easy-mode-badge {
@@ -23,10 +25,17 @@
   background: color-mix(in srgb, var(--brand-signal) 9%, var(--card));
 }
 .easy-workspace {
+  /* Same outer box as Pro .switch-workspace.home-workspace: fluid width
+     within the app workspace, identical gutters, no narrow centered column. */
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
   width: 100%;
-  max-width: 760px;
+  max-width: var(--app-workspace-width);
+  min-width: 0;
+  min-height: 100%;
   margin-inline: auto;
-  padding: 20px 28px 24px;
+  padding: 0.5rem var(--app-page-gutter) 1rem;
 }
 .easy-heading {
   display: flex;
@@ -351,9 +360,19 @@
   background: var(--muted);
 }
 .easy-usage {
+  /* Cap growth: plot is ~3/4 of the previous flex-fill height at default. */
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
   margin-top: 8px;
   padding-top: 12px;
   border-top: 1px solid var(--border);
+}
+.easy-usage-heading,
+.easy-usage-metrics,
+.easy-usage-legend,
+.easy-usage-empty {
+  flex: none;
 }
 .easy-usage-heading {
   display: flex;
@@ -362,13 +381,9 @@
   gap: 12px;
 }
 .easy-usage-heading h2 {
-  font-size: 13px;
-  font-weight: 550;
-}
-.easy-usage-heading > span {
-  font-size: 11px;
-  color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
 }
 .easy-usage-metrics {
   display: flex;
@@ -401,7 +416,10 @@
 .easy-usage-plot {
   position: relative;
   width: 100%;
-  height: 108px;
+  flex: none;
+  height: 200px;
+  min-height: 120px;
+  max-height: 200px;
   margin-top: 8px;
   overflow: visible;
 }
@@ -439,10 +457,24 @@
 .easy-usage-empty button {
   color: var(--brand-signal);
 }
-.easy-usage-dialog,
+.easy-usage-dialog {
+  width: min(520px, calc(100vw - 32px));
+  max-width: 520px;
+}
 .easy-edit-dialog {
   width: min(520px, calc(100vw - 32px));
   max-width: 520px;
+}
+.easy-edit-sheet .easy-form {
+  max-width: none;
+  gap: 12px;
+}
+.easy-edit-sheet .easy-form fieldset {
+  gap: 12px;
+}
+.easy-edit-sheet .easy-form input {
+  min-height: 36px;
+  margin-top: 4px;
 }
 .easy-usage-dialog [data-slot='dialog-close'] {
   top: 10px;

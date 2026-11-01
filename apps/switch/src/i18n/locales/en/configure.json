@@ -18,7 +18,9 @@
       "connect": "Connect",
       "details": "Measurement details",
       "detailsFor": "View details for {{name}}",
-      "moreFor": "More actions for {{name}}"
+      "moreFor": "More actions for {{name}}",
+      "openDesktop": "Open desktop",
+      "openingDesktop": "Opening…"
     },
     "addSource": {
       "description": "Choose how to fill this service.",
@@ -104,8 +106,6 @@
     },
     "empty": {
       "action": "Add service",
-      "import": "Import from local CLI",
-      "imported": "Imported from local CLI",
       "title": "No saved services",
       "preview": {
         "service": "Saved service"
@@ -184,7 +184,30 @@
         "unreachable": "Cannot reach this address. Check the Base URL or your network.",
         "unavailable": "Fetching the model list failed ({{status}}). Retry later or enter one manually."
       },
-      "modelNeedKey": "Enter your API Key first"
+      "modelNeedKey": "Enter your API Key first",
+      "claudeRoles": {
+        "title": "Model mapping",
+        "hintAria": "About model mapping",
+        "hint": "Map each Claude role to the model ID that will actually be requested. Display names appear in the client model menu; check 1M when the model supports a million-token context. Blank cells are filled with defaults when you save. Non-Claude models are requested as-is by the CLI; Desktop keeps a Claude-safe route name and remaps via a local proxy.",
+        "desktopRemap": "Desktop shows as {{route}} (local proxy remap)",
+        "oneClick": "One-click setup",
+        "fetchModels": "Fetch model list",
+        "role": "Role",
+        "displayName": "Display name",
+        "requestModel": "Request model ID",
+        "supports1m": "1M",
+        "subagentNoMenu": "Not shown in model menu",
+        "subagentPlaceholder": "Optional",
+        "roles": {
+          "sonnet": "Sonnet",
+          "opus": "Opus",
+          "fable": "Fable",
+          "haiku": "Haiku",
+          "subagent": "Subagent"
+        },
+        "requestModelPick": "Select or type a model ID",
+        "requestModelEmpty": "Fetch the model list first to pick from it, or type a model ID."
+      }
     },
     "home": {
       "allServices": "All services",
@@ -229,12 +252,6 @@
       "deleteBlocked": "Enable another service before deleting the one in use.",
       "favoriteLimit": "Choose up to 4 favorite services. Remove one first.",
       "favoriteMinimum": "Keep at least 1 favorite service.",
-      "imported": "Imported the current tool config as a service.",
-      "importEmpty": "No base URL and Key were found in the current tool config.",
-      "importAlreadySynced": "The current tool configuration is already saved for this tool.",
-      "importChecking": "Checking the current tool configuration…",
-      "importRetry": "Retry import status check",
-      "importStatusUnavailable": "Could not check whether the current tool configuration changed.",
       "reachable": "Reachable ({{ms}} ms)",
       "saved": "Service updated.",
       "switched": "Wrote {{tool}} ({{effect}}).",
@@ -541,7 +558,31 @@
       "updateMessageShort": "A new version of {{tool}} is available",
       "update": "Update",
       "updating": "Updating…",
-      "actionFailed": "Action failed, please try again"
+      "actionFailed": "Action failed, please try again",
+      "updateAvailable": "CLI update"
+    },
+    "desktop": {
+      "open": "Open desktop",
+      "opening": "Opening…",
+      "opened": "Opened {{name}} desktop.",
+      "notInstalled": "Desktop app not found",
+      "notInstalledHint": "Opening the official download page. Install it, then return to Switch.",
+      "launchFailed": "Could not open the desktop app.",
+      "detectFailed": "Could not detect the desktop app.",
+      "unsupported": "No official desktop app on this OS. Use the CLI instead.",
+      "detected": "Detected {{name}}",
+      "restartTitle": "Desktop app is running",
+      "restartDescription": "Fully quit and reopen to load the latest service config (required for Claude Desktop’s 3p gateway too).",
+      "restart": "Restart and open",
+      "activate": "Bring to front",
+      "tooltip": "Launch the desktop app. Claude Desktop uses its own Application Support 3p gateway (independent of Claude Code; fully quit & reopen after switching). Codex uses the local config Switch wrote.",
+      "cliVsDesktop": "Claude Code uses ~/.claude; Claude Desktop uses its own Application Support 3p gateway (Folkbench Switch profile). Configs are independent.",
+      "updateAvailable": "App update",
+      "updateHint": "A newer Claude Desktop is available ({{local}} → {{latest}}). Open the app to use its built-in updater.",
+      "updateHintShort": "A newer Claude Desktop is available. Open the app to use its built-in updater.",
+      "openToUpdate": "Open app to update",
+      "downloadPage": "Download page",
+      "detecting": "Checking version…"
     }
   }
 }
