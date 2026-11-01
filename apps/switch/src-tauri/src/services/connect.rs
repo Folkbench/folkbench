@@ -638,11 +638,12 @@ mod tests {
         let parsed = parse_connect_url(&connect_url(&sample_pairs())).unwrap();
         assert_eq!(parsed.tool_id, "claude-code");
 
+        // claude-desktop is a writable adapter (beta.6+); connect links may target it.
         let mut desktop = sample_pairs();
-        // Replace the tool value (last pair).
         let last = desktop.len() - 1;
         desktop[last] = ("tool", "claude-desktop");
-        assert!(parse_connect_url(&connect_url(&desktop)).is_err());
+        let desktop_parsed = parse_connect_url(&connect_url(&desktop)).unwrap();
+        assert_eq!(desktop_parsed.tool_id, "claude-desktop");
 
         let mut unknown = sample_pairs();
         let last = unknown.len() - 1;
