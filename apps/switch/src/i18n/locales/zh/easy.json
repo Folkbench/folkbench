@@ -26,7 +26,7 @@
     "needModel": "请从下拉列表选择模型，或稍后由站点预填。",
     "prepare": "接入并准备 {{tool}}",
     "prepareError": "没有完成接入。已保存的信息仍在，可以重试。",
-    "driftError": "工具配置已被其他程序修改，请在专业模式核对后再接入。",
+    "driftError": "工具配置已被其他程序修改。请在本页重新接入该服务；若仍失败，请核对工具本机配置后再试。",
     "manualInstall": "这个工具的 CLI 需要先安装。可在设置中切换到专业模式查看安装方式。",
     "installError": "CLI 安装未完成。请确认网络及 Node.js / npm（或本机已支持的安装方式） 环境，再重试。",
     "installTitle": "需要先安装 {{tool}}",
@@ -114,7 +114,7 @@
     "modelsErrorUnavailableGeneric": "读取模型列表失败。可继续使用预填或默认模型，或稍后重试。",
     "modelGroupClaude": "Claude 模型",
     "modelGroupOther": "其他模型",
-    "modelGroupOtherHint": "其他模型（不适用 Claude Code）",
+    "modelGroupOtherHint": "其他模型（不适用 Claude）",
     "modelGroupForTool": "{{tool}} 模型",
     "modelGroupOtherForTool": "其他模型",
     "installingCli": "安装中…",
@@ -136,6 +136,10 @@
     "installPanelRetry": "重试",
     "deleteConfirm": "确定删除该服务？若正在使用，会先清除本机对应 CLI 配置，再从 Switch 移除该服务与 Key。",
     "deleted": "已删除服务，并清除对应 CLI 配置。",
-    "deletedSaved": "已删除该服务。"
+    "deletedSaved": "已删除该服务。",
+    "openDesktop": "打开桌面端",
+    "openingDesktop": "正在打开…",
+    "openedDesktop": "已打开桌面端。",
+    "openDesktopHint": "打开 Claude 桌面端（会先确保 3p 网关已写入；若正在运行请完全退出再开）"
   }
 }

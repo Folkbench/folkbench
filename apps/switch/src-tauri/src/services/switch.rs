@@ -2,7 +2,8 @@ use std::path::Path;
 
 use crate::adapters::{self, ApplyRequest};
 use crate::domain::{
-    FetchedModel, MyService, ServiceError, ServiceProtocol, SwitchResult,
+    ClaudeRoleModels, FetchedModel, MyService, ServiceError, ServiceProtocol,
+    SwitchResult,
 };
 use crate::services::{archive, credentials, journal, preferences};
 
@@ -38,6 +39,7 @@ pub fn update_for_tool(
     channel_id: String,
     model_id: String,
     models: Vec<FetchedModel>,
+    claude_role_models: Option<ClaudeRoleModels>,
     provider_id: String,
     api_protocol: ServiceProtocol,
     base_url: String,
@@ -66,11 +68,17 @@ pub fn update_for_tool(
         models.clone(),
         model_id.trim(),
     );
+    let next_roles = crate::adapters::claude_roles::normalize_for_store(
+        claude_role_models.clone(),
+        model_id.trim(),
+        tool_id,
+    );
     let configuration_changed = key_changed
         || provider_changed
         || base_url.trim().trim_end_matches('/') != previous.base_url()
         || model_id.trim() != previous.row.model_id
         || next_models != previous.row.models
+        || next_roles != previous.row.claude_role_models
         || api_protocol != previous.row.api_protocol;
     let active = configuration_changed
         && preferences::load(config_dir)
@@ -103,6 +111,7 @@ pub fn update_for_tool(
             channel_id,
             model_id,
             models,
+            claude_role_models,
             provider_id,
             api_protocol,
             base_url,
@@ -382,6 +391,9 @@ fn with_switch_rollback<T>(
     tool_id: &str,
     operation: impl FnOnce() -> Result<T, ServiceError>,
 ) -> Result<T, ServiceError> {
+    // Durable on-disk backup of live tool configs before any write. Failure
+    // here must not block the switch: in-memory FileSnapshot still rolls back.
+    let _ = super::local_import::backup_live_configs(config_dir, home, tool_id);
     let journal_snapshot = adapters::FileSnapshot::capture(
         config_dir.join("switch-journal.json"),
     )?;
@@ -487,9 +499,9 @@ pub fn import_from_live(
     if !adapters::writable(tool_id) {
         return Err(ServiceError::ApplyUnsupported);
     }
-    let live = adapters::inspect_for_import(tool_id, home)?;
-    let base_url = live.base_url.ok_or(ServiceError::InvalidInput)?;
-    let api_key = live.api_key.ok_or(ServiceError::InvalidInput)?;
+    let (base_url, api_key) =
+        super::local_import::resolve_importable(tool_id, home)?
+            .ok_or(ServiceError::InvalidInput)?;
     let normalized_base_url = base_url.trim().trim_end_matches('/');
     if let Some(existing) = archive::list_for_tool(config_dir, tool_id)?
         .into_iter()
@@ -517,8 +529,9 @@ pub fn import_status(
     if !adapters::writable(tool_id) {
         return Err(ServiceError::ApplyUnsupported);
     }
-    let live = adapters::inspect_for_import(tool_id, home)?;
-    let (Some(base_url), Some(api_key)) = (live.base_url, live.api_key) else {
+    let Some((base_url, api_key)) =
+        super::local_import::resolve_importable(tool_id, home)?
+    else {
         return Ok("missing");
     };
     let normalized_base_url = base_url.trim().trim_end_matches('/');
@@ -539,11 +552,9 @@ fn add_from_live(
     base_url: String,
     api_key: String,
 ) -> Result<MyService, ServiceError> {
-    let name = adapters::tool_descriptors()
-        .into_iter()
-        .find(|tool| tool.id == tool_id)
-        .map(|tool| format!("{} (imported)", tool.display_name))
-        .unwrap_or_else(|| format!("{tool_id} (imported)"));
+    let language = preferences::load(config_dir).language;
+    let name =
+        super::local_import::local_default_service_name(language).to_string();
     let provider_id = if adapters::provider_id_required(tool_id) {
         archive::derive_provider_id(&name, &base_url)
     } else {
@@ -557,9 +568,12 @@ fn add_from_live(
         String::new(),
         String::new(),
         Vec::new(),
+        None,
         provider_id,
         match tool_id {
-            "claude-code" => ServiceProtocol::AnthropicMessages,
+            "claude-code" | "claude-desktop" => {
+                ServiceProtocol::AnthropicMessages
+            }
             "codex" => ServiceProtocol::OpenaiResponses,
             "gemini-cli" => ServiceProtocol::Gemini,
             "opencode" => ServiceProtocol::OpenaiCompletions,
@@ -587,7 +601,8 @@ fn resolve_previous_state(
         .map(|id| provider_key_for(config_dir, tool_id, id));
     let live = adapters::inspect(tool_id, home, inspect_key.as_deref())?;
     let (url, secret) = match (live.base_url, live.api_key) {
-        (None, None) if current_id.is_none() => {
+        (None, None) => {
+            // Empty live config: nothing to preserve, allow the switch.
             return Ok(PreviousState::Empty);
         }
         (Some(url), None) => {
@@ -599,7 +614,15 @@ fn resolve_previous_state(
             );
         }
         (Some(url), Some(secret)) => (url, secret),
-        _ => return Err(ServiceError::DriftDetected),
+        (None, Some(secret)) => {
+            // Key-only (typical official login): treat as official endpoint.
+            let Some(official) =
+                super::local_import::official_base_url(tool_id)
+            else {
+                return Err(ServiceError::DriftDetected);
+            };
+            (official.to_string(), secret)
+        }
     };
 
     if base_urls_equivalent(tool_id, &url, target_url) && secret == target_key {
@@ -656,12 +679,16 @@ fn previous_from_url_only(
         .map(|row| row.id);
     match (matches.next(), matches.next()) {
         (Some(id), None) => Ok(PreviousState::Service(id)),
+        // No unique saved match: if Switch has not claimed a current service,
+        // allow the switch (live will be backed up then overwritten). A claimed
+        // current with an unmatched URL-only live config stays protected.
+        _ if current_id.is_none() => Ok(PreviousState::Empty),
         _ => Err(ServiceError::DriftDetected),
     }
 }
 
 fn base_urls_equivalent(tool_id: &str, left: &str, right: &str) -> bool {
-    if tool_id == "claude-code" {
+    if tool_id == "claude-code" || tool_id == "claude-desktop" {
         adapters::anthropic_base_url(left)
             == adapters::anthropic_base_url(right)
     } else {
@@ -707,6 +734,7 @@ fn apply_archived_service(
         name: &record.row.name,
         model_id: &record.row.model_id,
         models: &record.row.models,
+        claude_role_models: record.row.claude_role_models.as_ref(),
         api_protocol: record.row.api_protocol,
         base_url: record.base_url(),
         api_key: &key,
@@ -726,7 +754,9 @@ fn live_matches_service(
     let provider_id = archive::resolve_provider_id(&record.row);
     let live = adapters::inspect(tool_id, home, Some(&provider_id))?;
     let url_matches = match live.base_url.as_deref() {
-        Some(live_url) if tool_id == "claude-code" => {
+        Some(live_url)
+            if tool_id == "claude-code" || tool_id == "claude-desktop" =>
+        {
             // Claude apply strips trailing `/v1`; archive keeps OpenAI-style URLs.
             adapters::anthropic_base_url(live_url)
                 == adapters::anthropic_base_url(record.base_url())
@@ -783,6 +813,7 @@ pub fn update(
         channel_id,
         model_id,
         Vec::new(),
+        None,
         String::new(),
         api_protocol,
         base_url,
@@ -931,6 +962,7 @@ mod tests {
                 "channel-1".into(),
                 "m1".into(),
                 archived.clone(),
+                None,
                 "example".into(),
                 ServiceProtocol::OpenaiCompletions,
                 "https://127.0.0.1:1/v1".into(),
@@ -998,6 +1030,7 @@ mod tests {
                 "channel-1".into(),
                 "gpt-5-6-sol".into(),
                 Vec::new(),
+                None,
                 if adapters::provider_id_required(tool_id) {
                     "example".into()
                 } else {
@@ -1098,13 +1131,14 @@ mod tests {
             None,
         )
         .unwrap();
-        let err = switch(&dir.config, &dir.home, "claude-desktop", &added.id)
+        // Unknown / non-writable tool id must not become current.
+        let err = switch(&dir.config, &dir.home, "not-a-real-tool", &added.id)
             .unwrap_err();
-        assert_eq!(err, ServiceError::ApplyUnsupported);
+        assert_eq!(err, ServiceError::ToolUnknown);
         assert!(
             !preferences::load(&dir.config)
                 .current_by_tool
-                .contains_key("claude-desktop")
+                .contains_key("not-a-real-tool")
         );
     }
 
@@ -1393,8 +1427,7 @@ requires_openai_auth = true
     }
 
     #[test]
-    fn codex_switch_stops_when_the_live_url_matches_no_saved_service_and_has_no_key()
-     {
+    fn codex_switch_continues_when_unmatched_url_only_and_no_current_service() {
         let dir = TempDir::new();
         let next = archive::add(
             &dir.config,
@@ -1422,15 +1455,82 @@ requires_openai_auth = true
 ",
         )
         .unwrap();
+        // No recorded current + unmatched URL-only live config: allow switch
+        // after durable backup rather than blocking with DriftDetected.
+        let switched =
+            switch(&dir.config, &dir.home, "codex", &next.id).unwrap();
+        assert_eq!(switched.service_id, next.id);
         assert_eq!(
-            switch(&dir.config, &dir.home, "codex", &next.id).unwrap_err(),
-            ServiceError::DriftDetected
-        );
-        assert!(
             preferences::load(&dir.config)
                 .current_by_tool
                 .get("codex")
-                .is_none()
+                .map(String::as_str),
+            Some(next.id.as_str())
+        );
+    }
+
+    #[test]
+    fn key_only_codex_imports_and_switches_to_relay_then_back() {
+        let dir = TempDir::new();
+        let codex = dir.home.join(".codex");
+        std::fs::create_dir_all(&codex).unwrap();
+        std::fs::write(
+            codex.join("auth.json"),
+            "{\"OPENAI_API_KEY\":\"sk-official-local\"}",
+        )
+        .unwrap();
+
+        super::super::local_import::auto_import_all(&dir.config, &dir.home)
+            .unwrap();
+        let listed = archive::list_for_tool(&dir.config, "codex").unwrap();
+        assert_eq!(listed.len(), 1);
+        let local_id = listed[0].id.clone();
+        assert_eq!(listed[0].base_url, "https://api.openai.com/v1");
+
+        let relay = archive::add_for_tool(
+            &dir.config,
+            "codex",
+            "Relay".into(),
+            String::new(),
+            String::new(),
+            String::new(),
+            Vec::new(),
+            None,
+            "relay".into(),
+            ServiceProtocol::OpenaiResponses,
+            "https://example.com/v1".into(),
+            "sk-relay".into(),
+            None,
+        )
+        .unwrap();
+
+        switch(&dir.config, &dir.home, "codex", &relay.id).unwrap();
+        let auth_after: serde_json::Value = serde_json::from_str(
+            &std::fs::read_to_string(codex.join("auth.json")).unwrap(),
+        )
+        .unwrap();
+        assert!(
+            auth_after.get("OPENAI_API_KEY").is_none(),
+            "relay switch must stash/remove OPENAI_API_KEY from auth.json"
+        );
+        let provider_key = archive::resolve_provider_id(
+            &archive::get_for_tool(&dir.config, "codex", &relay.id)
+                .unwrap()
+                .unwrap()
+                .row,
+        );
+        let live =
+            adapters::inspect("codex", &dir.home, Some(&provider_key)).unwrap();
+        assert_eq!(live.api_key.as_deref(), Some("sk-relay"));
+
+        switch(&dir.config, &dir.home, "codex", &local_id).unwrap();
+        let auth_restored: serde_json::Value = serde_json::from_str(
+            &std::fs::read_to_string(codex.join("auth.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            auth_restored.get("OPENAI_API_KEY").and_then(|v| v.as_str()),
+            Some("sk-official-local")
         );
     }
 
@@ -1670,6 +1770,7 @@ requires_openai_auth = true
             "".into(),
             "example-model".into(),
             Vec::new(),
+            None,
             String::new(),
             ServiceProtocol::Auto,
             "https://new.example/v1".into(),
@@ -1741,6 +1842,7 @@ requires_openai_auth = true
             String::new(),
             "test-model".into(),
             Vec::new(),
+            None,
             String::new(),
             ServiceProtocol::Gemini,
             "https://new.example/v1".into(),

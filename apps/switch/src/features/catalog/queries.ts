@@ -7,8 +7,6 @@ import {
 import {
   addMyService,
   fetchServiceModels,
-  getMyServiceImportStatus,
-  importMyServiceFromLive,
   listMyServices,
   listSwitchTools,
   queryServiceBalance,
@@ -33,15 +31,6 @@ export const switchToolsQueryOptions = queryOptions({
   queryFn: listSwitchTools,
 })
 
-export function myServiceImportStatusQueryOptions(toolId: string) {
-  return queryOptions({
-    queryKey: ['tool-import-status', toolId],
-    queryFn: () => getMyServiceImportStatus(toolId),
-    staleTime: 0,
-    refetchInterval: 3_000,
-    refetchOnWindowFocus: true,
-  })
-}
 
 
 export function useAddMyService() {
@@ -184,23 +173,5 @@ export function useFetchServiceModels() {
 export function useQueryServiceBalance(toolId: string) {
   return useMutation({
     mutationFn: (serviceId: string) => queryServiceBalance(toolId, serviceId),
-  })
-}
-
-export function useImportMyServiceFromLive() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (toolId: string) => importMyServiceFromLive(toolId),
-    onSuccess: async (_result, toolId) => {
-      await queryClient.invalidateQueries({
-        queryKey: ['my-services', toolId],
-      })
-      await queryClient.invalidateQueries({
-        queryKey: ['tool-import-status', toolId],
-      })
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryOptions.queryKey,
-      })
-    },
   })
 }

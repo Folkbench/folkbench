@@ -57,7 +57,6 @@ export function EasyUsage({
     <section className="easy-usage" aria-labelledby="easy-usage-title">
       <div className="easy-usage-heading">
         <h2 id="easy-usage-title">{t('easy.usage.title')}</h2>
-        <span>{t('easy.usage.scope')}</span>
       </div>
       {usage.isPending ? (
         <p className="easy-usage-empty" role="status">

@@ -20,6 +20,21 @@ export type ModelFetchResult = { status: ModelFetchStatus, models: Array<Fetched
  */
 export type ModelFetchStatus = "ready" | "empty" | "missingKey" | "invalidUrl" | "unauthorized" | "endpointNotFound" | "unreachable" | "unavailable";
 
+
+/**
+ * One Claude Code /model menu role (Sonnet / Opus / Fable / Haiku / Subagent).
+ */
+export type ClaudeRoleModel = { displayName: string, requestModel: string, supports1m: boolean, };
+
+/**
+ * Fixed Claude role → request-model mapping persisted per saved service.
+ */
+export type ClaudeRoleModels = { sonnet: ClaudeRoleModel, opus: ClaudeRoleModel, fable: ClaudeRoleModel, haiku: ClaudeRoleModel, 
+/**
+ * Optional Subagent; not shown in the /model menu.
+ */
+subagent: ClaudeRoleModel, };
+
 /**
  * One locally saved API service. The Key never appears on this type.
  */
@@ -29,6 +44,11 @@ export type MyService = { id: string, name: string, stationId: string, channelId
  * Empty means legacy archive or no fetch yet; adapters may probe.
  */
 models: Array<FetchedModel>, 
+/**
+ * Claude Code role → request model mapping (Sonnet/Opus/Fable/Haiku/Subagent).
+ * None/empty means fill sensible defaults on save/apply. Ignored for other tools.
+ */
+claudeRoleModels?: ClaudeRoleModels | null, 
 /**
  * Tool-facing provider key (e.g. models.providers.<id>). Empty falls back to `id`.
  */

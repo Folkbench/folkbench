@@ -4,6 +4,10 @@ import { relaunch } from '@tauri-apps/plugin-process'
 import { check, type Update } from '@tauri-apps/plugin-updater'
 
 import { Button } from '@/components/ui/button'
+import {
+  recordUpdateTelemetry,
+  prepareUpdateTelemetry,
+} from '@/bridge/commands/telemetry'
 
 type UpdateState =
   | { kind: 'idle' }
@@ -24,12 +28,14 @@ export function AppUpdateCheck() {
     try {
       const update = await check({ timeout: 30_000 })
       pending.current = update
+      recordUpdateTelemetry('update_check', true, update?.version)
       setState(
         update
           ? { kind: 'available', version: update.version }
           : { kind: 'none' }
       )
     } catch {
+      recordUpdateTelemetry('update_check', false)
       setState({ kind: 'error', stage: 'check' })
     }
   }
@@ -39,9 +45,10 @@ export function AppUpdateCheck() {
     if (!update) return
     let total = 0
     let received = 0
+    let downloadFinished = false
     setState({ kind: 'downloading', percent: null })
     try {
-      await update.downloadAndInstall((event) => {
+      await update.download((event) => {
         if (event.event === 'Started') {
           total = event.data.contentLength ?? 0
         } else if (event.event === 'Progress') {
@@ -55,9 +62,20 @@ export function AppUpdateCheck() {
           })
         }
       })
+      downloadFinished = true
+      recordUpdateTelemetry('update_download', true, update.version)
+      await prepareUpdateTelemetry(update.version)
+      await update.install()
+      recordUpdateTelemetry('update_install', true, update.version)
       pending.current = null
       setState({ kind: 'ready' })
     } catch {
+      await prepareUpdateTelemetry(null)
+      recordUpdateTelemetry(
+        downloadFinished ? 'update_install' : 'update_download',
+        false,
+        update.version
+      )
       setState({ kind: 'error', stage: 'install' })
     }
   }

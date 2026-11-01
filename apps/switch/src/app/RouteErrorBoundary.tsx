@@ -17,6 +17,10 @@ export function RouteErrorBoundary({ error }: ErrorComponentProps) {
   const router = useRouter()
   const code = error instanceof BridgeError ? error.code : null
 
+  if (import.meta.env.DEV) {
+    console.error('[RouteErrorBoundary]', error)
+  }
+
   return (
     <div className="flex min-h-svh items-center justify-center p-8">
       <Empty className="max-w-md border">

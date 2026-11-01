@@ -77,6 +77,45 @@ pub enum FolkbenchBinding {
     },
 }
 
+/// One Claude Code /model menu role (Sonnet / Opus / Fable / Haiku / Subagent).
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(
+    feature = "generate-bindings",
+    ts(export, export_to = "myService.ts")
+)]
+#[serde(rename_all = "camelCase")]
+pub struct ClaudeRoleModel {
+    #[serde(default)]
+    pub display_name: String,
+    #[serde(default)]
+    pub request_model: String,
+    #[serde(default)]
+    pub supports_1m: bool,
+}
+
+/// Fixed Claude role → request-model mapping persisted per saved service.
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(
+    feature = "generate-bindings",
+    ts(export, export_to = "myService.ts")
+)]
+#[serde(rename_all = "camelCase")]
+pub struct ClaudeRoleModels {
+    #[serde(default)]
+    pub sonnet: ClaudeRoleModel,
+    #[serde(default)]
+    pub opus: ClaudeRoleModel,
+    #[serde(default)]
+    pub fable: ClaudeRoleModel,
+    #[serde(default)]
+    pub haiku: ClaudeRoleModel,
+    /// Optional Subagent; not shown in the /model menu.
+    #[serde(default)]
+    pub subagent: ClaudeRoleModel,
+}
+
 /// One locally saved API service. The Key never appears on this type.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
@@ -95,6 +134,10 @@ pub struct MyService {
     /// Empty means legacy archive or no fetch yet; adapters may probe.
     #[serde(default)]
     pub models: Vec<FetchedModel>,
+    /// Claude Code role → request model mapping (Sonnet/Opus/Fable/Haiku/Subagent).
+    /// None/empty means fill sensible defaults on save/apply. Ignored for other tools.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub claude_role_models: Option<ClaudeRoleModels>,
     /// Tool-facing provider key (e.g. models.providers.<id>). Empty falls back to `id`.
     #[serde(default)]
     pub provider_id: String,

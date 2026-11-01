@@ -65,3 +65,7 @@ export function completeEasyOnboarding(): Promise<Preferences> {
 export async function setUiMode(uiMode: UiMode): Promise<Preferences> {
   return invokeCommand<Preferences>('set_ui_mode', { uiMode })
 }
+
+export async function fitWindowToContent(contentHeight: number): Promise<void> {
+  await invokeCommand<void>('fit_window_to_content', { contentHeight })
+}

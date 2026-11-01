@@ -41,6 +41,7 @@ mod tests {
                         String::new(),
                         String::new(),
                         Vec::new(),
+                        None,
                         String::new(),
                         ServiceProtocol::Auto,
                         "https://example.com/v1".into(),

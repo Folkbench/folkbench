@@ -7,11 +7,24 @@ import type {
 } from '@/bridge'
 
 export const EASY_DEFAULT_TOOLS = [
-  'claude-code',
+  'claude-desktop',
   'codex',
   'gemini-cli',
   'opencode',
 ]
+
+/** Easy list uses Claude Desktop; map legacy Claude Code selections. */
+export function normalizeEasyToolId(toolId: string) {
+  return toolId === 'claude-code' ? 'claude-desktop' : toolId
+}
+
+/** Easy tool pickers: hide Claude Code so Claude Desktop is the Claude entry. */
+export function easySelectableTools(tools: ToolDescriptor[]) {
+  return tools.filter(
+    (tool) =>
+      tool.switchEffect !== 'notImplemented' && tool.id !== 'claude-code'
+  )
+}
 
 export function easyTools(
   tools: ToolDescriptor[],
@@ -20,23 +33,31 @@ export function easyTools(
   const writable = tools.filter(
     (tool) => tool.switchEffect !== 'notImplemented'
   )
-  const preferred = favorites.length ? favorites : EASY_DEFAULT_TOOLS
-  const picked = preferred
-    .map((id) => writable.find((tool) => tool.id === id))
-    .filter((tool): tool is ToolDescriptor => Boolean(tool))
-    .slice(0, 4)
+  const preferred = (favorites.length ? favorites : EASY_DEFAULT_TOOLS).map(
+    normalizeEasyToolId
+  )
+  const seen = new Set<string>()
+  const picked: ToolDescriptor[] = []
+  for (const id of preferred) {
+    if (seen.has(id)) continue
+    const tool = writable.find((item) => item.id === id)
+    if (!tool) continue
+    seen.add(id)
+    picked.push(tool)
+    if (picked.length >= 4) break
+  }
   return picked.length ? picked : writable.slice(0, 4)
 }
 
 export function easyProtocol(toolId: string): ServiceProtocol {
-  if (toolId === 'claude-code') return 'anthropic-messages'
+  if (toolId === 'claude-code' || toolId === 'claude-desktop') return 'anthropic-messages'
   if (toolId === 'codex' || toolId === 'grok-build') return 'openai-responses'
   if (toolId === 'gemini-cli') return 'gemini'
   return 'openai-completions'
 }
 
 export function easyModelRequired(toolId: string) {
-  return !['claude-code', 'codex', 'gemini-cli', 'opencode'].includes(toolId)
+  return !['claude-code', 'claude-desktop', 'codex', 'gemini-cli', 'opencode'].includes(toolId)
 }
 
 /** Label for install/open copy: append " CLI" unless the name already mentions CLI (e.g. Gemini CLI). */
@@ -49,7 +70,7 @@ export function easyCliLabel(displayName: string) {
 
 /** Suggested model id for easy-mode forms; editable and never required. */
 export function easyDefaultModel(toolId: string) {
-  if (toolId === 'claude-code') return 'claude-sonnet-4-5'
+  if (toolId === 'claude-code' || toolId === 'claude-desktop') return 'claude-sonnet-4-5'
   if (toolId === 'gemini-cli') return 'gemini-2.5-pro'
   if (toolId === 'codex') return 'gpt-5.4'
   return 'gpt-5.4'
@@ -108,7 +129,7 @@ export function easyModelMatchesTool(
   name = '',
 ) {
   const hay = `${id} ${name}`
-  if (toolId === 'claude-code') return /claude|anthropic/i.test(hay)
+  if (toolId === 'claude-code' || toolId === 'claude-desktop') return /claude|anthropic/i.test(hay)
   if (toolId === 'codex') return /codex|\bgpt-|\bo1\b|\bo3\b|\bo4\b/i.test(hay)
   if (toolId === 'gemini-cli') return /gemini|gemma|google/i.test(hay)
   if (toolId === 'opencode') return /opencode|openai|\bgpt-|\bo1\b|\bo3\b/i.test(hay)
@@ -124,9 +145,9 @@ export function easyModelMatchesTool(
   return false
 }
 
-/** @deprecated use easyModelMatchesTool('claude-code', ...) */
+/** @deprecated use easyModelMatchesTool('claude-desktop', ...) */
 export function easyIsClaudeModel(id: string, name = '') {
-  return easyModelMatchesTool('claude-code', id, name)
+  return easyModelMatchesTool('claude-desktop', id, name)
 }
 
 export type EasyModelChoice = {
@@ -137,7 +158,7 @@ export type EasyModelChoice = {
 
 /** Short label for model-group headers (Codex / Claude / …). */
 export function easyModelGroupToolLabel(toolId: string, displayName: string) {
-  if (toolId === 'claude-code') return 'Claude'
+  if (toolId === 'claude-code' || toolId === 'claude-desktop') return 'Claude'
   if (toolId === 'codex') return 'Codex'
   if (toolId === 'gemini-cli') return 'Gemini'
   if (toolId === 'opencode') return 'OpenCode'
@@ -185,7 +206,7 @@ export function easyProviderId(
   existing?: string
 ) {
   if (
-    ['claude-code', 'codex', 'gemini-cli', 'aider', 'grok-build'].includes(
+    ['claude-code', 'claude-desktop', 'codex', 'gemini-cli', 'aider', 'grok-build'].includes(
       toolId
     )
   )

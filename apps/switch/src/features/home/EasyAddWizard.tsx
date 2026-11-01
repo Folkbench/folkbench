@@ -43,6 +43,7 @@ import {
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { useSetLastToolId } from '@/features/preferences/queries'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
+import { normalizeEasyToolId } from './easy-model'
 
 export type EasyWizardStep = Step
 type Step = 'tool' | 'station' | 'credentials'
@@ -51,6 +52,7 @@ type SourceMode = 'catalog' | 'custom'
 function defaultProtocolForTool(toolId: string): ServiceProtocol {
   switch (toolId) {
     case 'claude-code':
+    case 'claude-desktop':
       return 'anthropic-messages'
     case 'codex':
       return 'openai-responses'
@@ -105,6 +107,7 @@ function deriveProviderId(baseUrl: string): string {
 function modelRequiredForTool(toolId: string): boolean {
   switch (toolId) {
     case 'claude-code':
+    case 'claude-desktop':
     case 'codex':
     case 'gemini-cli':
     case 'opencode':
@@ -145,7 +148,9 @@ export function EasyAddWizard({
     if (initialStation) return 'credentials'
     return initialStep ?? 'station'
   })
-  const [toolId, setToolId] = useState(initialToolId || writable[0]?.id || '')
+  const [toolId, setToolId] = useState(
+    normalizeEasyToolId(initialToolId) || writable[0]?.id || ''
+  )
   const [sourceMode, setSourceMode] = useState<SourceMode>(
     initialStation ? 'catalog' : 'catalog'
   )
@@ -174,7 +179,8 @@ export function EasyAddWizard({
 
   useEffect(() => {
     if (!open) return
-    const nextTool = initialToolId || writable[0]?.id || ''
+    const nextTool =
+      normalizeEasyToolId(initialToolId) || writable[0]?.id || ''
     setToolId(nextTool)
     setStation(initialStation ?? null)
     setSourceMode(initialStation ? 'catalog' : 'catalog')
@@ -222,7 +228,7 @@ export function EasyAddWizard({
 
   function reset() {
     setStep(requireToolSelection ? 'tool' : 'station')
-    setToolId(initialToolId || writable[0]?.id || '')
+    setToolId(normalizeEasyToolId(initialToolId) || writable[0]?.id || '')
     setSourceMode('catalog')
     setStation(null)
     setCustomName('')

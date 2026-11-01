@@ -17,6 +17,7 @@ import type {
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ToolLogo } from '@/components/tool-logo'
+import { UpdateAvailableBadge } from '@/features/home/UpdateAvailableBadge'
 import {
   toolRuntimeCatalogQueryOptions,
   toolRuntimePrerequisitesQueryOptions,
@@ -310,6 +311,27 @@ function ToolRuntimeRow({
           <h2 className="truncate text-[14px] font-medium tracking-tight">
             {displayName}
           </h2>
+          {!checking && item?.status === 'updateAvailable' ? (
+            <UpdateAvailableBadge
+              label={t('tools.runtime.updateAvailable')}
+              hint={
+                item.localVersion && item.latestVersion
+                  ? t('tools.runtime.updateHint', {
+                      tool: displayName,
+                      local: item.localVersion,
+                      latest: item.latestVersion,
+                    })
+                  : t('tools.runtime.updateHintShort', { tool: displayName })
+              }
+              localVersion={item.localVersion}
+              latestVersion={item.latestVersion}
+              primaryLabel={t('tools.runtime.actions.update')}
+              primaryBusyLabel={t('tools.runtime.actions.updating')}
+              primaryBusy={upgradeBusy}
+              primaryDisabled={locked}
+              onPrimary={onUpgrade}
+            />
+          ) : null}
           {checking ? (
             <span className="inline-flex items-center gap-1 text-[12px] text-muted-foreground">
               <HugeiconsIcon

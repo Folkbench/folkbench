@@ -18,7 +18,9 @@
       "connect": "接入",
       "details": "测评详情",
       "detailsFor": "查看 {{name}} 详情",
-      "moreFor": "{{name}} 的更多操作"
+      "moreFor": "{{name}} 的更多操作",
+      "openDesktop": "打开桌面端",
+      "openingDesktop": "正在打开…"
     },
     "addSource": {
       "description": "选择填写方式。",
@@ -104,8 +106,6 @@
     },
     "empty": {
       "action": "添加服务",
-      "import": "从本机 CLI 导入",
-      "imported": "已从本机 CLI 导入",
       "title": "还没有保存的服务",
       "preview": {
         "service": "已保存的服务"
@@ -184,7 +184,30 @@
         "unreachable": "无法连接到该地址，请检查 Base URL 或网络。",
         "unavailable": "获取模型列表失败（{{status}}），可稍后重试或手动填写。"
       },
-      "modelNeedKey": "请先填写 API Key"
+      "modelNeedKey": "请先填写 API Key",
+      "claudeRoles": {
+        "title": "模型映射",
+        "hintAria": "模型映射说明",
+        "hint": "为 Claude 的各角色指定实际调用的模型 ID。显示名称会出现在客户端的模型菜单中；勾选 1M 表示该模型支持百万级上下文。未填写的项在保存时会自动补全默认值。若映射了非 Claude 模型，CLI 会直接请求该 ID；Desktop 仍显示安全的 Claude 路由名，并经本机 remapping 代理转发真实上游。",
+        "desktopRemap": "Desktop 将显示为 {{route}}（本机代理映射）",
+        "oneClick": "一键设置",
+        "fetchModels": "获取模型列表",
+        "role": "角色",
+        "displayName": "显示名称",
+        "requestModel": "请求模型 ID",
+        "supports1m": "1M",
+        "subagentNoMenu": "不出现在模型菜单",
+        "subagentPlaceholder": "可选",
+        "roles": {
+          "sonnet": "Sonnet",
+          "opus": "Opus",
+          "fable": "Fable",
+          "haiku": "Haiku",
+          "subagent": "Subagent"
+        },
+        "requestModelPick": "选择或输入模型 ID",
+        "requestModelEmpty": "可先点「获取模型列表」再下拉选择；也可直接手填模型 ID。"
+      }
     },
     "home": {
       "allServices": "全部服务",
@@ -229,12 +252,6 @@
       "deleteBlocked": "请先启用其他服务，再删除当前使用的这一条。",
       "favoriteLimit": "最多选择 4 个常用服务，请先取消一个。",
       "favoriteMinimum": "至少保留 1 个常用服务。",
-      "imported": "已把当前工具配置导入为一条服务。",
-      "importEmpty": "当前工具配置里没有找到 Base URL 和 Key。",
-      "importAlreadySynced": "当前工具的配置已经保存。",
-      "importChecking": "正在检查当前工具配置…",
-      "importRetry": "重试检查导入状态",
-      "importStatusUnavailable": "无法检查当前工具配置是否有变化。",
       "reachable": "连通正常（{{ms}} ms）",
       "saved": "服务已更新。",
       "switched": "已写入 {{tool}}（{{effect}}）。",
@@ -541,7 +558,31 @@
       "updateMessageShort": "{{tool}} 有新版本可更新",
       "update": "更新",
       "updating": "正在更新…",
-      "actionFailed": "操作失败，请稍后再试"
+      "actionFailed": "操作失败，请稍后再试",
+      "updateAvailable": "CLI 可更新"
+    },
+    "desktop": {
+      "open": "打开桌面端",
+      "opening": "正在打开…",
+      "opened": "已打开 {{name}} 桌面端。",
+      "notInstalled": "未检测到桌面端",
+      "notInstalledHint": "将打开官方下载页，安装后回到 Switch 即可一键启动。",
+      "launchFailed": "无法打开桌面端。",
+      "detectFailed": "检测桌面端失败。",
+      "unsupported": "当前系统没有官方桌面端，请使用 CLI。",
+      "detected": "已检测到 {{name}}",
+      "restartTitle": "桌面端正在运行",
+      "restartDescription": "若刚切换过服务，需完全退出再打开才能加载新配置（Claude Desktop 的 3p 网关亦然）。",
+      "restart": "重启并打开",
+      "activate": "仅切到前台",
+      "tooltip": "一键启动桌面端。Claude Desktop 使用独立的 Application Support 3p 网关配置（与 Claude Code 互不影响，切换后需完全退出再开）；Codex 使用本机已写入的配置。",
+      "cliVsDesktop": "Claude Code 使用 ~/.claude；Claude Desktop 使用独立的 Application Support 3p 网关（Folkbench Switch profile），两者配置互不同步。",
+      "updateAvailable": "客户端可更新",
+      "updateHint": "Claude Desktop 有新版本（{{local}} → {{latest}}）。打开客户端即可使用内置更新。",
+      "updateHintShort": "Claude Desktop 有新版本可更新。打开客户端即可使用内置更新。",
+      "openToUpdate": "打开客户端更新",
+      "downloadPage": "下载页",
+      "detecting": "正在检测版本…"
     }
   }
 }

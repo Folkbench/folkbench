@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "0.1.0-beta.5",
+  "version": "0.1.0-beta.6",
   "hashes": {
-    "package.json": "1e1908e5d5045c3cbb3e2634cef550635fd954215fa07eb483d61ba136094e0f",
+    "package.json": "088edd4b225ee877978d4284722983583326d37f3ebd14be51e93f7ac2426347",
     "bun.lock": "c2d1f26a87564bf54ce3104c21bfc7733d020fd0456c33b7a2aee18138f4a083",
-    "src-tauri/Cargo.lock": "a6dcb2a319f7b636f7384b2110b54254df96beea6a8e0add104d70e1de95d08f"
+    "src-tauri/Cargo.lock": "0d081a3144d661c7c2e85435cd069438d6beaa61ce5d4ed45aa24c4c5a0647ee"
   },
   "packages": [
     {
@@ -477,12 +477,6 @@
     },
     {
       "ecosystem": "crates.io",
-      "name": "cargo-platform",
-      "version": "0.1.9",
-      "license": "MIT OR Apache-2.0"
-    },
-    {
-      "ecosystem": "crates.io",
       "name": "cargo_metadata",
       "version": "0.19.2",
       "license": "MIT"
@@ -492,6 +486,12 @@
       "name": "cargo_toml",
       "version": "0.22.3",
       "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "cargo-platform",
+      "version": "0.1.9",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "crates.io",
@@ -538,13 +538,13 @@
     {
       "ecosystem": "crates.io",
       "name": "core-foundation",
-      "version": "0.9.4",
+      "version": "0.10.1",
       "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "crates.io",
       "name": "core-foundation",
-      "version": "0.10.1",
+      "version": "0.9.4",
       "license": "MIT OR Apache-2.0"
     },
     {
@@ -723,15 +723,15 @@
     },
     {
       "ecosystem": "crates.io",
-      "name": "embed-resource",
-      "version": "3.0.11",
-      "license": "MIT"
-    },
-    {
-      "ecosystem": "crates.io",
       "name": "embed_plist",
       "version": "1.2.2",
       "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "embed-resource",
+      "version": "3.0.11",
+      "license": "MIT"
     },
     {
       "ecosystem": "crates.io",
@@ -927,6 +927,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "h2",
+      "version": "0.4.20",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "half",
       "version": "2.7.1",
       "license": "MIT OR Apache-2.0"
@@ -989,6 +995,12 @@
       "ecosystem": "crates.io",
       "name": "httparse",
       "version": "1.10.1",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "httpdate",
+      "version": "1.0.3",
       "license": "MIT OR Apache-2.0"
     },
     {
@@ -1533,15 +1545,15 @@
     },
     {
       "ecosystem": "crates.io",
-      "name": "rustc-hash",
-      "version": "2.1.3",
-      "license": "Apache-2.0 OR MIT"
-    },
-    {
-      "ecosystem": "crates.io",
       "name": "rustc_version",
       "version": "0.4.1",
       "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "rustc-hash",
+      "version": "2.1.3",
+      "license": "Apache-2.0 OR MIT"
     },
     {
       "ecosystem": "crates.io",
@@ -1635,12 +1647,6 @@
     },
     {
       "ecosystem": "crates.io",
-      "name": "serde-untagged",
-      "version": "0.1.9",
-      "license": "MIT OR Apache-2.0"
-    },
-    {
-      "ecosystem": "crates.io",
       "name": "serde_core",
       "version": "1.0.229",
       "license": "MIT OR Apache-2.0"
@@ -1691,6 +1697,12 @@
       "ecosystem": "crates.io",
       "name": "serde_yaml",
       "version": "0.9.34+deprecated",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "serde-untagged",
+      "version": "0.1.9",
       "license": "MIT OR Apache-2.0"
     },
     {
@@ -2013,6 +2025,12 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "tokio-macros",
+      "version": "2.7.2",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "tokio-rustls",
       "version": "0.26.5",
       "license": "MIT OR Apache-2.0"
@@ -2307,6 +2325,18 @@
     },
     {
       "ecosystem": "crates.io",
+      "name": "windows_x86_64_msvc",
+      "version": "0.52.6",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "windows_x86_64_msvc",
+      "version": "0.53.1",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "ecosystem": "crates.io",
       "name": "windows-collections",
       "version": "0.2.0",
       "license": "MIT OR Apache-2.0"
@@ -2429,18 +2459,6 @@
       "ecosystem": "crates.io",
       "name": "windows-version",
       "version": "0.1.7",
-      "license": "MIT OR Apache-2.0"
-    },
-    {
-      "ecosystem": "crates.io",
-      "name": "windows_x86_64_msvc",
-      "version": "0.52.6",
-      "license": "MIT OR Apache-2.0"
-    },
-    {
-      "ecosystem": "crates.io",
-      "name": "windows_x86_64_msvc",
-      "version": "0.53.1",
       "license": "MIT OR Apache-2.0"
     },
     {

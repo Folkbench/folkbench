@@ -4,7 +4,8 @@ use std::{
 };
 
 use crate::domain::{
-    FetchedModel, ServiceError, ServiceProtocol, SwitchEffect, SwitchResult,
+    ClaudeRoleModels, FetchedModel, ServiceError, ServiceProtocol,
+    SwitchEffect, SwitchResult,
 };
 
 use super::{
@@ -23,6 +24,8 @@ pub struct ApplyRequest<'a> {
     pub model_id: &'a str,
     /// Archived model list from the last form fetch (may be empty).
     pub models: &'a [FetchedModel],
+    /// Claude role mapping; None fills defaults for claude-code on apply.
+    pub claude_role_models: Option<&'a ClaudeRoleModels>,
     pub api_protocol: ServiceProtocol,
     pub base_url: &'a str,
     pub api_key: &'a str,
@@ -32,18 +35,17 @@ pub fn config_dir(tool_id: &str, home: &Path) -> Option<PathBuf> {
     match tool_id {
         "claude-code" => Some(home.join(".claude")),
         "claude-desktop" => {
-            #[cfg(target_os = "macos")]
-            {
-                Some(home.join("Library/Application Support/Claude"))
-            }
-            #[cfg(target_os = "windows")]
-            {
-                Some(home.join("AppData/Roaming/Claude"))
-            }
-            #[cfg(not(any(target_os = "macos", target_os = "windows")))]
-            {
-                None
-            }
+            // Prefer Claude-3p root for detection; Desktop apply writes both
+            // Claude + Claude-3p via claude_desktop::apply_gateway.
+            super::claude_desktop::paths_from_home(home)
+                .map(|paths| {
+                    paths
+                        .threep_config_path
+                        .parent()
+                        .unwrap_or(Path::new(""))
+                        .to_path_buf()
+                })
+                .filter(|p| !p.as_os_str().is_empty())
         }
         "codex" => Some(home.join(".codex")),
         "gemini-cli" => Some(home.join(".gemini")),
@@ -75,6 +77,20 @@ pub fn detected(tool_id: &str, home: &Path) -> bool {
     if tool_id == "kimi-cli" {
         return home.join(".kimi-code").is_dir() || home.join(".kimi").is_dir();
     }
+    if tool_id == "claude-desktop" {
+        return super::claude_desktop::paths_from_home(home).is_some_and(
+            |paths| {
+                paths
+                    .normal_config_path
+                    .parent()
+                    .is_some_and(|dir| dir.is_dir())
+                    || paths
+                        .threep_config_path
+                        .parent()
+                        .is_some_and(|dir| dir.is_dir())
+            },
+        );
+    }
     config_dir(tool_id, home).is_some_and(|path| path.is_dir())
 }
 
@@ -84,6 +100,17 @@ pub(crate) fn configuration_files(
     home: &Path,
 ) -> Result<Vec<PathBuf>, ServiceError> {
     let dir = config_dir(tool_id, home).ok_or(ServiceError::ToolUnknown)?;
+    if tool_id == "claude-desktop" {
+        let Some(paths) = super::claude_desktop::paths_from_home(home) else {
+            return Err(ServiceError::ApplyUnsupported);
+        };
+        return Ok(vec![
+            paths.normal_config_path,
+            paths.threep_config_path,
+            paths.profile_path,
+            paths.meta_path,
+        ]);
+    }
     let names: &[&str] = match tool_id {
         "claude-code" | "qwen-code" => &["settings.json"],
         "codex" => &["auth.json", "config.toml", "auth.folkbench-held.json"],
@@ -105,10 +132,9 @@ pub fn effect(tool_id: &str) -> SwitchEffect {
         "claude-code" | "gemini-cli" | "kimi-cli" | "dsh" => {
             SwitchEffect::HotReload
         }
-        "codex" | "opencode" | "grok-build" | "qwen-code" | "pi"
-        | "openclaw" | "hermes" | "minimax-code" | "aider" => {
-            SwitchEffect::RequiresRestart
-        }
+        "claude-desktop" | "codex" | "opencode" | "grok-build"
+        | "qwen-code" | "pi" | "openclaw" | "hermes" | "minimax-code"
+        | "aider" => SwitchEffect::RequiresRestart,
         _ => SwitchEffect::NotImplemented,
     }
 }
@@ -143,6 +169,7 @@ pub fn model_required(tool_id: &str) -> bool {
     matches!(
         tool_id,
         "claude-code"
+            | "claude-desktop"
             | "grok-build"
             | "openclaw"
             | "hermes"
@@ -193,6 +220,7 @@ pub fn inspect(
     }
     Ok(match tool_id {
         "claude-code" => claude::inspect(&dir)?,
+        "claude-desktop" => super::claude_desktop::inspect(home)?,
         "codex" => codex::inspect(&dir)?,
         "gemini-cli" => gemini::inspect(&dir)?,
         "grok-build" => grok::inspect(&dir, service_id)?,
@@ -253,13 +281,31 @@ fn apply_inner(
     }
     let found = dir.exists();
     match request.tool_id {
-        "claude-code" => claude::apply(
-            &dir,
-            request.api_protocol,
-            request.base_url,
-            request.api_key,
-            request.model_id,
-        )?,
+        "claude-code" => {
+            let mut roles =
+                request.claude_role_models.cloned().unwrap_or_default();
+            super::claude_roles::fill_defaults(&mut roles, request.model_id);
+            claude::apply(
+                &dir,
+                request.api_protocol,
+                request.base_url,
+                request.api_key,
+                request.model_id,
+                &roles,
+            )?;
+        }
+        "claude-desktop" => {
+            let mut roles =
+                request.claude_role_models.cloned().unwrap_or_default();
+            super::claude_roles::fill_defaults(&mut roles, request.model_id);
+            super::claude_desktop::apply_gateway(
+                request.home,
+                request.base_url,
+                request.api_key,
+                request.model_id,
+                &roles,
+            )?;
+        }
         "codex" => codex::apply(
             &dir,
             request.provider_id,
@@ -414,7 +460,12 @@ fn clear_inner(
     let found = dir.exists();
     if found {
         match tool_id {
-            "claude-code" => claude::clear(&dir)?,
+            "claude-code" => {
+                claude::clear(&dir)?;
+            }
+            "claude-desktop" => {
+                super::claude_desktop::restore_official(home)?;
+            }
             "codex" => codex::clear(&dir, service_id, expected_api_key)?,
             "gemini-cli" => gemini::clear(&dir)?,
             "grok-build" => grok::clear(&dir, service_id)?,
@@ -583,6 +634,7 @@ mod tests {
             name: "Example",
             model_id: "gpt-5-6-sol",
             models: &[],
+            claude_role_models: None,
             api_protocol: ServiceProtocol::Auto,
             base_url: "https://example.com/v1",
             api_key: "sk-test",
@@ -778,10 +830,18 @@ mod tests {
             &fs::read_to_string(dir.join("auth.json")).unwrap(),
         )
         .unwrap();
-        assert_eq!(live["OPENAI_API_KEY"], "sk-test");
+        // Relay switches stash the prior auth Key and remove it so Codex
+        // cannot prefer auth.json over the provider bearer token.
+        assert!(live.get("OPENAI_API_KEY").is_none());
         assert_eq!(live["custom_note"], "keep");
         assert!(live.get("tokens").is_none());
         assert!(live.get("auth_mode").is_none());
+        let stash: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(dir.join("auth.folkbench-api-key-stash.json"))
+                .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(stash["OPENAI_API_KEY"], "sk-old");
         let held: serde_json::Value = serde_json::from_str(
             &fs::read_to_string(dir.join("auth.folkbench-held.json")).unwrap(),
         )
@@ -1739,5 +1799,85 @@ requires_openai_auth = true
                 .file_type()
                 .is_symlink()
         );
+    }
+
+    #[test]
+    fn claude_code_apply_does_not_touch_desktop_gateway() {
+        let home = TempHome::new();
+        let claude_dir = home.0.join(".claude");
+        fs::create_dir_all(&claude_dir).unwrap();
+        fs::write(claude_dir.join("settings.json"), "{}\n").unwrap();
+
+        let paths = crate::adapters::claude_desktop::paths_from_home(&home.0)
+            .expect("desktop paths");
+        // Seed a distinct Desktop gateway marker that Claude Code must not rewrite.
+        if let Some(parent) = paths.threep_config_path.parent() {
+            fs::create_dir_all(parent).unwrap();
+        }
+        fs::write(
+            &paths.threep_config_path,
+            "{\"marker\":\"desktop-only-before-code-apply\"}\n",
+        )
+        .unwrap();
+
+        apply(request(&home.0, "claude-code", "svc-code"))
+            .expect("claude-code apply");
+
+        let desktop_raw =
+            fs::read_to_string(&paths.threep_config_path).unwrap();
+        assert!(
+            desktop_raw.contains("desktop-only-before-code-apply"),
+            "claude-code apply must not rewrite Desktop 3p config: {desktop_raw}"
+        );
+        assert!(
+            !paths.profile_path.exists(),
+            "claude-code must not create Desktop Folkbench profile"
+        );
+
+        let code_raw =
+            fs::read_to_string(claude_dir.join("settings.json")).unwrap();
+        assert!(
+            code_raw.contains("ANTHROPIC_BASE_URL")
+                || code_raw.contains("ANTHROPIC_AUTH_TOKEN")
+        );
+    }
+
+    #[test]
+    fn claude_desktop_apply_does_not_rewrite_claude_code_settings() {
+        let home = TempHome::new();
+        let claude_dir = home.0.join(".claude");
+        fs::create_dir_all(&claude_dir).unwrap();
+        fs::write(
+            claude_dir.join("settings.json"),
+            "{\"marker\":\"code-only-before-desktop-apply\",\"env\":{}}\n",
+        )
+        .unwrap();
+
+        let mut req = request(&home.0, "claude-desktop", "svc-desk");
+        req.model_id = "claude-sonnet-4-5";
+        apply(req).expect("claude-desktop apply");
+
+        let code_raw =
+            fs::read_to_string(claude_dir.join("settings.json")).unwrap();
+        assert!(
+            code_raw.contains("code-only-before-desktop-apply"),
+            "claude-desktop apply must leave ~/.claude settings alone: {code_raw}"
+        );
+
+        let paths = crate::adapters::claude_desktop::paths_from_home(&home.0)
+            .expect("desktop paths");
+        assert!(
+            paths.threep_config_path.is_file() || paths.profile_path.is_file(),
+            "desktop apply should write 3p gateway files"
+        );
+    }
+
+    #[test]
+    fn claude_desktop_effect_is_requires_restart_and_independent() {
+        assert_eq!(effect("claude-code"), SwitchEffect::HotReload);
+        assert_eq!(effect("claude-desktop"), SwitchEffect::RequiresRestart);
+        assert!(writable("claude-desktop"));
+        assert!(known_tool("claude-desktop"));
+        assert!(model_required("claude-desktop"));
     }
 }

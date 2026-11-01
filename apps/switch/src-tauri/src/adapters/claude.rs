@@ -51,6 +51,7 @@ pub fn apply(
     base_url: &str,
     api_key: &str,
     model_id: &str,
+    roles: &crate::domain::ClaudeRoleModels,
 ) -> Result<(), ServiceError> {
     if !matches!(
         protocol,
@@ -60,30 +61,34 @@ pub fn apply(
     }
     let path = dir.join("settings.json");
     let mut root = read_json_object(&path)?;
-    let env = root
-        .entry("env".to_string())
-        .or_insert_with(|| serde_json::json!({}));
-    let Some(map) = env.as_object_mut() else {
-        return Err(ServiceError::WriteFailed);
-    };
-    map.insert(
-        "ANTHROPIC_BASE_URL".to_string(),
-        serde_json::Value::String(anthropic_base_url(base_url)),
-    );
-    // Preserve an existing API_KEY-only gateway mode. Otherwise use Claude
-    // Code's default AUTH_TOKEN mode, and never leave both credentials set.
-    let use_api_key = map.contains_key("ANTHROPIC_API_KEY")
-        && !map.contains_key("ANTHROPIC_AUTH_TOKEN");
-    map.remove("ANTHROPIC_API_KEY");
-    map.remove("ANTHROPIC_AUTH_TOKEN");
-    map.insert(
-        if use_api_key {
-            "ANTHROPIC_API_KEY".to_string()
-        } else {
-            "ANTHROPIC_AUTH_TOKEN".to_string()
-        },
-        serde_json::Value::String(api_key.to_string()),
-    );
+    {
+        let env = root
+            .entry("env".to_string())
+            .or_insert_with(|| serde_json::json!({}));
+        let Some(map) = env.as_object_mut() else {
+            return Err(ServiceError::WriteFailed);
+        };
+        map.insert(
+            "ANTHROPIC_BASE_URL".to_string(),
+            serde_json::Value::String(anthropic_base_url(base_url)),
+        );
+        // Preserve an existing API_KEY-only gateway mode. Otherwise use Claude
+        // Code's default AUTH_TOKEN mode, and never leave both credentials set.
+        let use_api_key = map.contains_key("ANTHROPIC_API_KEY")
+            && !map.contains_key("ANTHROPIC_AUTH_TOKEN");
+        map.remove("ANTHROPIC_API_KEY");
+        map.remove("ANTHROPIC_AUTH_TOKEN");
+        map.insert(
+            if use_api_key {
+                "ANTHROPIC_API_KEY".to_string()
+            } else {
+                "ANTHROPIC_AUTH_TOKEN".to_string()
+            },
+            serde_json::Value::String(api_key.to_string()),
+        );
+        // Role → request model env (ANTHROPIC_DEFAULT_* / CLAUDE_CODE_SUBAGENT).
+        super::claude_roles::write_to_env(map, roles);
+    }
     // Official Claude Code settings schema: top-level "model" pins the
     // default model id (same as /model). Empty should not reach here when
     // model_required("claude-code") is enforced at apply time.
@@ -111,6 +116,7 @@ pub fn clear(dir: &Path) -> Result<(), ServiceError> {
         env.remove("ANTHROPIC_BASE_URL");
         env.remove("ANTHROPIC_API_KEY");
         env.remove("ANTHROPIC_AUTH_TOKEN");
+        super::claude_roles::clear_from_env(env);
         if env.is_empty() {
             root.remove("env");
         }

@@ -1,5 +1,14 @@
 {
   "settings": {
+    "telemetry": {
+      "title": "使用统计",
+      "label": "帮助改进 Switch（可选）",
+      "description": "默认关闭。开启后向 FolkBench 发送版本、系统、工具标识和操作结果。使用随机安装 ID，不读取硬件指纹。",
+      "excluded": "不包含 API Key、密码、聊天内容、项目路径、自定义 API 地址或本机 Token 与费用总量。",
+      "disable": "关闭会清空待发队列并停止后续上报；已经发出的请求可能完成，已发送记录按服务端保留规则处理。",
+      "queue": "尚未发送的事件：{{count}} 条",
+      "error": "无法读取或保存统计设置，原有选择保持不变。"
+    },
     "about": {
       "title": "关于",
       "version": "版本",

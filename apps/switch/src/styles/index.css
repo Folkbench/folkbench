@@ -724,10 +724,12 @@ html[data-os='macos'] .switch-navigation a > span {
 }
 .home-list-scroll {
   min-width: 0;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
   scroll-padding-top: 3rem;
   border-radius: var(--radius-xl);
 }
-@media (width >= 960px) and (height >= 860px) {
+@media (width >= 900px) and (height >= 560px) {
   .switch-shell[data-page='home'] {
     height: 100dvh;
     min-height: 0;
@@ -764,10 +766,12 @@ html[data-os='macos'] .switch-navigation a > span {
     flex: none;
   }
   .home-comparison .home-list-scroll {
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
     overflow: auto;
     overscroll-behavior: contain;
+    /* Prefer showing every row; scroll only when the window is at its cap. */
+    padding-bottom: 0.25rem;
   }
 }
 @media (width < 960px) {
@@ -1251,4 +1255,15 @@ html[data-os='macos'] .switch-navigation a > span {
 [data-slot='dialog-content'][data-ending-style],
 [data-slot='alert-dialog-content'][data-ending-style] {
   transition-timing-function: var(--ease-exit);
+}
+
+/* The service list is the one region allowed to show a scrollbar, so rows
+   beyond the window height read as scrollable instead of clipped. */
+.home-list-scroll::-webkit-scrollbar {
+  display: block;
+  width: 6px;
+}
+.home-list-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--foreground) 22%, transparent);
 }

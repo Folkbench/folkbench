@@ -30,7 +30,6 @@ primary: boolean, };
  */
 export type ToolRuntimeKind = "notInstalled" | "installed" | "updateAvailable" | "probeFailed";
 
-
 /**
  * Host prerequisites for npm / Homebrew install channels (probe once per page).
  */

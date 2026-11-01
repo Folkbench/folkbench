@@ -191,6 +191,7 @@ impl ConnectSlot {
             pending.channel_id.clone(),
             pending.model_id.clone(),
             Vec::new(),
+            None,
             provider_id,
             ServiceProtocol::Auto,
             pending.base_url.clone(),

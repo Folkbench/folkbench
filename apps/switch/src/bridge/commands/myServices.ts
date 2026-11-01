@@ -1,4 +1,5 @@
 import type {
+  ClaudeRoleModels,
   FetchedModel,
   ModelFetchResult,
   MyService,
@@ -31,6 +32,7 @@ export async function addMyService(input: {
   channelId: string
   modelId: string
   models?: FetchedModel[]
+  claudeRoleModels?: ClaudeRoleModels | null
   providerId: string
   apiProtocol: ServiceProtocol
   baseUrl: string
@@ -54,6 +56,7 @@ export async function updateMyService(input: {
   channelId: string
   modelId: string
   models?: FetchedModel[]
+  claudeRoleModels?: ClaudeRoleModels | null
   providerId: string
   apiProtocol: ServiceProtocol
   baseUrl: string
@@ -110,20 +113,4 @@ export async function queryServiceBalance(
 
 export async function listSwitchTools(): Promise<ToolDescriptor[]> {
   return invokeCommand<ToolDescriptor[]>('list_switch_tools')
-}
-
-export async function importMyServiceFromLive(
-  toolId: string
-): Promise<MyService> {
-  return invokeCommand<MyService>('import_my_service_from_live', { toolId })
-}
-
-export type MyServiceImportStatus = 'missing' | 'synced' | 'changed'
-
-export async function getMyServiceImportStatus(
-  toolId: string
-): Promise<MyServiceImportStatus> {
-  return invokeCommand<MyServiceImportStatus>('get_my_service_import_status', {
-    toolId,
-  })
 }

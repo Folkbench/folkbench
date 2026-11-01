@@ -17,6 +17,7 @@ import type { SupportedLocale } from '@/i18n/config'
 import { cn } from '@/lib/utils'
 
 import { AppUpdateCheck } from './AppUpdateCheck'
+import { TelemetrySettings } from './TelemetrySettings'
 
 const LOCALES: SupportedLocale[] = ['zh', 'en']
 
@@ -48,6 +49,7 @@ export function SettingsPage() {
           {t('settings.description')}
         </p>
       </header>
+      <TelemetrySettings />
       <section className="flex flex-col gap-3">
         <h2 className="switch-section-title">
           {t('settings.appearance.title')}

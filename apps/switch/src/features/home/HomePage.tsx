@@ -15,11 +15,14 @@ import EyeIcon from '@hugeicons/core-free-icons/EyeIcon'
 import StopCircleIcon from '@hugeicons/core-free-icons/StopCircleIcon'
 import ViewOffIcon from '@hugeicons/core-free-icons/ViewOffIcon'
 import Pulse01Icon from '@hugeicons/core-free-icons/Pulse01Icon'
+import Loading03Icon from '@hugeicons/core-free-icons/Loading03Icon'
+import AiComputerIcon from '@hugeicons/core-free-icons/AiComputerIcon'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import {
   BRIDGE_ERROR,
   BridgeError,
+  fitWindowToContent,
   getMyServiceCredential,
   listPublishedStations,
   openPublishedStationWebsite,
@@ -46,6 +49,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { UpdateAvailableBadge } from './UpdateAvailableBadge'
 import {
   Dialog,
   DialogContent,
@@ -54,6 +58,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { ChoiceSelect } from '@/components/choice-select'
 import { Label } from '@/components/ui/label'
@@ -67,12 +79,10 @@ import { StationAvatar } from '@/components/station-avatar'
 import { ToolLogo } from '@/components/tool-logo'
 import { UsageTrendCard } from '@/components/usage-trend-card'
 import {
-  myServiceImportStatusQueryOptions,
   myServicesQueryOptions,
   switchToolsQueryOptions,
   useAddMyService,
   useFetchServiceModels,
-  useImportMyServiceFromLive,
   useRemoveMyService,
   useSwitchMyService,
   useUnswitchMyService,
@@ -95,6 +105,16 @@ import {
 import { UsageGuideCard } from './UsageGuideCard'
 import { BalanceControl, balanceLabel } from './BalanceControl'
 import { ServiceMenu } from './ServiceMenu'
+import {
+  openToolDesktopApp,
+  type ToolDesktopRestartChoice,
+} from './tool-desktop'
+import {
+  detectToolDesktop,
+  openToolDesktopDownload,
+  supportsDesktopLaunch,
+} from '@/bridge'
+import type { ToolDesktopApp } from '@/bridge/generated/toolLaunch' 
 import { LineComparison } from './LineComparison'
 import { AddSourceChoice } from './AddSourceChoice'
 import { PublishedServicePicker } from './PublishedServicePicker'
@@ -120,6 +140,12 @@ import {
   resolvePublishedStationRow,
   serviceCardModelLabel,
 } from './service-display'
+import {
+  ClaudeRoleMappingFields,
+  EMPTY_CLAUDE_ROLE_MODELS,
+  fillClaudeRoleDefaults,
+} from './ClaudeRoleMappingFields'
+import type { ClaudeRoleModels } from '@/bridge'
 
 type FormState = {
   targetToolId: string
@@ -129,6 +155,8 @@ type FormState = {
   modelId: string
   /** Last successful model-list fetch; persisted with the service. */
   models: FetchedModel[]
+  /** Claude role mapping; used for claude-code and claude-desktop. */
+  claudeRoleModels: ClaudeRoleModels
   providerId: string
   apiProtocol: ServiceProtocol
   baseUrl: string
@@ -142,6 +170,7 @@ const emptyForm: FormState = {
   channelId: '',
   modelId: '',
   models: [],
+  claudeRoleModels: { ...EMPTY_CLAUDE_ROLE_MODELS },
   providerId: '',
   apiProtocol: 'auto',
   baseUrl: '',
@@ -228,6 +257,11 @@ function allowedProviderId(value: string): boolean {
   if (!trimmed) return true
   if (trimmed.length > 64) return false
   return /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(trimmed)
+}
+
+
+function isClaudeTool(toolId: string): boolean {
+  return toolId === 'claude-code' || toolId === 'claude-desktop'
 }
 
 function protocolsForTool(toolId: string): ServiceProtocol[] {
@@ -343,6 +377,7 @@ function defaultProtocolForTool(toolId: string): ServiceProtocol {
 function modelRequiredForTool(toolId: string): boolean {
   switch (toolId) {
     case 'claude-code':
+    case 'claude-desktop':
     case 'grok-build':
     case 'openclaw':
     case 'hermes':
@@ -392,11 +427,22 @@ function protocolHelpKey(toolId: string): ProtocolHelpToolId {
 }
 
 function addInputFromForm(form: FormState) {
-  const { targetToolId, ...service } = form
+  const { targetToolId, claudeRoleModels, ...service } = form
+  const isClaude = isClaudeTool(targetToolId)
+  const roles = isClaude
+    ? fillClaudeRoleDefaults(claudeRoleModels, service.modelId)
+    : null
+  const modelId =
+    service.modelId.trim() ||
+    (roles
+      ? roles.fable.requestModel.trim() || roles.sonnet.requestModel.trim()
+      : '')
   return {
     ...service,
+    modelId,
     providerId: service.providerId.trim(),
     toolId: targetToolId,
+    claudeRoleModels: roles,
   }
 }
 
@@ -481,7 +527,6 @@ function ProHomePage() {
   const tools = useQuery(switchToolsQueryOptions)
   const preferences = useQuery(preferencesQueryOptions)
   const addService = useAddMyService()
-  const importService = useImportMyServiceFromLive()
   const updateService = useUpdateMyService()
   const removeService = useRemoveMyService()
   const switchService = useSwitchMyService()
@@ -505,6 +550,13 @@ function ProHomePage() {
   >(undefined)
   const [easyWizardRequireTool, setEasyWizardRequireTool] = useState(false)
   const [confirmStop, setConfirmStop] = useState(false)
+  const [desktopOpening, setDesktopOpening] = useState(false)
+  const [desktopRestartOpen, setDesktopRestartOpen] = useState(false)
+  const [desktopApp, setDesktopApp] = useState<ToolDesktopApp | null>(null)
+  const [desktopDetecting, setDesktopDetecting] = useState(false)
+  const desktopRestartResolver = useRef<
+    ((choice: ToolDesktopRestartChoice) => void) | null
+  >(null)
   // Last connectivity probe per service; drives the easy-mode "broken" state.
   const [verifyState, setVerifyState] = useState<
     Record<string, 'ok' | 'slow' | 'bad'>
@@ -557,6 +609,7 @@ function ProHomePage() {
   const isEasy = preferences.data?.uiMode === 'easy'
   const queryBalance = useQueryServiceBalance(toolId)
   const services = useQuery(myServicesQueryOptions(toolId))
+  const listScrollRef = useRef<HTMLDivElement>(null)
   const targetTools = toolList.filter(
     (tool) => tool.switchEffect !== 'notImplemented'
   )
@@ -819,7 +872,6 @@ function ProHomePage() {
         null)
       : null
   const currentService = rows.find((row) => row.id === currentId)
-  const importStatus = useQuery(myServiceImportStatusQueryOptions(toolId))
   const currentPublished = currentService
     ? currentPublishedStation(
         currentService,
@@ -877,6 +929,7 @@ function ProHomePage() {
     promptRuntime?.displayName ??
     ''
   const runtimeBusy = install.isPending || upgrade.isPending
+  const switchBusy = switchService.isPending || unswitchService.isPending
 
   /** Returns true (and opens the install dialog) when the tool is missing. */
   function guardNotInstalled(id: string): boolean {
@@ -937,30 +990,66 @@ function ProHomePage() {
     </Button>
   ) : null
 
-  const updateNotice = selectedUpdatable ? (
-    <div className="mb-3 flex items-center justify-between gap-3 rounded-lg border border-brand-signal/30 bg-brand-signal/5 px-3 py-2">
-      <p className="min-w-0 text-[12px] text-foreground">
-        {selectedRuntime.localVersion && selectedRuntime.latestVersion
+  const desktopUpdateBadge =
+    supportsDesktopLaunch(toolId) && desktopApp?.updateAvailable ? (
+      <UpdateAvailableBadge
+        label={t('configure.desktop.updateAvailable')}
+        hint={
+          desktopApp.localVersion && desktopApp.latestVersion
+            ? t('configure.desktop.updateHint', {
+                local: desktopApp.localVersion,
+                latest: desktopApp.latestVersion,
+              })
+            : t('configure.desktop.updateHintShort')
+        }
+        localVersion={desktopApp.localVersion}
+        latestVersion={desktopApp.latestVersion}
+        primaryLabel={t('configure.desktop.openToUpdate')}
+        primaryBusyLabel={t('configure.actions.openingDesktop')}
+        primaryBusy={desktopOpening}
+        primaryDisabled={switchBusy || !currentService}
+        onPrimary={() => void openDesktopApp()}
+        secondaryLabel={t('configure.desktop.downloadPage')}
+        onSecondary={() => {
+          void openToolDesktopDownload(toolId).catch(() => {
+            toast.error(t('configure.desktop.launchFailed'))
+          })
+        }}
+      />
+    ) : null
+
+  const cliUpdateBadge = selectedUpdatable ? (
+    <UpdateAvailableBadge
+      label={t('configure.toolRuntime.updateAvailable')}
+      hint={
+        selectedRuntime.localVersion && selectedRuntime.latestVersion
           ? t('configure.toolRuntime.updateMessage', {
               tool: toolName,
               local: selectedRuntime.localVersion,
               latest: selectedRuntime.latestVersion,
             })
-          : t('configure.toolRuntime.updateMessageShort', { tool: toolName })}
-      </p>
-      <Button
-        size="sm"
-        className="shrink-0"
-        disabled={runtimeBusy}
-        aria-busy={upgrade.isPending}
-        onClick={() => void onUpgradeTool(toolId)}
-      >
-        {upgrade.isPending
-          ? t('configure.toolRuntime.updating')
-          : t('configure.toolRuntime.update')}
-      </Button>
-    </div>
+          : t('configure.toolRuntime.updateMessageShort', { tool: toolName })
+      }
+      localVersion={selectedRuntime.localVersion}
+      latestVersion={selectedRuntime.latestVersion}
+      primaryLabel={t('configure.toolRuntime.update')}
+      primaryBusyLabel={t('configure.toolRuntime.updating')}
+      primaryBusy={upgrade.isPending}
+      primaryDisabled={runtimeBusy}
+      onPrimary={() => void onUpgradeTool(toolId)}
+    />
   ) : null
+
+  /** CLI and desktop client badges can appear side-by-side (e.g. Codex). */
+  const updateBadge =
+    cliUpdateBadge || desktopUpdateBadge ? (
+      <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5">
+        {cliUpdateBadge}
+        {desktopUpdateBadge}
+      </span>
+    ) : null
+
+
   const currentCatalog = currentService?.modelId
     ? catalogByModel.get(currentService.modelId)
     : undefined
@@ -982,7 +1071,6 @@ function ProHomePage() {
       }
     })
   const canWrite = effect !== 'notImplemented'
-  const switchBusy = switchService.isPending || unswitchService.isPending
 
   const loadError =
     services.error instanceof BridgeError
@@ -1126,6 +1214,7 @@ function ProHomePage() {
     setCatalogStep('entry')
     const savedProvider = service.providerId?.trim() ?? ''
     const archivedModels = service.models ?? []
+    const savedRoles = service.claudeRoleModels
     const nextForm = {
       targetToolId: toolId,
       name: service.name,
@@ -1133,6 +1222,18 @@ function ProHomePage() {
       channelId: service.channelId,
       modelId: service.modelId,
       models: archivedModels,
+      claudeRoleModels: savedRoles
+        ? { ...EMPTY_CLAUDE_ROLE_MODELS, ...savedRoles,
+            sonnet: { ...EMPTY_CLAUDE_ROLE_MODELS.sonnet, ...savedRoles.sonnet },
+            opus: { ...EMPTY_CLAUDE_ROLE_MODELS.opus, ...savedRoles.opus },
+            fable: { ...EMPTY_CLAUDE_ROLE_MODELS.fable, ...savedRoles.fable },
+            haiku: { ...EMPTY_CLAUDE_ROLE_MODELS.haiku, ...savedRoles.haiku },
+            subagent: {
+              ...EMPTY_CLAUDE_ROLE_MODELS.subagent,
+              ...savedRoles.subagent,
+            },
+          }
+        : { ...EMPTY_CLAUDE_ROLE_MODELS },
       providerId: savedProvider
         ? savedProvider
         : usesProviderIdField(toolId)
@@ -1178,7 +1279,20 @@ function ProHomePage() {
       toast.error(t('configure.easyAdd.needName'))
       return
     }
-    if (modelRequired && !form.modelId.trim()) {
+    let saveModelId = form.modelId.trim()
+    let saveClaudeRoles = form.claudeRoleModels
+    if (isClaudeTool(formToolId)) {
+      saveClaudeRoles = fillClaudeRoleDefaults(
+        form.claudeRoleModels,
+        form.modelId
+      )
+      if (!saveModelId) {
+        saveModelId =
+          saveClaudeRoles.fable.requestModel.trim() ||
+          saveClaudeRoles.sonnet.requestModel.trim()
+      }
+    }
+    if (modelRequired && !saveModelId) {
       toast.error(
         t('configure.form.modelRequired', {
           tool:
@@ -1242,8 +1356,10 @@ function ProHomePage() {
           name: form.name,
           stationId: form.stationId,
           channelId: form.channelId,
-          modelId: form.modelId,
+          modelId: saveModelId,
           models: form.models,
+          claudeRoleModels:
+            isClaudeTool(toolId) ? saveClaudeRoles : null,
           providerId: form.providerId.trim(),
           apiProtocol: form.apiProtocol,
           baseUrl: form.baseUrl,
@@ -1266,44 +1382,6 @@ function ProHomePage() {
     }
   }
 
-  async function onImport() {
-    if (!canWrite || importService.isPending) return
-    if (importStatus.isPending) {
-      toast.info(t('configure.status.importChecking'))
-      return
-    }
-    let status = importStatus.data
-    if (importStatus.isError) {
-      const result = await importStatus.refetch()
-      if (result.isError) {
-        toast.error(t('configure.status.importStatusUnavailable'))
-        return
-      }
-      status = result.data
-    }
-    if (status === 'missing') {
-      toast.info(t('configure.status.importEmpty'))
-      return
-    }
-    if (status === 'synced') {
-      toast.info(t('configure.status.importAlreadySynced'))
-      return
-    }
-    if (status !== 'changed') {
-      toast.info(t('configure.status.importStatusUnavailable'))
-      return
-    }
-    try {
-      await importService.mutateAsync(toolId)
-      toast.success(t('configure.status.imported'))
-    } catch (error) {
-      toast.error(
-        isServiceError(error, 'invalidInput')
-          ? t('configure.status.importEmpty')
-          : serviceErrorMessage(error, t)
-      )
-    }
-  }
 
   async function onEnable(service: MyService) {
     if (!canWrite) return
@@ -1324,6 +1402,58 @@ function ProHomePage() {
       }
     } catch (error) {
       toast.error(serviceErrorMessage(error, t))
+    }
+  }
+
+  useEffect(() => {
+    if (!supportsDesktopLaunch(toolId)) {
+      setDesktopApp(null)
+      setDesktopDetecting(false)
+      return
+    }
+    let cancelled = false
+    setDesktopDetecting(true)
+    void detectToolDesktop(toolId)
+      .then((info) => {
+        if (!cancelled) setDesktopApp(info)
+      })
+      .catch(() => {
+        if (!cancelled) setDesktopApp(null)
+      })
+      .finally(() => {
+        if (!cancelled) setDesktopDetecting(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [toolId])
+
+    function askDesktopRestart(): Promise<ToolDesktopRestartChoice> {
+    return new Promise((resolve) => {
+      desktopRestartResolver.current = resolve
+      setDesktopRestartOpen(true)
+    })
+  }
+
+  function settleDesktopRestart(choice: ToolDesktopRestartChoice) {
+    const resolve = desktopRestartResolver.current
+    desktopRestartResolver.current = null
+    setDesktopRestartOpen(false)
+    resolve?.(choice)
+  }
+
+  async function openDesktopApp() {
+    if (!currentService || desktopOpening) return
+    setDesktopOpening(true)
+    try {
+      await openToolDesktopApp({
+        toolId,
+        serviceId: currentService.id,
+        t,
+        askRestart: askDesktopRestart,
+      })
+    } finally {
+      setDesktopOpening(false)
     }
   }
 
@@ -1418,16 +1548,6 @@ function ProHomePage() {
     }
   }
 
-  const importAlreadySynced = importStatus.data === 'synced'
-  const importDisabled =
-    !canWrite || importService.isPending || importAlreadySynced
-  const importActionLabel = importStatus.isPending
-    ? t('configure.status.importChecking')
-    : importStatus.isError
-      ? t('configure.status.importRetry')
-      : importAlreadySynced
-        ? t('configure.empty.imported')
-        : t('configure.empty.import')
   const formTargetToolName =
     targetTools.find((tool) => tool.id === form.targetToolId)?.displayName ??
     form.targetToolId
@@ -1445,13 +1565,15 @@ function ProHomePage() {
             : 'close'
   const formToolId = dialog === 'edit' ? toolId : form.targetToolId
   const modelRequired = modelRequiredForTool(formToolId)
-  const showModelField =
+  const formBodyVisible =
     dialog !== null &&
     !showAddChoice &&
     !showPublishedPicker &&
     (!isCatalogAdd || catalogStep === 'entry')
+  // Claude Code uses role mapping instead of a single primary model picker.
+  const showModelField = formBodyVisible && !isClaudeTool(formToolId)
   const canFetchModels =
-    showModelField &&
+    formBodyVisible &&
     /^https?:\/\/\S+/.test(form.baseUrl.trim()) &&
     (form.apiKey.trim() !== '' ||
       Boolean(dialog === 'edit' && editing?.hasCredential))
@@ -1545,17 +1667,6 @@ function ProHomePage() {
         )
   }
 
-  function showDetails(published: PublishedStation) {
-    void navigate({
-      to: '/discover/$stationId/$channelId',
-      params: {
-        stationId: published.stationId,
-        channelId: published.channelId,
-      },
-      search: { modelId: published.modelId },
-    })
-  }
-
   function connectPublished(published: PublishedStation) {
     void navigate({
       to: '/',
@@ -1569,6 +1680,49 @@ function ProHomePage() {
       },
     })
   }
+
+  const listRowCount = backupLines.length
+  useEffect(() => {
+    if (isEasy || services.isPending) return
+    let cancelled = false
+    const measureAndFit = () => {
+      if (cancelled) return
+      const shell = document.querySelector(".switch-shell")
+      const workspace = document.querySelector(".home-workspace")
+      const list = listScrollRef.current
+      const stack = list?.firstElementChild as HTMLElement | null
+      let needed: number
+      if (shell && stack) {
+        // Shell top → last service row, plus workspace bottom padding.
+        // Avoid list.scrollHeight: WebKit reports it >= clientHeight when
+        // the flex list is stretched, which blocked shrinking and then
+        // overshot when replaced with a too-tight stack-only delta.
+        const top = shell.getBoundingClientRect().top
+        const bottom = stack.getBoundingClientRect().bottom
+        const pad = workspace
+          ? Number.parseFloat(getComputedStyle(workspace).paddingBottom) || 0
+          : 0
+        // Extra inset so the last row and card shadow are never clipped;
+        // pageZoom makes rect → window mapping slightly lossy on WebKit.
+        needed = Math.ceil(bottom - top + pad + 48)
+      } else {
+        const root = document.documentElement
+        needed = Math.max(root.scrollHeight, root.clientHeight) + 48
+      }
+      void fitWindowToContent(needed).catch(() => undefined)
+    }
+    const frame = requestAnimationFrame(() => {
+      measureAndFit()
+      requestAnimationFrame(measureAndFit)
+    })
+    // Usage cards finish loading after the first paint and change height.
+    const timer = window.setTimeout(measureAndFit, 320)
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(frame)
+      window.clearTimeout(timer)
+    }
+  }, [isEasy, services.isPending, listRowCount, toolId, usage.isPending, usage.isFetching])
 
   return (
     <div className="switch-workspace home-workspace">
@@ -1591,17 +1745,6 @@ function ProHomePage() {
               : (effectExplanation(toolId, toolName, effect, t) ??
                 effectLabel(effect, t))}
           </span>
-          {!isEasy ? (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={importDisabled}
-              title={importActionLabel}
-              onClick={() => void onImport()}
-            >
-              {importActionLabel}
-            </Button>
-          ) : null}
         </div>
       </div>
       {loadError ? (
@@ -1621,10 +1764,9 @@ function ProHomePage() {
           </section>
         ) : currentService ? (
           <section className="line-focus">
-            {updateNotice}
             <div className="line-focus-grid">
               <div className="min-w-0">
-                <p className="flex items-center gap-2 text-[12px] text-muted-foreground">
+                <p className="flex flex-wrap items-center gap-2 text-[12px] text-muted-foreground">
                   <span
                     className={`size-1.5 rounded-full ${
                       isEasy && verifyState[currentService.id] === 'bad'
@@ -1633,7 +1775,8 @@ function ProHomePage() {
                     }`}
                   />
                   <ToolLogo toolId={toolId} className="size-3.5" />
-                  {t('configure.home.current', { tool: toolName })}
+                  <span>{t('configure.home.current', { tool: toolName })}</span>
+                  {updateBadge}
                 </p>
                 <div className="mt-3 flex items-center gap-3">
                   {(() => {
@@ -1761,16 +1904,6 @@ function ProHomePage() {
                 </div>
               ) : (
                 <div className="flex shrink-0 flex-wrap items-center gap-1.5">
-                  {!isEasy && currentPublished ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-brand-signal/35 bg-card text-brand-signal"
-                      onClick={() => showDetails(currentPublished)}
-                    >
-                      {t('configure.actions.details')}
-                    </Button>
-                  ) : null}
                   {!isEasy ? (
                     <Button
                       variant="outline"
@@ -1785,6 +1918,31 @@ function ProHomePage() {
                         aria-hidden="true"
                       />
                       {t('configure.actions.close')}
+                    </Button>
+                  ) : null}
+                  {!isEasy && supportsDesktopLaunch(toolId) ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-foreground/20 bg-card"
+                      disabled={switchBusy || desktopOpening}
+                      aria-busy={desktopOpening}
+                      title={t('configure.desktop.tooltip')}
+                      onClick={() => void openDesktopApp()}
+                    >
+                      <HugeiconsIcon
+                        icon={
+                          desktopOpening ? Loading03Icon : AiComputerIcon
+                        }
+                        strokeWidth={1.7}
+                        aria-hidden="true"
+                        className={
+                          desktopOpening ? 'animate-spin' : undefined
+                        }
+                      />
+                      {desktopOpening
+                        ? t('configure.actions.openingDesktop')
+                        : t('configure.actions.openDesktop')}
                     </Button>
                   ) : null}
                   {!isEasy ? (
@@ -1817,10 +1975,10 @@ function ProHomePage() {
           </section>
         ) : (
           <section className="line-focus line-focus-idle">
-            {updateNotice}
             <div className="flex items-start justify-between gap-3">
-              <h2 className="min-w-0 text-[14px] font-medium tracking-tight">
-                {t('configure.home.chooseForTool', { tool: toolName })}
+              <h2 className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-medium tracking-tight">
+                <span className="min-w-0">{t('configure.home.chooseForTool', { tool: toolName })}</span>
+                {updateBadge}
               </h2>
               {rows.length ? (
                 installButton
@@ -1908,6 +2066,7 @@ function ProHomePage() {
             </Button>
           </div>
           <div
+            ref={listScrollRef}
             className="home-list-scroll"
             tabIndex={0}
             role="region"
@@ -1938,14 +2097,14 @@ function ProHomePage() {
       ) : null}
 
       <Dialog
-        open={dialog !== null}
+        open={dialog === 'add'}
         onOpenChange={(open) => {
           if (!open && !addService.isPending && !verifyService.isPending) {
             closeDialog()
           }
         }}
       >
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>
               {showPublishedPicker
@@ -1954,11 +2113,9 @@ function ProHomePage() {
                   ? t('discovery.connect.result.title')
                   : isCatalogAdd && catalogStep === 'review'
                     ? t('discovery.connect.review.title')
-                    : dialog === 'edit'
-                      ? t('configure.actions.edit')
-                      : isCatalogAdd
-                        ? t('discovery.connect.title')
-                        : t('configure.actions.add')}
+                    : isCatalogAdd
+                      ? t('discovery.connect.title')
+                      : t('configure.actions.add')}
             </DialogTitle>
             <DialogDescription>
               {showAddChoice
@@ -1969,11 +2126,9 @@ function ProHomePage() {
                     ? t('discovery.connect.result.description')
                     : isCatalogAdd && catalogStep === 'review'
                       ? t('discovery.connect.review.description')
-                      : dialog === 'edit'
-                        ? t('configure.form.editHint')
-                        : isCatalogAdd
-                          ? t('discovery.connect.description')
-                          : t('configure.form.addHint')}
+                      : isCatalogAdd
+                        ? t('discovery.connect.description')
+                        : t('configure.form.addHint')}
             </DialogDescription>
           </DialogHeader>
           {showAddChoice ? (
@@ -2156,6 +2311,22 @@ function ProHomePage() {
                       }
                     />
                   ) : null}
+                  {isClaudeTool(formToolId) ? (
+                    <ClaudeRoleMappingFields
+                      value={form.claudeRoleModels}
+                      primaryModel={form.modelId}
+                      models={fetchedModels}
+                      onChange={(claudeRoleModels) =>
+                        setForm((current) => ({
+                          ...current,
+                          claudeRoleModels,
+                        }))
+                      }
+                      onFetchModels={() => void runModelFetch()}
+                      fetchPending={modelFetchPending}
+                      canFetch={canFetchModels}
+                    />
+                  ) : null}
                 </>
               ) : catalogStep === 'review' ? (
                 <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
@@ -2258,6 +2429,297 @@ function ProHomePage() {
         </DialogContent>
       </Dialog>
 
+      <Sheet
+        open={dialog === 'edit'}
+        onOpenChange={(open) => {
+          if (!open && !addService.isPending && !verifyService.isPending) {
+            closeDialog()
+          }
+        }}
+      >
+        <SheetContent
+          side="bottom"
+          className="flex w-full max-w-3xl flex-col gap-0 overflow-hidden rounded-t-2xl rounded-b-none border-x border-b-0 p-0 shadow-[0_-8px_32px_rgba(0,0,0,0.12)] duration-[320ms] data-[side=bottom]:h-[calc(100dvh-5rem)] data-[side=bottom]:max-h-[calc(100dvh-5rem)]"
+        >
+          <SheetHeader className="shrink-0 border-b px-4 py-3 pr-12 text-left sm:px-5">
+            <SheetTitle>{t('configure.actions.edit')}</SheetTitle>
+            <SheetDescription>{t('configure.form.editHint')}</SheetDescription>
+          </SheetHeader>
+          <form className="flex min-h-0 flex-1 flex-col" onSubmit={onSave}>
+            <div className="min-h-0 flex-1 overflow-y-auto py-3">
+              <div className="grid w-full min-w-0 gap-2.5 px-4 sm:px-5 [&_[data-slot=input]]:h-8">
+              {!isCatalogAdd || catalogStep === 'entry' ? (
+                <>
+                  <Field
+                    label={t('configure.form.name')}
+                    value={form.name}
+                    onChange={(value) =>
+                      setForm((current) => ({
+                        ...current,
+                        name: value,
+                      }))
+                    }
+                  />
+                  {usesProviderIdField(
+                    dialog === 'edit' ? toolId : form.targetToolId
+                  ) ? (
+                    <ProviderIdField
+                      label={t('configure.form.providerId')}
+                      helpTip={t('configure.form.providerIdHelp')}
+                      helpAriaLabel={t('configure.form.providerIdHelpAria')}
+                      value={form.providerId}
+                      required
+                      onChange={(providerId) => {
+                        setProviderIdTouched(true)
+                        setForm((current) => ({ ...current, providerId }))
+                      }}
+                    />
+                  ) : null}
+                  <ProtocolField
+                    label={t('configure.form.apiProtocol')}
+                    helpTip={t(
+                      `configure.form.apiProtocolHelp.${protocolHelpKey(
+                        dialog === 'edit' ? toolId : form.targetToolId
+                      )}`
+                    )}
+                    helpAriaLabel={t('configure.form.apiProtocolHelpAria')}
+                    value={form.apiProtocol}
+                    options={protocolsForTool(
+                      dialog === 'edit' ? toolId : form.targetToolId
+                    ).map((protocol) => {
+                      const recommended = recommendedProtocolForTool(
+                        dialog === 'edit' ? toolId : form.targetToolId
+                      )
+                      const base = t(`configure.form.protocols.${protocol}`)
+                      return {
+                        value: protocol,
+                        label:
+                          recommended === protocol
+                            ? `${base}${t('configure.form.protocolRecommended')}`
+                            : base,
+                      }
+                    })}
+                    onChange={(apiProtocol) =>
+                      setForm({ ...form, apiProtocol })
+                    }
+                  />
+                  <Field
+                    label={t('configure.form.baseUrl')}
+                    value={form.baseUrl}
+                    placeholder={t('configure.form.baseUrlPlaceholder')}
+                    onChange={(value) =>
+                      setForm((current) => {
+                        const matched =
+                          dialog === 'add' && addSource === 'manual'
+                            ? matchStationByBaseUrl(value, publicStations)
+                            : undefined
+                        return {
+                          ...current,
+                          baseUrl: value,
+                          providerId:
+                            providerIdTouched ||
+                            !usesProviderIdField(
+                              dialog === 'edit'
+                                ? toolId
+                                : current.targetToolId
+                            )
+                              ? current.providerId
+                              : deriveProviderId(value),
+                          ...(dialog === 'add' && addSource === 'manual'
+                            ? {
+                                stationId: matched?.stationId ?? '',
+                                channelId: matched?.channelId ?? '',
+                                name:
+                                  current.name.trim() ||
+                                  matched?.stationName ||
+                                  current.name,
+                              }
+                            : {}),
+                        }
+                      })
+                    }
+                  />
+                  <Field
+                    key={
+                      dialog === 'edit'
+                        ? `edit-api-key-${editing?.id ?? 'unknown'}`
+                        : 'add-api-key'
+                    }
+                    label={
+                      dialog === 'edit'
+                        ? t('configure.form.apiKeyReplace')
+                        : t('configure.form.apiKey')
+                    }
+                    labelEnd={
+                      catalogStationForKeyLink?.websiteUrl ? (
+                        <button
+                          type="button"
+                          className="inline-flex shrink-0 items-center gap-1 rounded-md px-1 py-0.5 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
+                          disabled={openingCatalogWebsite}
+                          onClick={() => void openCatalogWebsiteForKey()}
+                        >
+                          {t('configure.form.getApiKeyOnWebsite')}
+                          <HugeiconsIcon
+                            icon={LinkSquare01Icon}
+                            strokeWidth={1.8}
+                            className="size-3.5"
+                          />
+                        </button>
+                      ) : null
+                    }
+                    value={form.apiKey}
+                    type="password"
+                    required={dialog !== 'edit'}
+                    onChange={(value) => setForm({ ...form, apiKey: value })}
+                  />
+                  {showModelField ? (
+                    <ModelField
+                      label={
+                        modelRequired
+                          ? t('configure.form.model')
+                          : t('configure.form.modelOptional')
+                      }
+                      value={form.modelId}
+                      models={fetchedModels}
+                      custom={modelCustom}
+                      pending={modelFetchPending}
+                      canFetch={canFetchModels}
+                      hasCredential={
+                        form.apiKey.trim() !== '' ||
+                        Boolean(dialog === 'edit' && editing?.hasCredential)
+                      }
+                      toolId={formToolId}
+                      toolDisplayName={
+                        toolList.find((tool) => tool.id === formToolId)
+                          ?.displayName ?? formToolId
+                      }
+                      hint={modelHint()}
+                      onFetch={() => void runModelFetch()}
+                      onCustomChange={setModelCustom}
+                      onChange={(modelId) =>
+                        setForm((current) => ({ ...current, modelId }))
+                      }
+                    />
+                  ) : null}
+                  {isClaudeTool(formToolId) ? (
+                    <ClaudeRoleMappingFields
+                      value={form.claudeRoleModels}
+                      primaryModel={form.modelId}
+                      models={fetchedModels}
+                      onChange={(claudeRoleModels) =>
+                        setForm((current) => ({
+                          ...current,
+                          claudeRoleModels,
+                        }))
+                      }
+                      onFetchModels={() => void runModelFetch()}
+                      fetchPending={modelFetchPending}
+                      canFetch={canFetchModels}
+                    />
+                  ) : null}
+                </>
+              ) : catalogStep === 'review' ? (
+                <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
+                  <p>
+                    {t('configure.form.tool')}: {formTargetToolName}
+                  </p>
+                  <p>
+                    {t('discovery.connect.review.name', { name: form.name })}
+                  </p>
+                  <p className="mt-1 break-all font-mono text-[12px] text-muted-foreground">
+                    {form.baseUrl}
+                  </p>
+                  {form.modelId ? (
+                    <p className="mt-1 text-[12px] text-muted-foreground">
+                      {t('configure.form.model')}：{form.modelId}
+                    </p>
+                  ) : null}
+                  {form.providerId ? (
+                    <p className="mt-1 text-[12px] text-muted-foreground">
+                      {t('configure.form.providerId')}：{form.providerId}
+                    </p>
+                  ) : null}
+                  <p className="mt-1 text-[12px] text-muted-foreground">
+                    {t('configure.form.apiProtocol')}：
+                    {t(`configure.form.protocols.${form.apiProtocol}`)}
+                  </p>
+                  <p className="mt-2 text-muted-foreground">
+                    {t('discovery.connect.review.keyHidden')}
+                  </p>
+                  <p className="mt-3 border-t pt-3 text-muted-foreground">
+                    {t('discovery.connect.review.scope')}
+                  </p>
+                </div>
+              ) : (
+                <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
+                  <p className="font-medium">{catalogResult?.name}</p>
+                  <p className="mt-1 text-muted-foreground">
+                    {t('configure.form.tool')}: {formTargetToolName}
+                  </p>
+                  <p className="mt-2 text-muted-foreground" role="status">
+                    {catalogResult?.reachable === true
+                      ? catalogResult.degraded
+                        ? t('discovery.connect.result.reachableSlow', {
+                            ms: catalogResult.latencyMs ?? 0,
+                          })
+                        : t('discovery.connect.result.reachable', {
+                            ms: catalogResult.latencyMs ?? 0,
+                          })
+                      : catalogResult?.reachable === false
+                        ? t('discovery.connect.result.unreachable')
+                        : t('discovery.connect.result.checkUnavailable')}
+                  </p>
+                  <p className="mt-2 text-muted-foreground">
+                    {t('discovery.connect.result.scope')}
+                  </p>
+                </div>
+              )}
+              </div>
+            </div>
+            <SheetFooter className="shrink-0 flex-row flex-wrap items-center justify-end gap-2 border-t bg-muted/40 px-4 py-2.5 sm:px-5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={addService.isPending || verifyService.isPending}
+                  onClick={
+                    addDialogDismiss === 'backToEntry'
+                      ? () => setCatalogStep('entry')
+                      : addDialogDismiss === 'viewServices'
+                        ? () => void viewSavedServices()
+                        : addDialogDismiss === 'backToPicker'
+                          ? () => setAddSource('pick')
+                          : addDialogDismiss === 'backToChoose'
+                            ? () => setAddSource('choose')
+                            : closeDialog
+                  }
+                >
+                  {addDialogDismiss === 'viewServices'
+                    ? t('discovery.connect.result.viewServices')
+                    : addDialogDismiss === 'close'
+                      ? t('common.actions.cancel')
+                      : t('common.actions.back')}
+                </Button>
+                {isCatalogAdd && catalogStep === 'result' ? null : (
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    className="text-brand-signal"
+                    disabled={
+                      addService.isPending ||
+                      updateService.isPending ||
+                      verifyService.isPending
+                    }
+                  >
+                    {isCatalogAdd && catalogStep === 'review'
+                      ? t('discovery.connect.review.saveAndCheck')
+                      : t('configure.actions.save')}
+                  </Button>
+                )}
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
+
       <EasyAddWizard
         open={easyWizardOpen}
         tools={toolList}
@@ -2274,7 +2736,40 @@ function ProHomePage() {
           }
         }}
       />
-      <SharePosterDialog
+      
+      <AlertDialog
+        open={desktopRestartOpen}
+        onOpenChange={(open) => {
+          if (!open) settleDesktopRestart('cancel')
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('configure.desktop.restartTitle')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('configure.desktop.restartDescription')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => settleDesktopRestart('cancel')}>
+              {t('common.actions.cancel')}
+            </AlertDialogCancel>
+            <Button
+              variant="outline"
+              onClick={() => settleDesktopRestart('activate')}
+            >
+              {t('configure.desktop.activate')}
+            </Button>
+            <AlertDialogAction onClick={() => settleDesktopRestart('restart')}>
+              {t('configure.desktop.restart')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+<SharePosterDialog
         summary={shareSummary}
         locale={numberLocale}
         onClose={() => setShareSummary(null)}

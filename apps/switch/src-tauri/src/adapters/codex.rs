@@ -8,6 +8,8 @@ use super::atomic::{read_json_object, write_bytes, write_json};
 use super::projection::LiveProjection;
 
 const HELD_AUTH_FILE: &str = "auth.folkbench-held.json";
+/// Stash for a prior auth.json OPENAI_API_KEY while a relay is active.
+const API_KEY_STASH_FILE: &str = "auth.folkbench-api-key-stash.json";
 const PROVIDER_PREFIX: &str = "folkbench-switch-";
 
 fn config_path(dir: &Path) -> std::path::PathBuf {
@@ -191,6 +193,13 @@ fn recoverable_pair(
     None
 }
 
+fn is_official_openai_base_url(base_url: &str) -> bool {
+    matches!(
+        endpoint(base_url).as_str(),
+        "https://api.openai.com" | "https://api.openai.com/v1"
+    )
+}
+
 pub fn apply(
     dir: &Path,
     service_id: &str,
@@ -218,10 +227,39 @@ pub fn apply(
             auth.remove(key);
         }
     }
-    auth.insert(
-        "OPENAI_API_KEY".to_string(),
-        Value::String(api_key.to_string()),
-    );
+    let official = is_official_openai_base_url(base_url);
+    let existing_key = auth
+        .get("OPENAI_API_KEY")
+        .and_then(Value::as_str)
+        .map(str::to_string)
+        .filter(|value| !value.trim().is_empty());
+    if official {
+        // Restoring official / local-default: put the service Key back into
+        // auth.json and clear any stash left from a prior relay switch.
+        auth.insert(
+            "OPENAI_API_KEY".to_string(),
+            Value::String(api_key.to_string()),
+        );
+        let stash_path = dir.join(API_KEY_STASH_FILE);
+        if stash_path.exists() {
+            let _ = super::atomic::remove_file(&stash_path);
+        }
+    } else {
+        // Relay: never leave OPENAI_API_KEY in auth.json — Codex would prefer
+        // it over a stale value and hijack the relay. Stash the previous Key
+        // (CC Switch-style) so switching back to the local default restores it.
+        if let Some(previous) = existing_key {
+            if previous.trim() != api_key.trim() {
+                let mut stash = Map::new();
+                stash.insert(
+                    "OPENAI_API_KEY".to_string(),
+                    Value::String(previous),
+                );
+                write_json(&dir.join(API_KEY_STASH_FILE), &stash)?;
+            }
+        }
+        auth.remove("OPENAI_API_KEY");
+    }
 
     let mut document = read_config(dir)?
         .parse::<toml_edit::DocumentMut>()
@@ -311,23 +349,42 @@ pub fn clear(
     if let Some(expected_api_key) = expected_api_key {
         let auth_path = dir.join("auth.json");
         let held_path = dir.join(HELD_AUTH_FILE);
+        let stash_path = dir.join(API_KEY_STASH_FILE);
         if auth_path.exists() {
             let mut auth = read_json_object(&auth_path)?;
-            let matches =
-                auth.get("OPENAI_API_KEY").and_then(|value| value.as_str())
-                    == Some(expected_api_key);
-            if matches {
-                auth.remove("OPENAI_API_KEY");
+            let current_key = auth
+                .get("OPENAI_API_KEY")
+                .and_then(Value::as_str)
+                .map(str::to_string);
+            let matches = current_key.as_deref() == Some(expected_api_key);
+            // Relay applies remove OPENAI_API_KEY from auth.json and leave a
+            // held ChatGPT login and/or an API-key stash. Treat that as still
+            // Switch-managed so clear can restore the prior login.
+            let relay_managed = current_key.is_none()
+                && (held_path.exists() || stash_path.exists());
+            if matches || relay_managed {
+                if matches {
+                    auth.remove("OPENAI_API_KEY");
+                }
                 if held_path.exists() {
                     for (key, value) in read_json_object(&held_path)? {
                         auth.insert(key, value);
                     }
-                }
-                write_json(&auth_path, &auth)?;
-                if held_path.exists() {
                     super::atomic::remove_file(&held_path)
                         .map_err(|_| ServiceError::WriteFailed)?;
+                    // ChatGPT login wins over a stashed API Key.
+                    if stash_path.exists() {
+                        let _ = super::atomic::remove_file(&stash_path);
+                    }
+                } else if stash_path.exists() {
+                    let stash = read_json_object(&stash_path)?;
+                    if let Some(value) = stash.get("OPENAI_API_KEY").cloned() {
+                        auth.insert("OPENAI_API_KEY".to_string(), value);
+                    }
+                    super::atomic::remove_file(&stash_path)
+                        .map_err(|_| ServiceError::WriteFailed)?;
                 }
+                write_json(&auth_path, &auth)?;
             }
         }
     }

@@ -26,10 +26,10 @@ pub use catalog::{
 pub use connect::{ConnectNotice, ConnectPreview, ConnectPublicStatus};
 pub use links::{ExternalLink, ExternalLinkError};
 pub use my_service::{
-    FetchedModel, FolkbenchBinding, ModelFetchResult, ModelFetchStatus,
-    MyService, ServiceBalance, ServiceBalanceStatus, ServiceBalanceUnit,
-    ServiceBalanceWindow, ServiceError, ServiceProtocol, SwitchEffect,
-    SwitchResult, VerifyResult,
+    ClaudeRoleModel, ClaudeRoleModels, FetchedModel, FolkbenchBinding,
+    ModelFetchResult, ModelFetchStatus, MyService, ServiceBalance,
+    ServiceBalanceStatus, ServiceBalanceUnit, ServiceBalanceWindow,
+    ServiceError, ServiceProtocol, SwitchEffect, SwitchResult, VerifyResult,
 };
 pub use preferences::{
     PreferenceError, Preferences, PreferredLanguage, PreferredTheme,
@@ -39,7 +39,7 @@ pub use session::{
     AuthorizationError, AuthorizationSupport, SessionState, SessionStatus,
     SessionUser,
 };
-pub use tool_launch::{WorkFolder, WorkFolderListing};
+pub use tool_launch::{ToolDesktopApp, WorkFolder, WorkFolderListing};
 pub use tool_runtime::{
     ToolInstallChannel, ToolRuntimeActionResult, ToolRuntimeCatalogEntry,
     ToolRuntimeInstall, ToolRuntimeKind, ToolRuntimePrerequisites,

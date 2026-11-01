@@ -46,7 +46,8 @@
         "copyInstall": "Copy install command",
         "copyNodeInstall": "Copy Node install command",
         "copyBrewInstall": "Copy Homebrew install command",
-        "copyOfficialDownload": "Copy official download link"
+        "copyOfficialDownload": "Copy official download link",
+        "updating": "Updating…"
       },
       "toast": {
         "actionFailed": "Action failed. Try again later.",
@@ -70,7 +71,10 @@
         "blocked": "Missing runtime",
         "restartHint": "After installing, fully quit Folkbench and open it again",
         "officialDownloadUrl": "https://nodejs.org/en/download"
-      }
+      },
+      "updateAvailable": "CLI update",
+      "updateHint": "A newer {{tool}} CLI is available ({{local}} → {{latest}})",
+      "updateHintShort": "A newer {{tool}} CLI is available"
     },
     "search": {
       "placeholder": "Search tools"
