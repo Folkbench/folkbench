@@ -1,0 +1,14 @@
+---
+import { getArticles } from '../../../lib/content'
+import { PREFIXED_LOCALES, isBlogLocale } from '../../../lib/site'
+
+export function getStaticPaths() {
+  return PREFIXED_LOCALES.map((locale) => ({ params: { locale } }))
+}
+
+const locale = Astro.params.locale
+if (!isBlogLocale(locale)) throw new Error(`Unknown locale: ${locale ?? ''}`)
+const entries = await getArticles(locale)
+const latest = entries[0]
+return Astro.redirect(latest ? `/${locale}/blog/${latest.data.slug}/` : `/${locale}/`, 302)
+---

@@ -1,6 +1,7 @@
 ---
 import type { ArticleEntry } from '../lib/content'
 import type { BlogLocale } from '../lib/site'
+import { BLOG_UI_COPY } from '../lib/ui-copy'
 
 type Props = {
   sources: ArticleEntry['data']['sources']
@@ -11,7 +12,7 @@ const { sources, locale } = Astro.props
 ---
 {sources.length > 0 && (
   <section class="article-sources" aria-labelledby="sources-heading">
-    <h2 id="sources-heading">{locale === 'en' ? 'Sources and scope' : locale === 'es' ? 'Fuentes y alcance' : '来源与范围'}</h2>
+    <h2 id="sources-heading">{BLOG_UI_COPY[locale].sourcesHeading}</h2>
     <ul>
       {sources.map((source) => (
         <li>
