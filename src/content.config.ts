@@ -1,17 +1,18 @@
 import { defineCollection, z } from 'astro:content'
 import { glob } from 'astro/loaders'
+import { SUPPORTED_LOCALES } from './lib/site'
 
 const articles = defineCollection({
   loader: glob({
-    // zh-CN, en, and es are one published set. check-article-locales rejects a missing locale.
-    pattern: '{zh-CN,en,es}/**/*.md',
+    // The twelve locales are one published set. check-article-locales rejects a missing locale.
+    pattern: `{${SUPPORTED_LOCALES.join(',')}}/**/*.md`,
     base: './src/content/articles',
     generateId: ({ entry }) => entry.replace(/\.md$/u, ''),
   }),
   schema: z.object({
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u),
     translationKey: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u),
-    locale: z.enum(['zh-CN', 'en', 'es']),
+    locale: z.enum(SUPPORTED_LOCALES),
     kind: z.enum(['article', 'benchmark-review']),
     title: z.string().min(1),
     description: z.string().min(1).max(400),

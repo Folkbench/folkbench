@@ -1,6 +1,7 @@
 import type { ArticleEntry } from './content'
 import { getPersona } from '../data/authors'
 import { absoluteUrl, localePath, type BlogLocale } from './site'
+import { BLOG_UI_COPY } from './ui-copy'
 
 export function articleJsonLd(entry: ArticleEntry, locale: BlogLocale): Record<string, unknown>[] {
   const canonical = absoluteUrl(localePath(locale, `/blog/${entry.data.slug}`))
@@ -29,7 +30,7 @@ export function articleJsonLd(entry: ArticleEntry, locale: BlogLocale): Record<s
       '@type': 'BreadcrumbList',
       '@id': `${canonical}#breadcrumb`,
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: locale === 'en' ? 'Articles' : locale === 'es' ? 'Artículos' : '文章', item: absoluteUrl(localePath(locale, '/blog')) },
+        { '@type': 'ListItem', position: 1, name: BLOG_UI_COPY[locale].breadcrumbArticles, item: absoluteUrl(localePath(locale, '/blog')) },
         { '@type': 'ListItem', position: 2, name: entry.data.title, item: canonical },
       ],
     },

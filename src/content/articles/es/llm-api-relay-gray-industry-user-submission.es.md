@@ -3,8 +3,8 @@ slug: llm-api-relay-gray-industry-user-submission
 translationKey: llm-api-relay-gray-industry-user-submission
 locale: es
 kind: article
-title: "El fantasma del mercado gris en los relays de modelos: fundadores quemados por una API al 10%"
-description: "Casos anónimos sobre la sustitución de modelos, las trampas de facturación, el truncamiento del contexto y el riesgo de datos detrás de relays muy baratos."
+title: "El fantasma del mercado gris en los intermediarios de IA: emprendedores a los que una API al 10% les salió cara"
+description: "Casos anónimos sobre el cambio encubierto de modelos, las trampas de facturación, el recorte del contexto y el riesgo para los datos detrás de los intermediarios demasiado baratos."
 category: Aportación de lectores
 tags: ["aportación de lectores", riesgo, precios]
 authorId: qing-lin
@@ -17,64 +17,64 @@ updatedAt: '2026-09-17'
 sources: []
 ---
 
-> Aportación del lector @rain落在鱼儿下. Estas son las opiniones del propio colaborador.
+> Aportación del lector @rain落在鱼儿下. Estas son opiniones del propio colaborador.
 
-En esta oleada de startups de modelos, casi todos los equipos que intentan estirar una moneda han oído hablar de un «relay de API». Los grupos de Telegram publican todo el día «10% del precio oficial», «paga 1000, recibe 1000» y «alta concurrencia, cero control de riesgo».
+En esta ola de startups de modelos de IA, casi todos los equipos que intentan cuidar hasta el último centavo han oído hablar de los “intermediarios de API”. En los grupos de Telegram se publica todo el día: “10% del precio oficial”, “recarga 1,000 y recibe 1,000 de regalo”, “alta concurrencia, cero control de riesgo”.
 
-No cae ningún pastel del cielo. En la cadena gris bajo el ecosistema de modelos, los equipos creen que encontraron un atajo y pisan un foso ya preparado.
+Pero nadie regala nada. En la cadena gris que corre por debajo del ecosistema de los modelos, hay equipos que creen haber encontrado un atajo y terminan cayendo en una trampa bien preparada.
 
-## 1. Una tarde luminosa, y una sustitución silenciosa
+## 1. Una tarde soleada y un cambio silencioso
 
-En un espacio maker de Nanshan, Shenzhen, la tarde estaba luminosa. Zhang Chi (un seudónimo) sostenía un americano con hielo y planeaba el paso siguiente. Ganar el concurso maker del sur de China significaría 500,000 en apoyo en efectivo y tres años de exención fiscal en el parque. Suficiente, pensó, para que un equipo de cinco personas sobreviviera a la etapa de prototipo.
+En un espacio maker de Nanshan, en Shenzhen, la tarde estaba soleada. Zhang Chi (seudónimo) sostenía un americano con hielo y planeaba el siguiente paso. Ganar el concurso de makers del sur de China significaría 500 mil en apoyo en efectivo y tres años de exención de impuestos en el parque tecnológico. Suficiente, pensaba, para que un equipo de cinco personas sobreviviera a la etapa de prototipo.
 
-Para que la demo fuera más rápida y más barata, conectó un relay del que hablaba el círculo. El producto era un banco de trabajo de exploración de datos con IA para analistas de empresa, montado sobre la comprensión multimodal y el razonamiento adaptativo ante una lógica de negocio difícil. Estaba pensado para brillar en el concurso.
+Para que la demo fuera más rápida y más barata, conectó un intermediario del que todos hablaban en el medio. El producto era una plataforma de exploración de datos con IA para analistas de empresas, basada en comprensión multimodal y razonamiento adaptativo sobre lógica de negocio compleja. Estaba pensada para lucirse en el concurso.
 
-«Iba genial, hasta justo antes del concurso, cuando intentamos generar de forma automática paneles entre departamentos e informes de atribución.» El sistema lanzó un error fatal de análisis de formato, sin aviso. Durante tres días enteros, dos ingenieros de backend principales revisaron prompts, fugas de memoria y estructuras de datos. Solo la mano de obra costó más de diez mil yuan.
+“Funcionaba de maravilla, hasta que, justo antes del concurso, intentamos generar automáticamente tableros entre departamentos e informes de atribución.” El sistema lanzó, sin previo aviso, un error fatal de análisis de formato. Durante tres días completos, dos ingenieros clave de backend revisaron prompts, fugas de memoria y estructuras de datos. Solo en horas de trabajo, el costo superó los diez mil yuanes.
 
-La tercera noche, Zhang Chi se saltó la consola del relay, enganchó una captura de paquetes y comparó las cabeceras de respuesta HTTP byte a byte.
+La tercera noche, Zhang Chi se saltó la consola del intermediario, conectó una herramienta de captura de paquetes y comparó los encabezados de respuesta HTTP byte por byte.
 
-La oficina quedó en silencio, salvo los ventiladores. La velocidad de los tokens y el jitter del flujo apuntaban a otro modelo de código abierto, más barato. El router del relay era simple y tosco: en cuanto el prompt se alargaba un poco, redirigía, sin decirlo, al modelo barato. El cómputo que habían ahorrado del dinero de la comida había pagado la matrícula de la trampa de degradación de un revendedor de cuentas.
+En la oficina solo se oían los ventiladores. La velocidad de generación de tokens y las irregularidades del stream apuntaban a otro modelo de código abierto, más barato. El enrutador del intermediario era simple y burdo: en cuanto el prompt se alargaba un poco, desviaba la solicitud al modelo barato sin avisar. El cómputo que habían pagado ahorrando hasta en la comida les sirvió para aprender, a precio de oro, cómo funciona la trampa de degradación de un revendedor de cuentas.
 
 ## 2. Trucos contables en la factura
 
-Si la sustitución de modelo es una flecha oculta, el multiplicador de facturación es un ábaco a la vista.
+Si el cambio de modelo es una flecha oculta, el multiplicador de facturación es un ábaco a plena vista.
 
-El arquitecto sénior al que todos llaman Zhou Ge niega con la cabeza ante el patrón. Los revendedores ya no son gente que solo vende cuentas. Se trajeron la aritmética de los derivados financieros.
+El arquitecto sénior al que todos llaman Zhou Ge mueve la cabeza cuando habla de este patrón. Los revendedores ya no son gente que solo vende cuentas: trajeron consigo la aritmética de los derivados financieros.
 
-En una ciudad de segundo nivel no lejos de Shenzhen, el desarrollador independiente Lin Feng (un seudónimo) chocó contra ese muro. Lleva un banco de trabajo de marketing con IA de extremo a extremo. El gasto mensual en la API era de varios cientos de dólares, y dolía. Un relay anunciaba «paga 1000, recibe 1000». Transfirió 2,000 yuan en el acto.
+En una ciudad de segundo nivel no muy lejos de Shenzhen, el desarrollador independiente Lin Feng (seudónimo) se topó con ese muro. Administra una plataforma de marketing con IA de punta a punta. Su gasto mensual en la API era de varios cientos de dólares, y le dolía. Un intermediario anunciaba “recarga 1,000 y recibe 1,000 de regalo”. Transfirió 2,000 yuanes en ese mismo momento.
 
-Cinco días después, el saldo había desaparecido. Recalculó 120 horas de registros de llamadas:
+Cinco días después, el saldo se había esfumado. Recalculó 120 horas de registros de llamadas:
 
-- **Un multiplicador oculto.** La tarifa de cobro de los modelos superiores, como `Claude 5 Fable`, se había fijado en silencio en 2.8×.
-- **Tokens inflados.** Se cambió el tokenizador para que un pasaje en chino de 100 tokens se facturara como 150 fragmentos.
+- **Un multiplicador oculto.** A los modelos superiores, como `Claude 5 Fable`, se les había fijado en secreto un multiplicador de cobro de 2.8×.
+- **Tokens inflados.** Se modificó el tokenizador para que un texto en chino de 100 tokens se cobrara como 150 fragmentos.
 
-La etiqueta decía 50% de descuento. Una sola llamada costaba casi 30% más que la API oficial. La frase de Zhou Ge era que crees haber encontrado una ganga, y unas pocas pulsaciones te vacían el saldo.
+En la etiqueta decía 50% de descuento. Cada llamada salía casi un 30% más cara que la API oficial. Como resume Zhou Ge: crees que encontraste una ganga, y con unos cuantos tecleos te vacían el saldo.
 
-## 3. Memoria rota, y las 9:01 de un lunes
+## 3. Memoria rota y las 9:01 de un lunes
 
-En producción, el daño de ese «precio bajo» se multiplica.
+En producción, el daño de ese “precio bajo” se multiplica.
 
-Medio año después, en la final de startups de Shenzhen, otro equipo hizo la demo de un banco de trabajo de desarrollo multiagente. Las tres primeras rondas de desglose de requisitos se veían limpias. En la sexta ronda, ante una pregunta profunda sobre la arquitectura, el agente respondió, de forma mecánica, que el documento subido no parecía contener esos datos.
+Medio año después, en la final de un concurso de startups en Shenzhen, otro equipo presentaba una plataforma de desarrollo multiagente. Las tres primeras rondas de desglose de requisitos se veían impecables. En la sexta, ante una pregunta de fondo sobre la arquitectura, el agente respondió de forma mecánica que el documento subido no parecía contener esos datos.
 
-La sala reaccionó. Los jueces fruncieron el ceño. Una noche de capturas de paquetes encontró dos causas:
+Hubo murmullos en la sala. Los jueces fruncieron el ceño. Una noche de capturas de paquetes reveló dos causas:
 
-1. **Un corte de contexto forzado.** Para ahorrar ancho de banda del gateway, el relay usó una ventana deslizante. Pasados 16k tokens, cortaba el contexto más antiguo, y el agente perdía la memoria.
-2. **Ahorro de caché retenido.** El relay activó el prompt caching y se quedó el descuento oficial de caché, citado aquí como 50%–90%, mientras seguía facturando al desarrollador el importe completo.
+1. **Un recorte forzado del contexto.** Para ahorrar ancho de banda en la puerta de enlace, el intermediario usaba una ventana deslizante. Pasados los 16k tokens, cortaba el contexto más antiguo, y el agente perdía la memoria.
+2. **Ahorros de caché que se quedaba el intermediario.** El intermediario activaba la caché de prompts y se quedaba con el descuento oficial por caché, que aquí se cita como del 50%–90%, mientras seguía cobrándole al desarrollador el monto completo.
 
-Casi a la misma hora, en aquella ciudad de segundo nivel, un motor empresarial de automatización de copilot de ventas con IA se encontró con un desastre 429 a las 9:01 de la mañana del lunes.
+Casi a la misma hora, en aquella ciudad de segundo nivel, un motor empresarial de automatización para un copiloto de ventas con IA sufrió un desastre de errores 429 a las 9:01 del lunes por la mañana.
 
-El relay no tenía claves legítimas. El pool se componía de credenciales de sesión web extraídas por ingeniería inversa. Esa mañana OpenAI desplegó una nueva generación de controles antibot, y el pool murió al instante. El sistema de ventas estuvo caído dos horas enteras. Decenas de vendedores se quedaron mirando una página de error. A la pérdida comercial no se le podía poner precio.
+El intermediario no tenía claves legítimas. Su pool eran credenciales de sesiones web obtenidas mediante ingeniería inversa. Esa mañana, OpenAI implementó una nueva generación de controles contra bots y el pool cayó por completo de inmediato. El sistema de ventas estuvo fuera de servicio dos horas completas. Decenas de vendedores se quedaron mirando una página de error. La pérdida comercial era imposible de calcular.
 
-## 4. Cuando los datos llegan a un foro de la web oscura
+## 4. Cuando los datos terminan en un foro de la dark web
 
-El último acto del juego de «ahorrar dinero» suele ser un chiste sombrío.
+El último acto del juego de “ahorrar dinero” suele ser una broma amarga.
 
-A medida que los controles oficiales se apretaban, varios relays perdieron el suministro de números y empezaron a perder dinero. Un mantenedor dejó «los controles están demasiado apretados, adiós» en un grupo de Telegram, desenchufó y borró la base de datos. Los saldos sin usar desaparecieron.
+A medida que los controles oficiales se endurecían, varios intermediarios se quedaron sin suministro de cuentas y empezaron a perder dinero. Un operador dejó un mensaje en un grupo de Telegram: “los controles están demasiado estrictos, adiós”. Luego desconectó todo y borró la base de datos. Los saldos sin usar desaparecieron.
 
-Dos semanas después, un foro de la web oscura listó un archivo de base de datos de 50GB. Muchos paneles de relay de código abierto se habían desplegado en hosts VPS baratos, sin protección real. Después de que los operadores se fueran, los hosts fueron escaneados y se llevaron las bases de datos. Código interno, prompts comerciales, configuraciones de flujos multiagente y datos de negocio que nunca se habían anonimizado a fondo quedaron a la vista.
+Dos semanas después, en un foro de la dark web apareció a la venta un archivo de base de datos de 50GB. Muchos paneles de intermediarios de código abierto se habían instalado en servidores VPS baratos sin ninguna protección real. Cuando sus operadores se fueron, los servidores fueron escaneados y les robaron las bases de datos. Código interno, prompts comerciales, configuraciones de flujos multiagente y datos de negocio que nunca se habían anonimizado a fondo quedaron expuestos.
 
-En un salón técnico, Zhou Ge ofreció una ecuación:
+En un encuentro técnico, Zhou Ge resumió todo en una ecuación:
 
-> **Coste real de una API de modelo = tarifas de tokens listadas + el coste de los reintentos tras una degradación + el tiempo dedicado a apagar fuegos + el riesgo de una fuga de datos.**
+> **Costo real de una API de modelos = tarifas de tokens a precio de lista + costo de los reintentos tras una degradación + tiempo dedicado a apagar incendios + riesgo de una filtración de datos.**
 
-Sigue sin haber almuerzo gratis. Un precio muy por debajo del suelo del mercado convierte la factura visible en una pesadilla de operaciones y en una bomba de seguridad que el equipo no puede dimensionar de antemano. Para quien quiera una empresa que dure, alejarse de los relays del mercado gris no es cuestión de ahorrar unas pocas monedas. Es cuestión de no entregar tú mismo las cartas.
+No existe el almuerzo gratis. Un precio muy por debajo del mínimo del mercado convierte la factura visible en una pesadilla operativa y en una bomba de seguridad cuyo tamaño el equipo no puede calcular de antemano. Para quien quiere construir una empresa que dure, alejarse de los intermediarios del mercado gris no es cuestión de ahorrar unas cuantas monedas. Es cuestión de no entregarle a nadie, con tus propias manos, tus mejores cartas.

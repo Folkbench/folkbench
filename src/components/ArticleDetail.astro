@@ -3,6 +3,7 @@ import SourceList from './SourceList.astro'
 import { getPersona } from '../data/authors'
 import type { ArticleEntry } from '../lib/content'
 import { localeLabel, localePath, type BlogLocale } from '../lib/site'
+import { BLOG_UI_COPY } from '../lib/ui-copy'
 
 type Props = {
   entry: ArticleEntry
@@ -12,11 +13,7 @@ type Props = {
 
 const { entry, locale, translations = [] } = Astro.props
 const persona = getPersona(entry.data.authorId)
-const copy = {
-  'zh-CN': { reader: '用户投稿', views: '非本站观点', updated: '更新于' },
-  en: { reader: 'Reader submission', views: "The contributor's own views", updated: 'Updated' },
-  es: { reader: 'Aportación de lectores', views: 'Opiniones de quien escribe', updated: 'Actualizado' },
-}[locale]
+const copy = BLOG_UI_COPY[locale].submission
 ---
 <main>
   <article>

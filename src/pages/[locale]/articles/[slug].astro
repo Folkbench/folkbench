@@ -1,0 +1,12 @@
+---
+import { getArticles } from '../../../lib/content'
+import { PREFIXED_LOCALES } from '../../../lib/site'
+
+export async function getStaticPaths() {
+  const groups = await Promise.all(PREFIXED_LOCALES.map(async (locale) => (await getArticles(locale))
+    .map((entry) => ({ params: { locale, slug: entry.data.slug } }))))
+  return groups.flat()
+}
+
+return Astro.redirect(`/${Astro.params.locale}/blog/${Astro.params.slug ?? ''}/`, 301)
+---
