@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
 import { SUPPORTED_LOCALES, type BlogLocale } from './site'
+import { BLOG_UI_COPY } from './ui-copy'
 
 export type ArticleEntry = CollectionEntry<'articles'>
 
@@ -29,19 +30,5 @@ export async function getTranslations(entry: ArticleEntry): Promise<ArticleEntry
 }
 
 export function kindLabel(kind: ArticleEntry['data']['kind'], locale: BlogLocale): string {
-  const labels = {
-    'zh-CN': {
-      article: '文章',
-      'benchmark-review': 'Benchmark Review',
-    },
-    en: {
-      article: 'Article',
-      'benchmark-review': 'Benchmark review',
-    },
-    es: {
-      article: 'Artículo',
-      'benchmark-review': 'Revisión de benchmark',
-    },
-  } as const
-  return labels[locale][kind]
+  return BLOG_UI_COPY[locale].kind[kind]
 }

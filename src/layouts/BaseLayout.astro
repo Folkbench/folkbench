@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css'
 import { absoluteUrl, FOLKBENCH_ORIGIN, localePath, openGraphLocale, SITE_ORIGIN, SUPPORTED_LOCALES, type BlogLocale } from '../lib/site'
+import { BLOG_UI_COPY } from '../lib/ui-copy'
 
 type Props = {
   title: string
@@ -36,11 +37,7 @@ const alternates = localizedAlternates
   ? SUPPORTED_LOCALES.map((item) => ({ locale: item, href: absoluteUrl(localePath(item, pathname)) }))
   : [{ locale, href: canonical }]
 const socialImageIsCover = image.includes('/covers/')
-const siteDescription = locale === 'en'
-  ? 'Folkbench articles in Chinese, English, and Spanish about models, API relays, reliability, and benchmark evidence.'
-  : locale === 'es'
-    ? 'Artículos de Folkbench en chino, inglés y español sobre modelos, relays de API, fiabilidad y evidencia de benchmarks.'
-    : 'Folkbench 关于模型、中转站、可靠性和 Benchmark 证据的中文、英文和西班牙文文章。'
+const siteDescription = BLOG_UI_COPY[locale].siteDescription
 const graphItems = [
   {
     '@type': 'Organization',

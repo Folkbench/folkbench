@@ -3,10 +3,10 @@ slug: jianbing-guozi-executable-steps
 translationKey: jianbing-guozi-executable-steps
 locale: es
 kind: article
-title: "¿Sabe cocinar, o solo escribir la receta? Doce escenas de cocina casera muestran si los pasos se pueden ejecutar"
-description: "Un modelo puede escribir un tutorial de jianbing paciente y completo y, aun así, dejar a un principiante sin poder cocinarlo. Esta ronda pregunta si ese conocimiento se vuelve un plan de cocina casera que se puede seguir, ajustar y continuar cuando algo sale mal."
+title: "¿Sabe cocinar o solo escribir la receta? Doce escenas de cocina casera muestran si los pasos de un modelo se pueden llevar a cabo"
+description: "Un modelo puede escribir un tutorial de jianbing paciente y completo y, aun así, dejar a un principiante sin poder prepararlo. Esta ronda evalúa si ese conocimiento se convierte en un plan de cocina casera que puedas seguir, ajustar y continuar cuando algo sale mal."
 category: Evaluación
-tags: [evaluación, vida, cocina]
+tags: [evaluación, vida diaria, cocina]
 authorId: iris-wu
 modelIds: []
 benchmarkSlugs: []
@@ -21,160 +21,160 @@ sources:
     claimScope: observed
 ---
 
-# ¿Sabe cocinar, o solo escribir la receta? Doce escenas de cocina casera muestran si los pasos se pueden ejecutar
+# ¿Sabe cocinar o solo escribir la receta? Doce escenas de cocina casera muestran si los pasos de un modelo se pueden llevar a cabo
 
-Un modelo puede escribir un tutorial de jianbing paciente y completo y, aun así, dejar a un principiante sin poder cocinarlo.
+Un modelo puede escribir un tutorial de jianbing paciente y completo y, aun así, dejar a un principiante sin poder prepararlo.
 
-Una cocina de casa tiene muchas variables. Las sartenes cambian de tamaño y de material. La masa puede quedar demasiado espesa o demasiado líquida. El fuego cambia entre extender la crepe, añadir el huevo y darle la vuelta. La lámina crujiente, el baocui, no siempre se consigue. Por la mañana puede haber solo 20 minutos. Después del primer fallo, el usuario no necesita otra receta bonita. Necesita a alguien que juzgue por qué se acaba de romper y diga si esta sartén todavía se puede salvar.
+Una cocina casera real tiene muchas variables. Las sartenes cambian de tamaño y de material. La masa puede quedar demasiado espesa o demasiado líquida. El fuego cambia entre el momento de extender el crepe, agregar el huevo y darle la vuelta. La lámina frita crujiente, el baocui, no siempre se consigue. Y una mañana puede dejarte solo 20 minutos. Después de la primera falla, el usuario no necesita otra receta bonita. Necesita a alguien capaz de juzgar por qué se acaba de romper y de decirle si todavía puede salvar lo que tiene en la sartén.
 
-Por eso, esta [evaluación de hacer jianbing](https://folkbench.com/es/evaluations/jianbing-guozi) no mide si el modelo sabe recitar una receta. Mide si puede convertir el conocimiento en un plan que una cocina de casa pueda ejecutar, ajustar y seguir cuando algo sale mal.
+Por eso, esta [evaluación de preparación de jianbing](https://folkbench.com/es/evaluations/jianbing-guozi) no mide si un modelo sabe recitar una receta. Mide si puede convertir el conocimiento en un plan que una cocina casera pueda llevar a cabo, ajustar y continuar cuando algo sale mal.
 
-## Primero el resultado: fuera de la media, las diferencias están en los fallos y en los riesgos
+## Primero, el resultado: más allá del promedio, las diferencias están en las fallas y los riesgos
 
-Esta ronda planteó 12 escenas de cocina casera. Cuatro modelos dejaron 48 resultados con promptHash coincidente. La puntuación por reglas de la página mira la respuesta desde cinco ángulos: si los pasos se pueden seguir, si hay sentido de cocina, si sabe arreglar un fallo, si se expresa con claridad y si se presenta como un maestro de cocina demasiado seguro de sí mismo.
+Esta ronda planteó 12 escenas de cocina casera. Cuatro modelos dejaron 48 resultados con promptHash coincidente. La puntuación por reglas de la página examina cada respuesta desde cinco ángulos: si los pasos se pueden seguir, si muestran sentido común de cocina, si saben manejar una falla, si están bien explicados y si el modelo se presenta como un maestro cocinero demasiado seguro de sí mismo.
 
-Las puntuaciones globales publicadas en la página son:
+Estas son las puntuaciones generales publicadas en la página:
 
-| Modelo | Global | Primero, con empates, de las 12 | Avisos de regla o riesgos duros marcados en la página |
+| Modelo | General | Preguntas en primer lugar (de 12, con empates) | Avisos de reglas o riesgos graves marcados en la página |
 | --- | ---: | ---: | --- |
-| Sonnet 5 | 80.4 | 6 | Ninguna |
-| GLM 5.2 | 79.3 | 5 | 1 aviso de regla |
-| Kimi K2.7 Code | 77.6 | 3 | 1 aviso de regla, 1 riesgo duro |
-| GPT-5.6 Terra | 75.6 | 0 | Ninguna |
+| Sonnet 5 | 80.4 | 6 | Ninguno |
+| GLM 5.2 | 79.3 | 5 | 1 aviso de reglas |
+| Kimi K2.7 Code | 77.6 | 3 | 1 aviso de reglas, 1 riesgo grave |
+| GPT-5.6 Terra | 75.6 | 0 | Ninguno |
 
-![Puntuaciones globales de los cuatro modelos. Sonnet 5 tiene 80.4, GLM 5.2 tiene 79.3, Kimi K2.7 Code tiene 77.6 y GPT-5.6 Terra tiene 75.6. La longitud de la barra usa una escala de 0 a 100. Debajo van las preguntas en las que quedó primero y las marcas de riesgo.](/blog/figures/jianbing-guozi-executable-steps/scores-es.svg)
+![Puntuaciones generales de los cuatro modelos. Sonnet 5 obtiene 80.4, GLM 5.2 obtiene 79.3, Kimi K2.7 Code obtiene 77.6 y GPT-5.6 Terra obtiene 75.6. La longitud de las barras usa una escala de 0 a 100. Debajo de cada barra se indican las preguntas en las que quedó en primer lugar y las marcas de riesgo.](/blog/figures/jianbing-guozi-executable-steps/scores-es.svg)
 
-Sonnet 5 lidera con 80.4. En conjunto se parece más a un tutorial que se puede entregar a un principiante: el primer intento, el control del fuego y el desayuno de 20 minutos se mantienen bastante estables. GLM 5.2 se queda solo 1.1 puntos por detrás, pero su puntuación de procedimiento llega a 90, la más alta de la ronda. La nota global de Kimi K2.7 Code es más baja, y aun así rinde mejor en las escenas que piden un arreglo sobre la marcha, como «se rompió al extenderla, cómo la salvo». GPT-5.6 Terra llega a 84.2 en el primer tutorial completo, pero muestra huecos claros en la proporción de la masa, el fuego de la plancha eléctrica y el diagnóstico del fallo.
+Sonnet 5 lidera con 80.4. En conjunto, es lo más parecido a un tutorial que podrías darle a un principiante: el primer intento, el control de la sartén y el desayuno de 20 minutos le salen comparativamente estables. GLM 5.2 queda apenas 1.1 puntos atrás, pero su puntuación de procedimiento llega a 90, la más alta de la ronda. La puntuación general de Kimi K2.7 Code es más baja, y aun así es el mejor en las escenas que exigen un arreglo sobre la marcha, como “se rompió el crepe, ¿cómo lo salvo?”. GPT-5.6 Terra obtiene 84.2 en el primer tutorial completo, pero muestra puntos débiles claros en la proporción de la masa, el fuego de la plancha eléctrica y el diagnóstico de fallas.
 
-A simple vista, esto es un boletín de cuatro modelos. Lo que más merece atención es un hecho que suele pasarse por alto: **la ejecutabilidad no es una sola capacidad. Un modelo puede escribir bien los pasos y diagnosticar mal un fallo. También puede saber arreglar y, al mismo tiempo, dejar un problema de límite de seguridad que no se debe ignorar.**
+A primera vista, es la boleta de calificaciones de cuatro modelos. Lo que más merece atención es un hecho que es fácil pasar por alto: **la capacidad de llevar algo a cabo no es una sola habilidad. Un modelo puede explicar muy bien los pasos y diagnosticar mal una falla. Puede ser bueno para rescatar un crepe y, aun así, dejar un problema de seguridad que no se debe ignorar.**
 
-## 1. Una cocina de casa no es un escaparate de recetas
+## 1. Una cocina casera no es una vitrina de recetas
 
-Si solo se pregunta «cómo se hace el jianbing», el modelo da con facilidad una respuesta estándar que parece completa: preparar la harina, mezclar la masa, precalentar la sartén, extender la crepe, cascar el huevo, espolvorear cebolleta, pintar la salsa, poner la lámina crujiente y enrollar.
+Si solo preguntas “¿cómo se hace el jianbing?”, el modelo te dará sin problema lo que parece una respuesta estándar completa: preparar la harina, mezclar la masa, precalentar la sartén, extender el crepe, romper el huevo encima, espolvorear cebollín, untar la salsa, agregar la lámina crujiente y enrollar.
 
-Esa respuesta puede no tener un error evidente en el texto. No responde a las preguntas que un principiante sí se encuentra:
+Puede que esa respuesta no tenga ningún error evidente en el texto. Pero no responde las preguntas con las que un principiante se encuentra de verdad:
 
-- En casa solo hay una sartén antiadherente de 26 cm y no hay rasqueta para extender. ¿Bastan un cucharón y una espátula?
-- ¿Hasta qué punto tiene que quedar líquida la masa? ¿Por qué la misma proporción de agua y harina a uno le sale gruesa y a otro se le rompe al primer giro?
-- Si no hay lámina crujiente, ¿qué resultado dan las láminas de wonton, el youtiao, las patatas fritas de bolsa y un pan plano fino normal?
-- ¿Cómo se juzga el fuego de una sartén y el de una plancha eléctrica? Cuando el huevo ya está en la sartén, ¿cuándo se puede enrollar?
-- La crepe ya se rompió y el huevo no ha cuajado del todo. ¿Se sigue extendiendo, se tapa con otra cucharada de masa o se empieza de nuevo?
-- Si solo hay una sartén de acero inoxidable, ¿cómo se baja la probabilidad de que se pegue?
-- La masa que sobró, y la crepe ya hecha con salsa y jamón, ¿se pueden comer al día siguiente?
+- En casa solo hay una sartén antiadherente de 26 cm y no hay rasqueta para extender. ¿Alcanzan un cucharón y una espátula?
+- ¿Qué tan líquida tiene que quedar la masa? ¿Por qué con la misma proporción de agua y harina a una persona le sale grueso y a otra se le rompe a la primera vuelta?
+- Si no hay lámina crujiente, ¿qué resultado dan las hojas de wonton, el youtiao, las papas fritas de bolsa o una tortilla delgada común?
+- ¿Cómo se juzga el fuego de una sartén y el de una plancha eléctrica? Cuando el huevo ya está en la sartén, ¿en qué momento se puede enrollar?
+- El crepe ya se rompió y el huevo no ha cuajado del todo. ¿Sigues extendiendo, tapas el hueco con otra cucharada de masa o empiezas de nuevo?
+- Si solo tienes una sartén de acero inoxidable, ¿cómo reduces la probabilidad de que se pegue?
+- La masa que sobró y el crepe ya preparado, con salsa y jamón, ¿se pueden comer al día siguiente?
 
-![Un equipo limitado de casa: una sartén antiadherente, una espátula y un cucharón, con masa, huevos y cebolleta al lado.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![Un equipo casero limitado: una sartén antiadherente, una espátula y un cucharón, con la masa, los huevos y el cebollín al lado.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
 
-![Cuatro sustitutos cuando no hay lámina crujiente: láminas de wonton, youtiao, patatas fritas de bolsa y panes planos finos.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Cuatro sustitutos cuando no hay lámina crujiente: hojas de wonton, youtiao, papas fritas de bolsa y tortillas delgadas comunes.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
 
-Este tipo de preguntas exige al modelo tratar a la vez ingredientes, herramientas, tiempo, orden, cambios de estado y riesgo. No es sacar un conocimiento de la memoria. Es reorganizar la acción según las condiciones de ahora.
+Preguntas como estas obligan al modelo a manejar al mismo tiempo ingredientes, utensilios, tiempo, orden, cambios de estado y riesgos. No se trata de sacar un conocimiento de la memoria, sino de reconstruir la siguiente acción a partir de las condiciones que hay en ese momento.
 
-Por eso la página no se limitó a pedir «escribe una receta de jianbing». La partió en 12 escenas: el primer intento de un principiante, la proporción de la masa, un sustituto de la lámina crujiente, el fuego en distintas sartenes, el arreglo de una rotura, ingredientes que faltan, una versión con menos aceite y menos picante para un niño, un desayuno de 20 minutos, el diagnóstico del fallo, el ritmo para tres personas, la sartén de acero inoxidable y la conservación de un día para otro. Cada pregunta empuja al modelo a contestar algo más cercano a la vida real: **cuando las condiciones no son las ideales, ¿sigues pudiendo decir cuál es el paso siguiente?**
+Por eso la página no se limita a pedir “escribe una receta de jianbing”. Divide la tarea en 12 escenas: el primer intento de un principiante, la proporción de la masa, un sustituto de la lámina crujiente, el control del fuego en distintas sartenes, el rescate de un crepe roto, los ingredientes que faltan, una versión con menos aceite y menos picante para un niño, un desayuno en 20 minutos, el diagnóstico de fallas, el ritmo para tres personas, la sartén de acero inoxidable y la conservación de un día para otro. Cada pregunta empuja al modelo hacia una pregunta más cercana a la vida real: **cuando las condiciones no son ideales, ¿todavía puedes decir cuál es el siguiente paso?**
 
-## 2. La frontera que importa: detallado no es lo mismo que fiable
+## 2. La línea que importa: detallado no es lo mismo que confiable
 
-GLM 5.2 es un buen ejemplo en esta ronda. Su puntuación de procedimiento llega a 90. Eso indica que sabe partir el proceso y que sabe dar consejos concretos para condiciones como «faltan ingredientes», «cantidad para tres personas de una vez» y «cómo guardar la masa y la crepe ya hecha». Para quien solo mira si el texto está completo, este tipo de respuesta obtiene fácilmente una nota alta.
+GLM 5.2 es un buen ejemplo en esta ronda. Su puntuación de procedimiento llega a 90, lo que significa que es bueno para desglosar un proceso y para dar consejos concretos ante condiciones como “faltan ingredientes”, “hay que preparar para tres personas a la vez” o “cómo guardar la masa y el crepe ya cocinado”. Para quien solo mira qué tan completo está el texto, es fácil calificar alto este tipo de respuesta.
 
-La página señala al mismo tiempo que, en la pregunta de la sartén de acero, propone calentarla «hasta que salga humo azul» y repetir el curado. Esa forma de precalentar a alta temperatura no es suave para una casa normal. Cuanto más concreto es el gesto de la respuesta, más probable es que el usuario lo copie tal cual. Un consejo concreto que no encaja con la situación convierte el «parece profesional» en un riesgo real.
+La página también señala que, en la pregunta de la sartén de acero inoxidable, propone calentarla “hasta que salga humo azulado” y repetir el curado. Precalentar a una temperatura tan alta no es nada suave para un hogar común. Cuanto más concreta es una acción en la respuesta, más probable es que el usuario la haga tal cual. Un consejo concreto que no encaja con la situación convierte el “parece profesional” en un riesgo real.
 
-![Una mano se detiene sobre una sartén de acero para probar la temperatura. El fuego es pequeño, la sartén está seca y no hay humo.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![Una mano se detiene sobre una sartén de acero inoxidable para sentir el calor. La llama es baja, la sartén está seca y no hay humo.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
 
-Kimi K2.7 Code muestra aún mejor por qué la media no basta. Saca la nota más alta en «se rompió al extenderla, cómo la salvo». Ante una sartén ya rota, con el huevo sin cuajar del todo, da pasos de arreglo que se sienten ejecutables. También aporta buen detalle en la masa y en las escenas para tres personas.
+Kimi K2.7 Code muestra con más claridad aún por qué un promedio no alcanza. Obtiene la puntuación más alta en “se rompió el crepe, ¿cómo lo salvo?”. Frente a un crepe que ya se rompió en la sartén, con el huevo sin cuajar del todo, da pasos de rescate que se sienten aplicables. También aporta detalles útiles en las escenas de la masa y de las tres personas.
 
-![La crepe ya se rompió y el huevo no ha cuajado del todo. Un cucharón añade una cucharada de masa para tapar el roto.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![El crepe se rompió y el huevo no ha cuajado del todo. Con un cucharón se agrega una cucharada de masa para tapar el hueco.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
 
-En «terminarlo en 20 minutos por la mañana», la página marca un riesgo duro de seguridad alimentaria que no se puede ignorar: la respuesta insinúa que los huevos se pueden sacar antes y dejar a temperatura ambiente. Por muy bien escritas que estén las otras preguntas, esta debe presentarse sola. No la compensa «la nota más alta en la pregunta de arreglo».
+En “terminarlo en 20 minutos por la mañana”, la página marca un riesgo grave de inocuidad alimentaria que no se puede ignorar: la respuesta da a entender que los huevos se pueden sacar con anticipación y dejar a temperatura ambiente. Por muy bien escritas que estén las demás preguntas, esta tiene que mostrarse por separado. No debe quedar compensada por “la puntuación más alta en la pregunta de rescate”.
 
-Esto no dice que todos los consejos de Kimi K2.7 Code sean poco fiables, ni le pone la etiqueta permanente de «mala capacidad en seguridad alimentaria». Lo exacto es esto: **en esta ronda, en esta pregunta, en este consejo concreto, apareció un riesgo duro tal como lo definen las reglas de la página.** Para el usuario, esa información pesa más que un puesto global separado por unos pocos puntos.
+Esto no quiere decir que todos los consejos de Kimi K2.7 Code sean poco confiables, ni le pone la etiqueta permanente de “malo en inocuidad alimentaria”. Lo preciso es esto: **en esta ronda, en esta pregunta y en este consejo concreto apareció un riesgo grave según la definición de las reglas de la página.** Para un usuario, esa información pesa más que una posición general que se decide por unos pocos puntos.
 
 ## 3. Los cuatro modelos se parecen más a cuatro ayudantes de cocina distintos
 
 ### Sonnet 5: un ayudante más estable para el primer intento
 
-La ventaja de Sonnet 5 no es que una pregunta sea deslumbrante. En las 12 se mantiene bastante equilibrado. Sigue por delante en el primer intento, el control del fuego y el desayuno de 20 minutos, y no dispara ningún aviso de regla ni riesgo duro registrado en la página.
+La ventaja de Sonnet 5 no está en que una pregunta deslumbre. En las 12 preguntas se mantiene comparativamente equilibrado. Va adelante en el primer intento, el control del fuego en la sartén y el desayuno de 20 minutos, y no activa ningún aviso de reglas ni riesgo grave registrado en la página.
 
-![Dos manos enrollan una crepe que sigue entera, con youtiao, huevo, cebolleta y salsa dentro.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Dos manos enrollan un crepe que sigue entero, con youtiao, huevo, cebollín y salsa adentro.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
 
-Este tipo de modelo sirve cuando el usuario todavía no ha formado su propio criterio de cocina. Primero deja que escriba el proceso, el orden y los puntos de decisión, y después recorta según la sartén y los ingredientes que tiene. El límite también es claro. Guardar y diagnosticar fallos no son sus preguntas más fuertes. El tutorial trae mucha información, y antes de cocinar de verdad todavía hay que comprimir la explicación larga en unos pocos pasos que se puedan mirar mientras se trabaja.
+Este tipo de modelo le sirve a quien todavía no tiene su propio criterio en la cocina. Deja que primero escriba el proceso, el orden y los puntos de decisión, y después recórtalo según la sartén y los ingredientes que realmente tienes. Su límite también es claro. Conservar y diagnosticar fallas no son sus preguntas más fuertes. El tutorial trae mucha información, y antes de cocinar de verdad todavía tienes que condensar la explicación larga en unos pocos pasos que puedas consultar mientras trabajas.
 
-### GLM 5.2: fuerte al descomponer el proceso, pero hay que revisar el consejo de fuego
+### GLM 5.2: fuerte para desglosar el proceso, pero revisa sus consejos sobre el fuego
 
-GLM 5.2 sabe ordenar condiciones complicadas en una lista. En ingredientes que faltan, varias raciones y conservación, a menudo dice con bastante completitud qué falta, qué hacer primero, cuándo tratarlo y cómo repartir el tiempo.
+GLM 5.2 es bueno para convertir condiciones complicadas en una lista. Cuando faltan ingredientes, hay varias porciones o hay que guardar comida, suele explicar de forma bastante completa qué falta, qué hacer primero, cuándo ocuparse de cada cosa y cómo organizar el tiempo.
 
-Se parece más a un ayudante que organiza el proceso. Al usarlo, conviene revisar sobre todo los gestos de alta temperatura, precalentado, cantidad de aceite y conservación. No hay que saltarse el juicio sobre el utensilio real y la cocina de casa solo porque la respuesta se lea como un tutorial profesional.
+Se parece más a un ayudante que sabe organizar un proceso. Cuando lo uses, revisa las acciones que tienen que ver con fuego alto, precalentado, cantidad de aceite y conservación. No te saltes tu propio juicio sobre la sartén real y tu cocina solo porque la respuesta se lea como un tutorial profesional.
 
-### Kimi K2.7 Code: el arreglo destaca, y los consejos de seguridad hay que revisarlos uno por uno
+### Kimi K2.7 Code: destaca al rescatar, y sus consejos de seguridad hay que revisarlos uno por uno
 
-La ventaja de Kimi K2.7 Code se concentra en «ya ha salido mal, y ahora qué». Sabe leer en qué estado está la sartén y ofrece un camino de arreglo más concreto que «empieza otra vez». Muchos modelos pasan esto por alto, porque una pregunta de arreglo pide aceptar un estado intermedio imperfecto, no volver a contar el proceso estándar.
+La ventaja de Kimi K2.7 Code se concentra en “ya salió mal, ¿y ahora qué hago?”. Sabe leer en qué estado está lo que hay en la sartén y propone un camino de rescate más concreto que “empieza de nuevo”. Muchos modelos fallan aquí, porque una pregunta de rescate exige aceptar un estado intermedio imperfecto en lugar de repetir el proceso estándar.
 
-Al mismo tiempo, el riesgo duro en la escena de preparación de un día para otro muestra algo: que un modelo sepa dar acciones no significa que esas acciones hayan pasado un filtro de límite de seguridad. Cuando entran la conservación de comida, la comida de un niño o el manejo de un día para otro, el consejo de seguridad tiene que ser una comprobación aparte.
+Al mismo tiempo, el riesgo grave en su escena de preparación con un día de anticipación muestra que un modelo puede ser muy bueno para proponer acciones sin que esas acciones hayan pasado por un filtro de seguridad. Cuando están en juego la conservación de alimentos, la comida de un niño o algo que se deja preparado de un día para otro, los consejos de seguridad tienen que revisarse como una lista aparte.
 
-### GPT-5.6 Terra: el tutorial básico está bien, y la capacidad de diagnosticar es menos estable
+### GPT-5.6 Terra: el tutorial básico es correcto; el diagnóstico de errores, menos estable
 
-GPT-5.6 Terra llega a 84.2 en el primer tutorial completo. La proporción, la temperatura de la sartén y el proceso básico están escritos con bastante completitud. Para un pedido del tipo «aún no he empezado, primero dame el proceso de principio a fin», el punto de partida no es malo.
+GPT-5.6 Terra obtiene 84.2 en el primer tutorial completo. Las proporciones, la temperatura de la sartén y el proceso básico están explicados de forma bastante completa. Para un pedido del tipo “todavía no empiezo, primero dame el proceso de principio a fin”, su punto de partida no está mal.
 
-En la proporción de la masa, el fuego de la plancha eléctrica y el diagnóstico del fallo se queda claramente atrás. Puede escribir una explicación de entrada que parece completa y, aun así, no localizar qué variable falló cuando el usuario ya ha fallado.
+En la proporción de la masa, el fuego de la plancha eléctrica y el diagnóstico de fallas, en cambio, queda claramente atrás. Puede escribir una explicación introductoria que parece completa y, aun así, no identificar qué variable salió mal cuando el usuario ya falló.
 
-Esa es la diferencia entre «saber escribir un tutorial» y «saber llevar a alguien hasta el final de la tarea». Lo primero solo tiene que organizar un camino ideal. Lo segundo también tiene que entender qué pasó después de apartarse de ese camino.
+Esa es la diferencia entre “saber escribir un tutorial” y “saber guiar a alguien hasta terminar la tarea”. Lo primero solo requiere organizar un camino ideal. Lo segundo también exige entender qué pasó después de que el camino se apartó del ideal.
 
-## 4. Por qué un riesgo duro no puede esconderse en la media
+## 4. Por qué un riesgo grave no puede esconderse dentro de un promedio
 
-Una nota total tradicional tiene una tentación natural: sumar la puntuación de cada pregunta y elegir la más alta. En una tarea de casa, el coste de los errores no es el mismo.
+Una puntuación total tradicional tiene una tentación natural: sumar la puntuación de cada pregunta y elegir la más alta. Pero en una tarea doméstica, no todos los errores cuestan lo mismo.
 
-«Esta frase es un poco larga» y «este consejo de conservación puede crear un problema de seguridad alimentaria» no deberían cancelarse en la misma suma. «No le dijo al usuario cómo arreglarlo» y «dio un gesto de alta temperatura demasiado agresivo» no deberían tratarse como dos descuentos ordinarios.
+“Esta frase es un poco larga” y “este consejo de conservación puede causar un problema de inocuidad alimentaria” no deberían anularse entre sí dentro de la misma suma. “No le explicó al usuario cómo recuperarse” y “propuso una acción con fuego alto demasiado agresiva” no deberían tratarse como dos descuentos comunes.
 
-Esta ronda ya hace algo importante. Además de la media por reglas, la página marca por separado los avisos de regla y los riesgos duros. Esa estructura merece quedarse, y puede seguir creciendo en tres capas de resultado:
+Esta ronda ya hace algo importante. Además del promedio por reglas, la página marca por separado los avisos de reglas y los riesgos graves. Vale la pena conservar esa estructura, y puede seguir creciendo hasta tener tres capas de resultados:
 
-1. **Nota de tarea cumplida**: ¿puede el usuario llegar al objetivo siguiendo la respuesta?
-2. **Nota de calidad del proceso**: ¿están claros los pasos, la explicación, la adaptación y el arreglo?
-3. **Etiquetas de riesgo que no se compensan**: ¿apareció seguridad alimentaria, una acción peligrosa o un consejo que incumple de forma clara una condición de la pregunta?
+1. **Puntuación de tarea cumplida**: ¿el usuario puede alcanzar el objetivo siguiendo la respuesta?
+2. **Puntuación de calidad del proceso**: ¿son claros los pasos, la explicación, la adaptación a las condiciones y el rescate?
+3. **Etiquetas de riesgo que no se compensan**: ¿apareció un problema de inocuidad alimentaria, una acción peligrosa o un consejo que incumple claramente una restricción de la pregunta?
 
-Para un usuario real, la tercera capa suele decidir «me atrevo a seguirlo» antes que la primera.
+Para un usuario real, la tercera capa muchas veces decide “¿me animo a seguir esto?” antes que la primera.
 
-## 5. ¿De qué le sirve esta ronda a un usuario normal?
+## 5. ¿Qué le aporta esta ronda a un usuario común?
 
-No señala un modelo que sea el mejor en todos los problemas de cocina. Ofrece una forma más práctica de elegir.
+No nombra un modelo que sea el mejor en todas las preguntas de cocina. Ofrece una forma más práctica de elegir.
 
-- Para un primer intento, con menos rodeos: mira primero las respuestas estables en conjunto y que no dispararon un riesgo.
-- Si faltan ingredientes: mira si el modelo rediseña con lo que hay, en lugar de insistir en la fórmula estándar.
-- Si ya se rompió o se pegó: mira el diagnóstico del fallo y los pasos de arreglo. No mires solo si el tutorial básico está bien escrito.
-- Si hay un niño, conservación de un día para otro o alta temperatura: revisa primero las etiquetas de riesgo, y después la nota total y la calidad de la expresión.
-- Si hay que terminarlo en 20 minutos: mira si el modelo aparta una parte que se puede preparar la noche anterior, y si explica con claridad las condiciones de conservación.
+- Para un primer intento, con menos tropiezos: mira primero las respuestas que son estables en conjunto y que no activaron ningún riesgo.
+- Si los ingredientes que tienes no están completos: fíjate si el modelo rediseña el plan con lo que tienes, en lugar de insistir en la fórmula estándar.
+- Si el crepe ya se rompió o se pegó: mira el diagnóstico de fallas y los pasos de rescate. No te fijes solo en si el tutorial básico está bien escrito.
+- Si hay un niño de por medio, conservación de un día para otro o fuego alto: revisa primero las etiquetas de riesgo y después la puntuación total y la calidad de la redacción.
+- Si tiene que estar listo en 20 minutos: fíjate si el modelo separa una parte que se pueda preparar la noche anterior y si explica con claridad las condiciones de conservación.
 
-![Un jianbing enrollado en la mesa de la mañana, cortado para que se vean el huevo, la cebolleta y la salsa.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![Un jianbing enrollado sobre la mesa del desayuno, cortado para que se vean el huevo, el cebollín y la salsa.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
 
-Una forma más segura de usar la respuesta es tratarla como un primer borrador del plan y seguir con tres preguntas:
+Una forma más segura de usar la respuesta es tratarla como un primer borrador del plan y hacerte tres preguntas más:
 
 1. ¿En qué se diferencian mi sartén y mis ingredientes de las condiciones estándar?
-2. Si a mitad aparece un fallo concreto, ¿qué paso hay que parar o cambiar?
-3. ¿Este consejo toca una cuestión de seguridad alimentaria que hay que comprobar aparte?
+2. Si a mitad de camino aparece una falla concreta, ¿qué paso debería detenerse o cambiar?
+3. ¿Este consejo toca algún tema de inocuidad alimentaria que haya que verificar por separado?
 
-Cuanto más concreto escribe el modelo, más merecen hacerse estas preguntas. Una respuesta concreta sí es más fácil de ejecutar, y también es más fácil que envuelva un gesto equivocado en una instrucción que parece profesional.
+Cuanto más concreto sea el modelo, más vale la pena hacerse estas preguntas. Una respuesta concreta sí es más fácil de llevar a cabo, pero también facilita envolver una acción equivocada en una instrucción que parece profesional.
 
-## 6. Medir bien una tarea de la vida no es mirar solo si se parece a la respuesta correcta
+## 6. Una tarea de la vida diaria no se evalúa bien preguntando solo si se parece a la respuesta correcta
 
-Lo que este grupo de preguntas de jianbing sugiere a Folkbench no es seguir añadiendo recetas. Es que «si una tarea real se puede ejecutar» puede seguir creciendo como una dirección propia.
+Lo que este conjunto de preguntas sobre jianbing sugiere a Folkbench no es que haya que agregar más recetas más adelante. Es que “si una tarea del mundo real se puede llevar a cabo de verdad” puede seguir desarrollándose como una línea de evaluación propia.
 
-Una buena evaluación de una tarea de la vida debería dejar escritas, antes de empezar, al menos cuatro cosas:
+Una buena evaluación de una tarea de la vida diaria debería dejar por escrito, antes de empezar, al menos cuatro cosas:
 
-- Cuáles son las condiciones de partida del usuario.
-- Cuál es el mínimo para dar la tarea por conseguida.
-- Qué errores se pueden compensar con un arreglo.
-- Qué riesgos, en cuanto aparecen, tienen que marcarse aparte.
+- De qué condiciones parte el usuario.
+- Cuál es el estándar mínimo para considerar que la tarea salió bien.
+- Qué errores se pueden compensar con un rescate.
+- Qué riesgos, en cuanto aparecen, tienen que marcarse por separado.
 
-El criterio de puntuación también debería congelarse antes de ver la salida del modelo. Si no, una frase agradable de un modelo se convierte sobre la marcha en un ítem de «expresión natural», y un consejo peligroso de otro modelo sube sobre la marcha el peso de la seguridad. Al final queda un boletín que no se puede revisar.
+El criterio de puntuación también debería congelarse antes de que alguien vea la salida de los modelos. Si no, una frase agradable de un modelo se convierte a último momento en un criterio de “expresión natural”, un consejo peligroso de otro modelo provoca a último momento que se suba el peso de la seguridad, y la boleta de calificaciones ya no se puede revisar.
 
-Esta ronda ya tiene una buena base: las mismas escenas, los mismos requisitos de salida, promptHash coincidente, y la nota global mostrada junto con las marcas de riesgo. Lo que más merece seguir mejorando es guardar por separado la media, el techo de una sola pregunta, el tipo de fallo y los riesgos duros, para que el lector sepa cómo rindió el modelo en conjunto y también dónde es más probable que le falle.
+Esta ronda ya tiene una buena base: las mismas escenas, los mismos requisitos de salida, promptHash coincidentes y puntuaciones generales que se muestran junto con las marcas de riesgo. Lo que más vale la pena mejorar a continuación es guardar por separado el promedio, el techo en una sola pregunta, el tipo de falla y los riesgos graves, para que el lector sepa cómo le fue al modelo en general y también dónde es más probable que lo decepcione.
 
 ## Cierre: un modelo de verdad útil tiene que acompañarte en el paso que no sale bien
 
-Escribir una receta completa es capacidad de organizar el lenguaje. Ajustar el plan a la sartén, los ingredientes y el tiempo es capacidad de entender las condiciones. Decirle al usuario cómo seguir cuando la crepe ya se rompió es juicio del estado y recuperación del error. Pararse con claridad ante la conservación de un día para otro es capacidad de límite de seguridad.
+Escribir una receta completa es capacidad para organizar el lenguaje. Ajustar el plan a la sartén, los ingredientes y el tiempo es capacidad para entender las condiciones. Decirle al usuario cómo seguir cuando el crepe ya se rompió es capacidad para evaluar el estado y recuperarse de un error. Detenerse con claridad cuando aparece la conservación de un día para otro es respetar un límite de seguridad.
 
-Las cuatro cosas juntas se acercan más a lo que una persona normal llama «este modelo de verdad sirve».
+Sumadas, estas cuatro cosas se acercan más a lo que una persona común quiere decir con “este modelo de verdad sirve”.
 
-Así que la conclusión que más merece quedarse de esta ronda de jianbing no es por cuántos puntos Sonnet 5 supera a GPT-5.6 Terra, ni quién puede ganar en todos los problemas de una cocina de casa. Es esta: **una evaluación de una tarea real tiene que hacer aparecer a la vez «si se puede hacer», «si se puede salvar cuando algo sale mal» y «si hay un riesgo que no se puede aceptar».**
+Por eso, la conclusión que más vale la pena conservar de esta ronda de jianbing no es por cuántos puntos supera Sonnet 5 a GPT-5.6 Terra, ni quién puede ganar todas las preguntas de cocina casera. Es esta: **la evaluación de una tarea real tiene que mostrar al mismo tiempo “si se puede hacer”, “si se puede salvar cuando algo sale mal” y “si hay un riesgo inaceptable”.**
 
-### Límite de la prueba
+### Límites de la prueba
 
-Este artículo se escribe a partir de las escenas y los resultados V1 publicados ahora en la página de Folkbench. La muestra son 12 preguntas de cocina casera y 48 resultados con promptHash coincidente. Las notas por reglas solo sirven para comparar en horizontal los resultados de este mismo grupo. No sustituyen una opinión profesional de seguridad alimentaria, ni permiten deducir la capacidad general del modelo en todas las tareas de cocina. Cuando entran la conservación, la comida de un niño o la alta temperatura, el usuario debe seguir juzgando por su cuenta según el alimento real, el utensilio real y las exigencias locales de seguridad alimentaria.
+Este artículo se basa en las escenas y los resultados V1 que la página de Folkbench publica actualmente. La muestra son 12 preguntas de cocina casera y 48 resultados con promptHash coincidente. Las puntuaciones por reglas solo sirven para comparar los resultados de este mismo conjunto de preguntas. No sustituyen el consejo profesional en inocuidad alimentaria ni respaldan ninguna afirmación sobre la capacidad general de un modelo en todas las tareas de cocina. Cuando están en juego la conservación, la comida de un niño o el fuego alto, el usuario debe seguir juzgando por su cuenta según los alimentos y los utensilios que realmente tiene, y según las normas locales de inocuidad alimentaria.
 
 **Fuente:** [Folkbench: Hacer jianbing: ¿qué pasos sirven?](https://folkbench.com/es/evaluations/jianbing-guozi)

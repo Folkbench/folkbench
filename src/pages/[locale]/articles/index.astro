@@ -1,0 +1,9 @@
+---
+import { PREFIXED_LOCALES } from '../../../lib/site'
+
+export function getStaticPaths() {
+  return PREFIXED_LOCALES.map((locale) => ({ params: { locale } }))
+}
+
+return Astro.redirect(`/${Astro.params.locale}/blog/`, 301)
+---

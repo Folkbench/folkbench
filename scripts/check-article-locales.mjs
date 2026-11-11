@@ -3,7 +3,8 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const articleRoot = join(dirname(fileURLToPath(import.meta.url)), '../src/content/articles')
-const requiredLocales = ['zh-CN', 'en', 'es']
+// The twelve public locales (src/lib/site.ts SUPPORTED_LOCALES); every article exists in each of them.
+const requiredLocales = ['zh-CN', 'en', 'zh-Hant', 'es', 'de', 'pt', 'fr', 'ru', 'ja', 'ko', 'id', 'vi']
 
 function fail(message) {
   throw new Error(`blog_article_locale_check_failed: ${message}`)
