@@ -5,7 +5,7 @@ locale: en
 kind: article
 title: GPT-6.1 Sol specs, long-context prices, and published comparisons
 description: "Official specs, list prices below and above 272K input tokens, and the deltas and per-task costs printed for GPT-6.1 Sol. These figures come from OpenAI’s public pages, not a Folkbench measurement."
-category: models
+category: Models
 tags: [pricing, benchmarks, api]
 authorId: iris-wu
 modelIds: [gpt-6-1-sol, gpt-6-sol, gpt-6-astra, gpt-6-luna]

@@ -5,7 +5,7 @@ locale: zh-CN
 kind: article
 title: Claude Sonnet 5.5 的规格、标价与发布页基准
 description: "整理 Claude Sonnet 5.5 的官网规格、与 Sonnet 5 相同的标价，以及发布页印出的基准。迁移时会返回 400 的请求单独列出。这些数字不是 Folkbench 实测。"
-category: models
+category: 模型
 tags: [pricing, benchmarks, api]
 authorId: iris-wu
 modelIds: [claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, gpt-6-sol]

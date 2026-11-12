@@ -5,7 +5,7 @@ locale: en
 kind: article
 title: Claude Sonnet 5.5 specs, list prices, and published benchmarks
 description: "Official specs, the Sonnet 5 list price, and the published benchmark table for Claude Sonnet 5.5, plus the requests that return 400 on migration. These figures are not a Folkbench measurement."
-category: models
+category: Models
 tags: [pricing, benchmarks, api]
 authorId: iris-wu
 modelIds: [claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, gpt-6-sol]
