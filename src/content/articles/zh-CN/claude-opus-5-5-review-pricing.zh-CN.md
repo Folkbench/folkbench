@@ -5,7 +5,7 @@ locale: zh-CN
 kind: article
 title: Claude Opus 5.5 的规格、标价与发布页基准
 description: "整理 Claude Opus 5.5 的官网规格、标价和发布页基准表，并列出迁移时会直接返回 400 的请求。数字来自厂商公开页面，不是 Folkbench 实测。"
-category: models
+category: 模型
 tags: [pricing, benchmarks, api]
 authorId: iris-wu
 modelIds: [claude-opus-5-5, claude-opus-5, claude-fable-5-1, claude-sonnet-5-5, gpt-6-astra, gpt-5-6-sol]

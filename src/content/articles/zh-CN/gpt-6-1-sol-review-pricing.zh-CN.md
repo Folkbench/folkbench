@@ -5,7 +5,7 @@ locale: zh-CN
 kind: article
 title: GPT-6.1 Sol 的规格、长上下文标价与发布页比较
 description: "整理 GPT-6.1 Sol 的模型页规格、272K 上下的官网标价，以及发布页写明的差值和单任务成本。这些数字来自 OpenAI 公开页面，不是 Folkbench 实测。"
-category: models
+category: 模型
 tags: [pricing, benchmarks, api]
 authorId: iris-wu
 modelIds: [gpt-6-1-sol, gpt-6-sol, gpt-6-astra, gpt-6-luna]

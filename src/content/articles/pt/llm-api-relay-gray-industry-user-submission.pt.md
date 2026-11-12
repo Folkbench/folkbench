@@ -5,7 +5,7 @@ locale: pt
 kind: article
 title: "O “fantasma do mercado cinza” nas revendas de API de modelos: os empreendedores arruinados por APIs a 10% do preço"
 description: "A partir de casos anônimos, uma discussão sobre a troca de modelos, as armadilhas de cobrança, o truncamento de contexto e os riscos para os dados por trás das revendas muito baratas."
-category: Colaboração de leitor
+category: Contribuição de leitor
 tags: [contribuição de leitor, risco, preços]
 authorId: qing-lin
 contributor: "@rain落在鱼儿下"

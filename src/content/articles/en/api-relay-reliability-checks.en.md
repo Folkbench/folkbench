@@ -5,7 +5,7 @@ locale: en
 kind: article
 title: API relay reliability checks
 description: "A repeatable relay acceptance flow: fix the request first, then inspect time to first byte, stream completion, error classes, and retry boundaries."
-category: reliability
+category: Reliability
 tags: [api, streaming, operations]
 authorId: mira-zhou
 modelIds: []

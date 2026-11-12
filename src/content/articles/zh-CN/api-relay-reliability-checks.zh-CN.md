@@ -5,7 +5,7 @@ locale: zh-CN
 kind: article
 title: API 中转站可靠性检查
 description: "一份可以重复执行的中转站验收流程：先固定请求，再观察首字节、流式结束、错误分类与重试边界。"
-category: reliability
+category: 稳定性
 tags: [api, streaming, operations]
 authorId: mira-zhou
 modelIds: []

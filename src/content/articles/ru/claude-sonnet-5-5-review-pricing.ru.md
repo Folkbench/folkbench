@@ -5,7 +5,7 @@ locale: ru
 kind: article
 title: "Claude Sonnet 5.5: характеристики, официальные цены и опубликованные бенчмарки"
 description: "Официальные характеристики Claude Sonnet 5.5, цены на уровне Sonnet 5 и таблица бенчмарков со страницы анонса, а также запросы, которые при миграции возвращают 400. Эти цифры — не измерения Folkbench."
-category: модели
+category: Модели
 tags: [цены, бенчмарки, api]
 authorId: iris-wu
 modelIds: [claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, gpt-6-sol]
