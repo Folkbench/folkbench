@@ -5,7 +5,7 @@ locale: pt
 kind: article
 title: "Claude Opus 5.5: especificações, preços de tabela e benchmarks publicados"
 description: "Especificações oficiais, preços de tabela e a tabela de benchmarks publicada do Claude Opus 5.5, além das requisições que retornam 400 na migração. Os números vêm das páginas do fabricante, não de uma medição do Folkbench."
-category: modelos
+category: Modelos
 tags: [preços, benchmarks, api]
 authorId: iris-wu
 modelIds: [claude-opus-5-5, claude-opus-5, claude-fable-5-1, claude-sonnet-5-5, gpt-6-astra, gpt-5-6-sol]

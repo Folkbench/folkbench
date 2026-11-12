@@ -5,7 +5,7 @@ locale: ru
 kind: article
 title: Характеристики, официальные цены и опубликованные бенчмарки Claude Opus 5.5
 description: "Официальные характеристики, цены и опубликованная таблица бенчмарков Claude Opus 5.5, а также запросы, которые при миграции возвращают 400. Эти цифры взяты со страниц разработчика, а не из измерений Folkbench."
-category: модели
+category: Модели
 tags: [цены, бенчмарки, api]
 authorId: iris-wu
 modelIds: [claude-opus-5-5, claude-opus-5, claude-fable-5-1, claude-sonnet-5-5, gpt-6-astra, gpt-5-6-sol]
