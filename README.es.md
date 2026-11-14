@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/readme-es/hero.png" width="100%" alt="Folkbench — Evalúa la IA en escenarios reales.">
+<img src="docs/images/readme-es/hero.webp" width="960" alt="Folkbench — Evalúa la IA en escenarios reales.">
 
 <br>
 
@@ -16,19 +16,20 @@
 
 <br>
 
-## Primero conoce la conexión. Después, ponte a trabajar.
+## Folkbench
 
 Folkbench reúne evaluaciones públicas de estaciones de API de IA para comparar disponibilidad, estabilidad, latencia y costo de un mismo modelo. Una vez elegida la conexión, usa **Folkbench Switch** para administrar localmente la configuración de Claude Code, Codex, Gemini CLI y otras herramientas.
 
-Este repositorio contiene el **cliente de escritorio Switch y el contenido del blog**. Los rankings públicos, el monitoreo de integridad y la comparación de estaciones se ofrecen en [folkbench.com](https://folkbench.com/es/?utm_source=github&utm_campaign=readme_es).
 
-<p align="center">
-<a href="https://folkbench.com/es/rankings?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/rankings.png" width="280" alt="Rankings públicos: disponibilidad, estabilidad, latencia y costo"></a>
-<a href="https://folkbench.com/es/arena?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/integrity.png" width="280" alt="Integridad del modelo: concordancia, tokens y huella del modelo"></a>
-<a href="https://folkbench.com/es/stations/compare?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/compare.png" width="280" alt="Comparación de estaciones: conexiones y métricas públicas lado a lado"></a>
-</p>
+<table width="100%">
+<tr>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/es/rankings?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/rankings.webp" width="100%" alt="Rankings públicos: disponibilidad, estabilidad, latencia y costo"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/es/arena?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/integrity.webp" width="100%" alt="Integridad del modelo: concordancia, tokens y huella del modelo"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/es/stations/compare?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/compare.webp" width="100%" alt="Comparación de estaciones: conexiones y métricas públicas lado a lado"></a></td>
+</tr>
+</table>
 
-## Responde preguntas concretas con información pública
+## Evaluaciones
 
 | Qué te interesa | Por dónde empezar |
 | :--- | :--- |
@@ -39,21 +40,18 @@ Este repositorio contiene el **cliente de escritorio Switch y el contenido del b
 | ¿Un modelo se comporta igual en distintas estaciones? | [Integridad del modelo](https://folkbench.com/es/arena?utm_source=github&utm_campaign=readme_es) |
 | ¿Cómo se comparan dos estaciones? | [Comparar estaciones](https://folkbench.com/es/stations/compare?utm_source=github&utm_campaign=readme_es) |
 
-### Integridad del modelo: diferencias que puedes revisar
+### Integridad del modelo
 
 Compara la concordancia de respuestas a preguntas de identidad, los tokens de entrada, los tokens de razonamiento y la huella del modelo entre conexiones del mismo modelo. También puedes consultar mediciones de caché cuando hay datos. Una sola respuesta o un porcentaje no demuestran por sí solos que un modelo haya sido sustituido: interpreta los resultados junto con las condiciones y las muestras de la prueba.
 
 [Abrir el monitor →](https://folkbench.com/es/arena?utm_source=github&utm_campaign=readme_es) · [Leer la metodología →](https://folkbench.com/es/blog/did-the-model-get-dumber?utm_source=github&utm_campaign=readme_es)
 
 <details open>
-<summary><b>Ver la ilustración del ranking</b></summary>
+<summary><b>Folkbench Rankings</b></summary>
 <br>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-en-dark.png">
-  <img src="docs/images/features/board-en-light.png" width="100%" alt="Ilustración del ranking de Folkbench; no representa resultados actuales en vivo">
-</picture>
+<img src="docs/images/readme-es/board.webp" width="960" alt="Ilustración de Folkbench Rankings, no resultados medidos en vivo.">
 
-Ilustración existente de la interfaz. Consulta el sitio para ver los datos y el diseño actuales.
+Interfaz ilustrativa. Consulta el sitio para ver los datos actuales.
 
 </details>
 
@@ -65,7 +63,7 @@ Ilustración existente de la interfaz. Consulta el sitio para ver los datos y el
 
 Switch es un cliente de escritorio de código abierto construido con Tauri + Rust. Guarda la Base URL y la API Key de un proveedor, revisa los cambios de configuración y aplícalos a tu herramienta. Cuando lo necesites, cambia de conexión o restaura la configuración anterior.
 
-<img src="docs/images/readme-es/workflow.png" width="100%" alt="Flujo: consultar evaluaciones, comparar información pública y revisar y aplicar la configuración local con Switch.">
+<img src="docs/images/readme-es/workflow.webp" width="960" alt="Flujo: consultar evaluaciones, comparar información pública y revisar y aplicar la configuración local con Switch.">
 
 ### Descargas
 
@@ -75,9 +73,9 @@ Los instaladores de macOS usan `.dmg`; los de Windows usan `.exe`.
 
 Los instaladores y archivos de verificación SHA256 están en [Releases](https://github.com/Folkbench/folkbench/releases). Sigue las instrucciones de la versión que elijas.
 
-<img src="docs/images/readme-es/switch.png" width="100%" alt="Ilustración de Folkbench Switch con fondo blanco, interfaz ligera y detalles violetas. La interfaz del cliente se muestra en inglés.">
+<img src="docs/images/readme-es/switch.webp" width="960" alt="Ilustración de Folkbench Switch con fondo blanco, interfaz ligera y detalles violetas. La interfaz del cliente se muestra en inglés.">
 
-### Menos cambios manuales al cambiar de conexión
+### Funciones
 
 | Función | Cómo funciona |
 | :--- | :--- |
@@ -107,7 +105,7 @@ Switch administra localmente la configuración de las herramientas. Las funcione
 
 <br>
 
-## Apoya a Folkbench
+## Patrocinadores
 
 Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinador →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_es)
 
@@ -141,7 +139,7 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 
 ---
 
-## Participa y comparte
+## Comunidad
 
 - **Reporta un problema:** [abre un issue](https://github.com/Folkbench/folkbench/issues) con pasos para reproducirlo y la versión. No incluyas API Keys ni configuraciones con credenciales.
 - **Únete a la conversación:** [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) · [grupo QQ](https://qm.qq.com/q/71NzSTrPVK) (203286875).
@@ -150,6 +148,6 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 
 ## Licencia
 
-El código del cliente en `apps/switch/` se publica bajo [Apache-2.0](apps/switch/LICENSE). Consulta [LICENSE.md](LICENSE.md) para el alcance de las licencias de artículos, imágenes y recursos de marca. La nueva portada del README, las tarjetas y la presentación de Switch son ilustraciones promocionales generadas con IA; el flujo es un diagrama explicativo. No representan resultados medidos ni capturas originales del producto.
+El código del cliente en `apps/switch/` se publica bajo [Apache-2.0](apps/switch/LICENSE). Consulta [LICENSE.md](LICENSE.md) para el alcance de las licencias de artículos, imágenes y recursos de marca.
 
 <p align="center"><br><b>Folkbench</b><br><sub>Evalúa la IA en escenarios reales.</sub><br><br><a href="https://folkbench.com/es/?utm_source=github&amp;utm_campaign=readme_es">Visita el sitio ↗</a>　·　<a href="https://github.com/Folkbench/folkbench/releases">Descarga Switch ↗</a></p>

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/readme-ja/hero.png" width="100%" alt="Folkbench — 実際の利用で、AI の価値を測る。">
+<img src="docs/images/readme-ja/hero.webp" width="960" alt="Folkbench — 実際の利用で、AI の価値を測る。">
 
 <br>
 
@@ -16,19 +16,20 @@
 
 <br>
 
-## 回線を見極めてから、作業を始める。
+## Folkbench
 
 Folkbench は AI API プロバイダーの公開ベンチマークを集約し、同じモデルの稼働率・安定性・応答速度・コストを比較できるようにします。回線を選んだら、**Folkbench Switch** で Claude Code、Codex、Gemini CLI などの接続設定をローカルで管理できます。
 
-このリポジトリには **Switch デスクトップクライアントとブログ記事**が含まれます。公開ランキング、モデル整合性モニター、プロバイダー比較は [folkbench.com](https://folkbench.com/ja/?utm_source=github&utm_campaign=readme_ja) で提供しています。
 
-<p align="center">
-<a href="https://folkbench.com/ja/rankings?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/rankings.png" width="280" alt="公開ランキング：稼働率、安定性、応答速度、コストを比較"></a>
-<a href="https://folkbench.com/ja/arena?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/integrity.png" width="280" alt="モデル整合性：プローブ一致率、Token、モデル指紋を確認"></a>
-<a href="https://folkbench.com/ja/stations/compare?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/compare.png" width="280" alt="プロバイダー比較：回線と公開指標を横並びで比較"></a>
-</p>
+<table width="100%">
+<tr>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/ja/rankings?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/rankings.webp" width="100%" alt="公開ランキング：稼働率、安定性、応答速度、コストを比較"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/ja/arena?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/integrity.webp" width="100%" alt="モデル整合性：プローブ一致率、Token、モデル指紋を確認"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/ja/stations/compare?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/compare.webp" width="100%" alt="プロバイダー比較：回線と公開指標を横並びで比較"></a></td>
+</tr>
+</table>
 
-## 知りたいことを、公開情報で確かめる
+## ベンチマーク
 
 | 知りたいこと | 確認するページ |
 | :--- | :--- |
@@ -39,21 +40,18 @@ Folkbench は AI API プロバイダーの公開ベンチマークを集約し�
 | 同じモデルでもプロバイダーによって挙動が違う？ | [モデル整合性モニター](https://folkbench.com/ja/arena?utm_source=github&utm_campaign=readme_ja) |
 | 二つのプロバイダーを比較したい | [プロバイダー比較](https://folkbench.com/ja/stations/compare?utm_source=github&utm_campaign=readme_ja) |
 
-### モデル整合性：検証できる違いを確認する
+### モデル整合性
 
 同じモデルの異なる回線について、モデルの識別情報を問うプローブへの回答一致率、入力 Token、推論 Token、モデル指紋を確認できます。データがある場合はキャッシュ測定情報も表示されます。一つの回答や一つの割合だけでモデルのすり替えを断定することはできません。テスト条件とサンプルを合わせて結果を解釈してください。
 
 [モニターを開く →](https://folkbench.com/ja/arena?utm_source=github&utm_campaign=readme_ja) · [評価方法を読む →](https://folkbench.com/ja/blog/did-the-model-get-dumber?utm_source=github&utm_campaign=readme_ja)
 
 <details open>
-<summary><b>ランキング画面のイメージを見る</b></summary>
+<summary><b>Folkbench Rankings</b></summary>
 <br>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-en-dark.png">
-  <img src="docs/images/features/board-en-light.png" width="100%" alt="Folkbench ランキング画面のイメージ。現在のリアルタイム測定結果ではありません">
-</picture>
+<img src="docs/images/readme-ja/board.webp" width="960" alt="Folkbench Rankings の画面イメージ。リアルタイムの測定結果ではありません。">
 
-既存の画面イメージです。最新のデータと画面構成は Web サイトでご確認ください。
+画面イメージです。最新のデータは Web サイトでご確認ください。
 
 </details>
 
@@ -65,7 +63,7 @@ Folkbench は AI API プロバイダーの公開ベンチマークを集約し�
 
 Switch は Tauri + Rust で開発されたオープンソースのデスクトップクライアントです。プロバイダーの Base URL と API Key を保存し、設定差分を確認してから対象ツールへ適用します。必要に応じて回線を切り替えたり、以前の設定を復元したりできます。
 
-<img src="docs/images/readme-ja/workflow.png" width="100%" alt="利用の流れ：Web で測定結果を確認し、公開情報を比較してから、Switch でローカル設定の差分を確認・適用します。">
+<img src="docs/images/readme-ja/workflow.webp" width="960" alt="利用の流れ：Web で測定結果を確認し、公開情報を比較してから、Switch でローカル設定の差分を確認・適用します。">
 
 ### ダウンロード
 
@@ -75,9 +73,9 @@ macOS のインストーラーは `.dmg`、Windows は `.exe` 形式です。
 
 インストーラーと SHA256 チェックサムは [Releases](https://github.com/Folkbench/folkbench/releases) に掲載しています。利用するバージョンのリリースノートに従ってください。
 
-<img src="docs/images/readme-ja/switch.png" width="100%" alt="白地、軽量な UI、控えめな紫色を用いた Folkbench Switch の画面イメージ。クライアント内は英語表示です。">
+<img src="docs/images/readme-ja/switch.webp" width="960" alt="白地、軽量な UI、控えめな紫色を用いた Folkbench Switch の画面イメージ。クライアント内は英語表示です。">
 
-### 回線を切り替えるたびの手作業を減らす
+### 機能
 
 | 機能 | できること |
 | :--- | :--- |
@@ -107,7 +105,7 @@ Switch はツールの設定をローカルで管理します。公開カタロ�
 
 <br>
 
-## Folkbench を支えるプロバイダー
+## スポンサー
 
 <table>
 <tr>
@@ -130,7 +128,7 @@ Switch はツールの設定をローカルで管理します。公開カタロ�
 
 ---
 
-## 参加とフィードバック
+## コミュニティ
 
 - **不具合の報告：** 再現手順とバージョンを添えて [Issue](https://github.com/Folkbench/folkbench/issues) を作成してください。API Key や認証情報を含む設定は投稿しないでください。
 - **コミュニティ：** [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) · [QQ グループ](https://qm.qq.com/q/71NzSTrPVK)（203286875）。
@@ -139,6 +137,6 @@ Switch はツールの設定をローカルで管理します。公開カタロ�
 
 ## ライセンス
 
-`apps/switch/` のクライアントコードは [Apache-2.0](apps/switch/LICENSE) で公開しています。ブログ記事、画像、ブランド素材の利用範囲は [LICENSE.md](LICENSE.md) を参照してください。新しい README のヘッダー、機能カード、Switch 紹介画像は AI 生成のプロモーション用イラストで、利用フローは説明図です。実測結果や製品の元のスクリーンショットを表すものではありません。
+`apps/switch/` のクライアントコードは [Apache-2.0](apps/switch/LICENSE) で公開しています。ブログ記事、画像、ブランド素材の利用範囲は [LICENSE.md](LICENSE.md) を参照してください。
 
 <p align="center"><br><b>Folkbench</b><br><sub>実際の利用で、AI の価値を測る。</sub><br><br><a href="https://folkbench.com/ja/?utm_source=github&amp;utm_campaign=readme_ja">Web サイトへ ↗</a>　·　<a href="https://github.com/Folkbench/folkbench/releases">Switch をダウンロード ↗</a></p>
