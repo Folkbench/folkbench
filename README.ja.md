@@ -1,147 +1,144 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="public/brand/folkbench-logo-only-inverse.svg">
-  <img src="public/brand/folkbench-logo-only.svg" width="80" height="80" alt="Folkbench">
-</picture>
+<img src="docs/images/readme-ja/hero.png" width="100%" alt="Folkbench — 実際の利用で、AI の価値を測る。">
 
-# Folkbench
+<br>
 
-### APIプロバイダー選びは、感覚ではなくデータで。
+[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=Switch%20Beta&color=171717&style=flat-square)](https://github.com/Folkbench/folkbench/releases)
+[![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=533AFD&style=flat-square)](https://github.com/Folkbench/folkbench/stargazers)
+[![Website](https://img.shields.io/badge/folkbench.com-171717?style=flat-square)](https://folkbench.com/ja/?utm_source=github&utm_campaign=readme_ja)
 
-AI API 回線リアルタイム実測ベンチマーク · 開発者向けローカルエンドポイント切替クライアント
+**[ランキングを見る](https://folkbench.com/ja/rankings?utm_source=github&utm_campaign=readme_ja)** · **[モデル整合性](https://folkbench.com/ja/arena?utm_source=github&utm_campaign=readme_ja)** · **[Switch をダウンロード](https://github.com/Folkbench/folkbench/releases)**
 
-[![Version](https://img.shields.io/badge/version-0.1.0--beta.1-blue.svg)](https://github.com/Folkbench/folkbench/releases)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE.md)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/Folkbench/folkbench/releases)
-[![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20%2B%20Rust-orange.svg)](https://tauri.app/)
-[![Telegram](https://img.shields.io/badge/Telegram-Group-2BA2E0?logo=telegram&logoColor=white)](https://t.me/+C_E8eL1ZevM4MTY9)
-[![QQ](https://img.shields.io/badge/QQ-Group-12B7F5?logo=tencentqq&logoColor=white)](https://qm.qq.com/q/71NzSTrPVK)
-
-[🌐 実測ベンチマーク](https://folkbench.com/rankings/board?utm_source=github&utm_campaign=folkbench-blog) · [⚡ Switch クライアント](#2-回线切替folkbench-switch-クライアント) · [📦 ダウンロード](#3-ダウンロードインストール) · [🔥 人気モデル](#人気モデル) · [💬 コミュニティ (TG)](https://t.me/+C_E8eL1ZevM4MTY9) · [💬 QQ グループ](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md)
+[简体中文](README.md) · [English](README.en.md) · [Español](README.es.md)
 
 </div>
 
----
+<br>
 
-日頃から各種 AI コーディングツールを使う際、重要なポイントは実質2つに集約されます：**「信頼できる回線（エンドポイント）を選ぶこと」**、そして**「その回線を各ツールに正しく設定すること」**です。
+## 回線を見極めてから、作業を始める。
 
-Folkbench は、この2つのステップを1つのスムーズな開発ワークフローに統合します：
+Folkbench は AI API プロバイダーの公開ベンチマークを集約し、同じモデルの稼働率・安定性・応答速度・コストを比較できるようにします。回線を選んだら、**Folkbench Switch** で Claude Code、Codex、Gemini CLI などの接続設定をローカルで管理できます。
 
-- 🌐 **[1. 回線を選ぶ](#1-回線を選ぶweb-実測ベンチマーク)**：複数リージョンのプローブが稼働率、P95レイテンシ、Token単価を 24時間 リアルタイムで継続計測。スペック偽装や不安定なサービスを客観的データで見極めます。
-- ⚡ **[2. 回線を使う](#2-回線切替folkbench-switch-クライアント)**：オープンソースのデスクトップクライアントが Base URL と API Key を一元管理。Claude Code や Codex などの設定を手作業で書き換えることなく、ワンクリックでエンドポイントを切り替えます。
+このリポジトリには **Switch デスクトップクライアントとブログ記事**が含まれます。公開ランキング、モデル整合性モニター、プロバイダー比較は [folkbench.com](https://folkbench.com/ja/?utm_source=github&utm_campaign=readme_ja) で提供しています。
 
----
+<p align="center">
+<a href="https://folkbench.com/ja/rankings?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/rankings.png" width="280" alt="公開ランキング：稼働率、安定性、応答速度、コストを比較"></a>
+<a href="https://folkbench.com/ja/arena?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/integrity.png" width="280" alt="モデル整合性：プローブ一致率、Token、モデル指紋を確認"></a>
+<a href="https://folkbench.com/ja/stations/compare?utm_source=github&amp;utm_campaign=readme_ja"><img src="docs/images/readme-ja/compare.png" width="280" alt="プロバイダー比較：回線と公開指標を横並びで比較"></a>
+</p>
 
-## 一部プロバイダーの詳細紹介と割引情報
+## 知りたいことを、公開情報で確かめる
 
-### [Modelflare](https://folkbench.com/go/modelflare?source=readme_ja)
-
-米国の Havenbyte LLC が運営。GPT、Claude、Gemini、Grok などの主要モデルと標準互換プロトコルに対応し、40種以上の画像・動画生成モデルもカバー。単一の API Key で複数モデルのフォールバック制御や予備グループの設定が可能で、リクエストログから遅延や実消費コストを確認できます。
-
-キャッシュ補償制度も特徴で、対象の OpenAI プールでキャッシュヒット率保証（65%〜85%）を下回った場合に補填が行われます。初回チャージ特典として、単発 US$20 のチャージで倍率 0.015 の GPT 特恵グループが解放されます。解放後の GPT-5.6-Sol は 100 万トークンあたりおよそ入力 ¥0.51 / 出力 ¥3.01 で、利用上限はありません。単発 US$50 のチャージで倍率 0.03 の Claude 特恵グループが解放されます。
-
-### [CheapAI](https://folkbench.com/go/cheapai?source=readme_ja)
-
-圧倒的な低価格を重視したサービス。リアルタイムの回線状況に応じて倍率を自動調整する「動的倍率プール」を備え、リソースに余裕がある時間帯はさらに安価に利用可能です。
-
-コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。
-
-### [IKunCode](https://folkbench.com/go/ikuncode?source=readme_ja)
-
-Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。
-
-### [FluxLane（智流）](https://folkbench.com/go/fluxlane?source=readme_ja)
-
-国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。
-
----
-
-## 1. 回線を選ぶ：Web 実測ベンチマーク
-
-公開プローブによる継続的な自動リクエストを通じて、各リレー・APIプロバイダーのモニタリングデータをありのまま公開しています。ブラックボックスや誇大表記を排除した客観的指標です。
-
-- 📊 **[総合ランキング](https://folkbench.com/rankings/board?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)**：稼働率、P95 応答時間、Token 単価を総合的に評価。
-- 🛡️ **[安定性ランキング](https://folkbench.com/rankings/board?metric=availability&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)**：稼働率重視の順位。長時間のタスクや CI/CD 自動化に最適。
-- 💰 **[コスパランキング](https://folkbench.com/rankings/board?metric=price&utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog)**：実際の Token 単価順。真の運用コストを比較可能。
-
-### 人気モデル
-
-特定モデルにおける各プロバイダーの実測データを確認したい場合は、個別ランキングを直接参照できます：
-
-| モデル | 実測データリンク |
+| 知りたいこと | 確認するページ |
 | :--- | :--- |
-| **GPT 6 Sol** | [各プロバイダーの実測データを表示](https://folkbench.com/rankings/gpt-6-sol?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| **GPT 6 Astra** | [各プロバイダーの実測データを表示](https://folkbench.com/rankings/gpt-6-astra?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| **Claude Fable 5.1** | [各プロバイダーの実測データを表示](https://folkbench.com/rankings/claude-fable-5-1?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| **Grok 4.7** | [各プロバイダーの実測データを表示](https://folkbench.com/rankings/grok-4-7?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
-| **DeepSeek V4.1 Flash** | [各プロバイダーの実測データを表示](https://folkbench.com/rankings/deepseek-v4-1-flash?utm_source=github&utm_medium=readme&utm_campaign=folkbench-blog) |
+| 利用できることが多い回線は？ | [稼働率ランキング](https://folkbench.com/ja/rankings?utm_source=github&utm_campaign=readme_ja) |
+| 長時間のタスクでの挙動は？ | [安定性ランキング](https://folkbench.com/ja/rankings/stability?utm_source=github&utm_campaign=readme_ja) |
+| 応答が速い回線は？ | [応答速度ランキング](https://folkbench.com/ja/rankings/latency?utm_source=github&utm_campaign=readme_ja) |
+| コーディングセッションの費用の目安は？ | [セッションコストランキング](https://folkbench.com/ja/rankings/cost?utm_source=github&utm_campaign=readme_ja) |
+| 同じモデルでもプロバイダーによって挙動が違う？ | [モデル整合性モニター](https://folkbench.com/ja/arena?utm_source=github&utm_campaign=readme_ja) |
+| 二つのプロバイダーを比較したい | [プロバイダー比較](https://folkbench.com/ja/stations/compare?utm_source=github&utm_campaign=readme_ja) |
 
----
+### モデル整合性：検証できる違いを確認する
 
-## 2. 回線切替：Folkbench Switch クライアント
+同じモデルの異なる回線について、モデルの識別情報を問うプローブへの回答一致率、入力 Token、推論 Token、モデル指紋を確認できます。データがある場合はキャッシュ測定情報も表示されます。一つの回答や一つの割合だけでモデルのすり替えを断定することはできません。テスト条件とサンプルを合わせて結果を解釈してください。
 
-Switch は Folkbench 公式のオープンソースデスクトップアプリ（Tauri + Rust 製）です。そのコアバリューは、**「複数のリレープロバイダーと公式アカウントの間で Base URL と API Key をワンクリックで切り替え、設定ファイルの手動編集から解放されること」**にあります。
+[モニターを開く →](https://folkbench.com/ja/arena?utm_source=github&utm_campaign=readme_ja) · [評価方法を読む →](https://folkbench.com/ja/blog/did-the-model-get-dumber?utm_source=github&utm_campaign=readme_ja)
 
-### 🎯 主な機能
+<details open>
+<summary><b>ランキング画面のイメージを見る</b></summary>
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-en-dark.png">
+  <img src="docs/images/features/board-en-light.png" width="100%" alt="Folkbench ランキング画面のイメージ。現在のリアルタイム測定結果ではありません">
+</picture>
 
-- 🔄 **ワンクリックでプロバイダー切替**：複数サービスの Base URL と API Key を保存し、対象ツールへ即座に反映。切り替えや復元もいつでもワンタップ。
-- 🛡️ **非破壊切替とセッション保護**：変更前に設定の差分（Diff）をプレビュー。Codex をサードパーティ回線に切り替える際、公式 ChatGPT の OAuth ログインセッションを自動退避し、公式に戻す際に無損失で自動復元します。
-- 📈 **ベンチマークデータの統合**：アプリ内で各サイトの最新稼働率や遅延状況を直接確認可能。回線状態を把握した上で安心して切り替えられます。
-- 🔒 **ローカル保存とプライバシー**：すべての API Key と設定はローカルディスクにのみ保存され、外部サーバーへ送信されることは一切ありません。完全オフライン動作。
-- 📊 **ローカル利用量・コスト試算**：セッションごとの Token 消費量をローカルで集計し、公開参考価格に基づいた利用コストを概算表示。
+既存の画面イメージです。最新のデータと画面構成は Web サイトでご確認ください。
 
-### 🧰 対応ツール
+</details>
 
-Switch は各ツールの設定ファイルパスやフォーマット仕様に最適化されており、接続に必要なパラメータのみを更新し、その他のユーザー独自設定は保持します：
+<br>
 
-| ツール | 設定ファイル / パス | 備考 |
+## Folkbench Switch
+
+**選んだ回線を、毎日使うツールへ。**
+
+Switch は Tauri + Rust で開発されたオープンソースのデスクトップクライアントです。プロバイダーの Base URL と API Key を保存し、設定差分を確認してから対象ツールへ適用します。必要に応じて回線を切り替えたり、以前の設定を復元したりできます。
+
+<img src="docs/images/readme-ja/workflow.png" width="100%" alt="利用の流れ：Web で測定結果を確認し、公開情報を比較してから、Switch でローカル設定の差分を確認・適用します。">
+
+### ダウンロード
+
+<p align="center"><b><a href="https://github.com/Folkbench/folkbench/releases">Switch Beta をダウンロード →</a></b><br><sub>macOS · Apple Silicon / Intel　｜　Windows · x64</sub></p>
+
+macOS のインストーラーは `.dmg`、Windows は `.exe` 形式です。
+
+インストーラーと SHA256 チェックサムは [Releases](https://github.com/Folkbench/folkbench/releases) に掲載しています。利用するバージョンのリリースノートに従ってください。
+
+<img src="docs/images/readme-ja/switch.png" width="100%" alt="白地、軽量な UI、控えめな紫色を用いた Folkbench Switch の画面イメージ。クライアント内は英語表示です。">
+
+### 回線を切り替えるたびの手作業を減らす
+
+| 機能 | できること |
+| :--- | :--- |
+| **プロバイダーの切替** | 複数サービスの接続設定を保存し、選択した設定を対応ツールへ適用します。 |
+| **設定差分の確認** | 書き込み前に変更を確認し、ほかのカスタム設定を保持します。復元できる範囲はツールのアダプターによって異なります。 |
+| **Codex の認証情報保護** | サードパーティーへ切り替える際に公式 OAuth 認証情報を一時退避し、公式に戻すときに復元します。 |
+| **公開回線の検索** | 公開カタログの回線、稼働率、状態履歴、価格をクライアントで確認できます。 |
+| **ローカル使用量の推計** | セッションごとの Token 使用量を確認し、参考単価でコストを推計します。 |
+
+Switch はツールの設定をローカルで管理します。公開カタログの取得、モデル情報の照会、プロバイダーへのリクエストなどにはネットワーク接続が必要です。Web サイトのモデル整合性モニターやキャッシュ補償情報が、そのままクライアントに実装されているわけではありません。Switch の UI は中国語と英語に対応しており、このページのクライアント画面イメージは英語表示です。
+
+<details open>
+<summary><b>対応ツールと設定パス</b></summary>
+
+| ツール | 設定ファイル / パス | 内容 |
 | :--- | :--- | :--- |
-| **Claude Code** | `~/.claude/settings.json` | Base URL を自動設定。Bearer トークンと API Key の認証モードを自動判別 |
-| **Codex** | `~/.codex/config.toml` | カスタム provider を登録。公式ログイン資格情報を自動退避・復元 |
-| **Gemini CLI** | `~/.gemini/.env` & `settings.json` | 環境変数と認証設定を同期反映 |
-| **Aider** | `~/.aider.conf.yml` | モデル名および API エンドポイント引数を書き込み |
-| **OpenCode** | `~/.config/opencode/` | サービスマッピングおよび認証キーを直接注入 |
-| **Kimi CLI** | `~/.kimi-code` / `~/.kimi` | 新旧バージョンのディレクトリ構造を自動判別 |
-| **DeepSeek Harness** | `~/.dsh/` | 公式 CLI 環境に準拠して適用 |
-| **その他** | MiniMax Code、Qwen Code、Grok Build、Hermes、Pi など | 順次サポート拡大中 |
+| **Claude Code** | `~/.claude/settings.json` | Base URL を書き込み、トークンと API Key の認証形式を処理 |
+| **Codex** | `~/.codex/config.toml` | カスタムプロバイダーを設定し、公式認証情報を退避・復元 |
+| **Gemini CLI** | `~/.gemini/.env` & `settings.json` | 環境変数と認証方式を更新 |
+| **Aider** | `~/.aider.conf.yml` | モデルと API エンドポイントを設定 |
+| **OpenCode** | `~/.config/opencode/` | サービスの割り当てと認証キーを設定 |
+| **Kimi CLI** | `~/.kimi-code` / `~/.kimi` | 新旧の設定ディレクトリに対応 |
+| **DeepSeek Harness** | `~/.dsh/` | 公式 CLI の環境に対応 |
+| **MiniMax Code / Qwen Code / Grok Build / Hermes / Pi** | — | 各アダプターは継続的に保守中 |
 
-### 💡 利用フロー
+</details>
 
-1. **プロバイダーを追加**：サービス名、Base URL、API Key を入力して保存；
-2. **対象ツールを選択**：サイドバーで使用中の開発ツール（Claude Code や Codex など）を選択；
-3. **設定を適用**：目的の回線を選んで有効化をクリック。即座に設定が反映されます；
-4. **復元またはクリア**：公式に戻す、または別の回線に変更したい場合もワンクリックで完了。
+<br>
 
----
+## Folkbench を支えるプロバイダー
 
-## 3. ダウンロード・インストール
-
-最新バージョン：**0.1.0-beta.1**
-
-| プラットフォーム | アーキテクチャ | パッケージ | 状態・署名 |
-| :--- | :--- | :--- | :--- |
-| **macOS** | Apple Silicon（Mシリーズ） | `.dmg` | **Apple 公式コード署名＆公証済み（Notarized）**。ダウンロード後すぐに起動可能 |
-| **macOS** | Intel（x64） | `.dmg` | **Apple 公式コード署名＆公証済み（Notarized）**。ダウンロード後すぐに起動可能 |
-| **Windows** | x64 | `.exe` | インストーラー / ポータブル版（解凍後すぐ利用可能） |
-
-[GitHub Releases](https://github.com/Folkbench/folkbench/releases) からお使いの環境に合わせたインストーラーをダウンロードしてください。各ファイルには SHA256 ハッシュ値が付属しています。
-
-*※ Windows のコード署名は現在申請手続き中です。初回起動時に SmartScreen の警告が表示された場合は、「詳細情報」→「実行」を選択してください。*
-
----
-
-## 🔒 プライバシーとセキュリティ
-
-- **完全ローカル管理**：Switch の設定および API Key は、すべてユーザーのローカル環境（ホームディレクトリ配下）にのみ保存されます。外部サーバーへの送信は一切行いません。
-- **コード・プロンプトの非収集**：利用量集計機能はローカルのログのみを解析します。ソースコード、プロンプト、会話コンテキストの読み取りやアップロードは一切行われません。
-- **セキュリティ上の注意**：GitHub Issues への投稿やログのスクリーンショットを共有する際は、ご自身的 API Key が映り込まないようマスキングをお願いします。
+<table>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" width="180" alt="Modelflare"></picture></a></td>
+<td><a href="https://folkbench.com/go/modelflare?source=readme_ja"><b>Modelflare</b></a><br>米国の Havenbyte LLC が運営。GPT、Claude、Gemini、Grok などの主要モデルと標準互換プロトコルに対応し、40種以上の画像・動画生成モデルもカバー。単一の API Key で複数モデルのフォールバック制御や予備グループの設定が可能で、リクエストログから遅延や実消費コストを確認できます。<br><br>キャッシュ補償制度も特徴で、対象の OpenAI プールでキャッシュヒット率保証（65%〜85%）を下回った場合に補填が行われます。初回チャージ特典として、単発 US$20 のチャージで倍率 0.015 の GPT 特恵グループが解放されます。解放後の GPT-5.6-Sol は 100 万トークンあたりおよそ入力 ¥0.51 / 出力 ¥3.01 で、利用上限はありません。単発 US$50 のチャージで倍率 0.03 の Claude 特恵グループが解放されます。</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" width="180" alt="CheapAI"></picture></a></td>
+<td><a href="https://folkbench.com/go/cheapai?source=readme_ja"><b>CheapAI</b></a><br>圧倒的な低価格を重視したサービス。リアルタイムの回線状況に応じて倍率を自動調整する「動的倍率プール」を備え、リソースに余裕がある時間帯はさらに安価に利用可能です。<br><br>コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" width="180" alt="IKunCode"></picture></a></td>
+<td><a href="https://folkbench.com/go/ikuncode?source=readme_ja"><b>IKunCode</b></a><br>Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" width="180" alt="FluxLane（智流）"></picture></a></td>
+<td><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><b>FluxLane（智流）</b></a><br>国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。</td>
+</tr>
+</table>
 
 ---
 
-## 🤝 フィードバックとコミュニティ
+## 参加とフィードバック
 
-- **コミュニティ**：[Telegram グループ](https://t.me/+C_E8eL1ZevM4MTY9) または [QQ グループ「folkbench 用户群」](https://qm.qq.com/q/71NzSTrPVK)（グループ番号 203286875）に参加して、AI 開発環境の活用法や最新の回線状況を共有できます。
-- **課題・改善提案**：バグの報告や対応ツールの追加要望は [GitHub Issues](https://github.com/Folkbench/folkbench/issues) までお気軽にお寄せください。
-- **セキュリティ**：脆弱性のご報告は [SECURITY.md](SECURITY.md) をご参照の上、個別にご連絡ください。
-- **オープンソースライセンス**：Folkbench Switch クライアントは [Apache-2.0](LICENSE.md) ライセンスの下で公開されています。
+- **不具合の報告：** 再現手順とバージョンを添えて [Issue](https://github.com/Folkbench/folkbench/issues) を作成してください。API Key や認証情報を含む設定は投稿しないでください。
+- **コミュニティ：** [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) · [QQ グループ](https://qm.qq.com/q/71NzSTrPVK)（203286875）。
+- **記事と投稿：** [Folkbench ブログ](https://folkbench.com/ja/blog?utm_source=github&utm_campaign=readme_ja) では評価方法、モデル資料、読者投稿を扱っています。既存の記事は 12 言語で提供しています。
+- **クライアント開発：** [Switch 開発ガイド（英語）](apps/switch/README.en.md)。
+
+## ライセンス
+
+`apps/switch/` のクライアントコードは [Apache-2.0](apps/switch/LICENSE) で公開しています。ブログ記事、画像、ブランド素材の利用範囲は [LICENSE.md](LICENSE.md) を参照してください。新しい README のヘッダー、機能カード、Switch 紹介画像は AI 生成のプロモーション用イラストで、利用フローは説明図です。実測結果や製品の元のスクリーンショットを表すものではありません。
+
+<p align="center"><br><b>Folkbench</b><br><sub>実際の利用で、AI の価値を測る。</sub><br><br><a href="https://folkbench.com/ja/?utm_source=github&amp;utm_campaign=readme_ja">Web サイトへ ↗</a>　·　<a href="https://github.com/Folkbench/folkbench/releases">Switch をダウンロード ↗</a></p>
