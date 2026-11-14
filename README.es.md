@@ -51,7 +51,7 @@ Compara la concordancia de respuestas a preguntas de identidad, los tokens de en
 <br>
 <img src="docs/images/readme-es/board.webp" width="960" alt="Ilustración de Folkbench Rankings, no resultados medidos en vivo.">
 
-Interfaz ilustrativa. Consulta el sitio para ver los datos actuales.
+Datos de ejemplo. Consulta los resultados publicados en el sitio.
 
 </details>
 

@@ -51,7 +51,7 @@ Folkbench は AI API プロバイダーの公開ベンチマークを集約し�
 <br>
 <img src="docs/images/readme-ja/board.webp" width="960" alt="Folkbench Rankings の画面イメージ。リアルタイムの測定結果ではありません。">
 
-画面イメージです。最新のデータは Web サイトでご確認ください。
+サンプルデータです。公開結果は Web サイトでご確認ください。
 
 </details>
 
