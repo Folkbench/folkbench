@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/readme-en/hero.png" width="100%" alt="Folkbench — Measure AI in the real world.">
+<img src="docs/images/readme-en/hero.webp" width="960" alt="Folkbench — Measure AI in the real world.">
 
 <br>
 
@@ -16,19 +16,20 @@
 
 <br>
 
-## Understand the route. Then get to work.
+## Folkbench
 
 Folkbench brings public AI API relay benchmarks together so you can compare availability, stability, latency and cost for the same model. Once you pick a route, use **Folkbench Switch** to manage connection settings locally for Claude Code, Codex, Gemini CLI and other tools.
 
-This repository contains the **Switch desktop client and blog content**. Public rankings, integrity monitoring and relay comparisons are provided by [folkbench.com](https://folkbench.com/en/?utm_source=github&utm_campaign=readme_en).
 
-<p align="center">
-<a href="https://folkbench.com/en/rankings?utm_source=github&amp;utm_campaign=readme_en"><img src="docs/images/readme-en/rankings.png" width="280" alt="Public rankings: compare availability, stability, latency and cost"></a>
-<a href="https://folkbench.com/en/arena?utm_source=github&amp;utm_campaign=readme_en"><img src="docs/images/readme-en/integrity.png" width="280" alt="Integrity monitor: probe agreement, tokens and model fingerprints"></a>
-<a href="https://folkbench.com/en/stations/compare?utm_source=github&amp;utm_campaign=readme_en"><img src="docs/images/readme-en/compare.png" width="280" alt="Compare relays: routes and public metrics side by side"></a>
-</p>
+<table width="100%">
+<tr>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/en/rankings?utm_source=github&amp;utm_campaign=readme_en"><img src="docs/images/readme-en/rankings.webp" width="100%" alt="Public rankings: compare availability, stability, latency and cost"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/en/arena?utm_source=github&amp;utm_campaign=readme_en"><img src="docs/images/readme-en/integrity.webp" width="100%" alt="Integrity monitor: probe agreement, tokens and model fingerprints"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/en/stations/compare?utm_source=github&amp;utm_campaign=readme_en"><img src="docs/images/readme-en/compare.webp" width="100%" alt="Compare relays: routes and public metrics side by side"></a></td>
+</tr>
+</table>
 
-## Use public information to answer specific questions
+## Benchmarks
 
 | What matters to you | Start here |
 | :--- | :--- |
@@ -39,21 +40,18 @@ This repository contains the **Switch desktop client and blog content**. Public 
 | Does a model behave consistently across relays? | [Integrity monitor](https://folkbench.com/en/arena?utm_source=github&utm_campaign=readme_en) |
 | How do two relays compare? | [Compare relays](https://folkbench.com/en/stations/compare?utm_source=github&utm_campaign=readme_en) |
 
-### Integrity monitoring: inspect differences you can review
+### Integrity monitoring
 
 Compare probe agreement, input tokens, reasoning tokens and model fingerprints for the same model across routes. Cache measurements are also available where data exists. A single answer or percentage cannot establish model substitution on its own; interpret results alongside the test conditions and samples.
 
 [Open the monitor →](https://folkbench.com/en/arena?utm_source=github&utm_campaign=readme_en) · [Read the methodology →](https://folkbench.com/en/blog/did-the-model-get-dumber?utm_source=github&utm_campaign=readme_en)
 
 <details open>
-<summary><b>Show the illustrative rankings interface</b></summary>
+<summary><b>Folkbench Rankings</b></summary>
 <br>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-en-dark.png">
-  <img src="docs/images/features/board-en-light.png" width="100%" alt="Illustrative Folkbench rankings interface, not current live benchmark results">
-</picture>
+<img src="docs/images/readme-en/board.webp" width="960" alt="Folkbench Rankings interface illustration, not live measured results.">
 
-Existing interface illustration; visit the website for current data and layout.
+Illustrative interface. Visit the website for current data.
 
 </details>
 
@@ -65,7 +63,7 @@ Existing interface illustration; visit the website for current data and layout.
 
 Switch is an open-source desktop client built with Tauri + Rust. Save a provider’s Base URL and API Key, preview the configuration changes, then apply them to your tool. Switch routes or restore the previous configuration when needed.
 
-<img src="docs/images/readme-en/workflow.png" width="100%" alt="Workflow: review website benchmarks, compare public information, then preview and apply local configuration with Switch.">
+<img src="docs/images/readme-en/workflow.webp" width="960" alt="Workflow: review website benchmarks, compare public information, then preview and apply local configuration with Switch.">
 
 ### Download
 
@@ -75,9 +73,9 @@ macOS installers use `.dmg`; Windows installers use `.exe`.
 
 Installers and SHA256 checksums are available in [Releases](https://github.com/Folkbench/folkbench/releases). Follow the instructions for the version you choose.
 
-<img src="docs/images/readme-en/switch.png" width="100%" alt="Illustrative Folkbench Switch interface with a white canvas, lightweight UI and restrained violet accents.">
+<img src="docs/images/readme-en/switch.webp" width="960" alt="Illustrative Folkbench Switch interface with a white canvas, lightweight UI and restrained violet accents.">
 
-### Less manual editing when you switch
+### Features
 
 | Capability | How it works |
 | :--- | :--- |
@@ -107,7 +105,7 @@ Switch manages tool configuration locally. Online functions such as public catal
 
 <br>
 
-## Support Folkbench
+## Sponsors
 
 These relays support Folkbench's ongoing benchmarks. [Become a sponsor →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_en)
 
@@ -141,7 +139,7 @@ These relays support Folkbench's ongoing benchmarks. [Become a sponsor →](http
 
 ---
 
-## Contribute and connect
+## Community
 
 - **Report a problem:** [Open an issue](https://github.com/Folkbench/folkbench/issues) with reproduction steps and version details. Do not include API keys or configurations containing credentials.
 - **Join the discussion:** [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) · [QQ group](https://qm.qq.com/q/71NzSTrPVK) (203286875).
@@ -150,6 +148,6 @@ These relays support Folkbench's ongoing benchmarks. [Become a sponsor →](http
 
 ## License
 
-Client code under `apps/switch/` is open source under [Apache-2.0](apps/switch/LICENSE). See [LICENSE.md](LICENSE.md) for blog, image and brand asset licensing. The new README hero, feature cards and Switch showcase are AI-generated promotional illustrations; the workflow is an explanatory diagram. None represents measured results or an original product screenshot.
+Client code under `apps/switch/` is open source under [Apache-2.0](apps/switch/LICENSE). See [LICENSE.md](LICENSE.md) for blog, image and brand asset licensing.
 
 <p align="center"><br><b>Folkbench</b><br><sub>Measure AI in the real world.</sub><br><br><a href="https://folkbench.com/en/?utm_source=github&amp;utm_campaign=readme_en">Visit the website ↗</a>　·　<a href="https://github.com/Folkbench/folkbench/releases">Download Switch ↗</a></p>

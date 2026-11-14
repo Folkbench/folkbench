@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/readme-zh/hero.png" width="100%" alt="Folkbench：在真实场景中衡量 AI 的价值。公开评测、降智监控与一键切换。">
+<img src="docs/images/readme-zh/hero.webp" width="960" alt="Folkbench：在真实场景中衡量 AI 的价值。公开评测、降智监控与一键切换。">
 
 <br>
 
@@ -16,19 +16,20 @@
 
 <br>
 
-## 先看清线路，再开始工作
+## Folkbench
 
 Folkbench 把 AI 中转站的公开评测放在一起，让你按模型比较可用率、稳定性、响应速度和成本。选好线路后，用 **Folkbench Switch** 在本地管理 Claude Code、Codex、Gemini CLI 等工具的连接配置。
 
-这里开源的是 **Switch 桌面客户端与博客内容**。公开榜单、降智监控和中转站对比由 [folkbench.com](https://folkbench.com/?utm_source=github&utm_campaign=readme) 提供。
 
-<p align="center">
-<a href="https://folkbench.com/rankings?utm_source=github&amp;utm_campaign=readme"><img src="docs/images/readme-zh/rankings.png" width="280" alt="公开榜单：比较可用率、稳定性、响应速度和成本"></a>
-<a href="https://folkbench.com/arena?utm_source=github&amp;utm_campaign=readme"><img src="docs/images/readme-zh/integrity.png" width="280" alt="降智监控：查看探针一致率、Token 与模型指纹"></a>
-<a href="https://folkbench.com/stations/compare?utm_source=github&amp;utm_campaign=readme"><img src="docs/images/readme-zh/compare.png" width="280" alt="中转站对比：并排查看同一模型的线路与公开指标"></a>
-</p>
+<table width="100%">
+<tr>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/rankings?utm_source=github&amp;utm_campaign=readme"><img src="docs/images/readme-zh/rankings.webp" width="100%" alt="公开榜单：比较可用率、稳定性、响应速度和成本"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/arena?utm_source=github&amp;utm_campaign=readme"><img src="docs/images/readme-zh/integrity.webp" width="100%" alt="降智监控：查看探针一致率、Token 与模型指纹"></a></td>
+<td width="33%" align="center" valign="top"><a href="https://folkbench.com/stations/compare?utm_source=github&amp;utm_campaign=readme"><img src="docs/images/readme-zh/compare.webp" width="100%" alt="中转站对比：并排查看同一模型的线路与公开指标"></a></td>
+</tr>
+</table>
 
-## 用公开信息，回答具体问题
+## 功能入口
 
 | 你关心什么 | 从这里开始 |
 | :--- | :--- |
@@ -39,21 +40,18 @@ Folkbench 把 AI 中转站的公开评测放在一起，让你按模型比较可
 | 不同中转站的模型表现是否一致？ | [降智监控](https://folkbench.com/arena?utm_source=github&utm_campaign=readme) |
 | 两家中转站怎么选？ | [中转站对比](https://folkbench.com/stations/compare?utm_source=github&utm_campaign=readme) |
 
-### 降智监控，看见可以复查的差异
+### 降智监控
 
 对同一模型、不同线路查看身份探针题的一致率、输入 Token、思考 Token 和模型指纹；有数据时也可查看缓存检测信息。一次回答或一个百分比不能单独证明模型被替换，结果需要结合检测条件与样本理解。
 
 [打开监控 →](https://folkbench.com/arena?utm_source=github&utm_campaign=readme) · [阅读评测方法 →](https://folkbench.com/blog/did-the-model-get-dumber?utm_source=github&utm_campaign=readme)
 
 <details open>
-<summary><b>展开查看榜单界面示意</b></summary>
+<summary><b>Folkbench Rankings</b></summary>
 <br>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-dark.png">
-  <img src="docs/images/features/board-light.png" width="100%" alt="Folkbench 榜单界面示意，非当前实时评测结果">
-</picture>
+<img src="docs/images/readme-zh/board.webp" width="960" alt="Folkbench Rankings 榜单界面示意，非实时测量结果。">
 
-现有界面示意图；当前数据与页面布局以网站为准。
+榜单界面示意；当前数据以网站为准。
 
 </details>
 
@@ -65,7 +63,7 @@ Folkbench 把 AI 中转站的公开评测放在一起，让你按模型比较可
 
 Switch 是基于 Tauri + Rust 的开源桌面客户端。保存服务商的 Base URL 与 API Key，预览配置差异，再应用到目标工具；需要时切换线路或恢复原有配置。
 
-<img src="docs/images/readme-zh/workflow.png" width="100%" alt="使用流程：在网站看实测，比较公开信息，再用 Switch 预览并应用本地配置。">
+<img src="docs/images/readme-zh/workflow.webp" width="960" alt="使用流程：在网站看实测，比较公开信息，再用 Switch 预览并应用本地配置。">
 
 ### 下载安装
 
@@ -75,9 +73,9 @@ macOS 安装包为 `.dmg`，Windows 安装包为 `.exe`。
 
 安装包与 SHA256 校验文件见 [Releases](https://github.com/Folkbench/folkbench/releases)。请按具体版本的发布说明选择安装包。
 
-<img src="docs/images/readme-zh/switch.png" width="100%" alt="Folkbench Switch 客户端界面示意：白底、轻量界面与紫色强调的产品展示图。">
+<img src="docs/images/readme-zh/switch.webp" width="960" alt="Folkbench Switch 客户端界面示意：白底、轻量界面与紫色强调的产品展示图。">
 
-### 为日常切换，少做几次手工修改
+### 功能
 
 | 能力 | 使用方式 |
 | :--- | :--- |
@@ -108,7 +106,7 @@ Switch 在本地管理工具配置。公开目录、模型查询和服务商请�
 
 <br>
 
-## 支持 Folkbench
+## 赞助商
 
 以下中转站支持 Folkbench 的持续评测。[成为赞助商 →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme)
 
@@ -142,7 +140,7 @@ Switch 在本地管理工具配置。公开目录、模型查询和服务商请�
 
 ---
 
-## 参与与交流
+## 社区
 
 - **反馈问题**：[提交 Issue](https://github.com/Folkbench/folkbench/issues)，附上复现步骤与版本信息；不要粘贴 API Key 或包含凭据的配置。
 - **一起讨论**：[Telegram](https://t.me/+C_E8eL1ZevM4MTY9) · [QQ 群](https://qm.qq.com/q/71NzSTrPVK)（203286875）。
@@ -151,6 +149,6 @@ Switch 在本地管理工具配置。公开目录、模型查询和服务商请�
 
 ## 许可证
 
-`apps/switch/` 下的客户端代码以 [Apache-2.0](apps/switch/LICENSE) 开源。博客文章、图片与品牌素材的许可范围见 [LICENSE.md](LICENSE.md)。新增 README 头图、功能图卡与 Switch 展示图为 AI 生成的宣传插画，流程图为说明性设计，均不代表实测数据或产品截图。
+`apps/switch/` 下的客户端代码以 [Apache-2.0](apps/switch/LICENSE) 开源。博客文章、图片与品牌素材的许可范围见 [LICENSE.md](LICENSE.md)。
 
 <p align="center"><br><b>Folkbench</b><br><sub>在真实场景中衡量 AI 的价值。</sub><br><br><a href="https://folkbench.com/?utm_source=github&amp;utm_campaign=readme">访问网站 ↗</a>　·　<a href="https://github.com/Folkbench/folkbench/releases">下载 Switch ↗</a></p>
