@@ -8,4 +8,6 @@
 - 不含实测数字或新性能结论；卡片链接与 README 文字提供完整入口。
 - Folkbench 标志及这些品牌宣传素材沿用根目录 LICENSE.md 的品牌与图片许可边界，不因客户端采用 Apache-2.0 而自动适用该许可。
 
-Display assets use WebP: feature cards are at most 720px wide, hero/UI images 1440px, and workflow diagrams 1280px. The workflow SVG remains the editable source. Rankings tables are illustrative and show no numeric benchmark results.
+Display assets use WebP: feature cards are at most 720px wide, hero/UI images 1440px, and workflow diagrams 1280px. The workflow SVG remains the editable source. Rankings tables use explicitly labeled sample values, not live benchmark results.
+
+The three sample rows show availability 99.6% / 99.1% / 98.4%, latency 1.6 s / 1.9 s / 2.3 s, session cost CNY 1.80 / 2.10 / 1.40, and illustrative data-security levels L4 / L3 / L2. These are design samples, not observed or audited station facts.

@@ -51,7 +51,7 @@ Folkbench 把 AI 中转站的公开评测放在一起，让你按模型比较可
 <br>
 <img src="docs/images/readme-zh/board.webp" width="960" alt="Folkbench Rankings 榜单界面示意，非实时测量结果。">
 
-榜单界面示意；当前数据以网站为准。
+示例数据；实际结果见线上榜单。
 
 </details>
 
