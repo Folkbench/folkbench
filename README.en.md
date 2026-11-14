@@ -51,7 +51,7 @@ Compare probe agreement, input tokens, reasoning tokens and model fingerprints f
 <br>
 <img src="docs/images/readme-en/board.webp" width="960" alt="Folkbench Rankings interface illustration, not live measured results.">
 
-Illustrative interface. Visit the website for current data.
+Sample data. See the website for published results.
 
 </details>
 
