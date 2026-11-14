@@ -16,6 +16,29 @@
 
 <br>
 
+## スポンサー
+
+<table>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" width="180" alt="Modelflare"></picture></a></td>
+<td><a href="https://folkbench.com/go/modelflare?source=readme_ja"><b>Modelflare</b></a><br>米国の Havenbyte LLC が運営。GPT、Claude、Gemini、Grok などの主要モデルと標準互換プロトコルに対応し、40種以上の画像・動画生成モデルもカバー。単一の API Key で複数モデルのフォールバック制御や予備グループの設定が可能で、リクエストログから遅延や実消費コストを確認できます。<br><br>キャッシュ補償制度も特徴で、対象の OpenAI プールでキャッシュヒット率保証（65%〜85%）を下回った場合に補填が行われます。初回チャージ特典として、単発 US$20 のチャージで倍率 0.015 の GPT 特恵グループが解放されます。解放後の GPT-5.6-Sol は 100 万トークンあたりおよそ入力 ¥0.51 / 出力 ¥3.01 で、利用上限はありません。単発 US$50 のチャージで倍率 0.03 の Claude 特恵グループが解放されます。</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" width="180" alt="CheapAI"></picture></a></td>
+<td><a href="https://folkbench.com/go/cheapai?source=readme_ja"><b>CheapAI</b></a><br>圧倒的な低価格を重視したサービス。リアルタイムの回線状況に応じて倍率を自動調整する「動的倍率プール」を備え、リソースに余裕がある時間帯はさらに安価に利用可能です。<br><br>コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" width="180" alt="IKunCode"></picture></a></td>
+<td><a href="https://folkbench.com/go/ikuncode?source=readme_ja"><b>IKunCode</b></a><br>Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。</td>
+</tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" width="180" alt="FluxLane（智流）"></picture></a></td>
+<td><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><b>FluxLane（智流）</b></a><br>国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。</td>
+</tr>
+</table>
+
+---
+
 ## Folkbench
 
 Folkbench は AI API プロバイダーの公開ベンチマークを集約し、同じモデルの稼働率・安定性・応答速度・コストを比較できるようにします。回線を選んだら、**Folkbench Switch** で Claude Code、Codex、Gemini CLI などの接続設定をローカルで管理できます。
@@ -102,29 +125,6 @@ Switch はツールの設定をローカルで管理します。公開カタロ�
 | **MiniMax Code / Qwen Code / Grok Build / Hermes / Pi** | — | 各アダプターは継続的に保守中 |
 
 </details>
-
-<br>
-
-## スポンサー
-
-<table>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" width="180" alt="Modelflare"></picture></a></td>
-<td><a href="https://folkbench.com/go/modelflare?source=readme_ja"><b>Modelflare</b></a><br>米国の Havenbyte LLC が運営。GPT、Claude、Gemini、Grok などの主要モデルと標準互換プロトコルに対応し、40種以上の画像・動画生成モデルもカバー。単一の API Key で複数モデルのフォールバック制御や予備グループの設定が可能で、リクエストログから遅延や実消費コストを確認できます。<br><br>キャッシュ補償制度も特徴で、対象の OpenAI プールでキャッシュヒット率保証（65%〜85%）を下回った場合に補填が行われます。初回チャージ特典として、単発 US$20 のチャージで倍率 0.015 の GPT 特恵グループが解放されます。解放後の GPT-5.6-Sol は 100 万トークンあたりおよそ入力 ¥0.51 / 出力 ¥3.01 で、利用上限はありません。単発 US$50 のチャージで倍率 0.03 の Claude 特恵グループが解放されます。</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" width="180" alt="CheapAI"></picture></a></td>
-<td><a href="https://folkbench.com/go/cheapai?source=readme_ja"><b>CheapAI</b></a><br>圧倒的な低価格を重視したサービス。リアルタイムの回線状況に応じて倍率を自動調整する「動的倍率プール」を備え、リソースに余裕がある時間帯はさらに安価に利用可能です。<br><br>コストを最優先するユーザー向けの割引プールから、安定性重視の Pro プール、公式 Key プールまで幅広い選択肢を提供しています。</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" width="180" alt="IKunCode"></picture></a></td>
-<td><a href="https://folkbench.com/go/ikuncode?source=readme_ja"><b>IKunCode</b></a><br>Claude Code、Codex、Gemini CLI などのコーディング支援ツールの導入サポートが充実。メール、QQ、Telegram などの窓口を公開しており、導入初心者に親切なサポート体制を整えています。</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" width="180" alt="FluxLane（智流）"></picture></a></td>
-<td><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><b>FluxLane（智流）</b></a><br>国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。</td>
-</tr>
-</table>
 
 ---
 
