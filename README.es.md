@@ -1,26 +1,113 @@
 <div align="center">
 
-<img src="public/brand/folkbench-logo-only.svg" width="64" height="64" alt="Folkbench">
+<img src="docs/images/readme-es/hero.png" width="100%" alt="Folkbench — Evalúa la IA en escenarios reales.">
 
-# Folkbench
+<br>
 
-Mediciones reales de estaciones, y Folkbench Switch.
+[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=Switch%20Beta&color=171717&style=flat-square)](https://github.com/Folkbench/folkbench/releases)
+[![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=533AFD&style=flat-square)](https://github.com/Folkbench/folkbench/stargazers)
+[![Website](https://img.shields.io/badge/folkbench.com-171717?style=flat-square)](https://folkbench.com/es/?utm_source=github&utm_campaign=readme_es)
 
-[![Release](https://img.shields.io/github/v/release/Folkbench/folkbench?include_prereleases&label=release&color=7624f4&style=for-the-badge)](https://github.com/Folkbench/folkbench/releases) [![Stars](https://img.shields.io/github/stars/Folkbench/folkbench?color=f5a623&logo=github&style=for-the-badge)](https://github.com/Folkbench/folkbench/stargazers) [![folkbench.com](https://img.shields.io/badge/folkbench.com-533afd?style=for-the-badge&logo=googlechrome&logoColor=white)](https://folkbench.com/?utm_source=github&utm_campaign=readme_badge) [![Telegram](https://img.shields.io/badge/Telegram-2BA2E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/+C_E8eL1ZevM4MTY9) [![Group](https://img.shields.io/badge/Group-12B7F5?logo=qq&logoColor=white&style=for-the-badge)](https://qm.qq.com/q/71NzSTrPVK)
+**[Ver rankings](https://folkbench.com/es/rankings?utm_source=github&utm_campaign=readme_es)** · **[Integridad del modelo](https://folkbench.com/es/arena?utm_source=github&utm_campaign=readme_es)** · **[Descargar Switch](https://github.com/Folkbench/folkbench/releases)**
 
-[🌐 Clasificación en vivo](https://folkbench.com/es/rankings/board?utm_source=github&utm_campaign=readme_es) · [⚡ Cliente Switch](#folkbench-switch) · [📦 Descargas](https://github.com/Folkbench/folkbench/releases) · [🔥 Modelos populares](#modelos-populares) · [💬 Comunidad (TG)](https://t.me/+C_E8eL1ZevM4MTY9) · [💬 Grupo QQ](https://qm.qq.com/q/71NzSTrPVK) · [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
-
-<picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-en-dark.png"><img src="docs/images/hero-en-light.png" width="100%" alt="Clasificación de estaciones de Folkbench y cliente Switch"></picture>
+[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
 </div>
 
 <br>
 
-[folkbench.com](https://folkbench.com/es/?utm_source=github&utm_campaign=readme_es) mide de forma continua las estaciones de API de IA y publica la disponibilidad, el tiempo de respuesta y el precio. Este repositorio contiene el código del cliente de escritorio **Folkbench Switch**, que escribe la ruta elegida en la configuración de Claude Code, Codex y otras herramientas.
+## Primero conoce la conexión. Después, ponte a trabajar.
 
----
+Folkbench reúne evaluaciones públicas de estaciones de API de IA para comparar disponibilidad, estabilidad, latencia y costo de un mismo modelo. Una vez elegida la conexión, usa **Folkbench Switch** para administrar localmente la configuración de Claude Code, Codex, Gemini CLI y otras herramientas.
 
-## Patrocinadores
+Este repositorio contiene el **cliente de escritorio Switch y el contenido del blog**. Los rankings públicos, el monitoreo de integridad y la comparación de estaciones se ofrecen en [folkbench.com](https://folkbench.com/es/?utm_source=github&utm_campaign=readme_es).
+
+<p align="center">
+<a href="https://folkbench.com/es/rankings?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/rankings.png" width="280" alt="Rankings públicos: disponibilidad, estabilidad, latencia y costo"></a>
+<a href="https://folkbench.com/es/arena?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/integrity.png" width="280" alt="Integridad del modelo: concordancia, tokens y huella del modelo"></a>
+<a href="https://folkbench.com/es/stations/compare?utm_source=github&amp;utm_campaign=readme_es"><img src="docs/images/readme-es/compare.png" width="280" alt="Comparación de estaciones: conexiones y métricas públicas lado a lado"></a>
+</p>
+
+## Responde preguntas concretas con información pública
+
+| Qué te interesa | Por dónde empezar |
+| :--- | :--- |
+| ¿Qué conexiones están disponibles con mayor frecuencia? | [Ranking de disponibilidad](https://folkbench.com/es/rankings?utm_source=github&utm_campaign=readme_es) |
+| ¿Cómo se comportan en tareas largas? | [Ranking de estabilidad](https://folkbench.com/es/rankings/stability?utm_source=github&utm_campaign=readme_es) |
+| ¿Qué conexiones responden más rápido? | [Ranking de latencia](https://folkbench.com/es/rankings/latency?utm_source=github&utm_campaign=readme_es) |
+| ¿Cuánto podría costar una sesión de programación? | [Ranking de costo por sesión](https://folkbench.com/es/rankings/cost?utm_source=github&utm_campaign=readme_es) |
+| ¿Un modelo se comporta igual en distintas estaciones? | [Integridad del modelo](https://folkbench.com/es/arena?utm_source=github&utm_campaign=readme_es) |
+| ¿Cómo se comparan dos estaciones? | [Comparar estaciones](https://folkbench.com/es/stations/compare?utm_source=github&utm_campaign=readme_es) |
+
+### Integridad del modelo: diferencias que puedes revisar
+
+Compara la concordancia de respuestas a preguntas de identidad, los tokens de entrada, los tokens de razonamiento y la huella del modelo entre conexiones del mismo modelo. También puedes consultar mediciones de caché cuando hay datos. Una sola respuesta o un porcentaje no demuestran por sí solos que un modelo haya sido sustituido: interpreta los resultados junto con las condiciones y las muestras de la prueba.
+
+[Abrir el monitor →](https://folkbench.com/es/arena?utm_source=github&utm_campaign=readme_es) · [Leer la metodología →](https://folkbench.com/es/blog/did-the-model-get-dumber?utm_source=github&utm_campaign=readme_es)
+
+<details open>
+<summary><b>Ver la ilustración del ranking</b></summary>
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-en-dark.png">
+  <img src="docs/images/features/board-en-light.png" width="100%" alt="Ilustración del ranking de Folkbench; no representa resultados actuales en vivo">
+</picture>
+
+Ilustración existente de la interfaz. Consulta el sitio para ver los datos y el diseño actuales.
+
+</details>
+
+<br>
+
+## Folkbench Switch
+
+**Conecta la estación que elegiste con las herramientas que usas a diario.**
+
+Switch es un cliente de escritorio de código abierto construido con Tauri + Rust. Guarda la Base URL y la API Key de un proveedor, revisa los cambios de configuración y aplícalos a tu herramienta. Cuando lo necesites, cambia de conexión o restaura la configuración anterior.
+
+<img src="docs/images/readme-es/workflow.png" width="100%" alt="Flujo: consultar evaluaciones, comparar información pública y revisar y aplicar la configuración local con Switch.">
+
+### Descargas
+
+<p align="center"><b><a href="https://github.com/Folkbench/folkbench/releases">Descargar Switch Beta →</a></b><br><sub>macOS · Apple Silicon / Intel　|　Windows · x64</sub></p>
+
+Los instaladores de macOS usan `.dmg`; los de Windows usan `.exe`.
+
+Los instaladores y archivos de verificación SHA256 están en [Releases](https://github.com/Folkbench/folkbench/releases). Sigue las instrucciones de la versión que elijas.
+
+<img src="docs/images/readme-es/switch.png" width="100%" alt="Ilustración de Folkbench Switch con fondo blanco, interfaz ligera y detalles violetas. La interfaz del cliente se muestra en inglés.">
+
+### Menos cambios manuales al cambiar de conexión
+
+| Función | Cómo funciona |
+| :--- | :--- |
+| **Cambio de proveedor** | Guarda la configuración de varios servicios y aplica tu elección a una herramienta compatible. |
+| **Vista previa de cambios** | Revisa los cambios antes de escribirlos y conserva otros ajustes personalizados. La restauración depende del adaptador de cada herramienta. |
+| **Protección de credenciales de Codex** | Al cambiar a un tercero, guarda temporalmente las credenciales OAuth oficiales y las restaura al volver. |
+| **Descubrimiento de conexiones públicas** | Consulta conexiones, disponibilidad, ventanas de estado y precios del catálogo público dentro del cliente. |
+| **Estimación de uso local** | Revisa los tokens por sesión y estima el costo con precios de referencia. |
+
+Switch administra localmente la configuración de las herramientas. Las funciones en línea, como el catálogo público, las consultas de modelos y las solicitudes a proveedores, requieren conexión a internet. El monitoreo de integridad y la información de compensación de caché del sitio no implican que esas funciones ya estén integradas en el cliente. La interfaz de Switch está disponible en chino e inglés; la ilustración de esta página muestra la versión en inglés.
+
+<details open>
+<summary><b>Herramientas compatibles y rutas de configuración</b></summary>
+
+| Herramienta | Archivo / ruta de configuración | Notas |
+| :--- | :--- | :--- |
+| **Claude Code** | `~/.claude/settings.json` | Escribe la Base URL y gestiona los tipos de credenciales token y API Key |
+| **Codex** | `~/.codex/config.toml` | Escribe un proveedor personalizado, guarda las credenciales oficiales y las restaura al volver |
+| **Gemini CLI** | `~/.gemini/.env` & `settings.json` | Actualiza las variables de entorno y el método de autenticación |
+| **Aider** | `~/.aider.conf.yml` | Escribe el modelo y el endpoint de la API |
+| **OpenCode** | `~/.config/opencode/` | Añade asignaciones de servicios y claves de autenticación |
+| **Kimi CLI** | `~/.kimi-code` / `~/.kimi` | Admite directorios de configuración nuevos y anteriores |
+| **DeepSeek Harness** | `~/.dsh/` | Adapta el entorno de la CLI oficial |
+| **MiniMax Code / Qwen Code / Grok Build / Hermes / Pi** | — | Los adaptadores siguen en mantenimiento activo |
+
+</details>
+
+<br>
+
+## Apoya a Folkbench
 
 Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinador →](https://folkbench.com/vendor/login?utm_source=github&utm_campaign=readme_es)
 
@@ -54,71 +141,15 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 
 ---
 
-## Clasificación de estaciones
+## Participa y comparte
 
-Hay muchas estaciones. ¿Cuál es estable, cuál es barata y cuál no toca tus datos? La tasa de éxito, la velocidad de respuesta, el precio y el nivel de seguridad de datos se ven en una sola clasificación. [General](https://folkbench.com/es/rankings/board?utm_source=github&utm_campaign=readme_es) · [Estabilidad](https://folkbench.com/es/rankings/board?metric=availability&utm_source=github&utm_campaign=readme_es) · [Relación calidad-precio](https://folkbench.com/es/rankings/board?metric=price&utm_source=github&utm_campaign=readme_es).
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/board-en-dark.png">
-  <img src="docs/images/features/board-en-light.png" width="100%" alt="Clasificación de estaciones">
-</picture>
-
-### Modelos populares
-
-Si quieres ver cómo se comporta un modelo concreto en cada estación, abre su clasificación:
-
-| Modelo | Datos medidos |
-| :--- | :--- |
-| **GPT 6 Sol** | [Ver los datos medidos de cada estación](https://folkbench.com/es/rankings/gpt-6-sol?utm_source=github&utm_medium=readme&utm_campaign=readme_es) |
-| **GPT 6 Astra** | [Ver los datos medidos de cada estación](https://folkbench.com/es/rankings/gpt-6-astra?utm_source=github&utm_medium=readme&utm_campaign=readme_es) |
-| **Claude Fable 5.1** | [Ver los datos medidos de cada estación](https://folkbench.com/es/rankings/claude-fable-5-1?utm_source=github&utm_medium=readme&utm_campaign=readme_es) |
-| **Grok 4.7** | [Ver los datos medidos de cada estación](https://folkbench.com/es/rankings/grok-4-7?utm_source=github&utm_medium=readme&utm_campaign=readme_es) |
-| **DeepSeek V4.1 Flash** | [Ver los datos medidos de cada estación](https://folkbench.com/es/rankings/deepseek-v4-1-flash?utm_source=github&utm_medium=readme&utm_campaign=readme_es) |
-
-## Folkbench Switch
-
-Una herramienta de configuración para asistentes de programación con IA, pensada para quien empieza. Claude Code, Codex, Gemini CLI y otros quedan listos en un clic, y es fácil de usar. [Descargar para macOS / Windows](https://github.com/Folkbench/folkbench/releases).
-
-macOS: Apple Silicon / Intel (`.dmg`); Windows: x64 (`.exe`). Los instaladores y los archivos de comprobación SHA256 se descargan en [Releases](https://github.com/Folkbench/folkbench/releases).
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features/switch-en-dark.png">
-  <img src="docs/images/features/switch-en-light.png" width="100%" alt="Folkbench Switch">
-</picture>
-
-Switch es el cliente de escritorio de código abierto que acompaña a Folkbench, construido con Tauri y Rust. Su valor principal es este: **cambiar con un clic el Base URL y la API Key entre varias estaciones y la ruta oficial, sin volver a editar la configuración a mano.**
-
-### 🎯 Funciones principales
-
-- 🔄 **Cambio de proveedor en un clic**: guarda el Base URL y la API Key de varios servicios y aplícalos a la herramienta de destino. Se puede cambiar y volver atrás cuando haga falta.
-- 🛡️ **Configuración sin pérdida y protección de estado**: antes de aplicar, muestra la diferencia. Al pasar Codex a un servicio de terceros, guarda de forma segura la credencial OAuth oficial de ChatGPT y la restaura sin pérdida al volver a la ruta oficial.
-- 📈 **Datos de sonda integrados**: dentro del cliente se ven la disponibilidad pública en tiempo real y la latencia de cada sitio, para confirmar la ruta antes de cambiar.
-- 🔒 **Almacenamiento local y privacidad**: todas las API Keys y la configuración se quedan en el dispositivo. No se suben a la nube y el cliente funciona sin conexión.
-- 📊 **Estimación de uso local**: cuenta los tokens por sesión y estima el coste con los precios de referencia públicos.
-
-### 🧰 Herramientas compatibles
-
-Switch adapta la ruta y los campos de cada herramienta. Al cambiar, solo cubre los parámetros de conexión y conserva el resto de ajustes propios:
-
-| Herramienta | Archivo / ruta | Notas |
-| :--- | :--- | :--- |
-| **Claude Code** | `~/.claude/settings.json` | Escribe el Base URL y distingue el tipo de credencial entre token y API Key |
-| **Codex** | `~/.codex/config.toml` | Escribe el provider personalizado, guarda la credencial oficial y la restaura al volver |
-| **Gemini CLI** | `~/.gemini/.env` & `settings.json` | Escribe a la vez las variables de entorno y el método de autenticación |
-| **Aider** | `~/.aider.conf.yml` | Escribe el modelo y los parámetros del endpoint de la API |
-| **OpenCode** | `~/.config/opencode/` | Inyecta el mapa de servicios y la clave de autenticación |
-| **Kimi CLI** | `~/.kimi-code` / `~/.kimi` | Compatible con los directorios de la versión nueva y de la antigua |
-| **DeepSeek Harness** | `~/.dsh/` | Adaptado al entorno de la CLI oficial |
-| **Otras** | MiniMax Code, Qwen Code, Grok Build, Hermes, Pi, etc. | Se sigue manteniendo la compatibilidad |
-
----
-
-## Comunidad
-
-Los errores y las ideas de funciones van a [GitHub Issues](https://github.com/Folkbench/folkbench/issues). También puedes entrar en [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) o en el [grupo de QQ](https://qm.qq.com/q/71NzSTrPVK) (203286875).
+- **Reporta un problema:** [abre un issue](https://github.com/Folkbench/folkbench/issues) con pasos para reproducirlo y la versión. No incluyas API Keys ni configuraciones con credenciales.
+- **Únete a la conversación:** [Telegram](https://t.me/+C_E8eL1ZevM4MTY9) · [grupo QQ](https://qm.qq.com/q/71NzSTrPVK) (203286875).
+- **Lee y contribuye:** el [blog de Folkbench](https://folkbench.com/es/blog?utm_source=github&utm_campaign=readme_es) incluye métodos de evaluación, referencias de modelos y aportes de lectores, con contenido existente en 12 idiomas.
+- **Desarrollo del cliente:** [notas de desarrollo de Switch, en inglés](apps/switch/README.en.md).
 
 ## Licencia
 
-El código de Switch en `apps/switch/` se publica bajo [Apache-2.0](apps/switch/LICENSE). Los artículos del blog, las imágenes y los materiales de marca quedan fuera; los detalles están en [LICENSE.md](LICENSE.md).
+El código del cliente en `apps/switch/` se publica bajo [Apache-2.0](apps/switch/LICENSE). Consulta [LICENSE.md](LICENSE.md) para el alcance de las licencias de artículos, imágenes y recursos de marca. La nueva portada del README, las tarjetas y la presentación de Switch son ilustraciones promocionales generadas con IA; el flujo es un diagrama explicativo. No representan resultados medidos ni capturas originales del producto.
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/banner-en-dark.png"><img src="docs/images/banner-en-light.png" width="100%" alt="Folkbench — El modelo que mejor funciona. Cualquiera puede elegirlo."></picture></p>
+<p align="center"><br><b>Folkbench</b><br><sub>Evalúa la IA en escenarios reales.</sub><br><br><a href="https://folkbench.com/es/?utm_source=github&amp;utm_campaign=readme_es">Visita el sitio ↗</a>　·　<a href="https://github.com/Folkbench/folkbench/releases">Descarga Switch ↗</a></p>
