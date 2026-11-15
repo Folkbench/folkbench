@@ -1,5 +1,9 @@
 name: Switch publish reviewed installers
 on:
+  workflow_run:
+    workflows: [Switch build installers]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       run_id:
@@ -31,7 +35,12 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
-    if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main' && inputs.qa_approved
+    if: >-
+      github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main' &&
+      ((github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == 'Folkbench/folkbench') ||
+      (github.event_name == 'workflow_dispatch' && inputs.qa_approved))
     runs-on: ubuntu-22.04
     timeout-minutes: 30
     permissions:
@@ -47,7 +56,7 @@ jobs:
     steps:
       - name: Keep approval state in the private Runner temporary directory
         run: printf 'PROMOTION_FILE=%s/switch-promotion.json\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
-      # Execute only trusted promotion code from the dispatch commit, never code from the downloaded build.
+      # Execute trusted default-branch promotion code, never candidate code or downloaded programs.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ github.sha }}
@@ -57,6 +66,7 @@ jobs:
         id: reviewed
         run: node apps/switch/scripts/promote.mjs prepare
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        if: steps.reviewed.outputs.ready == 'true'
         with:
           github-token: ${{ github.token }}
           run-id: ${{ steps.reviewed.outputs.run_id }}
@@ -64,6 +74,8 @@ jobs:
           merge-multiple: true
           path: reviewed-installers
       - name: Verify the reviewed files without modifying them
+        if: steps.reviewed.outputs.ready == 'true'
         run: node apps/switch/scripts/promote.mjs verify reviewed-installers
       - name: Upload three original installers and SHA256 checksums; use reviewed notes as release body
+        if: steps.reviewed.outputs.ready == 'true'
         run: node apps/switch/scripts/promote.mjs publish reviewed-installers

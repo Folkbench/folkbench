@@ -20,13 +20,15 @@ test('installer uploads use a non-hidden directory and exclude credential materi
   assert.match(workflow, /"\$signing_directory\/AuthKey\.p8"/)
 })
 
-test('build workflow freezes reviewed files and cannot publish or run from tags', () => {
+test('main pushes build new versions without giving the builder release-write permission', () => {
   const verify = workflow.slice(workflow.indexOf('\n  verify:'))
   assert.match(verify, /needs: \[validate, build\]/)
   assert.match(verify, /artifacts\.mjs verify release-artifacts "\$RELEASE_MODE"/)
   assert.match(verify, /name: switch-reviewed-.*github\.run_id.*github\.run_attempt/)
   assert.match(verify, /path: release-artifacts\//)
-  assert.doesNotMatch(workflow, /\n  publish:|contents: write|publish-beta|\n  push:|tags:/)
+  assert.doesNotMatch(workflow, /\n  publish:|contents: write|publish-beta|tags:/)
+  assert.match(workflow, /\n  push:\n    branches: \[main\]/)
+  assert.match(workflow, /if: needs\.validate\.outputs\.build == 'true'/)
   assert.match(workflow, /default: signed-candidate/)
 })
 
@@ -36,7 +38,13 @@ test('promotion downloads exact artifact IDs and never compiles, signs or execut
   assert.match(promotion, /promote\.mjs prepare/)
   assert.match(promotion, /promote\.mjs verify reviewed-installers/)
   assert.match(promotion, /promote\.mjs publish reviewed-installers/)
-  assert.doesNotMatch(promotion, /bun install|cargo |tauri |apple-ci|notarytool|codesign|secrets\.|environment:|needs:.*build|workflow_run:/)
+  assert.doesNotMatch(promotion, /bun install|cargo |tauri |apple-ci|notarytool|codesign|secrets\.|environment:|needs:.*build/)
+  assert.match(promotion, /workflow_run:\n    workflows: \[Switch build installers\]\n    types: \[completed\]\n    branches: \[main\]/)
+  assert.match(promotion, /github\.event\.workflow_run\.conclusion == 'success'/)
+  assert.match(promotion, /github\.event\.workflow_run\.event == 'push'/)
+  assert.match(promotion, /github\.event\.workflow_run\.head_repository\.full_name == 'Folkbench\/folkbench'/)
+  assert.match(promotion, /if: steps\.reviewed\.outputs\.ready == 'true'/)
+  assert.doesNotMatch(promotion, /QA_APPROVED:\s*['"]?true/)
   assert.match(promotion, /ref: \$\{\{ github\.sha \}\}/)
   assert.match(promotion, /persist-credentials: false/)
   for (const input of ['run_id', 'run_attempt', 'source_commit', 'manifest_sha256', 'qa_approved']) assert.match(promotion, new RegExp(`      ${input}:`))
