@@ -5,7 +5,11 @@ export {
   getConnectPreview,
 } from '@/bridge/commands/connect'
 export {
+  getDataSecurityBoard,
+  getOfficialProviderStatus,
+  getPublicIntegrity,
   listPublishedStations,
+  openDataSecurityStationWebsite,
   openPublishedStationWebsite,
   openPresetRelayWebsite,
   resolveCatalogAsset,
@@ -70,12 +74,38 @@ export type {
 } from '@/bridge/generated/bootstrap'
 
 export type {
+  BillingMode,
   CatalogError,
   CatalogModel,
+  DataSecurityBoardAnswer,
+  DataSecurityBoardCatalog,
+  DataSecurityBoardRefund,
+  DataSecurityBoardRow,
+  DataSecurityDescriptions,
+  DataSecurityEvidenceSource,
+  DataSecurityValidity,
+  IntegrityCacheSummary,
+  IntegrityClientMode,
+  IntegrityPeerAgreement,
+  IntegrityTokenRange,
+  InvoiceStatus,
+  ModelRiskLevel,
+  OfficialProviderHealthState,
+  OfficialProviderStatus,
+  OfficialProviderStatusCatalog,
+  OfficialTokenPrice,
+  PublicIntegrityCatalog,
+  PublicIntegrityMeasurement,
   PublishedCatalog,
+  PublishedDataSecurity,
   PublishedPrice,
   PublishedStation,
+  PublishedStationBilling,
+  PublishedStationProfile,
+  PublishedStationRecharge,
+  PublishedStationSupport,
   PublishedStatusState,
+  RouteType,
 } from '@/bridge/generated/catalog'
 
 export type {

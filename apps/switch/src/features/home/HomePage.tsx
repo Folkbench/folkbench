@@ -1,6 +1,13 @@
 import { useQueries, useQuery } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import CircleQuestionMarkIcon from '@hugeicons/core-free-icons/CircleQuestionMarkIcon'
@@ -24,7 +31,6 @@ import {
   BridgeError,
   fitWindowToContent,
   getMyServiceCredential,
-  listPublishedStations,
   openPublishedStationWebsite,
   openPresetRelayWebsite,
 } from '@/bridge'
@@ -76,8 +82,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
 import { ToolLogo } from '@/components/tool-logo'
+import { UpstreamStatusNotice } from '@/components/UpstreamStatusNotice'
 import { UsageTrendCard } from '@/components/usage-trend-card'
 import {
   myServicesQueryOptions,
@@ -115,7 +123,7 @@ import {
   openToolDesktopDownload,
   supportsDesktopLaunch,
 } from '@/bridge'
-import type { ToolDesktopApp } from '@/bridge/generated/toolLaunch' 
+import type { ToolDesktopApp } from '@/bridge/generated/toolLaunch'
 import { LineComparison } from './LineComparison'
 import { AddSourceChoice } from './AddSourceChoice'
 import { PublishedServicePicker } from './PublishedServicePicker'
@@ -128,7 +136,15 @@ import {
   useSetLastToolId,
 } from '@/features/preferences/queries'
 import { sessionUsageQueryOptions } from '@/features/usage/queries'
-import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
+import {
+  publicIntegrityQueryOptions,
+  publishedCatalogQueryOptions,
+} from '@/features/discovery/queries'
+import { normalizeLocale } from '@/i18n/config'
+import {
+  accuracyRatePercent,
+  matchIntegrityMeasurement,
+} from '@/lib/integrity-match'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
 import {
   groupEasyModelChoices,
@@ -141,6 +157,7 @@ import type { UsageWindow } from '@/lib/usage'
 import { EasyHomePage } from './EasyHomePage'
 import {
   resolvePublishedStationRow,
+  serviceCardModelId,
   serviceCardModelLabel,
 } from './service-display'
 import {
@@ -149,6 +166,7 @@ import {
   fillClaudeRoleDefaults,
 } from './ClaudeRoleMappingFields'
 import type { ClaudeRoleModels } from '@/bridge'
+import { Link } from '@tanstack/react-router'
 
 type FormState = {
   targetToolId: string
@@ -261,7 +279,6 @@ function allowedProviderId(value: string): boolean {
   if (trimmed.length > 64) return false
   return /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(trimmed)
 }
-
 
 function isClaudeTool(toolId: string): boolean {
   return toolId === 'claude-code' || toolId === 'claude-desktop'
@@ -631,13 +648,10 @@ function ProHomePage() {
   ].join('\n')
 
   const linkedCatalog = useQuery({
-    queryKey: ['published-catalog', search.modelId ?? ''],
-    queryFn: () => listPublishedStations(search.modelId ?? ''),
+    ...publishedCatalogQueryOptions(search.modelId ?? '', 'availability'),
     enabled: Boolean(
       search.add && search.modelId && search.stationId && search.channelId
     ),
-    staleTime: 60_000,
-    gcTime: 24 * 60 * 60_000,
   })
   const publishedBaseUrl =
     linkedCatalog.data?.stations.find(
@@ -679,6 +693,7 @@ function ProHomePage() {
               channelId: search.channelId,
               channelName: search.channelName ?? '',
               stationId: search.stationId,
+              stationSlug: null,
               stationName: search.stationName ?? '',
               stationAvatarPath: null,
               modelId: search.modelId,
@@ -687,10 +702,22 @@ function ProHomePage() {
               measuredAt: null,
               publishedAt: '',
               availabilityBps: null,
+              stabilityBps: null,
+              firstTokenLatencyMs: null,
+              latencyP95Ms: null,
+              multiplierBps: null,
               statusWindows: [],
               sampleSize: null,
               inputPrice: null,
               outputPrice: null,
+              cachePrice: null,
+              modelRisk: null,
+              modelConsistencyBps: null,
+              billingMode: null,
+              routeType: null,
+              invoiceStatus: null,
+              dataSecurity: null,
+              profile: null,
             }
           : null
       const station = stationFromCatalog ?? fallbackStation
@@ -812,7 +839,7 @@ function ProHomePage() {
     enabled: usageSupported,
   })
   const usageRow = usage.data?.tools.find((row) => row.toolId === toolId)
-  const numberLocale = i18n.resolvedLanguage === 'zh' ? 'zh-CN' : 'en'
+  const numberLocale = normalizeLocale(i18n.resolvedLanguage)
 
   const toolName =
     toolList.find((tool) => tool.id === toolId)?.displayName ?? toolId
@@ -839,8 +866,7 @@ function ProHomePage() {
   ].sort()
   const catalogQueries = useQueries({
     queries: catalogModelIds.map((modelId) => ({
-      queryKey: ['published-catalog', modelId],
-      queryFn: () => listPublishedStations(modelId),
+      ...publishedCatalogQueryOptions(modelId, 'availability'),
       staleTime: 300_000,
       refetchOnWindowFocus: false,
     })),
@@ -854,8 +880,9 @@ function ProHomePage() {
   // Same as easy mode: match by stationId only so catalog / quick-add
   // services show the site logo; custom "其他服务" keep initials.
   const publicCatalog = useQuery(
-    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID)
+    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID, 'availability')
   )
+  const integrityQuery = useQuery(publicIntegrityQueryOptions())
   const publicStations = publicCatalog.data?.stations ?? []
   const publicOrigin = publicCatalog.data?.origin
   // Catalog-add only: website for the "get API Key" link beside the Key field.
@@ -874,10 +901,13 @@ function ProHomePage() {
         matchStationByBaseUrl(form.baseUrl, publicStations) ??
         null)
       : null
-  const presetStationForKeyLink = dialog === 'add'
-    ? relayPresets.find((preset) => preset.stationId === form.stationId)
-    : undefined
-  const canOpenCatalogWebsiteForKey = Boolean(presetStationForKeyLink || catalogStationForKeyLink?.websiteUrl)
+  const presetStationForKeyLink =
+    dialog === 'add'
+      ? relayPresets.find((preset) => preset.stationId === form.stationId)
+      : undefined
+  const canOpenCatalogWebsiteForKey = Boolean(
+    presetStationForKeyLink || catalogStationForKeyLink?.websiteUrl
+  )
   const currentService = rows.find((row) => row.id === currentId)
   const currentPublished = currentService
     ? currentPublishedStation(
@@ -1056,9 +1086,33 @@ function ProHomePage() {
       </span>
     ) : null
 
-
   const currentCatalog = currentService?.modelId
     ? catalogByModel.get(currentService.modelId)
+    : undefined
+  const currentMatched = currentService
+    ? (currentPublished ??
+      matchPublishedStation(currentService, publicStations))
+    : undefined
+  const currentOrigin =
+    (currentPublished ? currentCatalog?.origin : publicOrigin) ??
+    'https://folkbench.com'
+  const currentModelId = serviceCardModelId(currentService, currentMatched)
+  const currentUpstreamModelId = currentModelId || DEFAULT_PUBLIC_MODEL_ID
+  const currentDiscoverModelId =
+    currentMatched?.modelId || DEFAULT_PUBLIC_MODEL_ID
+  const currentIntegrity =
+    currentService && currentMatched?.stationSlug && integrityQuery.data?.items
+      ? matchIntegrityMeasurement(integrityQuery.data.items, {
+          modelId: currentModelId || undefined,
+          stationSlug: currentMatched.stationSlug,
+          channelName: currentMatched.channelName,
+        })
+      : null
+  const currentIntegrityRate = currentIntegrity
+    ? accuracyRatePercent(currentIntegrity)
+    : null
+  const currentVerify = currentService
+    ? verifyState[currentService.id]
     : undefined
   const backupLines: ComparisonLine[] = homeServiceIds
     .map((id) => rowById.get(id))
@@ -1199,6 +1253,7 @@ function ProHomePage() {
           modelId: row.modelId,
           stationId: row.stationId,
           channelId: row.channelId,
+          locale: numberLocale,
         })
       }
     } catch {
@@ -1234,8 +1289,13 @@ function ProHomePage() {
       modelId: service.modelId,
       models: archivedModels,
       claudeRoleModels: savedRoles
-        ? { ...EMPTY_CLAUDE_ROLE_MODELS, ...savedRoles,
-            sonnet: { ...EMPTY_CLAUDE_ROLE_MODELS.sonnet, ...savedRoles.sonnet },
+        ? {
+            ...EMPTY_CLAUDE_ROLE_MODELS,
+            ...savedRoles,
+            sonnet: {
+              ...EMPTY_CLAUDE_ROLE_MODELS.sonnet,
+              ...savedRoles.sonnet,
+            },
             opus: { ...EMPTY_CLAUDE_ROLE_MODELS.opus, ...savedRoles.opus },
             fable: { ...EMPTY_CLAUDE_ROLE_MODELS.fable, ...savedRoles.fable },
             haiku: { ...EMPTY_CLAUDE_ROLE_MODELS.haiku, ...savedRoles.haiku },
@@ -1369,8 +1429,7 @@ function ProHomePage() {
           channelId: form.channelId,
           modelId: saveModelId,
           models: form.models,
-          claudeRoleModels:
-            isClaudeTool(toolId) ? saveClaudeRoles : null,
+          claudeRoleModels: isClaudeTool(toolId) ? saveClaudeRoles : null,
           providerId: form.providerId.trim(),
           apiProtocol: form.apiProtocol,
           baseUrl: form.baseUrl,
@@ -1392,7 +1451,6 @@ function ProHomePage() {
       toast.error(serviceErrorMessage(error, t))
     }
   }
-
 
   async function onEnable(service: MyService) {
     if (!canWrite) return
@@ -1439,7 +1497,7 @@ function ProHomePage() {
     }
   }, [toolId])
 
-    function askDesktopRestart(): Promise<ToolDesktopRestartChoice> {
+  function askDesktopRestart(): Promise<ToolDesktopRestartChoice> {
     return new Promise((resolve) => {
       desktopRestartResolver.current = resolve
       setDesktopRestartOpen(true)
@@ -1698,8 +1756,8 @@ function ProHomePage() {
     let cancelled = false
     const measureAndFit = () => {
       if (cancelled) return
-      const shell = document.querySelector(".switch-shell")
-      const workspace = document.querySelector(".home-workspace")
+      const shell = document.querySelector('.switch-shell')
+      const workspace = document.querySelector('.home-workspace')
       const list = listScrollRef.current
       const stack = list?.firstElementChild as HTMLElement | null
       let needed: number
@@ -1733,7 +1791,14 @@ function ProHomePage() {
       cancelAnimationFrame(frame)
       window.clearTimeout(timer)
     }
-  }, [isEasy, services.isPending, listRowCount, toolId, usage.isPending, usage.isFetching])
+  }, [
+    isEasy,
+    services.isPending,
+    listRowCount,
+    toolId,
+    usage.isPending,
+    usage.isFetching,
+  ])
 
   return (
     <div className="switch-workspace home-workspace">
@@ -1790,27 +1855,24 @@ function ProHomePage() {
                   {updateBadge}
                 </p>
                 <div className="mt-3 flex items-center gap-3">
-                  {(() => {
-                    const matched =
-                      currentPublished ??
-                      matchPublishedStation(currentService, publicStations)
-                    const origin =
-                      (currentPublished
-                        ? currentCatalog?.origin
-                        : publicOrigin) ?? 'https://folkbench.com'
-                    return (
-                      <StationAvatar
-                        name={matched?.stationName ?? currentService.name}
-                        avatarPath={matched?.stationAvatarPath}
-                        origin={origin}
-                        className="size-10 rounded-lg text-[15px]"
-                      />
-                    )
-                  })()}
-                  <div className="min-w-0">
-                    <h2 className="truncate text-[20px] font-semibold tracking-tight">
-                      {currentService.name}
-                    </h2>
+                  <StationAvatar
+                    name={currentMatched?.stationName ?? currentService.name}
+                    avatarPath={currentMatched?.stationAvatarPath}
+                    origin={currentOrigin}
+                    className="size-10 rounded-lg text-[15px]"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                      <h2 className="truncate text-[20px] font-medium tracking-tight">
+                        {currentService.name}
+                      </h2>
+                      {currentMatched?.dataSecurity ? (
+                        <DataSecurityBadge
+                          summary={currentMatched.dataSecurity}
+                          variant="badge"
+                        />
+                      ) : null}
+                    </div>
                     <p className="mt-1 truncate text-[12px] text-muted-foreground">
                       {[
                         currentPublished?.channelName ?? currentService.name,
@@ -1821,6 +1883,56 @@ function ProHomePage() {
                     </p>
                   </div>
                 </div>
+                {currentIntegrity && currentIntegrityRate !== null ? (
+                  <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg border border-border/70 bg-muted/40 px-3 py-1.5 text-[12px]">
+                    <span className="text-muted-foreground tabular-nums">
+                      {t('configure.home.integrityCue', {
+                        agree: currentIntegrity.agree,
+                        total: currentIntegrity.total,
+                        rate: `${currentIntegrityRate}%`,
+                      })}
+                    </span>
+                    <Link
+                      to="/discover"
+                      search={{
+                        modelId: currentDiscoverModelId,
+                        tab: 'integrity',
+                        metric: 'availability',
+                      }}
+                      className="font-medium text-brand-signal underline-offset-2 hover:underline"
+                    >
+                      {t('configure.home.viewIntegrityMonitor')}
+                    </Link>
+                  </div>
+                ) : null}
+                {currentIntegrityRate !== null && currentIntegrityRate < 85 ? (
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-warning/35 bg-warning/10 px-3 py-1.5 text-[12px] text-warning">
+                    <span>{t('configure.home.lowAgreementHint')}</span>
+                    {rows.length > 1 ? (
+                      <button
+                        type="button"
+                        className="shrink-0 font-medium underline underline-offset-2 hover:opacity-80"
+                        onClick={() => {
+                          listScrollRef.current?.scrollIntoView({
+                            block: 'center',
+                            behavior: 'smooth',
+                          })
+                          listScrollRef.current?.focus({ preventScroll: true })
+                        }}
+                      >
+                        {t('configure.home.switchBackupManually')}
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
+                {currentVerify === 'bad' || currentVerify === 'slow' ? (
+                  <div className="mt-2">
+                    <UpstreamStatusNotice
+                      modelId={currentUpstreamModelId}
+                      onlyProblems
+                    />
+                  </div>
+                ) : null}
               </div>
             </div>
             <div className="line-focus-footer">
@@ -1942,14 +2054,10 @@ function ProHomePage() {
                       onClick={() => void openDesktopApp()}
                     >
                       <HugeiconsIcon
-                        icon={
-                          desktopOpening ? Loading03Icon : AiComputerIcon
-                        }
+                        icon={desktopOpening ? Loading03Icon : AiComputerIcon}
                         strokeWidth={1.7}
                         aria-hidden="true"
-                        className={
-                          desktopOpening ? 'animate-spin' : undefined
-                        }
+                        className={desktopOpening ? 'animate-spin' : undefined}
                       />
                       {desktopOpening
                         ? t('configure.actions.openingDesktop')
@@ -1988,7 +2096,9 @@ function ProHomePage() {
           <section className="line-focus line-focus-idle">
             <div className="flex items-start justify-between gap-3">
               <h2 className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-medium tracking-tight">
-                <span className="min-w-0">{t('configure.home.chooseForTool', { tool: toolName })}</span>
+                <span className="min-w-0">
+                  {t('configure.home.chooseForTool', { tool: toolName })}
+                </span>
                 {updateBadge}
               </h2>
               {rows.length ? (
@@ -2020,6 +2130,19 @@ function ProHomePage() {
                   ? t('configure.home.currentMissing')
                   : t('configure.home.notEnabled')}
             </p>
+            <div>
+              <Link
+                to="/discover"
+                search={{
+                  modelId: DEFAULT_PUBLIC_MODEL_ID,
+                  tab: 'rankings',
+                  metric: 'availability',
+                }}
+                className="text-[12px] font-medium text-brand-signal underline-offset-2 hover:underline"
+              >
+                {t('configure.home.exploreRankings')}
+              </Link>
+            </div>
             <div className="line-focus-empty-flow mt-auto" aria-hidden="true">
               <div className="line-focus-empty-node">
                 <span className="line-focus-empty-node-mark">API</span>
@@ -2060,21 +2183,34 @@ function ProHomePage() {
       </div>
       {rows.length > 0 ? (
         <section className="home-comparison flex min-w-0 flex-col gap-3">
-          <div className="flex flex-wrap items-center justify-end gap-3">
-            {installButton}
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={targetTools.length === 0}
-              onClick={openAdd}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Link
+              to="/discover"
+              search={{
+                modelId: currentDiscoverModelId,
+                tab: 'rankings',
+                metric: 'availability',
+              }}
+              className="text-[12px] font-medium text-brand-signal underline-offset-2 hover:underline"
             >
-              <HugeiconsIcon
-                icon={Add01Icon}
-                strokeWidth={1.7}
-                aria-hidden="true"
-              />
-              {t('configure.actions.add')}
-            </Button>
+              {t('configure.home.exploreRankings')}
+            </Link>
+            <div className="flex flex-wrap items-center justify-end gap-3">
+              {installButton}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={targetTools.length === 0}
+                onClick={openAdd}
+              >
+                <HugeiconsIcon
+                  icon={Add01Icon}
+                  strokeWidth={1.7}
+                  aria-hidden="true"
+                />
+                {t('configure.actions.add')}
+              </Button>
+            </div>
           </div>
           <div
             ref={listScrollRef}
@@ -2089,6 +2225,7 @@ function ProHomePage() {
                 currentId={currentId}
                 busy={switchBusy}
                 canWrite={canWrite}
+                integrityItems={integrityQuery.data?.items}
                 onReorder={(keys) => void onReorderBackupServices(keys)}
                 onSwitch={(service) => void onEnable(service)}
                 onConnect={connectPublished}
@@ -2240,9 +2377,7 @@ function ProHomePage() {
                           providerId:
                             providerIdTouched ||
                             !usesProviderIdField(
-                              dialog === 'edit'
-                                ? toolId
-                                : current.targetToolId
+                              dialog === 'edit' ? toolId : current.targetToolId
                             )
                               ? current.providerId
                               : deriveProviderId(value),
@@ -2459,273 +2594,273 @@ function ProHomePage() {
           <form className="flex min-h-0 flex-1 flex-col" onSubmit={onSave}>
             <div className="min-h-0 flex-1 overflow-y-auto py-3">
               <div className="grid w-full min-w-0 gap-2.5 px-4 sm:px-5 [&_[data-slot=input]]:h-8">
-              {!isCatalogAdd || catalogStep === 'entry' ? (
-                <>
-                  <Field
-                    label={t('configure.form.name')}
-                    value={form.name}
-                    onChange={(value) =>
-                      setForm((current) => ({
-                        ...current,
-                        name: value,
-                      }))
-                    }
-                  />
-                  {usesProviderIdField(
-                    dialog === 'edit' ? toolId : form.targetToolId
-                  ) ? (
-                    <ProviderIdField
-                      label={t('configure.form.providerId')}
-                      helpTip={t('configure.form.providerIdHelp')}
-                      helpAriaLabel={t('configure.form.providerIdHelpAria')}
-                      value={form.providerId}
-                      required
-                      onChange={(providerId) => {
-                        setProviderIdTouched(true)
-                        setForm((current) => ({ ...current, providerId }))
-                      }}
-                    />
-                  ) : null}
-                  <ProtocolField
-                    label={t('configure.form.apiProtocol')}
-                    helpTip={t(
-                      `configure.form.apiProtocolHelp.${protocolHelpKey(
-                        dialog === 'edit' ? toolId : form.targetToolId
-                      )}`
-                    )}
-                    helpAriaLabel={t('configure.form.apiProtocolHelpAria')}
-                    value={form.apiProtocol}
-                    options={protocolsForTool(
-                      dialog === 'edit' ? toolId : form.targetToolId
-                    ).map((protocol) => {
-                      const recommended = recommendedProtocolForTool(
-                        dialog === 'edit' ? toolId : form.targetToolId
-                      )
-                      const base = t(`configure.form.protocols.${protocol}`)
-                      return {
-                        value: protocol,
-                        label:
-                          recommended === protocol
-                            ? `${base}${t('configure.form.protocolRecommended')}`
-                            : base,
-                      }
-                    })}
-                    onChange={(apiProtocol) =>
-                      setForm({ ...form, apiProtocol })
-                    }
-                  />
-                  <Field
-                    label={t('configure.form.baseUrl')}
-                    value={form.baseUrl}
-                    placeholder={t('configure.form.baseUrlPlaceholder')}
-                    onChange={(value) =>
-                      setForm((current) => {
-                        const matched =
-                          dialog === 'add' && addSource === 'manual'
-                            ? matchStationByBaseUrl(value, publicStations)
-                            : undefined
-                        return {
-                          ...current,
-                          baseUrl: value,
-                          providerId:
-                            providerIdTouched ||
-                            !usesProviderIdField(
-                              dialog === 'edit'
-                                ? toolId
-                                : current.targetToolId
-                            )
-                              ? current.providerId
-                              : deriveProviderId(value),
-                          ...(dialog === 'add' && addSource === 'manual'
-                            ? {
-                                stationId: matched?.stationId ?? '',
-                                channelId: matched?.channelId ?? '',
-                                name:
-                                  current.name.trim() ||
-                                  matched?.stationName ||
-                                  current.name,
-                              }
-                            : {}),
-                        }
-                      })
-                    }
-                  />
-                  <Field
-                    key={
-                      dialog === 'edit'
-                        ? `edit-api-key-${editing?.id ?? 'unknown'}`
-                        : 'add-api-key'
-                    }
-                    label={
-                      dialog === 'edit'
-                        ? t('configure.form.apiKeyReplace')
-                        : t('configure.form.apiKey')
-                    }
-                    labelEnd={
-                      canOpenCatalogWebsiteForKey ? (
-                        <button
-                          type="button"
-                          className="inline-flex shrink-0 items-center gap-1 rounded-md px-1 py-0.5 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                          disabled={openingCatalogWebsite}
-                          onClick={() => void openCatalogWebsiteForKey()}
-                        >
-                          {t('configure.form.getApiKeyOnWebsite')}
-                          <HugeiconsIcon
-                            icon={LinkSquare01Icon}
-                            strokeWidth={1.8}
-                            className="size-3.5"
-                          />
-                        </button>
-                      ) : null
-                    }
-                    value={form.apiKey}
-                    type="password"
-                    required={dialog !== 'edit'}
-                    onChange={(value) => setForm({ ...form, apiKey: value })}
-                  />
-                  {showModelField ? (
-                    <ModelField
-                      label={
-                        modelRequired
-                          ? t('configure.form.model')
-                          : t('configure.form.modelOptional')
-                      }
-                      value={form.modelId}
-                      models={fetchedModels}
-                      custom={modelCustom}
-                      pending={modelFetchPending}
-                      canFetch={canFetchModels}
-                      hasCredential={
-                        form.apiKey.trim() !== '' ||
-                        Boolean(dialog === 'edit' && editing?.hasCredential)
-                      }
-                      toolId={formToolId}
-                      toolDisplayName={
-                        toolList.find((tool) => tool.id === formToolId)
-                          ?.displayName ?? formToolId
-                      }
-                      hint={modelHint()}
-                      onFetch={() => void runModelFetch()}
-                      onCustomChange={setModelCustom}
-                      onChange={(modelId) =>
-                        setForm((current) => ({ ...current, modelId }))
-                      }
-                    />
-                  ) : null}
-                  {isClaudeTool(formToolId) ? (
-                    <ClaudeRoleMappingFields
-                      value={form.claudeRoleModels}
-                      primaryModel={form.modelId}
-                      models={fetchedModels}
-                      onChange={(claudeRoleModels) =>
+                {!isCatalogAdd || catalogStep === 'entry' ? (
+                  <>
+                    <Field
+                      label={t('configure.form.name')}
+                      value={form.name}
+                      onChange={(value) =>
                         setForm((current) => ({
                           ...current,
-                          claudeRoleModels,
+                          name: value,
                         }))
                       }
-                      onFetchModels={() => void runModelFetch()}
-                      fetchPending={modelFetchPending}
-                      canFetch={canFetchModels}
                     />
-                  ) : null}
-                </>
-              ) : catalogStep === 'review' ? (
-                <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
-                  <p>
-                    {t('configure.form.tool')}: {formTargetToolName}
-                  </p>
-                  <p>
-                    {t('discovery.connect.review.name', { name: form.name })}
-                  </p>
-                  <p className="mt-1 break-all font-mono text-[12px] text-muted-foreground">
-                    {form.baseUrl}
-                  </p>
-                  {form.modelId ? (
-                    <p className="mt-1 text-[12px] text-muted-foreground">
-                      {t('configure.form.model')}：{form.modelId}
+                    {usesProviderIdField(
+                      dialog === 'edit' ? toolId : form.targetToolId
+                    ) ? (
+                      <ProviderIdField
+                        label={t('configure.form.providerId')}
+                        helpTip={t('configure.form.providerIdHelp')}
+                        helpAriaLabel={t('configure.form.providerIdHelpAria')}
+                        value={form.providerId}
+                        required
+                        onChange={(providerId) => {
+                          setProviderIdTouched(true)
+                          setForm((current) => ({ ...current, providerId }))
+                        }}
+                      />
+                    ) : null}
+                    <ProtocolField
+                      label={t('configure.form.apiProtocol')}
+                      helpTip={t(
+                        `configure.form.apiProtocolHelp.${protocolHelpKey(
+                          dialog === 'edit' ? toolId : form.targetToolId
+                        )}`
+                      )}
+                      helpAriaLabel={t('configure.form.apiProtocolHelpAria')}
+                      value={form.apiProtocol}
+                      options={protocolsForTool(
+                        dialog === 'edit' ? toolId : form.targetToolId
+                      ).map((protocol) => {
+                        const recommended = recommendedProtocolForTool(
+                          dialog === 'edit' ? toolId : form.targetToolId
+                        )
+                        const base = t(`configure.form.protocols.${protocol}`)
+                        return {
+                          value: protocol,
+                          label:
+                            recommended === protocol
+                              ? `${base}${t('configure.form.protocolRecommended')}`
+                              : base,
+                        }
+                      })}
+                      onChange={(apiProtocol) =>
+                        setForm({ ...form, apiProtocol })
+                      }
+                    />
+                    <Field
+                      label={t('configure.form.baseUrl')}
+                      value={form.baseUrl}
+                      placeholder={t('configure.form.baseUrlPlaceholder')}
+                      onChange={(value) =>
+                        setForm((current) => {
+                          const matched =
+                            dialog === 'add' && addSource === 'manual'
+                              ? matchStationByBaseUrl(value, publicStations)
+                              : undefined
+                          return {
+                            ...current,
+                            baseUrl: value,
+                            providerId:
+                              providerIdTouched ||
+                              !usesProviderIdField(
+                                dialog === 'edit'
+                                  ? toolId
+                                  : current.targetToolId
+                              )
+                                ? current.providerId
+                                : deriveProviderId(value),
+                            ...(dialog === 'add' && addSource === 'manual'
+                              ? {
+                                  stationId: matched?.stationId ?? '',
+                                  channelId: matched?.channelId ?? '',
+                                  name:
+                                    current.name.trim() ||
+                                    matched?.stationName ||
+                                    current.name,
+                                }
+                              : {}),
+                          }
+                        })
+                      }
+                    />
+                    <Field
+                      key={
+                        dialog === 'edit'
+                          ? `edit-api-key-${editing?.id ?? 'unknown'}`
+                          : 'add-api-key'
+                      }
+                      label={
+                        dialog === 'edit'
+                          ? t('configure.form.apiKeyReplace')
+                          : t('configure.form.apiKey')
+                      }
+                      labelEnd={
+                        canOpenCatalogWebsiteForKey ? (
+                          <button
+                            type="button"
+                            className="inline-flex shrink-0 items-center gap-1 rounded-md px-1 py-0.5 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
+                            disabled={openingCatalogWebsite}
+                            onClick={() => void openCatalogWebsiteForKey()}
+                          >
+                            {t('configure.form.getApiKeyOnWebsite')}
+                            <HugeiconsIcon
+                              icon={LinkSquare01Icon}
+                              strokeWidth={1.8}
+                              className="size-3.5"
+                            />
+                          </button>
+                        ) : null
+                      }
+                      value={form.apiKey}
+                      type="password"
+                      required={dialog !== 'edit'}
+                      onChange={(value) => setForm({ ...form, apiKey: value })}
+                    />
+                    {showModelField ? (
+                      <ModelField
+                        label={
+                          modelRequired
+                            ? t('configure.form.model')
+                            : t('configure.form.modelOptional')
+                        }
+                        value={form.modelId}
+                        models={fetchedModels}
+                        custom={modelCustom}
+                        pending={modelFetchPending}
+                        canFetch={canFetchModels}
+                        hasCredential={
+                          form.apiKey.trim() !== '' ||
+                          Boolean(dialog === 'edit' && editing?.hasCredential)
+                        }
+                        toolId={formToolId}
+                        toolDisplayName={
+                          toolList.find((tool) => tool.id === formToolId)
+                            ?.displayName ?? formToolId
+                        }
+                        hint={modelHint()}
+                        onFetch={() => void runModelFetch()}
+                        onCustomChange={setModelCustom}
+                        onChange={(modelId) =>
+                          setForm((current) => ({ ...current, modelId }))
+                        }
+                      />
+                    ) : null}
+                    {isClaudeTool(formToolId) ? (
+                      <ClaudeRoleMappingFields
+                        value={form.claudeRoleModels}
+                        primaryModel={form.modelId}
+                        models={fetchedModels}
+                        onChange={(claudeRoleModels) =>
+                          setForm((current) => ({
+                            ...current,
+                            claudeRoleModels,
+                          }))
+                        }
+                        onFetchModels={() => void runModelFetch()}
+                        fetchPending={modelFetchPending}
+                        canFetch={canFetchModels}
+                      />
+                    ) : null}
+                  </>
+                ) : catalogStep === 'review' ? (
+                  <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
+                    <p>
+                      {t('configure.form.tool')}: {formTargetToolName}
                     </p>
-                  ) : null}
-                  {form.providerId ? (
-                    <p className="mt-1 text-[12px] text-muted-foreground">
-                      {t('configure.form.providerId')}：{form.providerId}
+                    <p>
+                      {t('discovery.connect.review.name', { name: form.name })}
                     </p>
-                  ) : null}
-                  <p className="mt-1 text-[12px] text-muted-foreground">
-                    {t('configure.form.apiProtocol')}：
-                    {t(`configure.form.protocols.${form.apiProtocol}`)}
-                  </p>
-                  <p className="mt-2 text-muted-foreground">
-                    {t('discovery.connect.review.keyHidden')}
-                  </p>
-                  <p className="mt-3 border-t pt-3 text-muted-foreground">
-                    {t('discovery.connect.review.scope')}
-                  </p>
-                </div>
-              ) : (
-                <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
-                  <p className="font-medium">{catalogResult?.name}</p>
-                  <p className="mt-1 text-muted-foreground">
-                    {t('configure.form.tool')}: {formTargetToolName}
-                  </p>
-                  <p className="mt-2 text-muted-foreground" role="status">
-                    {catalogResult?.reachable === true
-                      ? catalogResult.degraded
-                        ? t('discovery.connect.result.reachableSlow', {
-                            ms: catalogResult.latencyMs ?? 0,
-                          })
-                        : t('discovery.connect.result.reachable', {
-                            ms: catalogResult.latencyMs ?? 0,
-                          })
-                      : catalogResult?.reachable === false
-                        ? t('discovery.connect.result.unreachable')
-                        : t('discovery.connect.result.checkUnavailable')}
-                  </p>
-                  <p className="mt-2 text-muted-foreground">
-                    {t('discovery.connect.result.scope')}
-                  </p>
-                </div>
-              )}
+                    <p className="mt-1 break-all font-mono text-[12px] text-muted-foreground">
+                      {form.baseUrl}
+                    </p>
+                    {form.modelId ? (
+                      <p className="mt-1 text-[12px] text-muted-foreground">
+                        {t('configure.form.model')}：{form.modelId}
+                      </p>
+                    ) : null}
+                    {form.providerId ? (
+                      <p className="mt-1 text-[12px] text-muted-foreground">
+                        {t('configure.form.providerId')}：{form.providerId}
+                      </p>
+                    ) : null}
+                    <p className="mt-1 text-[12px] text-muted-foreground">
+                      {t('configure.form.apiProtocol')}：
+                      {t(`configure.form.protocols.${form.apiProtocol}`)}
+                    </p>
+                    <p className="mt-2 text-muted-foreground">
+                      {t('discovery.connect.review.keyHidden')}
+                    </p>
+                    <p className="mt-3 border-t pt-3 text-muted-foreground">
+                      {t('discovery.connect.review.scope')}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="rounded-lg border bg-card px-3 py-3 text-[13px]">
+                    <p className="font-medium">{catalogResult?.name}</p>
+                    <p className="mt-1 text-muted-foreground">
+                      {t('configure.form.tool')}: {formTargetToolName}
+                    </p>
+                    <p className="mt-2 text-muted-foreground" role="status">
+                      {catalogResult?.reachable === true
+                        ? catalogResult.degraded
+                          ? t('discovery.connect.result.reachableSlow', {
+                              ms: catalogResult.latencyMs ?? 0,
+                            })
+                          : t('discovery.connect.result.reachable', {
+                              ms: catalogResult.latencyMs ?? 0,
+                            })
+                        : catalogResult?.reachable === false
+                          ? t('discovery.connect.result.unreachable')
+                          : t('discovery.connect.result.checkUnavailable')}
+                    </p>
+                    <p className="mt-2 text-muted-foreground">
+                      {t('discovery.connect.result.scope')}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             <SheetFooter className="shrink-0 flex-row flex-wrap items-center justify-end gap-2 border-t bg-muted/40 px-4 py-2.5 sm:px-5">
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={addService.isPending || verifyService.isPending}
+                onClick={
+                  addDialogDismiss === 'backToEntry'
+                    ? () => setCatalogStep('entry')
+                    : addDialogDismiss === 'viewServices'
+                      ? () => void viewSavedServices()
+                      : addDialogDismiss === 'backToPicker'
+                        ? () => setAddSource('pick')
+                        : addDialogDismiss === 'backToChoose'
+                          ? () => setAddSource('choose')
+                          : closeDialog
+                }
+              >
+                {addDialogDismiss === 'viewServices'
+                  ? t('discovery.connect.result.viewServices')
+                  : addDialogDismiss === 'close'
+                    ? t('common.actions.cancel')
+                    : t('common.actions.back')}
+              </Button>
+              {isCatalogAdd && catalogStep === 'result' ? null : (
                 <Button
-                  type="button"
+                  type="submit"
                   variant="ghost"
-                  disabled={addService.isPending || verifyService.isPending}
-                  onClick={
-                    addDialogDismiss === 'backToEntry'
-                      ? () => setCatalogStep('entry')
-                      : addDialogDismiss === 'viewServices'
-                        ? () => void viewSavedServices()
-                        : addDialogDismiss === 'backToPicker'
-                          ? () => setAddSource('pick')
-                          : addDialogDismiss === 'backToChoose'
-                            ? () => setAddSource('choose')
-                            : closeDialog
+                  className="text-brand-signal"
+                  disabled={
+                    addService.isPending ||
+                    updateService.isPending ||
+                    verifyService.isPending
                   }
                 >
-                  {addDialogDismiss === 'viewServices'
-                    ? t('discovery.connect.result.viewServices')
-                    : addDialogDismiss === 'close'
-                      ? t('common.actions.cancel')
-                      : t('common.actions.back')}
+                  {isCatalogAdd && catalogStep === 'review'
+                    ? t('discovery.connect.review.saveAndCheck')
+                    : t('configure.actions.save')}
                 </Button>
-                {isCatalogAdd && catalogStep === 'result' ? null : (
-                  <Button
-                    type="submit"
-                    variant="ghost"
-                    className="text-brand-signal"
-                    disabled={
-                      addService.isPending ||
-                      updateService.isPending ||
-                      verifyService.isPending
-                    }
-                  >
-                    {isCatalogAdd && catalogStep === 'review'
-                      ? t('discovery.connect.review.saveAndCheck')
-                      : t('configure.actions.save')}
-                  </Button>
-                )}
+              )}
             </SheetFooter>
           </form>
         </SheetContent>
@@ -2747,7 +2882,7 @@ function ProHomePage() {
           }
         }}
       />
-      
+
       <AlertDialog
         open={desktopRestartOpen}
         onOpenChange={(open) => {
@@ -2780,7 +2915,7 @@ function ProHomePage() {
         </AlertDialogContent>
       </AlertDialog>
 
-<SharePosterDialog
+      <SharePosterDialog
         summary={shareSummary}
         locale={numberLocale}
         onClose={() => setShareSummary(null)}
@@ -3005,7 +3140,8 @@ function ModelField({
   }))
   const grouped = groupEasyModelChoices(toolId, toolDisplayName, rows, t)
   const options = (() => {
-    if (!hasKey) return [] as Array<{ value: string; label: string; section?: string }>
+    if (!hasKey)
+      return [] as Array<{ value: string; label: string; section?: string }>
     const orphan =
       value && !models.some((model) => model.id === value)
         ? [{ value, label: `${value}${t('configure.form.modelCustomSuffix')}` }]

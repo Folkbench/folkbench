@@ -17,9 +17,9 @@ export function TelemetrySettings() {
     onSuccess: (value) => client.setQueryData(['telemetry-status'], value),
   })
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-2.5">
       <h2 className="switch-section-title">{t('settings.telemetry.title')}</h2>
-      <div className="rounded-xl border bg-card px-5 py-4">
+      <div className="fbd-panel px-5 py-4">
         <label className="flex items-start justify-between gap-5">
           <span>
             <span className="block text-[14px] font-medium">

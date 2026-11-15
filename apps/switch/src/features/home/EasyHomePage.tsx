@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
@@ -10,19 +10,17 @@ import PencilEdit02Icon from '@hugeicons/core-free-icons/PencilEdit02Icon'
 import Pulse01Icon from '@hugeicons/core-free-icons/Pulse01Icon'
 import CircleQuestionMarkIcon from '@hugeicons/core-free-icons/CircleQuestionMarkIcon'
 import { HugeiconsIcon } from '@hugeicons/react'
-import type {
-  MyService,
-  ToolDescriptor,
-  FetchedModel,
-} from '@/bridge'
+import type { MyService, ToolDescriptor, FetchedModel } from '@/bridge'
 import {
   BridgeError,
   getMyServiceCredential,
   openExternalLink,
   openPresetRelayWebsite,
 } from '@/bridge'
+import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { ToolLogo } from '@/components/tool-logo'
 import { StationAvatar } from '@/components/station-avatar'
+import { UpstreamStatusNotice } from '@/components/UpstreamStatusNotice'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -73,7 +71,14 @@ import {
   preferencesQueryOptions,
   useSetLastToolId,
 } from '@/features/preferences/queries'
-import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
+import {
+  publicIntegrityQueryOptions,
+  publishedCatalogQueryOptions,
+} from '@/features/discovery/queries'
+import {
+  accuracyRatePercent,
+  matchIntegrityMeasurement,
+} from '@/lib/integrity-match'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
 import {
   activeEasyService,
@@ -111,10 +116,16 @@ import {
 } from '@/features/tools/queries'
 
 const CUSTOM = 'custom'
-const blank = { source: '', name: '', note: '', baseUrl: '', key: '', model: '' }
+const blank = {
+  source: '',
+  name: '',
+  note: '',
+  baseUrl: '',
+  key: '',
+  model: '',
+}
 type Draft = typeof blank
 type Phase = 'checking' | 'installing' | 'saving' | 'applying' | null
-
 
 function serviceErrorMessage(error: unknown, t: (key: string) => string) {
   const code = error instanceof BridgeError ? error.serviceError : undefined
@@ -146,6 +157,7 @@ function serviceErrorMessage(error: unknown, t: (key: string) => string) {
 
 export function EasyHomePage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const tools = useQuery(switchToolsQueryOptions)
   const cliCatalog = useQuery(toolRuntimeCatalogQueryOptions)
   const prefs = useQuery(preferencesQueryOptions)
@@ -175,8 +187,7 @@ export function EasyHomePage() {
   const lastEasyToolId = prefs.data?.lastToolId
     ? normalizeEasyToolId(prefs.data.lastToolId)
     : null
-  const tool =
-    picked.find((item) => item.id === lastEasyToolId) ?? picked[0]
+  const tool = picked.find((item) => item.id === lastEasyToolId) ?? picked[0]
   const [busy, setBusy] = useState(false)
   const [welcome, setWelcome] = useState(false)
   const [autoAdd, setAutoAdd] = useState(false)
@@ -184,7 +195,10 @@ export function EasyHomePage() {
   const guideSeen = useRef(false)
   // Persist legacy Easy selection claude-code → claude-desktop once.
   useEffect(() => {
-    if (prefs.data?.lastToolId === 'claude-code' && tool?.id === 'claude-desktop') {
+    if (
+      prefs.data?.lastToolId === 'claude-code' &&
+      tool?.id === 'claude-desktop'
+    ) {
       setTool.mutate('claude-desktop')
     }
   }, [prefs.data?.lastToolId, tool?.id, setTool])
@@ -231,15 +245,38 @@ export function EasyHomePage() {
           <p>{t('easy.description')}</p>
           <p>{t('easy.boundary')}</p>
         </div>
-        <button
-          type="button"
-          className="easy-quick-start"
-          disabled={busy}
-          onClick={openGuide}
-        >
-          <HugeiconsIcon icon={CircleQuestionMarkIcon} size={16} strokeWidth={1.7} />
-          <span>{t('easy.quickStart')}</span>
-        </button>
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <button
+            type="button"
+            className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-border bg-card px-3 py-1.5 text-[12px] font-medium text-foreground shadow-xs transition-colors hover:bg-muted/60 disabled:pointer-events-none disabled:opacity-50"
+            disabled={busy}
+            onClick={() =>
+              void navigate({
+                to: '/discover',
+                search: {
+                  modelId: DEFAULT_PUBLIC_MODEL_ID,
+                  tab: 'rankings',
+                  metric: 'availability',
+                },
+              })
+            }
+          >
+            {t('configure.easyHome.browseRankings')}
+          </button>
+          <button
+            type="button"
+            className="easy-quick-start"
+            disabled={busy}
+            onClick={openGuide}
+          >
+            <HugeiconsIcon
+              icon={CircleQuestionMarkIcon}
+              size={16}
+              strokeWidth={1.7}
+            />
+            <span>{t('easy.quickStart')}</span>
+          </button>
+        </div>
       </header>
       <div
         className="easy-tool-tabs"
@@ -330,8 +367,12 @@ function EasyTool({
   const client = useQueryClient()
   // Rankings enrich saved/discovered services; preset membership is maintained separately.
   const catalog = useQuery(
-    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID)
+    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID, 'availability')
   )
+  const integrity = useQuery(publicIntegrityQueryOptions())
+  const [verifyResult, setVerifyResult] = useState<
+    Record<string, 'ok' | 'slow' | 'bad'>
+  >({})
   const prefix =
     tool.id === 'claude-code' || tool.id === 'claude-desktop'
       ? /^claude/i
@@ -405,7 +446,8 @@ function EasyTool({
   const stations = [
     ...presetStations,
     ...uniqueEasyStations(catalogStations).filter(
-      (row) => !presetStations.some((preset) => preset.stationId === row.stationId)
+      (row) =>
+        !presetStations.some((preset) => preset.stationId === row.stationId)
     ),
   ]
   const existing = (services.data ?? []).find(
@@ -414,7 +456,8 @@ function EasyTool({
   const selectedStation = stations.find(
     (item) => draft.source === `station:${item.stationId}`
   )
-  const baseUrl = draft.baseUrl || existing?.baseUrl || selectedStation?.baseUrl || ''
+  const baseUrl =
+    draft.baseUrl || existing?.baseUrl || selectedStation?.baseUrl || ''
   const published = matchStationByBaseUrl(baseUrl, catalogStations)
   const busy = phase !== null
   const showForm = !current || editing
@@ -443,7 +486,10 @@ function EasyTool({
         baseUrl: station.baseUrl || '',
         name: station.stationName || '',
         note: '',
-        model: station.modelId && prefix.test(station.modelId) ? station.modelId : '',
+        model:
+          station.modelId && prefix.test(station.modelId)
+            ? station.modelId
+            : '',
       })
       setEditing(true)
       userSelectedSource.current = true
@@ -529,7 +575,9 @@ function EasyTool({
     if (current) startAddService()
     else
       document
-        .querySelector('.easy-workspace form, .easy-workspace select, .easy-workspace input')
+        .querySelector(
+          '.easy-workspace form, .easy-workspace select, .easy-workspace input'
+        )
         ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
   }, [autoAdd, services.isSuccess, prefs.isSuccess, busy, current])
 
@@ -592,7 +640,9 @@ function EasyTool({
       draft.model.trim() ||
       (existing?.baseUrl === baseUrl ? existing.modelId : '') ||
       (published && prefix.test(published.modelId) ? published.modelId : '') ||
-      (tool.id === 'claude-code' || tool.id === 'claude-desktop' ? 'claude-sonnet-4-6' : '')
+      (tool.id === 'claude-code' || tool.id === 'claude-desktop'
+        ? 'claude-sonnet-4-6'
+        : '')
     gate.current = true
     cancelled.current = false
     setFailure('')
@@ -705,6 +755,14 @@ function EasyTool({
         toolId: tool.id,
         serviceId: service.id,
       })
+      setVerifyResult((prev) => ({
+        ...prev,
+        [service.id]: !result.reachable
+          ? 'bad'
+          : result.degraded
+            ? 'slow'
+            : 'ok',
+      }))
       const ms = result.latencyMs ?? 0
       if (!result.reachable) {
         toast.error(t('configure.status.unreachable'))
@@ -716,6 +774,7 @@ function EasyTool({
         toast.success(t('configure.status.reachable', { ms }))
       }
     } catch (error) {
+      setVerifyResult((prev) => ({ ...prev, [service.id]: 'bad' }))
       toast.error(serviceErrorMessage(error, t))
     }
   }
@@ -869,7 +928,7 @@ function EasyTool({
         setFailure(
           error instanceof BridgeError && error.serviceError === 'driftDetected'
             ? t('easy.driftError')
-            : t('easy.folder.launchError'),
+            : t('easy.folder.launchError')
         )
       }
     } finally {
@@ -898,7 +957,7 @@ function EasyTool({
   }
   const hasKey = Boolean(
     draft.key.trim() ||
-      (existing?.hasCredential && baseUrl === existing.baseUrl)
+    (existing?.hasCredential && baseUrl === existing.baseUrl)
   )
   const modelsLoading =
     hasKey &&
@@ -919,7 +978,7 @@ function EasyTool({
   async function loadModels(
     url = baseUrl,
     apiKey = draft.key,
-    serviceId = existing?.id,
+    serviceId = existing?.id
   ) {
     const fetchBase = modelsFetchBaseUrl(url)
     if (!fetchBase) return
@@ -968,7 +1027,10 @@ function EasyTool({
   // Presets are independent of public rankings. Keep an explicitly selected
   // discovery/custom match available without promoting it into the preset list.
   const sourceStations = [...presetStations]
-  if (selectedStation && !sourceStations.some((row) => row.stationId === selectedStation.stationId)) {
+  if (
+    selectedStation &&
+    !sourceStations.some((row) => row.stationId === selectedStation.stationId)
+  ) {
     sourceStations.push(selectedStation)
   }
   const sourceOptions: Array<ChoiceOption<string>> = [
@@ -1134,79 +1196,80 @@ function EasyTool({
           </div>
         </div>
         {tool.id === 'claude-code' || tool.id === 'claude-desktop' ? null : (
-        <ChoiceSelect
-          label={t('easy.modelLabel')}
-          labelAccessory={
-            <TooltipProvider delay={200}>
-              <Tooltip>
-                <TooltipTrigger
-                  type="button"
-                  className="easy-field-info"
-                  aria-label={t('easy.modelInfoAria')}
-                >
-                  <HugeiconsIcon
-                    icon={CircleQuestionMarkIcon}
-                    size={14}
-                    strokeWidth={1.7}
+          <ChoiceSelect
+            label={t('easy.modelLabel')}
+            labelAccessory={
+              <TooltipProvider delay={200}>
+                <Tooltip>
+                  <TooltipTrigger
+                    type="button"
+                    className="easy-field-info"
+                    aria-label={t('easy.modelInfoAria')}
+                  >
+                    <HugeiconsIcon
+                      icon={CircleQuestionMarkIcon}
+                      size={14}
+                      strokeWidth={1.7}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    className="max-w-[260px] text-left leading-snug"
+                  >
+                    {t('easy.modelInfo')}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            }
+            value={draft.model}
+            options={(() => {
+              if (!hasKey) return []
+              const orphan =
+                draft.model &&
+                !modelOptions.some((model) => model.id === draft.model)
+                  ? [{ value: draft.model, label: draft.model }]
+                  : []
+              const rows = modelOptions.map((model) => ({
+                value: model.id,
+                label: model.name || model.id,
+              }))
+              return [
+                ...orphan,
+                ...groupEasyModelChoices(tool.id, tool.displayName, rows, t),
+              ]
+            })()}
+            placeholder={t(
+              !hasKey
+                ? 'easy.modelNeedKey'
+                : modelsLoading
+                  ? 'easy.modelsLoading'
+                  : 'easy.modelDefault'
+            )}
+            notice={
+              !hasKey ? (
+                t('easy.modelNeedKey')
+              ) : modelsLoading ? (
+                <>
+                  <span
+                    className="easy-spinner easy-spinner--sm"
+                    aria-hidden="true"
                   />
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-[260px] text-left leading-snug">
-                  {t('easy.modelInfo')}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          }
-          value={draft.model}
-          options={(() => {
-            if (!hasKey) return []
-            const orphan =
-              draft.model &&
-              !modelOptions.some((model) => model.id === draft.model)
-                ? [{ value: draft.model, label: draft.model }]
-                : []
-            const rows = modelOptions.map((model) => ({
-              value: model.id,
-              label: model.name || model.id,
-            }))
-            return [
-              ...orphan,
-              ...groupEasyModelChoices(
-                tool.id,
-                tool.displayName,
-                rows,
-                t,
-              ),
-            ]
-          })()}
-          placeholder={t(
-            !hasKey
-              ? 'easy.modelNeedKey'
-              : modelsLoading
-                ? 'easy.modelsLoading'
-                : 'easy.modelDefault'
-          )}
-          notice={
-            !hasKey ? (
-              t('easy.modelNeedKey')
-            ) : modelsLoading ? (
-              <>
-                <span className="easy-spinner easy-spinner--sm" aria-hidden="true" />
-                {t('easy.modelsLoading')}
-              </>
-            ) : null
-          }
-          onOpenChange={(open) => {
-            if (
-              open &&
-              hasKey &&
-              !modelOptions.length &&
-              !fetchModels.isPending &&
-              modelsFetchBaseUrl(baseUrl)
-            )
-              void loadModels(baseUrl)
-          }}
-          onChange={(model) => setDraft((value) => ({ ...value, model }))}
-        />
+                  {t('easy.modelsLoading')}
+                </>
+              ) : null
+            }
+            onOpenChange={(open) => {
+              if (
+                open &&
+                hasKey &&
+                !modelOptions.length &&
+                !fetchModels.isPending &&
+                modelsFetchBaseUrl(baseUrl)
+              )
+                void loadModels(baseUrl)
+            }}
+            onChange={(model) => setDraft((value) => ({ ...value, model }))}
+          />
         )}
         {failure ? (
           <p className="easy-error" role="alert">
@@ -1215,7 +1278,10 @@ function EasyTool({
         ) : null}
         {busy && phase ? (
           <p className="easy-inline-phase" role="status" aria-live="polite">
-            <span className="easy-spinner easy-spinner--sm" aria-hidden="true" />
+            <span
+              className="easy-spinner easy-spinner--sm"
+              aria-hidden="true"
+            />
             {t(`easy.phase.${phase}`)}
           </p>
         ) : null}
@@ -1229,6 +1295,27 @@ function EasyTool({
       </fieldset>
     </form>
   )
+  const currentMatched = current
+    ? matchPublishedStation(current, catalogStations)
+    : undefined
+  const currentTargetModelId =
+    current?.modelId?.trim() ||
+    currentMatched?.modelId ||
+    DEFAULT_PUBLIC_MODEL_ID
+  const currentIntegrity =
+    currentMatched?.stationSlug && integrity.data?.items
+      ? matchIntegrityMeasurement(integrity.data.items, {
+          modelId:
+            current?.modelId?.trim() || currentMatched.modelId || undefined,
+          stationSlug: currentMatched.stationSlug,
+          channelName: currentMatched.channelName,
+        })
+      : null
+  const currentIntegrityRate = currentIntegrity
+    ? accuracyRatePercent(currentIntegrity)
+    : null
+  const currentVerify = current ? verifyResult[current.id] : undefined
+
   return (
     <>
       {busy && !editing ? (
@@ -1284,7 +1371,7 @@ function EasyTool({
                       name={matched?.stationName ?? service.name}
                       avatarPath={matched?.stationAvatarPath}
                       origin={catalogOrigin}
-                      className="size-[30px] shrink-0 rounded-lg text-[10px]"
+                      className="size-[30px] shrink-0 rounded-lg text-[11px]"
                     />
                     <div className="easy-config-meta">
                       <span>{t('easy.tapToUse')}</span>
@@ -1367,8 +1454,7 @@ function EasyTool({
                   busy ||
                   desktopOpening ||
                   (!supportsDesktopLaunch(tool.id) &&
-                    (cliInstalling ||
-                      (!cliReady && !runtimeStatus.isSuccess)))
+                    (cliInstalling || (!cliReady && !runtimeStatus.isSuccess)))
                 }
                 aria-busy={desktopOpening || cliInstalling}
                 onClick={() => {
@@ -1409,17 +1495,12 @@ function EasyTool({
           </div>
           <div className="easy-config-row">
             <div className="easy-config-main">
-              {(() => {
-                const matched = matchPublishedStation(current, catalogStations)
-                return (
-                  <StationAvatar
-                    name={matched?.stationName ?? current.name}
-                    avatarPath={matched?.stationAvatarPath}
-                    origin={catalogOrigin}
-                    className="size-[30px] shrink-0 rounded-lg text-[10px]"
-                  />
-                )
-              })()}
+              <StationAvatar
+                name={currentMatched?.stationName ?? current.name}
+                avatarPath={currentMatched?.stationAvatarPath}
+                origin={catalogOrigin}
+                className="size-[30px] shrink-0 rounded-lg text-[11px]"
+              />
               <div className="easy-config-meta">
                 <span>{t('easy.serviceLabel')}</span>
                 <strong>{current.name}</strong>
@@ -1446,6 +1527,66 @@ function EasyTool({
               </button>
             </div>
           </div>
+          {currentMatched?.dataSecurity ||
+          (currentIntegrity && currentIntegrityRate !== null) ? (
+            <div className="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-border/70 bg-muted/40 px-3 py-2 text-[12px]">
+              {currentMatched?.dataSecurity ? (
+                <DataSecurityBadge
+                  summary={currentMatched.dataSecurity}
+                  variant="badge"
+                />
+              ) : null}
+              {currentIntegrity && currentIntegrityRate !== null ? (
+                <>
+                  <span className="text-muted-foreground tabular-nums">
+                    {t('configure.home.integrityCue', {
+                      agree: currentIntegrity.agree,
+                      total: currentIntegrity.total,
+                      rate: `${currentIntegrityRate}%`,
+                    })}
+                  </span>
+                  <button
+                    type="button"
+                    className="font-medium text-brand-signal underline-offset-2 hover:underline"
+                    onClick={() =>
+                      void navigate({
+                        to: '/discover',
+                        search: {
+                          modelId: currentTargetModelId,
+                          tab: 'integrity',
+                          metric: 'availability',
+                        },
+                      })
+                    }
+                  >
+                    {t('configure.home.viewIntegrityMonitor')}
+                  </button>
+                </>
+              ) : null}
+            </div>
+          ) : null}
+          {currentIntegrityRate !== null && currentIntegrityRate < 85 ? (
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-warning/35 bg-warning/10 px-3 py-2 text-[12px] text-warning">
+              <span>{t('configure.home.lowAgreementHint')}</span>
+              {(services.data?.length ?? 0) > 1 ? (
+                <button
+                  type="button"
+                  className="shrink-0 font-medium underline underline-offset-2 hover:opacity-80"
+                  onClick={() => setChooseService(true)}
+                >
+                  {t('configure.home.switchBackupManually')}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+          {currentVerify === 'bad' || currentVerify === 'slow' ? (
+            <div className="mt-2">
+              <UpstreamStatusNotice
+                modelId={currentTargetModelId}
+                onlyProblems
+              />
+            </div>
+          ) : null}
           {failure && !showForm ? (
             <p className="easy-error" role="alert">
               {failure}
@@ -1504,7 +1645,9 @@ function EasyTool({
             <SheetTitle>{t('easy.editTitle')}</SheetTitle>
             <SheetDescription>{t('easy.editDescription')}</SheetDescription>
           </SheetHeader>
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5">{form}</div>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5">
+            {form}
+          </div>
         </SheetContent>
       </Sheet>
       <Dialog open={chooseService} onOpenChange={setChooseService}>
@@ -1517,42 +1660,43 @@ function EasyTool({
               const matched = matchPublishedStation(service, catalogStations)
               const isActive = service.id === current?.id
               return (
-              <div className="easy-service-list-row" key={service.id}>
-                <button
-                  type="button"
-                  className="easy-service-pick"
-                  disabled={isActive}
-                  aria-disabled={isActive}
-                  aria-current={isActive ? 'true' : undefined}
-                  onClick={() => {
-                    if (isActive) return
-                    void useSavedService(service)
-                  }}
-                >
-                  <StationAvatar
-                    name={matched?.stationName ?? service.name}
-                    avatarPath={matched?.stationAvatarPath}
-                    origin={catalogOrigin}
-                    className="size-7 rounded-lg text-[9px]"
+                <div className="easy-service-list-row" key={service.id}>
+                  <button
+                    type="button"
+                    className="easy-service-pick"
+                    disabled={isActive}
+                    aria-disabled={isActive}
+                    aria-current={isActive ? 'true' : undefined}
+                    onClick={() => {
+                      if (isActive) return
+                      void useSavedService(service)
+                    }}
+                  >
+                    <StationAvatar
+                      name={matched?.stationName ?? service.name}
+                      avatarPath={matched?.stationAvatarPath}
+                      origin={catalogOrigin}
+                      className="size-7 rounded-lg text-[11px]"
+                    />
+                    <span>{service.name}</span>
+                    {isActive ? (
+                      <span className="easy-service-pick__badge">
+                        {t('easy.inUse')}
+                      </span>
+                    ) : null}
+                  </button>
+                  <ServiceMenu
+                    service={service}
+                    compact
+                    simple
+                    onVerify={(item) => {
+                      void checkConnection(item)
+                    }}
+                    onRemove={requestDelete}
                   />
-                  <span>{service.name}</span>
-                  {isActive ? (
-                    <span className="easy-service-pick__badge">
-                      {t('easy.inUse')}
-                    </span>
-                  ) : null}
-                </button>
-                <ServiceMenu
-                  service={service}
-                  compact
-                  simple
-                  onVerify={(item) => {
-                    void checkConnection(item)
-                  }}
-                  onRemove={requestDelete}
-                />
-              </div>
-            )})}
+                </div>
+              )
+            })}
           </div>
           <Button variant="outline" onClick={startAddService}>
             {t('easy.addService')}
@@ -1600,7 +1744,7 @@ function EasyTool({
                     name={station.stationName}
                     avatarPath={station.stationAvatarPath}
                     origin={catalogOrigin}
-                    className="size-8 rounded-md text-[10px] [&_img]:object-contain"
+                    className="size-8 rounded-md text-[11px] [&_img]:object-contain"
                   />
                   <span className="easy-no-key-stations__name">
                     {station.stationName}

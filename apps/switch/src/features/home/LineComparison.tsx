@@ -10,9 +10,18 @@ import { Reorder, useDragControls, useReducedMotion } from 'motion/react'
 import ArrowLeftRightIcon from '@hugeicons/core-free-icons/ArrowLeftRightIcon'
 import DragDropVerticalIcon from '@hugeicons/core-free-icons/DragDropVerticalIcon'
 import { HugeiconsIcon } from '@hugeicons/react'
-import type { MyService, PublishedStation } from '@/bridge'
+import type {
+  MyService,
+  PublicIntegrityMeasurement,
+  PublishedStation,
+} from '@/bridge'
+import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
 import { Button } from '@/components/ui/button'
+import {
+  accuracyRatePercent,
+  matchIntegrityMeasurement,
+} from '@/lib/integrity-match'
 import { ServiceMenu } from './ServiceMenu'
 import { serviceCardModelId } from './service-display'
 
@@ -45,6 +54,7 @@ export function LineComparison({
   onBalance,
   onEdit,
   onRemove,
+  integrityItems,
   simple = false,
 }: {
   simple?: boolean
@@ -52,6 +62,7 @@ export function LineComparison({
   currentId: string | null
   busy: boolean
   canWrite: boolean
+  integrityItems?: readonly PublicIntegrityMeasurement[]
   onReorder?: (orderedKeys: string[]) => void
   onSwitch: (service: MyService) => void
   onConnect: (published: PublishedStation) => void
@@ -112,6 +123,7 @@ export function LineComparison({
             canReorder={canReorder}
             dragging={draggingId === key}
             reduceMotion={Boolean(reduceMotion)}
+            integrityItems={integrityItems}
             onDragStart={() => {
               draggingRef.current = true
               setDraggingId(key)
@@ -143,6 +155,7 @@ function BackupSwitcherRow({
   canReorder,
   dragging,
   reduceMotion,
+  integrityItems,
   onDragStart,
   onDragEnd,
   onSwitch,
@@ -161,6 +174,7 @@ function BackupSwitcherRow({
   canReorder: boolean
   dragging: boolean
   reduceMotion: boolean
+  integrityItems?: readonly PublicIntegrityMeasurement[]
   onDragStart: () => void
   onDragEnd: () => void
   onSwitch: (service: MyService) => void
@@ -178,6 +192,18 @@ function BackupSwitcherRow({
   const station = published?.stationName ?? service?.baseUrl ?? ''
   const model = serviceCardModelId(service, published)
   const subtitle = [station, model].filter(Boolean).join(' · ')
+  const security = published?.dataSecurity ?? null
+  const matchedIntegrity =
+    published?.stationSlug && integrityItems?.length
+      ? matchIntegrityMeasurement(integrityItems, {
+          modelId: model || undefined,
+          stationSlug: published.stationSlug,
+          channelName: published.channelName,
+        })
+      : null
+  const integrityRate = matchedIntegrity
+    ? accuracyRatePercent(matchedIntegrity)
+    : null
 
   function startDrag(event: ReactPointerEvent<HTMLButtonElement>) {
     if (!canReorder) return
@@ -212,16 +238,35 @@ function BackupSwitcherRow({
         name={published?.stationName ?? name}
         avatarPath={published?.stationAvatarPath}
         origin={origin ?? DEFAULT_ORIGIN}
-        className="size-7 text-[10px]"
+        className="size-7 text-[11px]"
       />
       <div className="min-w-0 flex-1">
-        <div className="flex min-w-0 items-center gap-1.5">
+        <div className="flex min-w-0 flex-wrap items-center gap-1.5">
           <strong className="truncate text-[13px] font-medium" title={name}>
             {name}
           </strong>
           {active ? (
             <span className="backup-switcher-badge">
               {t('configure.actions.enabled')}
+            </span>
+          ) : null}
+          {security ? (
+            <DataSecurityBadge
+              summary={security}
+              variant="field"
+              className="shrink-0 text-[11px]"
+            />
+          ) : null}
+          {matchedIntegrity && integrityRate !== null ? (
+            <span
+              className="shrink-0 rounded-full border border-border/70 bg-muted/60 px-1.5 py-0.5 text-[11px] tabular-nums text-muted-foreground"
+              title={t('configure.home.integrityCue', {
+                agree: matchedIntegrity.agree,
+                total: matchedIntegrity.total,
+                rate: `${integrityRate}%`,
+              })}
+            >
+              {`${matchedIntegrity.agree}/${matchedIntegrity.total} · ${integrityRate}%`}
             </span>
           ) : null}
         </div>

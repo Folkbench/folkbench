@@ -259,7 +259,8 @@ impl ConnectSlot {
 pub(crate) fn load_catalog_groups(
     model_id: &str,
 ) -> Result<Vec<CatalogGroup>, ()> {
-    let catalog = list_published_stations(Some(model_id)).map_err(|_| ())?;
+    let catalog =
+        list_published_stations(Some(model_id), None).map_err(|_| ())?;
     Ok(catalog
         .stations
         .into_iter()

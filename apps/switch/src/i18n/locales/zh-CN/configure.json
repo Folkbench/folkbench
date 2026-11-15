@@ -60,7 +60,11 @@
       "station": "站点",
       "title": "保存这条线路？",
       "tool": "将导入到 {{tool}} 的服务列表，只归档，不会切换当前服务。",
-      "unmatched": "暂无公开运行数据。"
+      "unmatched": "暂无公开运行数据。",
+      "securityWarning": "数据安全提醒：该站当前为 {{level}} 级（{{name}}），发送敏感工作内容前请留意。",
+      "integrityMatch": "最近探针一致率：{{agree}}/{{total}}（{{rate}}）。",
+      "integrityMatchNone": "暂无与该线路匹配的降智监控实测记录。",
+      "integrityLink": "在降智监控中查看"
     },
     "binding": {
       "rank": "#{{rank}}",
@@ -230,7 +234,12 @@
       "recentAvailability": "近 24 小时",
       "search": "搜索已保存服务",
       "target": "当前配置目标",
-      "viewAllServices": "查看全部 {{count}} 个服务"
+      "viewAllServices": "查看全部 {{count}} 个服务",
+      "exploreRankings": "查看排行榜与降智监控",
+      "integrityCue": "探针一致率：{{agree}}/{{total}}（{{rate}}）",
+      "viewIntegrityMonitor": "前往降智监控",
+      "switchBackupManually": "手动切换备用线路",
+      "lowAgreementHint": "近期探针一致率低于 85%，建议前往降智监控核对原始指标或手动切换备用线路。"
     },
     "list": {
       "count": "{{count}} 条服务"
@@ -315,7 +324,8 @@
       "broken": "这条线路暂时连不上，建议换一家再试。",
       "emptyHint": "还没有服务。点「添加服务」，选个站点、贴上 Key 就能用。",
       "stopTitle": "停止让 {{tool}} 使用这条服务？",
-      "stopConfirm": "停止后，{{tool}} 将不再通过中转站访问模型，恢复为未接入状态。服务会保留，随时可以再点「使用」。"
+      "stopConfirm": "停止后，{{tool}} 将不再通过中转站访问模型，恢复为未接入状态。服务会保留，随时可以再点「使用」。",
+      "browseRankings": "榜单与监控"
     },
     "guide": {
       "title": "使用指南",

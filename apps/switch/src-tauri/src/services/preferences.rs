@@ -396,18 +396,23 @@ mod tests {
     fn saved_language_survives_a_reload() {
         let dir = TempDir::new();
 
-        let saved = save_language(&dir.0, PreferredLanguage::Zh)
+        let saved = save_language(&dir.0, PreferredLanguage::ZhCn)
             .expect("language must persist");
 
-        assert_eq!(saved.language, PreferredLanguage::Zh);
-        assert_eq!(load(&dir.0).language, PreferredLanguage::Zh);
+        assert_eq!(saved.language, PreferredLanguage::ZhCn);
+        assert_eq!(load(&dir.0).language, PreferredLanguage::ZhCn);
+
+        let hant = save_language(&dir.0, PreferredLanguage::ZhHant)
+            .expect("zh-Hant must persist");
+        assert_eq!(hant.language, PreferredLanguage::ZhHant);
+        assert_eq!(load(&dir.0).language, PreferredLanguage::ZhHant);
     }
 
     #[test]
     fn rewriting_replaces_the_previous_value() {
         let dir = TempDir::new();
 
-        save_language(&dir.0, PreferredLanguage::Zh).expect("first write");
+        save_language(&dir.0, PreferredLanguage::ZhCn).expect("first write");
         save_language(&dir.0, PreferredLanguage::En).expect("second write");
 
         assert_eq!(load(&dir.0).language, PreferredLanguage::En);
@@ -417,7 +422,7 @@ mod tests {
     fn write_leaves_no_temporary_file_behind() {
         let dir = TempDir::new();
 
-        save_language(&dir.0, PreferredLanguage::Zh).expect("write");
+        save_language(&dir.0, PreferredLanguage::ZhCn).expect("write");
 
         let leftovers: Vec<String> = fs::read_dir(&dir.0)
             .expect("directory must be readable")
@@ -445,7 +450,7 @@ mod tests {
     #[test]
     fn stored_file_contains_only_known_non_secret_fields() {
         let dir = TempDir::new();
-        save_language(&dir.0, PreferredLanguage::Zh).expect("write");
+        save_language(&dir.0, PreferredLanguage::ZhCn).expect("write");
 
         let raw = fs::read_to_string(preferences_path(&dir.0))
             .expect("stored file must be readable");
@@ -472,7 +477,7 @@ mod tests {
             .into_iter()
             .collect()
         );
-        assert_eq!(value["language"], "zh");
+        assert_eq!(value["language"], "zh-CN");
         assert_eq!(value["theme"], "system");
         assert!(value["lastToolId"].is_null());
         assert_eq!(value["favoriteServiceIdsByTool"], serde_json::json!({}));
@@ -508,14 +513,16 @@ mod tests {
         )
         .expect("seed legacy preferences");
 
-        assert!(load(&dir.0).account_onboarding_completed);
-        assert_eq!(load(&dir.0).theme, PreferredTheme::System);
+        let loaded = load(&dir.0);
+        assert_eq!(loaded.language, PreferredLanguage::ZhCn);
+        assert!(loaded.account_onboarding_completed);
+        assert_eq!(loaded.theme, PreferredTheme::System);
     }
 
     #[test]
     fn theme_survives_reload_without_changing_other_preferences() {
         let dir = TempDir::new();
-        save_language(&dir.0, PreferredLanguage::Zh).expect("language");
+        save_language(&dir.0, PreferredLanguage::ZhCn).expect("language");
         record_current_service(&dir.0, "codex", "svc-1").expect("current");
         for theme in [
             PreferredTheme::Dark,
@@ -525,7 +532,7 @@ mod tests {
             save_theme(&dir.0, theme).expect("theme write");
             let loaded = load(&dir.0);
             assert_eq!(loaded.theme, theme);
-            assert_eq!(loaded.language, PreferredLanguage::Zh);
+            assert_eq!(loaded.language, PreferredLanguage::ZhCn);
             assert_eq!(
                 loaded.current_by_tool.get("codex").map(String::as_str),
                 Some("svc-1")
@@ -567,10 +574,10 @@ mod tests {
     fn saving_language_keeps_switcher_state() {
         let dir = TempDir::new();
         record_current_service(&dir.0, "claude-code", "svc-1").expect("record");
-        save_language(&dir.0, PreferredLanguage::Zh).expect("language");
+        save_language(&dir.0, PreferredLanguage::ZhCn).expect("language");
 
         let loaded = load(&dir.0);
-        assert_eq!(loaded.language, PreferredLanguage::Zh);
+        assert_eq!(loaded.language, PreferredLanguage::ZhCn);
         assert_eq!(loaded.last_tool_id.as_deref(), Some("claude-code"));
         assert_eq!(
             loaded
@@ -698,17 +705,20 @@ mod tests {
             .map(|value| value.as_str().expect("locale codes are strings"))
             .collect();
 
-        let serialized: Vec<String> =
-            [PreferredLanguage::En, PreferredLanguage::Zh]
-                .iter()
-                .map(|variant| {
-                    serde_json::to_value(variant)
-                        .expect("variant must serialize")
-                        .as_str()
-                        .expect("variants serialize as strings")
-                        .to_owned()
-                })
-                .collect();
+        let serialized: Vec<String> = [
+            PreferredLanguage::En,
+            PreferredLanguage::ZhCn,
+            PreferredLanguage::ZhHant,
+        ]
+        .iter()
+        .map(|variant| {
+            serde_json::to_value(variant)
+                .expect("variant must serialize")
+                .as_str()
+                .expect("variants serialize as strings")
+                .to_owned()
+        })
+        .collect();
 
         assert_eq!(serialized, supported);
         assert_eq!(
