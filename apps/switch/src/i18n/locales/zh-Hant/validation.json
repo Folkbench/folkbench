@@ -1,0 +1,8 @@
+{
+  "validation": {
+    "invalidValue": "請輸入有效值。",
+    "required": "此項為必填。",
+    "selectOption": "請選擇一個選項。",
+    "tooLong": "此內容過長。"
+  }
+}

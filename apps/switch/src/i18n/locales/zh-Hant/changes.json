@@ -1,0 +1,34 @@
+{
+  "changes": {
+    "description": "查看遮罩處理後的本機設定異動與復原資格。",
+    "details": {
+      "afterHash": "結果雜湊",
+      "beforeHash": "原始雜湊",
+      "target": "目標",
+      "verification": "驗證結果"
+    },
+    "empty": {
+      "description": "套用過的設定異動記錄會顯示在這裡。",
+      "title": "尚無本機異動"
+    },
+    "rollback": {
+      "confirm": {
+        "description": "僅當檔案在套用後沒有變動時，才能恢復上一版設定。",
+        "title": "恢復上一版設定？"
+      },
+      "success": "已恢復上一版設定。",
+      "unavailable": {
+        "concurrentModification": "檔案在套用後發生過變更，目前無法復原。"
+      }
+    },
+    "table": {
+      "columns": {
+        "action": "操作",
+        "status": "狀態",
+        "time": "時間",
+        "tool": "工具"
+      }
+    },
+    "title": "變更歷史"
+  }
+}

@@ -317,8 +317,7 @@ export function UsagePage() {
   const { toolId: selectedId } = useSearch({ from: '/console/usage' })
   const setLastTool = useSetLastToolId()
   const reduceMotion = useReducedMotion()
-  const locale =
-    normalizeLocale(i18n.resolvedLanguage) === 'zh' ? 'zh-CN' : 'en'
+  const locale = normalizeLocale(i18n.resolvedLanguage)
   const usage = useQuery(sessionUsageQueryOptions)
   const tools = useQuery(switchToolsQueryOptions)
   const [span, setSpan] = useState<DateSpan>(() => spanForDays(1))
@@ -448,7 +447,7 @@ export function UsagePage() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="text-[32px] leading-none font-semibold tracking-tight tabular-nums">
+                <p className="text-[32px] leading-none font-medium tracking-tight tabular-nums">
                   {formatTokenMagnitude(current.tokens, locale)}
                   <span className="ml-2 text-[14px] font-normal tracking-normal text-muted-foreground">
                     {t('usage.tokens.unit')}
@@ -595,7 +594,9 @@ export function UsagePage() {
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
-            <h2 className="text-[14px] font-medium">{t('usage.byTool.title')}</h2>
+            <h2 className="text-[14px] font-medium">
+              {t('usage.byTool.title')}
+            </h2>
             {ranked.length > 0 ? (
               <div className="usage-tool-list overflow-hidden rounded-xl border bg-card">
                 {ranked.map((view, index) => {
@@ -616,9 +617,7 @@ export function UsagePage() {
                         locale={locale}
                         configuring={setLastTool.isPending}
                         onSelect={() =>
-                          selectScope(
-                            selectedId === view.id ? 'all' : view.id
-                          )
+                          selectScope(selectedId === view.id ? 'all' : view.id)
                         }
                         onConfigure={() => void openToolConfig(view.id)}
                       />

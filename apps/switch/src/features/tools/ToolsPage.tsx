@@ -47,8 +47,6 @@ function shortenPath(path: string) {
   return path
 }
 
-
-
 type PrereqCopyKey = 'node' | 'nodeOfficial' | 'brew'
 
 function PrerequisitesBanners({
@@ -122,9 +120,7 @@ function PrerequisitesBanners({
               >
                 <HugeiconsIcon
                   icon={
-                    copyingKey === 'nodeOfficial'
-                      ? Loading03Icon
-                      : Copy01Icon
+                    copyingKey === 'nodeOfficial' ? Loading03Icon : Copy01Icon
                   }
                   strokeWidth={1.7}
                   className={
@@ -154,9 +150,7 @@ function PrerequisitesBanners({
             size="sm"
             disabled={copyingKey !== null}
             aria-busy={copyingKey === 'brew'}
-            onClick={() =>
-              onCopy('brew', prereq.brewInstallCommand as string)
-            }
+            onClick={() => onCopy('brew', prereq.brewInstallCommand as string)}
           >
             <HugeiconsIcon
               icon={copyingKey === 'brew' ? Loading03Icon : Copy01Icon}
@@ -229,7 +223,9 @@ function VersionDisplay({
             <span className="text-muted-foreground" aria-hidden="true">
               →
             </span>
-            <span className={labelClass}>{t('tools.runtime.versionLatest')}</span>
+            <span className={labelClass}>
+              {t('tools.runtime.versionLatest')}
+            </span>
             <span className={valueClass}>{latest}</span>
           </>
         ) : null}
@@ -367,7 +363,7 @@ function ToolRuntimeRow({
                   <div className="min-w-0 flex-1">
                     <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
                       {install.primary ? (
-                        <span className="shrink-0 rounded-md bg-foreground/8 px-1.5 py-0.5 text-[10px] font-medium text-foreground">
+                        <span className="shrink-0 rounded-md bg-foreground/8 px-1.5 py-0.5 text-[11px] font-medium text-foreground">
                           {t('tools.runtime.installPrimary')}
                         </span>
                       ) : null}
@@ -468,9 +464,7 @@ export function ToolsPage() {
   const install = useInstallTool()
   const upgrade = useUpgradeTool()
   const [copyingGrok, setCopyingGrok] = useState(false)
-  const [copyingPrereq, setCopyingPrereq] = useState<PrereqCopyKey | null>(
-    null
-  )
+  const [copyingPrereq, setCopyingPrereq] = useState<PrereqCopyKey | null>(null)
   const [bulkUpgrading, setBulkUpgrading] = useState(false)
   const [bulkBusyId, setBulkBusyId] = useState<string | null>(null)
   const installBusyId =
@@ -483,8 +477,7 @@ export function ToolsPage() {
       : null
   const upgradeBusyId = bulkBusyId ?? singleUpgradeBusyId
   const anyChecking =
-    runtimes.some((query) => query.isFetching) ||
-    prerequisites.isFetching
+    runtimes.some((query) => query.isFetching) || prerequisites.isFetching
   const loadedRows = runtimes
     .map((query) => query.data)
     .filter((row): row is ToolRuntimeStatus => !!row)

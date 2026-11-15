@@ -27,9 +27,11 @@ export function LanguageSwitcher({
 
   const labels: Record<SupportedLocale, string> = {
     en: t('settings.language.options.en'),
-    zh: t('settings.language.options.zh'),
+    'zh-CN': t('settings.language.options.zh-CN'),
+    'zh-Hant': t('settings.language.options.zh-Hant'),
   }
-  const nextLocale: SupportedLocale = value === 'en' ? 'zh' : 'en'
+  const nextLocale: SupportedLocale =
+    value === 'en' ? 'zh-CN' : value === 'zh-CN' ? 'zh-Hant' : 'en'
 
   return (
     <Button

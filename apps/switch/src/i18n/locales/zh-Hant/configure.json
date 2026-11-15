@@ -1,0 +1,598 @@
+{
+  "configure": {
+    "actions": {
+      "add": "新增服務",
+      "addFavorite": "設為常用服務",
+      "addShort": "新增",
+      "close": "停止使用",
+      "edit": "編輯",
+      "enable": "啟用",
+      "enabled": "使用中",
+      "more": "更多操作",
+      "remove": "刪除",
+      "removeFavorite": "取消常用服務",
+      "save": "儲存",
+      "switch": "切換",
+      "verify": "驗證連線",
+      "balance": "查看餘額",
+      "connect": "接入",
+      "details": "評測詳情",
+      "detailsFor": "查看 {{name}} 詳情",
+      "moreFor": "{{name}} 的更多操作",
+      "openDesktop": "開啟桌面版",
+      "openingDesktop": "正在開啟…"
+    },
+    "addSource": {
+      "description": "選擇填寫方式。",
+      "custom": "輸入自訂設定",
+      "customHint": "自行填寫名稱、位址和 Key。",
+      "station": "使用已進駐中轉站快速填入",
+      "stationHint": "從已發布管道帶入名稱和位址。"
+    },
+    "balance": {
+      "action": "查看餘額",
+      "missingKey": "還沒有 Key",
+      "money": "剩餘 {{amount}} {{currency}}",
+      "notAdapted": "餘額尚未適配",
+      "percent": "{{window}}剩餘 {{percent}}%",
+      "unauthorized": "Key 無法查詢餘額",
+      "unavailable": "目前查不到餘額",
+      "window": {
+        "fiveHour": "5 小時",
+        "monthly": "30 天",
+        "weekly": "7 天"
+      }
+    },
+    "connect": {
+      "address": "位址",
+      "checking": "正在查看公開運作數據…",
+      "description": "將這條線路儲存至 Folkbench Switch",
+      "group": "群組",
+      "invalidDescription": "連結缺少必填項目，或該位址無法儲存。",
+      "invalidTitle": "此連結無法使用",
+      "key": "Key",
+      "keyAttached": "已附上",
+      "matched": "此群組可對應公開可用率與價格。",
+      "model": "模型",
+      "import": "匯入",
+      "saveFailed": "這條線路未能成功儲存。",
+      "switchFailed": "已儲存，但寫入工具設定失敗。請到首頁再點一次切換。",
+      "station": "中轉站",
+      "title": "儲存這條線路？",
+      "tool": "將匯入至 {{tool}} 的服務清單，僅歸檔，不會切換目前服務。",
+      "unmatched": "尚無公開運作數據。",
+      "securityWarning": "資料安全提醒：該站目前為 {{level}} 級（{{name}}），傳送敏感工作內容前請留意。",
+      "integrityMatch": "最近探針一致率：{{agree}}/{{total}}（{{rate}}）。",
+      "integrityMatchNone": "尚無與該線路相符的降級監控實測記錄。",
+      "integrityLink": "在降級監控中查看"
+    },
+    "binding": {
+      "rank": "#{{rank}}",
+      "unverified": "未核驗（{{reason}}）",
+      "verified": "Folkbench 名次 {{rank}}"
+    },
+    "columns": {
+      "action": "操作",
+      "balance": "餘額",
+      "binding": "Folkbench",
+      "channel": "中轉站 / 管道 / 模型",
+      "name": "服務"
+    },
+    "current": "目前使用",
+    "delete": {
+      "confirm": "刪除後，本機儲存的 API Key 也會一併移除。",
+      "title": "刪除 {{name}}？"
+    },
+    "description": "將已儲存的服務啟用到目前的程式開發工具。Key 僅存於 Rust 端，不會出現在視窗中。",
+    "effect": {
+      "hotReload": "熱切換",
+      "notImplemented": "尚未實作寫入",
+      "requiresRestart": "需要重啟"
+    },
+    "effectDetail": {
+      "codex": "{{tool}} 僅在啟動時讀取設定，需要完全結束後重新開啟",
+      "gemini-cli": "{{tool}} 新開一輪對話後會使用新設定"
+    },
+    "effectLine": {
+      "hotReload": "{{tool}} · 啟用後熱切換",
+      "notImplemented": "{{tool}} · 這一版還不能寫入該工具",
+      "requiresRestart": "{{tool}} · 啟用後需要重啟該工具工作階段"
+    },
+    "enableReview": {
+      "address": "位址",
+      "confirm": "確認寫入工具設定",
+      "description": "將把這條服務寫入 {{tool}} 的本機設定。",
+      "kicker": "在 {{tool}} 啟用",
+      "effect": "生效方式",
+      "keyHidden": "已儲存的 Key 會由本機服務寫入，不在此顯示。",
+      "limit": "這裡預覽的是寫入目標與生效方式，尚非逐檔案差異預覽；不會自動發送可能計費的模型請求。",
+      "title": "在 {{tool}} 啟用 {{name}}？"
+    },
+    "empty": {
+      "action": "新增服務",
+      "title": "還沒有儲存的服務",
+      "preview": {
+        "service": "已儲存的服務"
+      }
+    },
+    "form": {
+      "addHint": "顯示名稱、Base URL 與 Key 為必填。",
+      "apiKey": "API Key",
+      "getApiKeyOnWebsite": "前往官網取得 API Key",
+      "apiKeyReplace": "API Key",
+      "showApiKey": "顯示 API Key",
+      "hideApiKey": "隱藏 API Key",
+      "apiProtocol": "API 協定",
+      "apiProtocolHelpAria": "查看協定說明",
+      "apiProtocolHelp": {
+        "claude-code": "Claude Code 本身依 Anthropic Messages 協定送出請求（通常是 /v1/messages）。請優先選擇 Anthropic Messages；若填入 OpenAI 風格的 Base URL 或其他協定，本版不做協定轉換，可能無法正常呼叫。",
+        "codex": "Codex 主要使用 OpenAI Responses 協定。請優先選擇 Responses；Chat Completions 或 Anthropic Messages 與工具不相符時可能無法呼叫。",
+        "gemini-cli": "Gemini CLI 使用 Gemini 原生介面。請優先選擇 Gemini 原生介面；其他協定與工具不相符時可能無法呼叫。",
+        "opencode": "OpenCode 可依上游使用多種協定（Chat Completions、Responses、Anthropic Messages）。請依實際介面選擇；Folkbench 依所選協定原樣寫入，不做協定轉換。",
+        "default": "協定須與目前工具及上游介面一致。可選協定對齊各工具實際可寫入的設定；Folkbench 依所選協定原樣寫入，本版不做協定轉換。",
+        "openclaw": "OpenClaw 依所選 API 協定寫入設定（常見為 OpenAI Completions）。可選 Completions、Responses、Anthropic Messages、Gemini 原生；本版不做協定轉換，請與上游介面保持一致。",
+        "pi": "Pi 依所選 API 協定寫入設定。可選 Completions、Responses、Anthropic Messages、Gemini 原生；本版不做協定轉換，請與上游介面保持一致。",
+        "hermes": "Hermes 的 API 模式對應 Chat Completions、Responses（codex_responses）與 Anthropic Messages。請依上游選擇；本版不做協定轉換，也不支援 Bedrock。",
+        "grok-build": "Grok Build 原生偏 Responses。可選 Responses、Chat Completions、Anthropic Messages；非原生協定須上游本身相容，本版不做本機路由轉換。",
+        "minimax-code": "MiniMax Code 支援 Anthropic Messages、Chat Completions 與 Responses。請依上游選擇；本版不做協定轉換。"
+      },
+      "protocolRecommended": "（推薦）",
+      "baseUrl": "API Base URL",
+      "baseUrlPlaceholder": "例如：https://api.example.com/v1",
+      "channelId": "Folkbench 管道 id（選填）",
+      "editHint": "目前 Key 已預填（密碼框遮罩）。清空 Key 欄則保留原值。",
+      "hint": "顯示名稱、Base URL 與 Key 為必填。Folkbench id 為選填，僅用於名次核驗。",
+      "modelId": "模型 id（選填）",
+      "moreIds": "中轉站 / 管道 / 模型（選填）",
+      "name": "顯示名稱",
+      "providerId": "供應商識別碼",
+      "providerIdHelpAria": "查看供應商識別碼說明",
+      "providerIdHelp": "供應商識別碼是寫入工具設定時的 provider 鍵名（例如 OpenClaw / Pi 的 models.providers.<識別碼>，或 Hermes 的 custom_providers[].name / model.provider: custom:<識別碼>）。模型參照格式為「識別碼/模型ID」。可從下拉預設（openai、anthropic 等）中選擇，也可直接輸入。請使用字母、數字、連字號或底線，不要含空格或斜線。",
+      "providerIdPlaceholder": "例如：modelflare 或 my-relay",
+      "providerIdPresets": "展開預設供應商",
+      "providerIdRequired": "請填寫供應商識別碼（可從下拉選擇，或直接輸入）。",
+      "providerIdInvalid": "供應商識別碼只能包含字母、數字、連字號與底線，且須以字母或數字開頭。",
+      "protocols": {
+        "anthropic-messages": "Anthropic Messages（Claude）",
+        "auto": "預設",
+        "gemini": "Gemini 原生介面",
+        "openai-completions": "OpenAI 相容介面（Chat Completions）",
+        "openai-responses": "OpenAI Responses 介面"
+      },
+      "stationId": "Folkbench 中轉站 id（選填）",
+      "tool": "要切換的工具",
+      "unspecified": "未填寫 Folkbench id",
+      "model": "模型",
+      "modelOptional": "模型（選填）",
+      "modelPlaceholder": "輸入模型 ID，例如 gpt-5.4",
+      "modelSelectPlaceholder": "請選擇模型",
+      "modelCustom": "手動輸入模型 ID…",
+      "modelCustomSuffix": "（自訂）",
+      "modelBackToList": "從清單選擇",
+      "fetchModels": "取得模型清單",
+      "refetchModels": "重新取得",
+      "fetchingModels": "取得中…",
+      "modelRequired": "{{tool}} 需要指定模型：請從模型清單中選擇，或手動填寫模型 ID。",
+      "modelHintRequired": "此工具的設定必須包含模型，儲存前請選擇或填寫。",
+      "modelHintOptional": "留空則保留工具本身的模型設定。",
+      "modelHintOpencode": "留空時，切換會自動探測模型清單並選擇一個預設模型。",
+      "modelFetch": {
+        "needsCredentials": "填寫 Base URL 與 API Key 後會自動取得模型清單。",
+        "pending": "正在取得模型清單…",
+        "ready": "已取得 {{count}} 個模型。",
+        "empty": "介面回傳了空的模型清單，請手動填寫模型 ID。",
+        "missingKey": "需要 API Key 才能取得模型清單。",
+        "invalidUrl": "Base URL 須以 https:// 開頭（本機位址可用 http://）。",
+        "unauthorized": "Key 無效或無權限取得模型清單（HTTP {{status}}）。",
+        "endpointNotFound": "此位址沒有提供模型清單介面，請手動填寫模型 ID。",
+        "unreachable": "無法連線至該位址，請檢查 Base URL 或網路。",
+        "unavailable": "取得模型清單失敗（{{status}}），可稍後重試或手動填寫。"
+      },
+      "modelNeedKey": "請先填寫 API Key",
+      "claudeRoles": {
+        "title": "模型對應",
+        "hintAria": "模型對應說明",
+        "hint": "為 Claude 的各角色指定實際呼叫的模型 ID。顯示名稱會出現在用戶端的模型選單中；勾選 1M 表示該模型支援百萬級上下文。未填寫的項目在儲存時會自動補全預設值。若對應了非 Claude 模型，CLI 會直接請求該 ID；Desktop 仍顯示安全的 Claude 路由名稱，並經本機 remapping 代理轉發真實上游。",
+        "desktopRemap": "Desktop 將顯示為 {{route}}（本機代理對應）",
+        "oneClick": "一鍵設定",
+        "fetchModels": "取得模型清單",
+        "role": "角色",
+        "displayName": "顯示名稱",
+        "requestModel": "請求模型 ID",
+        "supports1m": "1M",
+        "subagentNoMenu": "不出現在模型選單",
+        "subagentPlaceholder": "選填",
+        "roles": {
+          "sonnet": "Sonnet",
+          "opus": "Opus",
+          "fable": "Fable",
+          "haiku": "Haiku",
+          "subagent": "Subagent"
+        },
+        "requestModelPick": "選擇或輸入模型 ID",
+        "requestModelEmpty": "可先點「取得模型清單」再下拉選擇；也可直接手填模型 ID。"
+      }
+    },
+    "home": {
+      "allServices": "全部服務",
+      "channel": "管道 / 群組",
+      "chooseForTool": "為 {{tool}} 選擇服務",
+      "current": "目前啟用 · {{tool}}",
+      "currentMissing": "目前工具設定未匹配到已儲存服務",
+      "description": "啟用一條服務後，它會寫入目前工具的本機設定。",
+      "favoriteServices": "常用服務",
+      "manual": "手動新增 · 未關聯榜單",
+      "model": "模型",
+      "noOtherServices": "目前只有這條已儲存服務",
+      "noOtherServicesDescription": "新增其他已購買的服務，或從頂部探索服務中挑選新線路。",
+      "noPublicStatus": "尚無公開運作數據",
+      "noSearchDescription": "試試其他服務名稱、管道或模型。",
+      "noSearchResults": "沒有找到符合的服務",
+      "notEnabled": "尚未為此工具啟用服務",
+      "otherServices": "切換到其他服務",
+      "otherServicesDescription": "啟用後會寫入 {{tool}}；其他工具目前使用的服務不會改變。",
+      "recentAvailability": "近 24 小時",
+      "search": "搜尋已儲存服務",
+      "target": "目前設定目標",
+      "viewAllServices": "查看全部 {{count}} 個服務",
+      "exploreRankings": "查看排行榜與降級監控",
+      "integrityCue": "探針一致率：{{agree}}/{{total}}（{{rate}}）",
+      "viewIntegrityMonitor": "前往降級監控",
+      "switchBackupManually": "手動切換備用線路",
+      "lowAgreementHint": "近期探針一致率低於 85%，建議前往降級監控核對原始指標或手動切換備用線路。"
+    },
+    "list": {
+      "count": "{{count}} 條服務"
+    },
+    "restartHint": "重新啟動 {{tool}} 工作階段後生效",
+    "switch": {
+      "disable": "從 {{tool}} 關閉 {{name}}",
+      "enable": "在 {{tool}} 上啟用 {{name}}"
+    },
+    "switchResult": {
+      "description": "{{name}} 已寫入 {{tool}} 的本機設定。",
+      "effect": "生效方式：{{effect}}",
+      "scope": "已確認設定寫入；尚未用您的 Key 發起模型請求。若工具提示需要重新啟動，請重新開啟工作階段後使用。",
+      "title": "工具設定已寫入"
+    },
+    "status": {
+      "added": "服務已儲存在本機。",
+      "closed": "已從 {{tool}} 關閉（{{effect}}）。",
+      "deleteBlocked": "請先啟用其他服務，再刪除目前使用的這一條。",
+      "favoriteLimit": "最多選擇 4 個常用服務，請先取消一個。",
+      "favoriteMinimum": "至少保留 1 個常用服務。",
+      "reachable": "連線正常（{{ms}} ms）",
+      "saved": "服務已更新。",
+      "switched": "已寫入 {{tool}}（{{effect}}）。",
+      "unreachable": "無法連線",
+      "reachableSlow": "連線但較慢（{{ms}} ms）",
+      "restartToApply": "重新啟動 {{tool}} 工作階段後生效"
+    },
+    "statusWindow": {
+      "label": "{{name}} 最近 24 小時管道狀態",
+      "summary": "正常 {{ok}}；延遲 {{delayed}}；異常 {{down}}；無資料 {{unknown}}。"
+    },
+    "title": "我的服務",
+    "comparison": {
+      "priceUnit": "價格 / 百萬 Token",
+      "columns": {
+        "channel": "管道 / 中轉站",
+        "availability": "24h 可用率 / 狀態",
+        "input": "輸入價格",
+        "output": "輸出價格",
+        "actions": "操作"
+      }
+    },
+    "backup": {
+      "title": "備用管道",
+      "reorder": "拖曳調整順序"
+    },
+    "easyAdd": {
+      "title": "新增服務",
+      "stepTool": "選擇工具",
+      "stepStation": "選擇中轉站或自訂",
+      "stepCredentials": "填寫 Key 與模型",
+      "register": "前往註冊 / 建立 Key",
+      "registerHint": "可從探索站接入，也可自訂填寫；沒有帳戶可先前往網站註冊並建立 Key。",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "sk-...",
+      "model": "模型",
+      "modelPlaceholder": "填寫好 key 後選擇預設模型",
+      "next": "下一步",
+      "saveAndSwitch": "儲存並切換",
+      "noStations": "尚無附帶 API 位址的中轉站。",
+      "noTools": "尚無可用工具。",
+      "needKey": "請填寫 API Key。",
+      "needModel": "請選擇或填寫模型。",
+      "needStation": "請選擇一個中轉站。",
+      "switched": "已儲存並寫入 {{tool}}。",
+      "savedSwitchFailed": "服務已儲存，但寫入工具設定失敗。請回首頁手動啟用。",
+      "openingWebsite": "正在開啟網站…",
+      "custom": "自訂設定",
+      "customHint": "已在其他網站建立 Key，自行填寫設定。",
+      "nameOptional": "顯示名稱",
+      "namePlaceholder": "必填，清單中顯示的名稱",
+      "needBaseUrl": "請填寫 API Base URL。",
+      "needName": "請填寫顯示名稱。",
+      "invalidBaseUrl": "請輸入以 http:// 或 https:// 開頭的網址。",
+      "modelHint": "請確保該 key 對應的群組能呼叫您選擇的模型。如不確定請前往中轉站確認。",
+      "nameLabel": "顯示名稱"
+    },
+    "easyHome": {
+      "changeStation": "換一家",
+      "changeLine": "換線路",
+      "broken": "這條線路暫時連不上，建議換一家再試。",
+      "emptyHint": "還沒有服務。點「新增服務」，選個中轉站、貼上 Key 就能用。",
+      "stopTitle": "停止讓 {{tool}} 使用這條服務？",
+      "stopConfirm": "停止後，{{tool}} 將不再透過中轉站存取模型，恢復為未接入狀態。服務會保留，隨時可以再點「使用」。",
+      "browseRankings": "榜單與監控"
+    },
+    "guide": {
+      "title": "使用指南",
+      "titleFor": "{{tool}} 使用指南",
+      "claude-code": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `claude --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Claude Code 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `claude` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `/help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `claude --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Claude Code 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `claude` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `/help`。"
+        }
+      },
+      "codex": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `codex --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Codex 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `codex` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `codex --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `codex --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Codex 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `codex` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `codex --help`。"
+        }
+      },
+      "gemini-cli": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `gemini --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Gemini CLI 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `gemini` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `/help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `gemini --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Gemini CLI 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `gemini` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `/help`。"
+        }
+      },
+      "grok-build": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `grok --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Grok 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `grok` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `grok --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `grok --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Grok 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `grok` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `grok --help`。"
+        }
+      },
+      "opencode": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `opencode --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 OpenCode 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `opencode` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `opencode --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `opencode --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 OpenCode 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `opencode` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `opencode --help`。"
+        }
+      },
+      "openclaw": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `openclaw --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 OpenClaw 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `openclaw` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `openclaw --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `openclaw --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 OpenClaw 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `openclaw` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `openclaw --help`。"
+        }
+      },
+      "hermes": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `hermes --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Hermes 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `hermes` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `hermes --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `hermes --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Hermes 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `hermes` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `hermes --help`。"
+        }
+      },
+      "pi": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `pi --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Pi 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `pi` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `pi --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `pi --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Pi 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `pi` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `pi --help`。"
+        }
+      },
+      "minimax-code": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `mcode --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 MiniMax Code 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `mcode` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `mcode --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `mcode --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 MiniMax Code 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `mcode` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `mcode --help`。"
+        }
+      },
+      "dsh": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `dsh --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 DeepSeek Harness 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `dsh` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `dsh --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `dsh --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 DeepSeek Harness 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `dsh` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `dsh --help`。"
+        }
+      },
+      "qwen-code": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `qwen --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Qwen Code 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `qwen` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `/help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `qwen --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Qwen Code 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `qwen` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `/help`。"
+        }
+      },
+      "kimi-cli": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `kimi --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Kimi CLI 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `kimi` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `kimi --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `kimi --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Kimi CLI 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `kimi` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `kimi --help`。"
+        }
+      },
+      "aider": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "在終端機輸入 `aider --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Aider 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `aider` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `aider --help`。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為該工具成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "在視窗輸入 `aider --version`。若提示找不到指令，先回到 Switch 點該工具使用「安裝 CLI」，或依 Aider 官網完成安裝。",
+          "runCommand": "輸入 `cd 您的專案路徑` 進入專案，再輸入 `aider` 按 Enter 啟動（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "出現提示後直接打字提問，即可開始和 AI 對話；需要幫助可輸入 `aider --help`。"
+        }
+      },
+      "generic": {
+        "mac": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為 {{tool}} 成功新增服務。",
+          "openTerminal": "開啟「終端機」：按 Command + 空白鍵，輸入「終端機」或 Terminal，按 Enter。",
+          "ensureInstalled": "確認本機已安裝 {{tool}}；若不確定，可在 Switch 裡對該工具使用「安裝 CLI」，或依官方文件安裝。",
+          "runCommand": "進入您的專案目錄後，依 {{tool}} 官方文件中的啟動指令執行（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "啟動後即可開始和 AI 對話；遇到問題請查看 {{tool}} 官方文件。"
+        },
+        "win": {
+          "ensureService": "使用前請先確認您已在 Folkbench Switch 裡為 {{tool}} 成功新增服務。",
+          "openTerminal": "開啟 PowerShell：按 Win 鍵搜尋「PowerShell」或「終端機」，按 Enter 開啟。",
+          "ensureInstalled": "確認本機已安裝 {{tool}}；若不確定，可在 Switch 裡對該工具使用「安裝 CLI」，或依官方文件安裝。",
+          "runCommand": "進入您的專案目錄後，依 {{tool}} 官方文件中的啟動指令執行（Folkbench Switch 已寫好位址和 Key）。",
+          "startChat": "啟動後即可開始和 AI 對話；遇到問題請查看 {{tool}} 官方文件。"
+        }
+      }
+    },
+    "dock": {
+      "notInstalled": "未安裝"
+    },
+    "toolRuntime": {
+      "installTitle": "還沒安裝 {{tool}}",
+      "installDesc": "需要先在本機安裝 {{tool}}，才能為它新增服務。點擊下方按鈕自動安裝，裝好後會自動重新整理。",
+      "install": "安裝 CLI",
+      "skip": "跳過",
+      "installing": "正在安裝…",
+      "updateMessage": "{{tool}} 有新版本可更新（{{local}} → {{latest}}）",
+      "updateMessageShort": "{{tool}} 有新版本可更新",
+      "update": "更新",
+      "updating": "正在更新…",
+      "actionFailed": "操作失敗，請稍後重試",
+      "updateAvailable": "CLI 可更新"
+    },
+    "desktop": {
+      "open": "開啟桌面版",
+      "opening": "正在開啟…",
+      "opened": "已開啟 {{name}} 桌面版。",
+      "notInstalled": "未偵測到桌面版",
+      "notInstalledHint": "將開啟官方下載頁，安裝後回到 Switch 即可一鍵啟動。",
+      "launchFailed": "無法開啟桌面版。",
+      "detectFailed": "偵測桌面版失敗。",
+      "unsupported": "目前系統沒有官方桌面版，請使用 CLI。",
+      "detected": "已偵測到 {{name}}",
+      "restartTitle": "桌面版正在執行",
+      "restartDescription": "若剛切換過服務，須完全結束再重新開啟才能載入新設定（Claude Desktop 的 3p 閘道亦同）。",
+      "restart": "重新啟動並開啟",
+      "activate": "僅切至前景",
+      "tooltip": "一鍵啟動桌面版。Claude Desktop 使用獨立的 Application Support 3p 閘道設定（與 Claude Code 互不影響，切換後須完全結束再開啟）；Codex 使用本機已寫入的設定。",
+      "cliVsDesktop": "Claude Code 使用 ~/.claude；Claude Desktop 使用獨立的 Application Support 3p 閘道（Folkbench Switch profile），兩者設定互不同步。",
+      "updateAvailable": "用戶端可更新",
+      "updateHint": "Claude Desktop 有新版本（{{local}} → {{latest}}）。開啟用戶端即可使用內建更新。",
+      "updateHintShort": "Claude Desktop 有新版本可更新。開啟用戶端即可使用內建更新。",
+      "openToUpdate": "開啟用戶端更新",
+      "downloadPage": "下載頁",
+      "detecting": "正在偵測版本…"
+    }
+  }
+}
