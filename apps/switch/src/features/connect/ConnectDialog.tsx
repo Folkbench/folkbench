@@ -16,6 +16,8 @@ import type {
   ConnectPreview,
   ConnectPublicStatus,
 } from '@/bridge'
+import { DataSecurityBadge } from '@/components/DataSecurityBadge'
+import { UpstreamStatusNotice } from '@/components/UpstreamStatusNotice'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -27,9 +29,19 @@ import {
 } from '@/components/ui/dialog'
 import { bootstrapQueryOptions } from '@/features/bootstrap/queries'
 import {
+  publicIntegrityQueryOptions,
+  publishedCatalogQueryOptions,
+} from '@/features/discovery/queries'
+import { matchStationByBaseUrl } from '@/features/home/easy-model'
+import {
   preferencesQueryOptions,
   useSetLastToolId,
 } from '@/features/preferences/queries'
+import {
+  accuracyRatePercent,
+  matchIntegrityMeasurement,
+} from '@/lib/integrity-match'
+import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
 
 export function ConnectDialog() {
   const { t } = useTranslation()
@@ -42,6 +54,18 @@ export function ConnectDialog() {
   const [saving, setSaving] = useState(false)
   const [saveFailed, setSaveFailed] = useState(false)
   const [switchFailed, setSwitchFailed] = useState(false)
+
+  const catalog = useQuery({
+    ...publishedCatalogQueryOptions(
+      preview?.modelId || DEFAULT_PUBLIC_MODEL_ID,
+      'availability'
+    ),
+    enabled: preview !== null,
+  })
+  const integrity = useQuery({
+    ...publicIntegrityQueryOptions(),
+    enabled: preview !== null,
+  })
 
   useEffect(() => {
     let active = true
@@ -150,6 +174,60 @@ export function ConnectDialog() {
         ?.displayName ?? preview.toolId)
     : null
 
+  const catalogStations = catalog.data?.stations ?? []
+  const matchedStation = preview
+    ? (catalogStations.find(
+        (station) =>
+          station.stationId === preview.stationId &&
+          (!preview.groupName || station.channelName === preview.groupName)
+      ) ??
+      catalogStations.find(
+        (station) => station.stationId === preview.stationId
+      ) ??
+      matchStationByBaseUrl(preview.baseUrl, catalogStations))
+    : undefined
+
+  const security = matchedStation?.dataSecurity ?? null
+  const rawLevel = security ? Math.trunc(security.level) : null
+  const securityLevel: 0 | 1 | 2 | 3 | 4 | null =
+    rawLevel === null
+      ? null
+      : rawLevel <= 0
+        ? 0
+        : rawLevel === 1
+          ? 1
+          : rawLevel === 2
+            ? 2
+            : rawLevel === 3
+              ? 3
+              : 4
+  const showSecurityWarning =
+    security !== null && (security.level < 3 || security.validity !== 'current')
+
+  const matchedIntegrity =
+    preview && matchedStation?.stationSlug && integrity.data?.items
+      ? matchIntegrityMeasurement(integrity.data.items, {
+          modelId: preview.modelId,
+          stationSlug: matchedStation.stationSlug,
+          channelName: preview.groupName || matchedStation.channelName,
+        })
+      : null
+  const integrityRate = matchedIntegrity
+    ? accuracyRatePercent(matchedIntegrity)
+    : null
+
+  async function openInIntegrityMonitor(current: ConnectPreview) {
+    await dismiss(current.id)
+    await navigate({
+      to: '/discover',
+      search: {
+        modelId: current.modelId || DEFAULT_PUBLIC_MODEL_ID,
+        tab: 'integrity',
+        metric: 'availability',
+      },
+    })
+  }
+
   return (
     <>
       <Dialog
@@ -168,10 +246,7 @@ export function ConnectDialog() {
                 </DialogDescription>
               </DialogHeader>
               <dl className="grid gap-2 text-[13px]">
-                <Field
-                  label={t('configure.form.name')}
-                  value={preview.name}
-                />
+                <Field label={t('configure.form.name')} value={preview.name} />
                 <Field
                   label={t('configure.connect.model')}
                   value={preview.modelId}
@@ -191,7 +266,59 @@ export function ConnectDialog() {
                     value={t('configure.connect.keyAttached')}
                   />
                 ) : null}
+                {security ? (
+                  <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-2">
+                    <dt className="text-muted-foreground">
+                      {t('discovery.columns.security')}
+                    </dt>
+                    <dd>
+                      <DataSecurityBadge summary={security} variant="badge" />
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
+              {showSecurityWarning && security && securityLevel !== null ? (
+                <p className="rounded-lg border border-warning/35 bg-warning/10 px-3 py-2 text-[12px] text-warning">
+                  {t('configure.connect.securityWarning', {
+                    level: security.level,
+                    name: t(`discovery.dataSecurity.names.l${securityLevel}`),
+                  })}
+                </p>
+              ) : null}
+              <UpstreamStatusNotice modelId={preview.modelId} onlyProblems />
+              {matchedIntegrity && integrityRate !== null ? (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-[12px]">
+                  <span className="text-muted-foreground tabular-nums">
+                    {t('configure.connect.integrityMatch', {
+                      agree: matchedIntegrity.agree,
+                      total: matchedIntegrity.total,
+                      rate: `${integrityRate}%`,
+                    })}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={saving}
+                    className="font-medium text-brand-signal underline-offset-2 hover:underline"
+                    onClick={() => void openInIntegrityMonitor(preview)}
+                  >
+                    {t('configure.connect.integrityLink')}
+                  </button>
+                </div>
+              ) : !integrity.isPending && !integrity.isError ? (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-[12px]">
+                  <span className="text-muted-foreground">
+                    {t('configure.connect.integrityMatchNone')}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={saving}
+                    className="font-medium text-brand-signal underline-offset-2 hover:underline"
+                    onClick={() => void openInIntegrityMonitor(preview)}
+                  >
+                    {t('configure.connect.integrityLink')}
+                  </button>
+                </div>
+              ) : null}
               {preview.publicStatus !== 'unavailable' ? (
                 <p className="text-[13px] text-muted-foreground">
                   {publicStatusCopy(preview.publicStatus, t)}

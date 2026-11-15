@@ -1,0 +1,48 @@
+{
+  "common": {
+    "accessibility": {
+      "closeDialog": "關閉對話框",
+      "collapseSidebar": "收合側邊欄",
+      "expandSidebar": "展開側邊欄",
+      "openInspector": "開啟詳情",
+      "openNavigation": "開啟導覽列"
+    },
+    "actions": {
+      "apply": "套用",
+      "back": "返回",
+      "cancel": "取消",
+      "close": "關閉",
+      "continue": "繼續",
+      "copy": "複製",
+      "create": "建立",
+      "delete": "刪除",
+      "done": "完成",
+      "edit": "編輯",
+      "open": "開啟",
+      "refresh": "重新整理",
+      "restore": "恢復",
+      "retry": "重試",
+      "revoke": "撤銷",
+      "save": "儲存",
+      "signOut": "登出"
+    },
+    "product": {
+      "description": "將 Folkbench 已發布的中轉站設定到本機程式開發工具。",
+      "eyebrow": "FOLKBENCH DESKTOP",
+      "foundation": "驗證版",
+      "shortName": "Folkbench",
+      "title": "Folkbench Switch"
+    },
+    "skeleton": {
+      "description": "此路由用於驗證導覽與工作階段守衛，頁面內容將在後續里程碑實作。",
+      "title": "路由預留頁面"
+    },
+    "status": {
+      "connected": "已連線",
+      "disconnected": "未連線",
+      "loading": "載入中",
+      "unavailable": "無法使用",
+      "verified": "已驗證"
+    }
+  }
+}

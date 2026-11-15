@@ -16,6 +16,7 @@ import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
 import ViewOffIcon from '@hugeicons/core-free-icons/ViewOffIcon'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
 import { ToolLogo } from '@/components/tool-logo'
 import { Button } from '@/components/ui/button'
@@ -42,8 +43,14 @@ import {
 } from '@/features/catalog/queries'
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { useSetLastToolId } from '@/features/preferences/queries'
+import { normalizeLocale } from '@/i18n/config'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
-import { easyPresetStations, normalizeEasyToolId, type EasyStationChoice } from './easy-model'
+import {
+  easyPresetStations,
+  matchStationByBaseUrl,
+  normalizeEasyToolId,
+  type EasyStationChoice,
+} from './easy-model'
 import relayPresets from './relay-presets.json'
 
 export type EasyWizardStep = Step
@@ -140,7 +147,8 @@ export function EasyAddWizard({
   requireToolSelection?: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const locale = normalizeLocale(i18n.resolvedLanguage)
   const writable = tools.filter(
     (tool) => tool.switchEffect !== 'notImplemented'
   )
@@ -169,7 +177,7 @@ export function EasyAddWizard({
   const [openingWebsite, setOpeningWebsite] = useState(false)
 
   const catalog = useQuery(
-    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID)
+    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID, 'availability')
   )
   const addService = useAddMyService()
   const switchService = useSwitchMyService()
@@ -180,8 +188,7 @@ export function EasyAddWizard({
 
   useEffect(() => {
     if (!open) return
-    const nextTool =
-      normalizeEasyToolId(initialToolId) || writable[0]?.id || ''
+    const nextTool = normalizeEasyToolId(initialToolId) || writable[0]?.id || ''
     setToolId(nextTool)
     setStation(initialStation ?? null)
     setSourceMode(initialStation ? 'catalog' : 'catalog')
@@ -211,10 +218,30 @@ export function EasyAddWizard({
     writableKey,
   ])
 
+  const catalogStations = catalog.data?.stations ?? []
   const stations = useMemo(
-    () => easyPresetStations(relayPresets, catalog.data?.stations ?? []),
-    [catalog.data?.stations],
+    () => easyPresetStations(relayPresets, catalogStations),
+    [catalogStations]
   )
+
+  function resolveDataSecurity(row: EasyStationChoice) {
+    if (
+      initialStation &&
+      initialStation.stationId === row.stationId &&
+      initialStation.dataSecurity
+    ) {
+      return initialStation.dataSecurity
+    }
+    return (
+      catalogStations.find(
+        (item) => item.stationId === row.stationId && item.dataSecurity
+      )?.dataSecurity ??
+      (row.baseUrl
+        ? matchStationByBaseUrl(row.baseUrl, catalogStations)?.dataSecurity
+        : undefined) ??
+      null
+    )
+  }
 
   function reset() {
     setStep(requireToolSelection ? 'tool' : 'station')
@@ -285,6 +312,7 @@ export function EasyAddWizard({
           modelId: row.modelId,
           stationId: row.stationId,
           channelId: row.channelId,
+          locale,
         })
       } else {
         throw new Error('websiteUnavailable')
@@ -464,41 +492,53 @@ export function EasyAddWizard({
                 className="max-h-72 overflow-y-auto rounded-lg border"
                 role="list"
               >
-                {stations.map((row) => (
-                  <div
-                    key={row.stationId}
-                    role="listitem"
-                    className="flex items-center gap-3 border-b px-3 py-2.5 last:border-b-0"
-                  >
-                    <button
-                      type="button"
-                      className="flex min-w-0 flex-1 items-center gap-3 text-left hover:opacity-90"
-                      onClick={() => enterCatalogStation(row)}
+                {stations.map((row) => {
+                  const security = resolveDataSecurity(row)
+                  return (
+                    <div
+                      key={row.stationId}
+                      role="listitem"
+                      className="flex items-center gap-3 border-b px-3 py-2.5 last:border-b-0"
                     >
-                      <StationAvatar
-                        name={row.stationName}
-                        avatarPath={row.stationAvatarPath}
-                        origin={catalog.data?.origin ?? 'https://folkbench.com'}
-                      />
-                      <span className="min-w-0 truncate text-[14px] font-medium">
-                        {row.stationName}
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                      disabled={openingWebsite}
-                      onClick={() => void onRegister(row)}
-                    >
-                      {t('configure.easyAdd.register')}
-                      <HugeiconsIcon
-                        icon={LinkSquare01Icon}
-                        strokeWidth={1.8}
-                        className="size-3.5"
-                      />
-                    </button>
-                  </div>
-                ))}
+                      <button
+                        type="button"
+                        className="flex min-w-0 flex-1 items-center gap-3 text-left hover:opacity-90"
+                        onClick={() => enterCatalogStation(row)}
+                      >
+                        <StationAvatar
+                          name={row.stationName}
+                          avatarPath={row.stationAvatarPath}
+                          origin={
+                            catalog.data?.origin ?? 'https://folkbench.com'
+                          }
+                        />
+                        <span className="min-w-0 truncate text-[14px] font-medium">
+                          {row.stationName}
+                        </span>
+                      </button>
+                      {security ? (
+                        <DataSecurityBadge
+                          summary={security}
+                          variant="badge"
+                          className="shrink-0"
+                        />
+                      ) : null}
+                      <button
+                        type="button"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
+                        disabled={openingWebsite}
+                        onClick={() => void onRegister(row)}
+                      >
+                        {t('configure.easyAdd.register')}
+                        <HugeiconsIcon
+                          icon={LinkSquare01Icon}
+                          strokeWidth={1.8}
+                          className="size-3.5"
+                        />
+                      </button>
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -513,10 +553,22 @@ export function EasyAddWizard({
                   avatarPath={station.stationAvatarPath}
                   origin={catalog.data?.origin ?? 'https://folkbench.com'}
                 />
-                <div className="min-w-0">
-                  <p className="truncate text-[14px] font-medium">
-                    {station.stationName}
-                  </p>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <p className="truncate text-[14px] font-medium">
+                      {station.stationName}
+                    </p>
+                    {(() => {
+                      const security = resolveDataSecurity(station)
+                      return security ? (
+                        <DataSecurityBadge
+                          summary={security}
+                          variant="badge"
+                          className="shrink-0"
+                        />
+                      ) : null
+                    })()}
+                  </div>
                   <p className="truncate font-mono text-[11px] text-muted-foreground">
                     {station.baseUrl}
                   </p>
@@ -524,7 +576,13 @@ export function EasyAddWizard({
                 <button
                   type="button"
                   className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                  disabled={openingWebsite || (!station.websiteUrl && !relayPresets.some((preset) => preset.stationId === station.stationId))}
+                  disabled={
+                    openingWebsite ||
+                    (!station.websiteUrl &&
+                      !relayPresets.some(
+                        (preset) => preset.stationId === station.stationId
+                      ))
+                  }
                   onClick={() => void onRegister(station)}
                 >
                   {t('configure.easyAdd.register')}

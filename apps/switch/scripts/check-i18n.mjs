@@ -108,11 +108,11 @@ const manifest = JSON.parse(await readFile(manifestPath, 'utf8'))
 const supported = manifest.supportedLocales
 const required = manifest.requiredLocales
 
-if (!Array.isArray(supported) || supported.length !== 2) {
-  fail('supportedLocales must contain exactly en and zh in the first release')
+if (!Array.isArray(supported) || supported.length !== 3) {
+  fail('supportedLocales must contain exactly en, zh-CN, and zh-Hant')
 }
-if (supported.join(',') !== 'en,zh') {
-  fail('supportedLocales must be ordered as en, zh')
+if (supported.join(',') !== 'en,zh-CN,zh-Hant') {
+  fail('supportedLocales must be ordered as en, zh-CN, zh-Hant')
 }
 if (manifest.defaultLocale !== 'en' || manifest.fallbackLocale !== 'en') {
   fail('English must be the default and fallback locale')

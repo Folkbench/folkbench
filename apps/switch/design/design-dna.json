@@ -10,89 +10,90 @@
   },
   "design_system": {
     "color": {
-      "palette_type": "neutral lilac-gray / near-black semantic pair",
+      "palette_type": "Precision Spectrum v0.5 cool hairline / quiet pure-black semantic pair",
       "primary": {
-        "hex": "#24222D",
-        "role": "Primary light-theme ink, headings, and strong text"
+        "hex": "#171717",
+        "role": "Primary light-theme ink, headings, and filled primary actions"
       },
       "secondary": {
-        "hex": "#F6F5F9",
+        "hex": "#F7F9FC",
         "role": "Default light-theme application canvas behind grouped lists"
       },
       "accent": {
-        "hex": "#6543D4",
-        "role": "Sparse action and focus signal; dark mode uses #A799FF."
+        "hex": "#533AFD",
+        "role": "Sparse action and focus signal; dark mode uses #9A92FF."
       },
       "neutral": {
         "scale": [
           "#FFFFFF",
-          "#F7F7F5",
-          "#F3F3F1",
-          "#E5E5E2",
-          "#CECECA",
-          "#AAAAAA",
-          "#62625F",
-          "#242424",
-          "#181818",
-          "#151515",
-          "#101010",
-          "#080808"
+          "#FAFBFD",
+          "#F7F9FC",
+          "#F1F4F8",
+          "#E3E8EE",
+          "#DAE1E9",
+          "#C5CFDB",
+          "#697386",
+          "#425466",
+          "#171717",
+          "#171918",
+          "#090A0A",
+          "#050606"
         ],
-        "usage": "Low-chroma gray canvas, white or stepped near-black surfaces, graphite text, muted metadata, and one-pixel hairlines"
+        "usage": "Cool cool-gray hairlines in light, stepped pure-black surfaces in dark with inset 1px top sheen"
       },
       "semantic": {
-        "success": "#247B56",
-        "warning": "#92621F",
-        "error": "#B53E55",
-        "info": "#6543D4"
+        "success": "#159570",
+        "warning": "#C77B18",
+        "error": "#D34242",
+        "info": "#5469D4"
       },
       "surface": {
-        "background": "#F6F5F9",
+        "background": "#F7F9FC",
         "card": "#FFFFFF",
         "elevated": "#FFFFFF"
       },
-      "contrast_strategy": "Theme-resolved semantic tokens across all pages, menus, charts, and overlays. Status uses a numeric or textual label as well as color.",
+      "contrast_strategy": "Theme-resolved Precision Spectrum v0.5 semantic tokens across all pages, menus, charts, and overlays. Status uses a numeric or textual label as well as color.",
       "theme_tokens": {
         "light": {
-          "background": "#F6F5F9",
-          "foreground": "#24232D",
-          "chrome": "#FDFCFE",
+          "background": "#F7F9FC",
+          "foreground": "#171717",
+          "chrome": "rgb(255 255 255 / 90%)",
           "card": "#FFFFFF",
           "popover": "#FFFFFF",
-          "muted": "#F6F5F9",
-          "secondary": "#ECEAF2",
-          "muted_foreground": "#696779",
-          "border": "#E7E5ED",
-          "input": "#CFCCD9",
-          "signal": "#6543D4",
-          "signal_soft": "#F0EAFF",
-          "success": "#247B56",
-          "warning": "#92621F",
-          "error": "#B53E55",
-          "primary": "#24222D",
+          "muted": "#F1F4F8",
+          "secondary": "#FAFBFD",
+          "muted_foreground": "#697386",
+          "border": "#DAE1E9",
+          "input": "#C5CFDB",
+          "signal": "#533AFD",
+          "signal_soft": "#F0EEFF",
+          "success": "#159570",
+          "warning": "#C77B18",
+          "error": "#D34242",
+          "primary": "#171717",
           "primary_foreground": "#FFFFFF",
-          "grid": "rgb(83 58 253 / 6%)",
-          "scrim": "rgb(25 22 35 / 32%)"
+          "grid": "rgb(23 23 23 / 4%)",
+          "scrim": "rgb(14 15 14 / 36%)"
         },
         "dark": {
-          "background": "#09090C",
-          "foreground": "#EFEFF5",
-          "chrome": "#0F0F13",
-          "card": "#15151B",
-          "popover": "#15151B",
-          "muted": "#1B1B23",
-          "secondary": "#22222C",
-          "muted_foreground": "#9999AB",
-          "border": "#292932",
-          "input": "#3C3B49",
-          "signal": "#A799FF",
-          "signal_soft": "#252039",
-          "success": "#68D9A7",
-          "warning": "#F0BD6D",
-          "error": "#FF929F",
-          "primary": "#F0EFF8",
-          "primary_foreground": "#19171E",
-          "grid": "rgb(225 222 255 / 5.5%)",
+          "background": "#050606",
+          "foreground": "#F2F2EE",
+          "chrome": "rgb(9 10 10 / 92%)",
+          "card": "#090A0A",
+          "popover": "#121413",
+          "muted": "#101111",
+          "secondary": "#171918",
+          "muted_foreground": "#A6AAA3",
+          "border": "#202321",
+          "input": "#343835",
+          "signal": "#9A92FF",
+          "signal_soft": "#1B1A2B",
+          "success": "#43D7A0",
+          "warning": "#F4B860",
+          "error": "#FF7777",
+          "primary": "#F2F2EE",
+          "primary_foreground": "#111211",
+          "grid": "rgb(255 255 255 / 4.5%)",
           "scrim": "rgb(0 0 0 / 66%)"
         }
       }
@@ -107,19 +108,19 @@
         },
         "heading_1": {
           "size": "1.5rem",
-          "weight": "600",
-          "line_height": "1.1",
-          "tracking": "-0.03em"
+          "weight": "500",
+          "line_height": "1.2",
+          "tracking": "-0.04em"
         },
         "heading_2": {
           "size": "1.25rem",
-          "weight": "600",
+          "weight": "500",
           "line_height": "1.2",
           "tracking": "-0.02em"
         },
         "heading_3": {
           "size": "1rem",
-          "weight": "600",
+          "weight": "500",
           "line_height": "1.35",
           "tracking": "-0.01em"
         },
@@ -143,17 +144,17 @@
         },
         "overline": {
           "size": "0.6875rem",
-          "weight": "600",
+          "weight": "500",
           "line_height": "1.2",
-          "tracking": "0.08em"
+          "tracking": "0.04em"
         }
       },
       "font_families": {
-        "heading": "-apple-system, BlinkMacSystemFont, Segoe UI Variable, Segoe UI, PingFang SC, Microsoft YaHei UI, ui-sans-serif, system-ui, sans-serif",
-        "body": "-apple-system, BlinkMacSystemFont, Segoe UI Variable, Segoe UI, PingFang SC, Microsoft YaHei UI, ui-sans-serif, system-ui, sans-serif",
-        "mono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace"
+        "heading": "'Inter Variable', 'Noto Sans SC Variable', Inter, 'Noto Sans SC', system-ui, sans-serif",
+        "body": "'Inter Variable', 'Noto Sans SC Variable', Inter, 'Noto Sans SC', system-ui, sans-serif",
+        "mono": "'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace"
       },
-      "font_style_notes": "UI type is the operating-system interface face: San Francisco and PingFang SC on macOS, Segoe UI and Microsoft YaHei UI on Windows. Do not insert Inter, Noto Sans SC, or SF-only weights such as 590. ui-monospace is reserved for URLs, versions, amounts, request identifiers, config diffs, and system labels."
+      "font_style_notes": "Bundled Inter Variable and Noto Sans SC Variable (with Traditional Chinese PingFang TC / Microsoft JhengHei / Noto Sans TC override on :lang(zh-Hant)) aligned to Precision Spectrum v0.5. Weights strictly limited to 400 and 500; minimum font size 11px; CJK headings reset letter-spacing to 0."
     },
     "spacing": {
       "base_unit": "4px",
@@ -174,7 +175,7 @@
       "section_rhythm": "16-28px component gaps, 24-40px feature groups, and 32-56px page sections depending on window width"
     },
     "layout": {
-      "grid_system": "Native title bar, compact 64px top navigation, home tool selector, 60/40 current-route and local-usage highlights, then a bounded comparison scroll region",
+      "grid_system": "Native title bar, compact 56px frosted top navigation, home tool selector, 60/40 current-route and local-usage highlights, then a bounded comparison scroll region",
       "max_content_width": "70rem including responsive gutters",
       "columns": "Home highlights: 60/40 current route and 7-day local curve at 228px tall. At 850px+ width and 650px+ height home is window-bounded, with a single comparison scroll region. Narrow or short windows retain full page scrolling.",
       "gutter": "clamp(16px, 2.5vw, 28px)",
