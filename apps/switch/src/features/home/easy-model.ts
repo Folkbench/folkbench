@@ -236,26 +236,47 @@ export function uniqueEasyStations(stations: PublishedStation[]) {
     const nextRank = row.rank ?? Number.POSITIVE_INFINITY
     if (nextRank < prevRank) seen.set(row.stationId, row)
   }
-  return pinCheapAiSecond(
-    Array.from(seen.values()).sort(
-      (a, b) =>
-        (a.rank ?? Number.POSITIVE_INFINITY) -
-        (b.rank ?? Number.POSITIVE_INFINITY)
-    )
+  return Array.from(seen.values()).sort(
+    (a, b) =>
+      (a.rank ?? Number.POSITIVE_INFINITY) -
+      (b.rank ?? Number.POSITIVE_INFINITY)
   )
 }
 
-/** Keep catalog rank order, but always surface CheapAI as the second Key link. */
-function pinCheapAiSecond(rows: PublishedStation[]) {
-  const idx = rows.findIndex((row) => /cheapai/i.test(row.stationName))
-  // Already first or second: leave rank order as-is (do not demote #1).
-  if (idx < 0 || idx <= 1) return rows
-  const next = rows.slice()
-  const [cheap] = next.splice(idx, 1)
-  next.splice(Math.min(1, next.length), 0, cheap)
-  return next
+export type RelayPreset = {
+  stationId: string
+  stationName: string
+  slug: string
+  baseUrl: string
 }
 
+export type EasyStationChoice = Pick<
+  PublishedStation,
+  'stationId' | 'stationName' | 'baseUrl' | 'stationAvatarPath'
+> & Partial<Pick<PublishedStation, 'modelId' | 'channelId' | 'websiteUrl'>>
+
+/** Manually delivered presets stay available without a ranking or network.
+ * Published rows only enrich their avatar and matching channel/model identity. */
+export function easyPresetStations(
+  presets: readonly RelayPreset[],
+  stations: PublishedStation[],
+): EasyStationChoice[] {
+  return presets.map((preset) => {
+    const sameStation = stations.filter(
+      (row) => row.stationId === preset.stationId
+    )
+    const matching = matchStationByBaseUrl(preset.baseUrl, sameStation)
+    return {
+      stationId: preset.stationId,
+      stationName: preset.stationName,
+      baseUrl: preset.baseUrl,
+      stationAvatarPath:
+        sameStation.find((row) => row.stationAvatarPath)?.stationAvatarPath ?? null,
+      modelId: matching?.modelId,
+      channelId: matching?.channelId,
+    }
+  })
+}
 
 function hostnameOf(url: string) {
   try {

@@ -109,6 +109,7 @@ pub fn run() {
             commands::bootstrap::get_bootstrap_state,
             commands::catalog::list_published_stations,
             commands::catalog::open_published_station_website,
+            commands::catalog::open_preset_relay_website,
             commands::catalog::resolve_catalog_asset,
             commands::my_services::add_my_service,
             commands::connect::confirm_connect_link,

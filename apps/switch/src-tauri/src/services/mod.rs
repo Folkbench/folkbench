@@ -28,7 +28,10 @@ pub use account::{
 pub use archive::allowed_base_url as allowed_service_base_url;
 pub use balance::query as query_service_balance;
 pub use bootstrap::bootstrap_state;
-pub use catalog::{list_published_stations, resolve_published_station_website};
+pub use catalog::{
+    list_published_stations, resolve_preset_relay_website,
+    resolve_published_station_website,
+};
 pub use catalog_asset::resolve_catalog_asset;
 pub use session_usage::list as list_session_usage;
 pub use tool_runtime::{

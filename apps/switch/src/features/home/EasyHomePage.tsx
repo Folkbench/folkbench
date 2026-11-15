@@ -12,7 +12,6 @@ import CircleQuestionMarkIcon from '@hugeicons/core-free-icons/CircleQuestionMar
 import { HugeiconsIcon } from '@hugeicons/react'
 import type {
   MyService,
-  PublishedStation,
   ToolDescriptor,
   FetchedModel,
 } from '@/bridge'
@@ -20,7 +19,7 @@ import {
   BridgeError,
   getMyServiceCredential,
   openExternalLink,
-  openPublishedStationWebsite,
+  openPresetRelayWebsite,
 } from '@/bridge'
 import { ToolLogo } from '@/components/tool-logo'
 import { StationAvatar } from '@/components/station-avatar'
@@ -80,6 +79,7 @@ import {
   activeEasyService,
   easyCliLabel,
   easyProtocol,
+  easyPresetStations,
   easyProviderId,
   easyStationAvatar,
   easyTools,
@@ -91,6 +91,7 @@ import {
   normalizeEasyToolId,
   uniqueEasyStations,
 } from './easy-model'
+import relayPresets from './relay-presets.json'
 import { launchToolWithoutFolder } from './WorkFolderDialog'
 import {
   openToolDesktopApp,
@@ -327,8 +328,7 @@ function EasyTool({
   const prefs = useQuery(preferencesQueryOptions)
   const services = useQuery(myServicesQueryOptions(tool.id))
   const client = useQueryClient()
-  // Same public ranking as Discovery (default model), not filtered by tool model.
-  // Tool-specific model catalogs often only list one relay (e.g. Modelflare).
+  // Rankings enrich saved/discovered services; preset membership is maintained separately.
   const catalog = useQuery(
     publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID)
   )
@@ -400,15 +400,22 @@ function EasyTool({
   const saved = useRef<{ service: MyService; fingerprint: string } | null>(null)
   const userSelectedSource = useRef(false)
   const modelRequest = useRef(0)
-  const stations = uniqueEasyStations(catalog.data?.stations ?? [])
   const catalogStations = catalog.data?.stations ?? []
+  const presetStations = easyPresetStations(relayPresets, catalogStations)
+  const stations = [
+    ...presetStations,
+    ...uniqueEasyStations(catalogStations).filter(
+      (row) => !presetStations.some((preset) => preset.stationId === row.stationId)
+    ),
+  ]
   const existing = (services.data ?? []).find(
     (item) => draft.source === `saved:${item.id}`
   )
-  const published = stations.find(
+  const selectedStation = stations.find(
     (item) => draft.source === `station:${item.stationId}`
   )
-  const baseUrl = draft.baseUrl || existing?.baseUrl || published?.baseUrl || ''
+  const baseUrl = draft.baseUrl || existing?.baseUrl || selectedStation?.baseUrl || ''
+  const published = matchStationByBaseUrl(baseUrl, catalogStations)
   const busy = phase !== null
   const showForm = !current || editing
   const canContinue = () => alive.current && !cancelled.current
@@ -436,7 +443,7 @@ function EasyTool({
         baseUrl: station.baseUrl || '',
         name: station.stationName || '',
         note: '',
-        model: prefix.test(station.modelId) ? station.modelId : '',
+        model: station.modelId && prefix.test(station.modelId) ? station.modelId : '',
       })
       setEditing(true)
       userSelectedSource.current = true
@@ -457,7 +464,7 @@ function EasyTool({
       (item) => source === `station:${item.stationId}`
     )
     const stationModel =
-      stationItem && prefix.test(stationItem.modelId)
+      stationItem?.modelId && prefix.test(stationItem.modelId)
         ? stationItem.modelId
         : ''
     const nextUrl = savedItem?.baseUrl || stationItem?.baseUrl || ''
@@ -753,14 +760,10 @@ function EasyTool({
     }
   }
 
-  async function onRegister(row: PublishedStation) {
+  async function onRegister(row: { stationId: string }) {
     setOpeningWebsite(true)
     try {
-      await openPublishedStationWebsite({
-        modelId: row.modelId,
-        stationId: row.stationId,
-        channelId: row.channelId,
-      })
+      await openPresetRelayWebsite(row.stationId)
     } catch {
       toast.error(t('errors.catalog.websiteUnavailable'))
     } finally {
@@ -962,8 +965,12 @@ function EasyTool({
   const savedServices = (services.data ?? []).filter(
     (service) => !editTargetId || service.id === editTargetId
   )
-  // Always list discovery stations so the same provider can be added again
-  // with another Key (each save creates a new service row).
+  // Presets are independent of public rankings. Keep an explicitly selected
+  // discovery/custom match available without promoting it into the preset list.
+  const sourceStations = [...presetStations]
+  if (selectedStation && !sourceStations.some((row) => row.stationId === selectedStation.stationId)) {
+    sourceStations.push(selectedStation)
+  }
   const sourceOptions: Array<ChoiceOption<string>> = [
     ...savedServices.map((service) => {
       const matched = matchPublishedStation(service, catalogStations)
@@ -979,7 +986,7 @@ function EasyTool({
     }),
     ...(editTargetId
       ? []
-      : stations.map((station) => ({
+      : sourceStations.map((station) => ({
           value: `station:${station.stationId}`,
           label: station.stationName,
           avatar: easyStationAvatar(
@@ -1585,9 +1592,9 @@ function EasyTool({
             <DialogTitle>{t('easy.noKeyTitle')}</DialogTitle>
             <DialogDescription>{t('easy.noKeyDescription')}</DialogDescription>
           </DialogHeader>
-          {stations.length ? (
+          {presetStations.length ? (
             <div className="easy-no-key-stations">
-              {stations.map((station) => (
+              {presetStations.map((station) => (
                 <div key={station.stationId}>
                   <StationAvatar
                     name={station.stationName}
@@ -1600,7 +1607,7 @@ function EasyTool({
                   </span>
                   <button
                     type="button"
-                    disabled={openingWebsite || !station.websiteUrl}
+                    disabled={openingWebsite}
                     onClick={() => void onRegister(station)}
                   >
                     {t('configure.easyAdd.register')}

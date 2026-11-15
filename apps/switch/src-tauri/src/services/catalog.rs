@@ -376,12 +376,75 @@ pub fn resolve_published_station_website(
         .ok_or(CatalogError::WebsiteUnavailable)
 }
 
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PresetRelayLink {
+    station_id: String,
+    slug: String,
+}
+
+/// The bundled, manually reviewed preset list owns membership and the slug.
+/// The WebView supplies only an ID; registration always uses the Folkbench
+/// confirmation page, including its current reviewed affiliate destination.
+pub fn resolve_preset_relay_website(
+    station_id: &str,
+) -> Result<String, CatalogError> {
+    let presets: Vec<PresetRelayLink> = serde_json::from_str(include_str!(
+        "../../../src/features/home/relay-presets.json"
+    ))
+    .map_err(|_| CatalogError::InvalidResponse)?;
+    let preset = presets
+        .iter()
+        .find(|preset| preset.station_id == station_id)
+        .ok_or(CatalogError::WebsiteUnavailable)?;
+    if preset.slug.is_empty()
+        || preset.slug.len() > 160
+        || !preset.slug.bytes().all(|byte| {
+            byte.is_ascii_lowercase()
+                || byte.is_ascii_digit()
+                || byte == b'-'
+        })
+    {
+        return Err(CatalogError::InvalidResponse);
+    }
+    Ok(format!(
+        "{FOLKBENCH_PUBLIC_ORIGIN}/go/{}?source=switch",
+        preset.slug
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     const FIXTURE: &str =
         include_str!("../../tests/fixtures/public-rankings-ready.json");
+
+    #[test]
+    fn preset_registration_uses_reviewed_folkbench_outbound_pages() {
+        for (station_id, slug) in [
+            ("merchant-a3165bb8-847", "modelflare"),
+            ("merchant-b8db6d82-ed2", "ikuncode"),
+            ("merchant-7281389a-354", "fluxlane"),
+        ] {
+            assert_eq!(
+                resolve_preset_relay_website(station_id).unwrap(),
+                format!("https://folkbench.com/go/{slug}?source=switch")
+            );
+        }
+        for rejected in [
+            "merchant-92f59e23-338",
+            "merchant-a61e0410-474",
+            "https://example.com",
+            "../modelflare",
+            "",
+        ] {
+            assert_eq!(
+                resolve_preset_relay_website(rejected),
+                Err(CatalogError::WebsiteUnavailable)
+            );
+        }
+    }
 
     #[test]
     fn parses_a_ready_rankings_payload() {

@@ -33,6 +33,17 @@ pub fn open_published_station_website(
         .map_err(|_| CatalogError::WebsiteUnavailable)
 }
 
+#[tauri::command(rename_all = "camelCase")]
+pub fn open_preset_relay_website(
+    app: AppHandle,
+    station_id: String,
+) -> Result<(), CatalogError> {
+    let website = services::resolve_preset_relay_website(&station_id)?;
+    app.opener()
+        .open_url(website, None::<&str>)
+        .map_err(|_| CatalogError::WebsiteUnavailable)
+}
+
 fn cache_dir(app: &AppHandle) -> Result<PathBuf, CatalogError> {
     app.path()
         .app_cache_dir()

@@ -9,7 +9,7 @@ import type {
   ServiceProtocol,
   ToolDescriptor,
 } from '@/bridge'
-import { openPublishedStationWebsite } from '@/bridge'
+import { openPresetRelayWebsite, openPublishedStationWebsite } from '@/bridge'
 import CircleQuestionMarkIcon from '@hugeicons/core-free-icons/CircleQuestionMarkIcon'
 import EyeIcon from '@hugeicons/core-free-icons/EyeIcon'
 import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
@@ -43,7 +43,8 @@ import {
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { useSetLastToolId } from '@/features/preferences/queries'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
-import { normalizeEasyToolId } from './easy-model'
+import { easyPresetStations, normalizeEasyToolId, type EasyStationChoice } from './easy-model'
+import relayPresets from './relay-presets.json'
 
 export type EasyWizardStep = Step
 type Step = 'tool' | 'station' | 'credentials'
@@ -154,7 +155,7 @@ export function EasyAddWizard({
   const [sourceMode, setSourceMode] = useState<SourceMode>(
     initialStation ? 'catalog' : 'catalog'
   )
-  const [station, setStation] = useState<PublishedStation | null>(
+  const [station, setStation] = useState<EasyStationChoice | null>(
     initialStation ?? null
   )
   const [customName, setCustomName] = useState('')
@@ -210,21 +211,10 @@ export function EasyAddWizard({
     writableKey,
   ])
 
-  const stations = useMemo(() => {
-    const seen = new Map<string, PublishedStation>()
-    for (const row of catalog.data?.stations ?? []) {
-      if (!row.baseUrl) continue
-      const prev = seen.get(row.stationId)
-      if (!prev) {
-        seen.set(row.stationId, row)
-        continue
-      }
-      const prevRank = prev.rank ?? Number.POSITIVE_INFINITY
-      const nextRank = row.rank ?? Number.POSITIVE_INFINITY
-      if (nextRank < prevRank) seen.set(row.stationId, row)
-    }
-    return Array.from(seen.values())
-  }, [catalog.data?.stations])
+  const stations = useMemo(
+    () => easyPresetStations(relayPresets, catalog.data?.stations ?? []),
+    [catalog.data?.stations],
+  )
 
   function reset() {
     setStep(requireToolSelection ? 'tool' : 'station')
@@ -257,7 +247,7 @@ export function EasyAddWizard({
     setStep('credentials')
   }
 
-  function enterCatalogStation(row: PublishedStation) {
+  function enterCatalogStation(row: EasyStationChoice) {
     setSourceMode('catalog')
     setStation(row)
     setCustomName('')
@@ -285,14 +275,20 @@ export function EasyAddWizard({
     setStep('station')
   }
 
-  async function onRegister(row: PublishedStation) {
+  async function onRegister(row: EasyStationChoice) {
     setOpeningWebsite(true)
     try {
-      await openPublishedStationWebsite({
-        modelId: row.modelId,
-        stationId: row.stationId,
-        channelId: row.channelId,
-      })
+      if (relayPresets.some((preset) => preset.stationId === row.stationId)) {
+        await openPresetRelayWebsite(row.stationId)
+      } else if (row.modelId && row.channelId) {
+        await openPublishedStationWebsite({
+          modelId: row.modelId,
+          stationId: row.stationId,
+          channelId: row.channelId,
+        })
+      } else {
+        throw new Error('websiteUnavailable')
+      }
     } catch {
       toast.error(t('errors.catalog.websiteUnavailable'))
     } finally {
@@ -459,11 +455,7 @@ export function EasyAddWizard({
                 </span>
               </span>
             </button>
-            {catalog.isPending ? (
-              <p className="rounded-lg border px-3 py-3 text-[13px] text-muted-foreground">
-                {t('common.status.loading')}
-              </p>
-            ) : stations.length === 0 ? (
+            {stations.length === 0 ? (
               <p className="rounded-lg border px-3 py-3 text-[13px] text-muted-foreground">
                 {t('configure.easyAdd.noStations')}
               </p>
@@ -495,7 +487,7 @@ export function EasyAddWizard({
                     <button
                       type="button"
                       className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                      disabled={openingWebsite || !row.websiteUrl}
+                      disabled={openingWebsite}
                       onClick={() => void onRegister(row)}
                     >
                       {t('configure.easyAdd.register')}
@@ -532,7 +524,7 @@ export function EasyAddWizard({
                 <button
                   type="button"
                   className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                  disabled={openingWebsite || !station.websiteUrl}
+                  disabled={openingWebsite || (!station.websiteUrl && !relayPresets.some((preset) => preset.stationId === station.stationId))}
                   onClick={() => void onRegister(station)}
                 >
                   {t('configure.easyAdd.register')}

@@ -5,56 +5,27 @@ import { toast } from 'sonner'
 import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
 import { HugeiconsIcon } from '@hugeicons/react'
 
-import { BRIDGE_ERROR, BridgeError, openPublishedStationWebsite } from '@/bridge'
-import type { PublishedStation } from '@/bridge'
+import { openPresetRelayWebsite } from '@/bridge'
 import { StationAvatar } from '@/components/station-avatar'
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
+import { easyPresetStations, type EasyStationChoice } from './easy-model'
+import relayPresets from './relay-presets.json'
 
 export function PublishedServicePicker({
   onSelect,
 }: {
-  onSelect: (station: PublishedStation) => void
+  onSelect: (station: EasyStationChoice) => void
 }) {
   const { t } = useTranslation()
   const [openingWebsite, setOpeningWebsite] = useState(false)
   const catalog = useQuery(publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID))
-  // One row per station: logo + name only (no channel). Prefer ranked / with baseUrl.
-  const rows = (() => {
-    const seen = new Map<string, PublishedStation>()
-    for (const row of catalog.data?.stations ?? []) {
-      const prev = seen.get(row.stationId)
-      if (!prev) {
-        seen.set(row.stationId, row)
-        continue
-      }
-      const prevRank = prev.rank ?? Number.POSITIVE_INFINITY
-      const nextRank = row.rank ?? Number.POSITIVE_INFINITY
-      const prevHasUrl = Boolean(prev.baseUrl)
-      const nextHasUrl = Boolean(row.baseUrl)
-      if (
-        (!prevHasUrl && nextHasUrl) ||
-        (prevHasUrl === nextHasUrl && nextRank < prevRank)
-      ) {
-        seen.set(row.stationId, row)
-      }
-    }
-    return Array.from(seen.values())
-  })()
-  const error =
-    catalog.error instanceof BridgeError &&
-    catalog.error.code === BRIDGE_ERROR.desktopUnavailable
-      ? t('errors.bridge.desktopUnavailable')
-      : t('errors.catalog.unavailable')
+  const rows = easyPresetStations(relayPresets, catalog.data?.stations ?? [])
 
-  async function onRegister(row: PublishedStation) {
+  async function onRegister(row: EasyStationChoice) {
     setOpeningWebsite(true)
     try {
-      await openPublishedStationWebsite({
-        modelId: row.modelId,
-        stationId: row.stationId,
-        channelId: row.channelId,
-      })
+      await openPresetRelayWebsite(row.stationId)
     } catch {
       toast.error(t('errors.catalog.websiteUnavailable'))
     } finally {
@@ -64,18 +35,7 @@ export function PublishedServicePicker({
 
   return (
     <div className="grid gap-3">
-      {catalog.isPending ? (
-        <p className="rounded-lg border px-3 py-3 text-[13px] text-muted-foreground">
-          {t('common.status.loading')}
-        </p>
-      ) : catalog.isError && !catalog.data ? (
-        <p
-          className="rounded-lg border px-3 py-3 text-[13px] text-destructive"
-          role="alert"
-        >
-          {error}
-        </p>
-      ) : rows.length === 0 ? (
+      {rows.length === 0 ? (
         <p className="rounded-lg border px-3 py-3 text-[13px] text-muted-foreground">
           {t('discovery.pick.empty')}
         </p>
@@ -108,7 +68,7 @@ export function PublishedServicePicker({
               <button
                 type="button"
                 className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                disabled={openingWebsite || !row.websiteUrl}
+                disabled={openingWebsite}
                 onClick={() => void onRegister(row)}
               >
                 {t('configure.easyAdd.register')}
