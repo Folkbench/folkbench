@@ -400,9 +400,7 @@ pub fn resolve_preset_relay_website(
     if preset.slug.is_empty()
         || preset.slug.len() > 160
         || !preset.slug.bytes().all(|byte| {
-            byte.is_ascii_lowercase()
-                || byte.is_ascii_digit()
-                || byte == b'-'
+            byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-'
         })
     {
         return Err(CatalogError::InvalidResponse);
