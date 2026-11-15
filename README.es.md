@@ -24,7 +24,6 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 
 <!-- /go 跳转上线前的原始链接 / Original links before /go went live:
      Modelflare: https://modelflare.dev/sign-up?partner=TDN1QM6KKYX9&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
-     CheapAI: https://cheapai.info/sign-up?aff=TkeF&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
      IKunCode: https://api.ikuncode.cc/sign-up?aff=QgPu&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme
      智流 FluxLane: https://folkbench.com/services/fluxlane?utm_source=github&utm_campaign=readme
 -->
@@ -33,10 +32,6 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 <tr>
 <td width="200" align="center"><a href="https://folkbench.com/go/modelflare?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/modelflare-dark.png"><img src="docs/images/sponsors/modelflare-light.png" alt="Modelflare" width="180"></picture></a></td>
 <td><a href="https://folkbench.com/go/modelflare?source=readme_es"><b>Modelflare</b></a><br>Modelflare está operado por Havenbyte LLC, en Estados Unidos. Cubre modelos principales como GPT, Claude, Gemini y Grok, además de los protocolos compatibles habituales, y también más de 40 modelos de imagen y vídeo. Una API Key puede configurar un fallback ordenado y llamar a varios modelos; la Key también puede tener un grupo de reserva. En el registro de solicitudes se ven el estado, la latencia, los tokens y el coste real.<br><br>La compensación de caché es otro punto de este sitio: algunos grupos de OpenAI —el de precio prioritario, el estable y el premium— garantizan cada día una tasa de aciertos de caché del 65%, el 75% y el 85%, respectivamente. Si una solicitud de API que cumple las condiciones no alcanza esa tasa, la plataforma añade el complemento correspondiente.<br><br>Ahora hay una promoción de primera recarga que desbloquea grupos de oferta. Una sola recarga de US$20 desbloquea el grupo de oferta GPT con multiplicador 0.015; después, GPT-5.6-Sol cuesta aproximadamente ¥0.51 (entrada) / ¥3.01 (salida) por millón de tokens, sin límite de uso. Una sola recarga de US$50 desbloquea el grupo de oferta Claude con multiplicador 0.03.</td>
-</tr>
-<tr>
-<td width="200" align="center"><a href="https://folkbench.com/go/cheapai?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/cheapai-dark.png"><img src="docs/images/sponsors/cheapai-light.png" alt="CheapAI" width="180"></picture></a></td>
-<td><a href="https://folkbench.com/go/cheapai?source=readme_es"><b>CheapAI</b></a><br>El nombre lo dice: el foco es el precio bajo, sobre todo en el grupo de oferta, donde el precio está muy contenido. También tiene un grupo de multiplicador dinámico. Según el soporte, este grupo ajusta el multiplicador según las cuentas disponibles en ese momento. Cuando hay recursos de sobra, el precio puede bajar más; cuando escasean, se ajusta. El equilibrio entre precio y disponibilidad se hace en tiempo real.<br><br>Quien busque relación calidad-precio puede elegir el grupo de oferta, con mejor multiplicador de descuento. Quien busque estabilidad puede elegir el grupo estable o el grupo Pro. El sitio también ofrece un grupo de clave oficial, así que cubre usos distintos.</td>
 </tr>
 <tr>
 <td width="200" align="center"><a href="https://folkbench.com/go/ikuncode?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/ikuncode-dark.png"><img src="docs/images/sponsors/ikuncode-light.png" alt="IKunCode" width="180"></picture></a></td>

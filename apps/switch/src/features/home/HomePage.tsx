@@ -26,6 +26,7 @@ import {
   getMyServiceCredential,
   listPublishedStations,
   openPublishedStationWebsite,
+  openPresetRelayWebsite,
 } from '@/bridge'
 import type {
   FetchedModel,
@@ -133,7 +134,9 @@ import {
   groupEasyModelChoices,
   matchPublishedStation,
   matchStationByBaseUrl,
+  type EasyStationChoice,
 } from './easy-model'
+import relayPresets from './relay-presets.json'
 import type { UsageWindow } from '@/lib/usage'
 import { EasyHomePage } from './EasyHomePage'
 import {
@@ -871,6 +874,10 @@ function ProHomePage() {
         matchStationByBaseUrl(form.baseUrl, publicStations) ??
         null)
       : null
+  const presetStationForKeyLink = dialog === 'add'
+    ? relayPresets.find((preset) => preset.stationId === form.stationId)
+    : undefined
+  const canOpenCatalogWebsiteForKey = Boolean(presetStationForKeyLink || catalogStationForKeyLink?.websiteUrl)
   const currentService = rows.find((row) => row.id === currentId)
   const currentPublished = currentService
     ? currentPublishedStation(
@@ -1158,7 +1165,7 @@ function ProHomePage() {
     setEasyWizardOpen(true)
   }
 
-  function choosePublished(station: PublishedStation) {
+  function choosePublished(station: EasyStationChoice) {
     const targetToolId = defaultTargetToolId
     const baseUrl = station.baseUrl ?? ''
     setForm({
@@ -1167,7 +1174,7 @@ function ProHomePage() {
       apiProtocol: defaultProtocolForTool(targetToolId),
       name: '',
       stationId: station.stationId,
-      channelId: station.channelId,
+      channelId: station.channelId ?? '',
       // Keep model empty — user selects after credentials, same as manual add.
       modelId: '',
       baseUrl,
@@ -1182,14 +1189,18 @@ function ProHomePage() {
 
   async function openCatalogWebsiteForKey() {
     const row = catalogStationForKeyLink
-    if (!row?.websiteUrl) return
+    if (!presetStationForKeyLink && !row?.websiteUrl) return
     setOpeningCatalogWebsite(true)
     try {
-      await openPublishedStationWebsite({
-        modelId: row.modelId,
-        stationId: row.stationId,
-        channelId: row.channelId,
-      })
+      if (presetStationForKeyLink) {
+        await openPresetRelayWebsite(presetStationForKeyLink.stationId)
+      } else if (row) {
+        await openPublishedStationWebsite({
+          modelId: row.modelId,
+          stationId: row.stationId,
+          channelId: row.channelId,
+        })
+      }
     } catch {
       toast.error(t('errors.catalog.websiteUnavailable'))
     } finally {
@@ -2261,7 +2272,7 @@ function ProHomePage() {
                         : t('configure.form.apiKey')
                     }
                     labelEnd={
-                      catalogStationForKeyLink?.websiteUrl ? (
+                      canOpenCatalogWebsiteForKey ? (
                         <button
                           type="button"
                           className="inline-flex shrink-0 items-center gap-1 rounded-md px-1 py-0.5 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
@@ -2551,7 +2562,7 @@ function ProHomePage() {
                         : t('configure.form.apiKey')
                     }
                     labelEnd={
-                      catalogStationForKeyLink?.websiteUrl ? (
+                      canOpenCatalogWebsiteForKey ? (
                         <button
                           type="button"
                           className="inline-flex shrink-0 items-center gap-1 rounded-md px-1 py-0.5 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"

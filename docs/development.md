@@ -30,6 +30,18 @@ bun run test:switch:rust
 
 `bun run switch:dev` 会启动客户端，仅在你明确希望启动时使用。
 
+## README 赞助与 Switch 预设交付
+
+README 赞助位与 Switch 预设继续人工交付。2026-11-15 已按主站有效权益核对：Modelflare、IKunCode、智流 FluxLane 同时拥有两项权益；CheapAI 没有有效权益，Cloudbridge 的基础套餐不包含这两项推广。
+
+Switch 预设唯一清单为 [relay-presets.json](../apps/switch/src/features/home/relay-presets.json)，包含已核对的站点 ID、展示名、公开 API Base URL 和 `/go` 别名。简易模式的服务选择和注册链接读取此清单，离线或榜单无该模型时仍可选择；公开目录继续读取真实榜单，不改变自然排名。Rust 只接受清单内的站点 ID，注册链接统一打开 Folkbench `/go/<slug>?source=switch` 确认页，浏览器端不能指定任意跳转 URL。
+
+每次人工上线或下线前，先在主站核对站点的有效权益、审核后的公开地址和交付材料；分别更新对应 README 或预设清单，再走正常审核与发布流程。README 与 Switch 是可单购的独立权益，分别维护和检查名单。不要将付款明细、账务身份、私有材料或生产凭据复制到此公开仓库。只有相应 README 已推送或 Switch 安装包已发布后，才能将对应交付标为完成。
+
+此清单不会自动读取支付状态或在到期时更新。购买、续费、到期仍由主站权益待办驱动人工处理；已安装客户端的预设随新版本更新。
+
+2026-11-15 修复核对使用了主站只读事务中的订阅、独立权益和交付记录，以及真实公开榜单中的站点 ID 和 API Base URL。四种 README、简易模式、添加向导和专业模式选择器均已修正。博客检查、Switch 检查（含 TypeScript 和语言契约）、14 项定向检查、源码凭据模式检查、文档相对链接和 diff 空白检查通过。Rust 测试因本机缺少 Cargo 未执行；没有安装工具链、启动预览或构建安装包，系统浏览器真实打开及安装包内的原生调用尚未验证。未知预设 ID 拒绝跳转；榜单失败只影响可选头像与渠道信息，不补造模型或测量数据。此记录不代表已推送 README 或发布客户端。
+
 ## 合作流程
 
 功能分支 → PR → main。提交检查按变更范围执行，推送检查覆盖两个组件。推荐在 GitHub Ruleset 中要求 `Blog gate` 和 `Switch gate`；两个汇总检查始终运行，避免路径过滤导致必需检查永久等待。

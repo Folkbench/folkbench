@@ -26,6 +26,7 @@ const {
   modelsFetchBaseUrl,
   activeEasyService,
   uniqueEasyStations,
+  easyPresetStations,
   compactCurve,
 } = await import(
   `data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`
@@ -127,6 +128,34 @@ test('easy discovery keeps connectable stations, deduplicates by best rank and s
     [bestA, b]
   )
   assert.deepEqual(uniqueEasyStations([]), [])
+})
+
+test('paid presets remain available without rankings and do not inherit unrelated discovery stations', async () => {
+  const presets = JSON.parse(await readFile(
+    new URL('src/features/home/relay-presets.json', root), 'utf8'
+  ))
+  const offline = easyPresetStations(presets, [])
+  assert.deepEqual(offline.map((row) => row.stationName), ['Modelflare', 'IKunCode', '智流 FluxLane'])
+  assert.ok(offline.every((row) => row.baseUrl.startsWith('https://')))
+  assert.ok(offline.every((row) => !row.channelId && !row.modelId))
+  const withOtherStation = easyPresetStations(presets, [
+    { stationId: 'merchant-92f59e23-338', stationName: 'CheapAI', baseUrl: 'https://cheapai.info/v1', rank: 1 },
+  ])
+  assert.deepEqual(withOtherStation, offline)
+  // A known station's changed API base must not attach the old preset to a different channel.
+  const changedBase = easyPresetStations(presets, [
+    { stationId: presets[0].stationId, stationName: presets[0].stationName, baseUrl: 'https://example.com/v1', channelId: 'different-base', modelId: 'different-model' },
+  ])
+  assert.equal(changedBase[0].channelId, undefined)
+})
+
+test('public discovery preserves rank order without a CheapAI override', () => {
+  const rows = [
+    { stationId: 'first', stationName: 'First', baseUrl: 'https://first.example.com', rank: 1 },
+    { stationId: 'second', stationName: 'Second', baseUrl: 'https://second.example.com', rank: 2 },
+    { stationId: 'cheapai', stationName: 'CheapAI', baseUrl: 'https://cheapai.info/v1', rank: 3 },
+  ]
+  assert.deepEqual(uniqueEasyStations(rows), rows)
 })
 
 test('compact curve has seven stable bounded points and handles empty or zero records', () => {
