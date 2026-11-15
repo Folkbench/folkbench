@@ -70,7 +70,7 @@ export async function verifyInstallerFiles(input, { version, commit, mode, selec
 export function buildIdentity(env) {
   const identity = { repository: env.GITHUB_REPOSITORY, workflowPath: '.github/workflows/switch-beta.yml', workflowCommit: env.GITHUB_SHA, runId: Number(env.GITHUB_RUN_ID), runAttempt: Number(env.GITHUB_RUN_ATTEMPT), event: env.GITHUB_EVENT_NAME, ref: env.GITHUB_REF }
   if (identity.repository !== 'Folkbench/folkbench' || !/^[a-f0-9]{40}$/.test(identity.workflowCommit) ||
-      !Number.isSafeInteger(identity.runId) || identity.runId <= 0 || !Number.isSafeInteger(identity.runAttempt) || identity.runAttempt <= 0 || identity.event !== 'workflow_dispatch' || identity.ref !== 'refs/heads/main') throw new Error('Candidate must originate from a manual build on the public main branch.')
+      !Number.isSafeInteger(identity.runId) || identity.runId <= 0 || !Number.isSafeInteger(identity.runAttempt) || identity.runAttempt <= 0 || !['push', 'workflow_dispatch'].includes(identity.event) || identity.ref !== 'refs/heads/main') throw new Error('Candidate must originate from a push or manual build on the public main branch.')
   return identity
 }
 
@@ -96,7 +96,10 @@ async function verify(input, mode) {
   const digest = createHash('sha256').update(manifestText).digest('hex')
   if (process.env.GITHUB_STEP_SUMMARY) {
     const { appendFile } = await import('node:fs/promises')
-    await appendFile(process.env.GITHUB_STEP_SUMMARY, `## 待验收安装包\n\n版本：\`${version}\`；源码：\`${commit}\`\n\n构建：\`${manifest.build.runId}\`；尝试：\`${manifest.build.runAttempt}\`\n\n平台：${selectedPlatforms.join(', ')}\n\n清单 SHA256：\`${digest}\`\n\n下载本次运行的 \`switch-reviewed-${manifest.build.runId}-${manifest.build.runAttempt}\` Artifact（ZIP 解压后为 DMG / EXE）。验收通过后，在 **Switch publish reviewed installers** 输入以上构建编号、尝试编号、源码 SHA、清单 SHA256，并勾选三平台已验收。发布不会重新构建。\n`)
+    const next = process.env.GITHUB_EVENT_NAME === 'push'
+      ? '本次为 main 新版本推送构建，成功后自动触发发布工作流；发布只读取本批不可变产物，不重新构建，也不声明人工安装验收已完成。'
+      : '手动候选构建不自动发布；实际安装包验收后，在 Switch publish reviewed installers 输入本次构建编号、尝试、源码 SHA 和清单摘要。'
+    await appendFile(process.env.GITHUB_STEP_SUMMARY, `## 已校验安装包\n\n版本：\`${version}\`；源码：\`${commit}\`\n\n构建：\`${manifest.build.runId}\`；尝试：\`${manifest.build.runAttempt}\`\n\n平台：${selectedPlatforms.join(', ')}\n\n清单 SHA256：\`${digest}\`\n\n${next}\n\n原安装包位于本次运行的 \`switch-reviewed-${manifest.build.runId}-${manifest.build.runAttempt}\` Artifact。\n`)
   }
   console.log(`Verified ${records.length} Beta installers at source ${commit}.`)
 }
