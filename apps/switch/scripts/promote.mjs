@@ -21,10 +21,23 @@ export function approvalInput(env) {
   return approval
 }
 
+/** Automatic publication is authorized by a successful official main push,
+ * never by pretending that a human checked the QA checkbox. */
+export function automaticApprovalInput(event) {
+  const run = event?.workflow_run
+  if (event?.action !== 'completed' || event.repository?.full_name !== repository ||
+      run?.event !== 'push' || run.head_branch !== 'main' || run.head_repository?.full_name !== repository ||
+      run.path !== workflowPath || run.status !== 'completed' || run.conclusion !== 'success' ||
+      !positive(run.id) || !positive(run.run_attempt) || !sourceSHA(run.head_sha)) throw new Error('Automatic publication requires a successful installer build from the official main push.')
+  return { runId: run.id, runAttempt: run.run_attempt, commit: run.head_sha, publicationTrigger: 'version-push' }
+}
+
 export function validateRun(run, workflow, approval) {
   if (run.id !== approval.runId || run.run_attempt !== approval.runAttempt || run.workflow_id !== workflow.id ||
-      workflow.path !== workflowPath || run.path !== workflowPath || run.event !== 'workflow_dispatch' || run.head_branch !== 'main' ||
-      run.head_repository?.full_name !== repository || run.status !== 'completed' || run.conclusion !== 'success' || !sourceSHA(run.head_sha)) throw new Error('Only a successful, unchanged manual build from this public repository main may be promoted.')
+      workflow.path !== workflowPath || run.path !== workflowPath || !['push', 'workflow_dispatch'].includes(run.event) || run.head_branch !== 'main' ||
+      run.head_repository?.full_name !== repository || run.status !== 'completed' || run.conclusion !== 'success' || !sourceSHA(run.head_sha) ||
+      (run.event === 'push' && run.head_sha !== approval.commit) ||
+      (approval.publicationTrigger === 'version-push' && run.event !== 'push')) throw new Error('Only a successful, unchanged build from this public repository main may be promoted.')
   return run
 }
 
@@ -59,18 +72,23 @@ async function listArtifacts(runId, api) {
   throw new Error('Artifact listing exceeded its safe pagination limit.')
 }
 
-export async function preparePromotion(approval, { api = github, git = args => execFileSync('git', args, { encoding: 'utf8' }) } = {}) {
-  if (!positive(approval.runId) || !positive(approval.runAttempt) || !sourceSHA(approval.commit) || !digestSHA(approval.manifestSha256)) throw new Error('Invalid immutable build approval.')
+export async function preparePromotion(approval, { api = github, git = args => execFileSync('git', args, { encoding: 'utf8' }), skipPublished = false } = {}) {
+  const automatic = approval.publicationTrigger === 'version-push'
+  if (!positive(approval.runId) || !positive(approval.runAttempt) || !sourceSHA(approval.commit) ||
+      (!digestSHA(approval.manifestSha256) && !(automatic && approval.manifestSha256 === undefined)) ||
+      (approval.publicationTrigger !== undefined && !automatic)) throw new Error('Invalid immutable build approval.')
   const workflow = await api('actions/workflows/switch-beta.yml')
   const run = validateRun(await api(`actions/runs/${approval.runId}`), workflow, approval)
   // A caller-provided SHA is validated before being passed to Git; never execute candidate code.
   git(['merge-base', '--is-ancestor', approval.commit, 'origin/main'])
   const pkg = JSON.parse(git(['show', `${approval.commit}:apps/switch/package.json`]))
   const tag = releaseTag(pkg.version)
-  const artifact = chooseArtifact(await listArtifacts(run.id, api), run)
   const release = await api(`releases/tags/${tag}`, { notFound: true })
+  if (release && release.draft !== true && automatic && skipPublished) return null
   if (release && release.draft !== true) throw new Error('This version is already public; create a new Beta version instead of replacing files.')
-  return { ...approval, repository, workflowPath, workflowCommit: run.head_sha, artifactId: artifact.id, artifactName: artifact.name, version: pkg.version, tag }
+  if (automatic && git(['rev-parse', `${approval.commit}:apps/switch`]).trim() !== git(['rev-parse', 'origin/main:apps/switch']).trim()) throw new Error('A newer Switch source exists on main; the superseded build will not be published.')
+  const artifact = chooseArtifact(await listArtifacts(run.id, api), run)
+  return { ...approval, ...(run.event === 'push' ? { buildEvent: 'push' } : {}), repository, workflowPath, workflowCommit: run.head_sha, artifactId: artifact.id, artifactName: artifact.name, version: pkg.version, tag }
 }
 
 async function regularFile(path, maxBytes = Infinity) {
@@ -82,12 +100,13 @@ async function regularFile(path, maxBytes = Infinity) {
 export async function verifyReviewedDirectory(directory, approval, policy) {
   validatePolicy(policy)
   const text = await regularFile(resolve(directory, 'release-manifest.json'), 1024 * 1024)
-  if (sha256(text) !== approval.manifestSha256) throw new Error('The manifest is not the one approved during installer QA.')
+  if (sha256(text) !== approval.manifestSha256) throw new Error('The manifest differs from the frozen build manifest.')
   const manifest = JSON.parse(text.toString('utf8'))
   const build = buildIdentity({ GITHUB_REPOSITORY: manifest.build?.repository, GITHUB_SHA: manifest.build?.workflowCommit, GITHUB_RUN_ID: manifest.build?.runId, GITHUB_RUN_ATTEMPT: manifest.build?.runAttempt, GITHUB_EVENT_NAME: manifest.build?.event, GITHUB_REF: manifest.build?.ref })
   if (manifest.schemaVersion !== 2 || manifest.channel !== 'beta' || !releaseModes.includes(manifest.mode) || manifest.mode !== 'signed-candidate' ||
       manifest.commit !== approval.commit || manifest.version !== approval.version || manifest.tag !== approval.tag || manifest.tag !== releaseTag(manifest.version) ||
-      manifest.build.workflowPath !== workflowPath || build.runId !== approval.runId || build.runAttempt !== approval.runAttempt || build.workflowCommit !== approval.workflowCommit) throw new Error('Reviewed manifest identity, build mode or workflow provenance differs from the approved build.')
+      manifest.build.workflowPath !== workflowPath || build.runId !== approval.runId || build.runAttempt !== approval.runAttempt || build.workflowCommit !== approval.workflowCommit ||
+      build.event !== (approval.buildEvent ?? 'workflow_dispatch') || (build.event === 'push' && manifest.commit !== build.workflowCommit)) throw new Error('Reviewed manifest identity, build mode or workflow provenance differs from the approved build.')
   const selected = selectPlatforms(manifest.selectedPlatforms)
   if (selected.length !== policy.requiredPlatforms.length || policy.requiredPlatforms.some(name => !selected.includes(name))) throw new Error('Diagnostic or incomplete platform builds cannot be publicly released.')
   const records = await verifyInstallerFiles(directory, { version: manifest.version, commit: manifest.commit, mode: manifest.mode, selectedPlatforms: selected })
@@ -169,7 +188,8 @@ export async function publishReviewed(directory, approval, policy, { api = githu
   if (!isDeepStrictEqual(current, approval)) throw new Error('The reviewed build changed after preparation; obtain fresh approval.')
   const reviewed = await verifyReviewedDirectory(directory, approval, policy)
   const marker = buildMarker(approval)
-  const body = `${reviewed.notes}\nmacOS：Developer ID 签名并已公证。Windows：未做 Authenticode 签名。\n\n${marker}\n`
+  const publication = approval.publicationTrigger === 'version-push' ? '\n发布方式：main 新版本推送后自动构建并发布，已通过流水线检查；不代表三平台人工安装验收。\n' : ''
+  const body = `${reviewed.notes}\nmacOS：Developer ID 签名并已公证。Windows：未做 Authenticode 签名。\n${publication}\n${marker}\n`
   let release = await api(`releases/tags/${approval.tag}`, { notFound: true })
   if (release) validateDraft(release, approval, body)
   else {
@@ -204,21 +224,41 @@ export async function publishReviewed(directory, approval, policy, { api = githu
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    if (process.env.GITHUB_REPOSITORY !== repository || process.env.GITHUB_REF !== 'refs/heads/main' || process.env.GITHUB_EVENT_NAME !== 'workflow_dispatch') throw new Error('Promotion must be manually dispatched from the public main branch.')
+    if (process.env.GITHUB_REPOSITORY !== repository || process.env.GITHUB_REF !== 'refs/heads/main' || !['workflow_run', 'workflow_dispatch'].includes(process.env.GITHUB_EVENT_NAME)) throw new Error('Promotion must run on the public default branch after a successful build or manual dispatch.')
     const policy = JSON.parse(await readFile(resolve(switchRoot, 'release-policy.json'), 'utf8'))
     validatePolicy(policy)
-    const approval = approvalInput(process.env)
+    const automatic = process.env.GITHUB_EVENT_NAME === 'workflow_run'
+    const approval = automatic
+      ? automaticApprovalInput(JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, 'utf8')))
+      : approvalInput(process.env)
     if (process.argv[2] === 'prepare') {
-      const prepared = await preparePromotion(approval)
-      await writeFile(process.env.PROMOTION_FILE, JSON.stringify(prepared, null, 2) + '\n', { mode: 0o600 })
-      await appendFile(process.env.GITHUB_OUTPUT, `artifact_id=${prepared.artifactId}\nrun_id=${prepared.runId}\n`)
+      const prepared = await preparePromotion(approval, { skipPublished: automatic })
+      if (!prepared) {
+        await appendFile(process.env.GITHUB_OUTPUT, 'ready=false\n')
+        console.log('Version already published; skipping without changing its tag or assets.')
+      } else {
+        await writeFile(process.env.PROMOTION_FILE, JSON.stringify(prepared, null, 2) + '\n', { mode: 0o600 })
+        await appendFile(process.env.GITHUB_OUTPUT, `ready=true\nartifact_id=${prepared.artifactId}\nrun_id=${prepared.runId}\n`)
+      }
     } else if (['verify', 'publish'].includes(process.argv[2])) {
-      const prepared = JSON.parse(await readFile(process.env.PROMOTION_FILE, 'utf8'))
+      let prepared = JSON.parse(await readFile(process.env.PROMOTION_FILE, 'utf8'))
       for (const key of Object.keys(approval)) if (approval[key] !== prepared[key]) throw new Error('Approval differs from preparation.')
       if (process.argv[2] === 'verify') {
+        if (automatic) {
+          // Derive the hash only from the exact immutable artifact selected via
+          // GitHub's successful run; never accept a caller-selected artifact.
+          const manifestSha256 = sha256(await regularFile(resolve(process.argv[3], 'release-manifest.json'), 1024 * 1024))
+          prepared = await preparePromotion({ ...prepared, manifestSha256 })
+        }
         const result = await verifyReviewedDirectory(resolve(process.argv[3]), prepared, policy)
+        if (automatic) await writeFile(process.env.PROMOTION_FILE, JSON.stringify(prepared, null, 2) + '\n', { mode: 0o600 })
         console.log(`Verified ${result.manifest.assets.length} original installers; ${result.releaseFiles.length} public attachments; metadata stays in CI; no files were regenerated.`)
-      } else console.log(await publishReviewed(resolve(process.argv[3]), prepared, policy))
+      } else {
+        if (!digestSHA(prepared.manifestSha256)) throw new Error('Verify the immutable artifact manifest before publication.')
+        const url = await publishReviewed(resolve(process.argv[3]), prepared, policy)
+        console.log(url)
+        if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, `Published ${prepared.tag}: ${url}\n\nSource: ${prepared.commit}\nBuild: ${prepared.runId}/${prepared.runAttempt}\nManifest SHA256: ${prepared.manifestSha256}\n`)
+      }
     } else throw new Error('Usage: promote.mjs prepare | verify DIRECTORY | publish DIRECTORY')
   } catch (error) { console.error(error.message); process.exitCode = 1 }
 }

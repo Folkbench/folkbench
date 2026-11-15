@@ -3,13 +3,15 @@ import { appendFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { selectPlatforms, platforms } from './artifacts.mjs'
-import { validateRelease } from './release.mjs'
+import { checkReleaseNotes, validateRelease } from './release.mjs'
 import { cargoVersion, lockVersion, releaseTag } from './version.mjs'
 
 export function buildContext(env, git = args => execFileSync('git', args, { encoding: 'utf8' })) {
-  if (env.GITHUB_REPOSITORY !== 'Folkbench/folkbench' || env.GITHUB_REF !== 'refs/heads/main' || env.GITHUB_EVENT_NAME !== 'workflow_dispatch') throw new Error('Builds must be dispatched manually from the public main branch.')
+  if (env.GITHUB_REPOSITORY !== 'Folkbench/folkbench' || env.GITHUB_REF !== 'refs/heads/main' || !['push', 'workflow_dispatch'].includes(env.GITHUB_EVENT_NAME)) throw new Error('Builds must originate from a push or manual dispatch on the public main branch.')
+  const automatic = env.GITHUB_EVENT_NAME === 'push'
   const commit = env.REQUESTED_SOURCE || env.GITHUB_SHA
   if (!/^[a-f0-9]{40}$/.test(commit)) throw new Error('Source must be a full immutable commit SHA.')
+  if (automatic && commit !== env.GITHUB_SHA) throw new Error('Automatic builds must use the pushed source commit.')
   git(['merge-base', '--is-ancestor', commit, 'origin/main'])
   const show = path => git(['show', `${commit}:apps/switch/${path}`])
   const version = JSON.parse(show('package.json')).version
@@ -18,8 +20,11 @@ export function buildContext(env, git = args => execFileSync('git', args, { enco
   const mode = env.REQUESTED_MODE || 'signed-candidate'
   const release = validateRelease({ version, tag: releaseTag(version), mode, policy })
   const selectedPlatforms = selectPlatforms(env.REQUESTED_PLATFORMS || 'all')
+  if (automatic && (mode !== 'signed-candidate' || selectedPlatforms.length !== policy.requiredPlatforms.length)) throw new Error('Automatic releases require all platforms and Mac notarization.')
+  if (automatic) checkReleaseNotes(git(['show', `${commit}:docs/switch/CHANGELOG.md`]), version)
+  const build = !automatic || !git(['tag', '--list', release.tag]).trim()
   const matrix = { include: selectedPlatforms.map(platform => ({ ...platforms[platform], platform, os: platform.startsWith('macos-') ? 'macos-15' : 'windows-2022' })) }
-  return { version, tag: release.tag, mode, commit, notarize: String(release.requiresAppleNotarization), selected_platforms: JSON.stringify(selectedPlatforms), matrix: JSON.stringify(matrix) }
+  return { version, tag: release.tag, mode, commit, build: String(build), notarize: String(release.requiresAppleNotarization), selected_platforms: JSON.stringify(selectedPlatforms), matrix: JSON.stringify(matrix) }
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

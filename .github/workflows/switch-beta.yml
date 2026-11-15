@@ -1,5 +1,14 @@
 name: Switch build installers
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/switch/**'
+      - '.github/workflows/switch-*.yml'
+      - 'scripts/**'
+      - 'package.json'
+      - 'bun.lock'
+      - 'docs/switch/CHANGELOG.md'
   workflow_dispatch:
     inputs:
       source_commit:
@@ -21,13 +30,14 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: switch-build-${{ github.run_id }}
-  cancel-in-progress: false
+  group: switch-build-${{ github.event_name == 'push' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 jobs:
   validate:
     if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
     outputs:
+      build: ${{ steps.release.outputs.build }}
       version: ${{ steps.release.outputs.version }}
       tag: ${{ steps.release.outputs.tag }}
       mode: ${{ steps.release.outputs.mode }}
@@ -56,6 +66,7 @@ jobs:
       - run: node scripts/check-source-hygiene.mjs
   build:
     needs: validate
+    if: needs.validate.outputs.build == 'true'
     environment: ${{ needs.validate.outputs.mode == 'build-only' && 'switch-build' || 'switch-beta' }}
     strategy:
       fail-fast: false
@@ -228,6 +239,7 @@ jobs:
           fi
   verify:
     needs: [validate, build]
+    if: needs.validate.outputs.build == 'true'
     runs-on: ubuntu-22.04
     env:
       FOLKBENCH_BUILD_COMMIT: ${{ needs.validate.outputs.commit }}
