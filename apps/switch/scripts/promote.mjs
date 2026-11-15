@@ -188,7 +188,7 @@ export async function publishReviewed(directory, approval, policy, { api = githu
   if (!isDeepStrictEqual(current, approval)) throw new Error('The reviewed build changed after preparation; obtain fresh approval.')
   const reviewed = await verifyReviewedDirectory(directory, approval, policy)
   const marker = buildMarker(approval)
-  const publication = approval.publicationTrigger === 'version-push' ? '\n发布方式：main 新版本推送后自动构建并发布，已通过流水线检查；不代表三平台人工安装验收。\n' : ''
+  const publication = approval.buildEvent === 'push' ? '\n构建来源：main 新版本推送；三平台自动检查已通过。\n' : ''
   const body = `${reviewed.notes}\nmacOS：Developer ID 签名并已公证。Windows：未做 Authenticode 签名。\n${publication}\n${marker}\n`
   let release = await api(`releases/tags/${approval.tag}`, { notFound: true })
   if (release) validateDraft(release, approval, body)
@@ -248,7 +248,9 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
           // Derive the hash only from the exact immutable artifact selected via
           // GitHub's successful run; never accept a caller-selected artifact.
           const manifestSha256 = sha256(await regularFile(resolve(process.argv[3], 'release-manifest.json'), 1024 * 1024))
-          prepared = await preparePromotion({ ...prepared, manifestSha256 })
+          const frozen = { ...prepared, manifestSha256 }
+          if (!isDeepStrictEqual(await preparePromotion(frozen), frozen)) throw new Error('Artifact identity changed after download; publication stopped.')
+          prepared = frozen
         }
         const result = await verifyReviewedDirectory(resolve(process.argv[3]), prepared, policy)
         if (automatic) await writeFile(process.env.PROMOTION_FILE, JSON.stringify(prepared, null, 2) + '\n', { mode: 0o600 })

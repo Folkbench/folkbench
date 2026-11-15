@@ -2,8 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
-const workflow = await readFile(new URL('../../../.github/workflows/switch-beta.yml', import.meta.url), 'utf8')
-const promotion = await readFile(new URL('../../../.github/workflows/switch-publish.yml', import.meta.url), 'utf8')
+const workflow = (await readFile(new URL('../../../.github/workflows/switch-beta.yml', import.meta.url), 'utf8')).replace(/\r\n/g, '\n')
+const promotion = (await readFile(new URL('../../../.github/workflows/switch-publish.yml', import.meta.url), 'utf8')).replace(/\r\n/g, '\n')
 
 test('candidate workflow uses API Key notarization without Apple login passwords', () => {
   for (const name of ['APPLE_API_KEY', 'APPLE_API_ISSUER', 'APPLE_API_PRIVATE_KEY']) assert.ok(workflow.includes(`secrets.${name}`))
