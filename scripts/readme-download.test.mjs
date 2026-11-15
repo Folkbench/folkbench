@@ -9,7 +9,7 @@ function checkDownloads(text) {
   assert.match(text, /SHA-?256/i)
   // Plain headings and already-expanded details are both readable by default.
   for (const tag of text.match(/<details\b[^>]*>/gi) || []) assert.match(tag, /\bopen(?:\s|=|>)/i)
-  for (const parameter of ['partner=TDN1QM6KKYX9', 'aff=TkeF', 'aff=QgPu', 'go/fluxlane?source=readme']) assert(text.includes(parameter))
+  for (const parameter of ['partner=TDN1QM6KKYX9', 'aff=QgPu', 'go/fluxlane?source=readme']) assert(text.includes(parameter))
 }
 
 for (const name of ['README.md', 'README.en.md', 'README.es.md']) {
@@ -18,6 +18,14 @@ for (const name of ['README.md', 'README.en.md', 'README.es.md']) {
     checkDownloads(text)
   })
 }
+
+test('all README sponsor tables contain the currently delivered sponsorships', async () => {
+  for (const name of ['README.md', 'README.en.md', 'README.es.md', 'README.ja.md']) {
+    const text = await readFile(new URL(`../${name}`, import.meta.url), 'utf8')
+    const slugs = [...new Set(Array.from(text.matchAll(/href="https:\/\/folkbench\.com\/go\/([a-z0-9-]+)\?source=readme/g), (match) => match[1]))]
+    assert.deepEqual(slugs, ['modelflare', 'ikuncode', 'fluxlane'], name)
+  }
+})
 
 test('download checks accept plain sections and still reject pinned versions or collapsed content', async () => {
   const text = await readFile(new URL('../README.md', import.meta.url), 'utf8')

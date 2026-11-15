@@ -19,6 +19,11 @@ export async function openPublishedStationWebsite(input: {
   return invokeCommand<void>('open_published_station_website', input)
 }
 
+/** Rust resolves the reviewed preset to its Folkbench outbound page. */
+export async function openPresetRelayWebsite(stationId: string): Promise<void> {
+  return invokeCommand<void>('open_preset_relay_website', { stationId })
+}
+
 /**
  * Resolves a site-relative public logo/avatar path through the desktop disk
  * cache. Returns a data URL the WebView can paint without another remote hop.

@@ -1,5 +1,16 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.7 — Beta
+
+- 统一简易模式、添加向导和专业模式的预设线路：Modelflare、IKunCode、智流 FluxLane。
+- 预设线路独立于公开榜单，暂时没有榜单数据时仍可选择并填写 API Key。
+- 移除 CheapAI 的固定优先展示；公开目录继续保留真实榜单顺序。
+- 预设注册链接统一经过 Folkbench 跳出页，使用站点当前已审核的注册链接。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.6 — Beta
 
 - 拆分 Claude Desktop 独立配置与 Claude Code；支持桌面端角色路由与非 Claude 模型映射。

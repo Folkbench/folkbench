@@ -7,6 +7,7 @@ export {
 export {
   listPublishedStations,
   openPublishedStationWebsite,
+  openPresetRelayWebsite,
   resolveCatalogAsset,
 } from '@/bridge/commands/catalog'
 export {
