@@ -1,13 +1,10 @@
 .switch-shell[data-ui-mode='easy'] {
-  background: var(--chrome);
+  background: var(--background);
 }
 .switch-shell[data-ui-mode='easy'] .switch-header {
-  min-height: 58px;
+  min-height: var(--app-header-height);
   gap: 12px;
-  padding-inline: 24px;
-}
-.switch-shell[data-ui-mode='easy'][data-page='home'] .switch-navigation {
-  display: none;
+  padding-inline: var(--app-page-gutter);
 }
 .switch-shell[data-ui-mode='easy'] .switch-canvas::before {
   display: none;
@@ -52,8 +49,8 @@
 .easy-heading h1 {
   margin: 0;
   font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.6px;
+  font-weight: 500;
+  letter-spacing: var(--track-page);
   line-height: 1.25;
 }
 .easy-heading p {
@@ -76,7 +73,7 @@
   background: color-mix(in srgb, var(--brand-signal) 9%, var(--card));
   color: var(--brand-signal);
   font-size: 12px;
-  font-weight: 550;
+  font-weight: 500;
   letter-spacing: -0.1px;
   line-height: 1.2;
   white-space: nowrap;
@@ -98,7 +95,7 @@
   margin-bottom: 18px;
   border: 1px solid var(--border);
   border-radius: 11px;
-  background: var(--background);
+  background: var(--muted);
 }
 .easy-tool-tabs button {
   display: flex;
@@ -117,7 +114,7 @@
 .easy-tool-tabs button[aria-pressed='true'] {
   background: var(--card);
   border-color: var(--border);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--fb-sheen), var(--shadow-soft);
 }
 .easy-tool-tabs button:disabled {
   opacity: 0.5;
@@ -219,8 +216,8 @@
   min-height: 46px;
   margin-top: 14px;
   font-size: 14px;
-  background: var(--brand-signal);
-  color: var(--brand-signal-foreground);
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 .easy-config-heading {
   display: flex;
@@ -232,7 +229,7 @@
 }
 .easy-config-heading h2 {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
 }
 .easy-config-heading > span:not(.easy-verify-result) {
   color: var(--success);
@@ -259,7 +256,7 @@
   border-radius: 8px;
   color: var(--brand-signal);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 .easy-heading-actions > button.easy-check-connection:hover {
@@ -277,14 +274,14 @@
   min-height: 34px;
   padding: 5px 12px;
   border-radius: 8px;
-  background: var(--brand-signal);
-  color: var(--brand-signal-foreground);
+  background: var(--primary);
+  color: var(--primary-foreground);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 .easy-heading-actions > button.easy-cli-action:hover {
-  filter: brightness(1.05);
+  opacity: 0.9;
 }
 .easy-heading-actions > button.easy-cli-action:disabled {
   opacity: 0.45;
@@ -313,6 +310,7 @@
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
+  box-shadow: var(--fb-sheen);
 }
 .easy-config-main {
   display: flex;
@@ -339,7 +337,7 @@
 /* Only the label under the service name — never StationAvatar's root/inner spans. */
 .easy-config-meta > span {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted-foreground);
 }
 .easy-config-row strong {
@@ -382,8 +380,8 @@
 }
 .easy-usage-heading h2 {
   font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.2px;
+  font-weight: 500;
+  letter-spacing: var(--track-section);
 }
 .easy-usage-metrics {
   display: flex;
@@ -402,8 +400,8 @@
 }
 .easy-usage-metrics strong {
   font-size: 20px;
-  font-weight: 550;
-  letter-spacing: -0.3px;
+  font-weight: 500;
+  letter-spacing: var(--track-section);
   font-variant-numeric: tabular-nums;
 }
 .easy-usage-metrics > button {
@@ -506,7 +504,7 @@
 }
 .easy-usage-total strong {
   font-size: 24px;
-  font-weight: 550;
+  font-weight: 500;
 }
 .easy-usage-table {
   width: 100%;
@@ -567,7 +565,7 @@
 }
 .easy-preparing h2 {
   font-size: 18px;
-  font-weight: 550;
+  font-weight: 500;
 }
 .easy-preparing p {
   font-size: 12px;
@@ -685,6 +683,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--card);
+  box-shadow: var(--fb-sheen);
 }
 .easy-no-key-stations > div {
   display: flex;
@@ -748,7 +747,7 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--brand-signal) 12%, transparent);
   color: var(--brand-signal);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
 }
 
@@ -762,6 +761,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--card);
+  box-shadow: var(--fb-sheen);
 }
 .easy-saved-row {
   display: flex;
@@ -787,7 +787,7 @@
 }
 .easy-saved-pick .easy-config-meta > span {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted-foreground);
 }
 .easy-saved-pick .easy-config-meta > strong {
@@ -837,7 +837,7 @@
   background: color-mix(in srgb, var(--brand-signal) 5%, var(--card));
   color: var(--brand-signal);
   font-size: 13px;
-  font-weight: 550;
+  font-weight: 500;
   cursor: pointer;
 }
 .easy-saved-add:hover {
@@ -853,13 +853,12 @@
   font-size: 13px;
 }
 
-
 .choice-select-section {
   display: block;
   padding: 10px 12px 6px;
   color: var(--muted-foreground);
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 500;
   line-height: 1.3;
   letter-spacing: 0.01em;
   user-select: none;
@@ -904,7 +903,7 @@
 .easy-install-panel__phase {
   margin: 0;
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35;
 }
 .easy-install-panel__subtitle {
@@ -933,7 +932,7 @@
 }
 .easy-install-panel__steps li.is-current {
   color: var(--foreground, inherit);
-  font-weight: 600;
+  font-weight: 500;
 }
 .easy-install-panel__steps li.is-done {
   color: var(--foreground, inherit);
@@ -956,8 +955,13 @@
   opacity: 0.85;
 }
 @keyframes easy-install-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.25); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
 }
 .easy-install-panel__hint {
   margin: 0;
@@ -975,7 +979,7 @@
 .easy-install-panel__result-title {
   margin: 0;
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35;
 }
 .easy-install-panel__result-body {
@@ -1003,7 +1007,8 @@
   justify-content: flex-start;
   margin-top: 0.25rem;
   padding-top: 0.75rem;
-  border-top: 1px solid color-mix(in oklab, var(--border, #e5e7eb) 80%, transparent);
+  border-top: 1px solid
+    color-mix(in oklab, var(--border, #e5e7eb) 80%, transparent);
 }
 .easy-edit-delete .size-3\.5 {
   margin-right: 0.35rem;

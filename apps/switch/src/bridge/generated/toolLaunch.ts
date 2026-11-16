@@ -7,7 +7,19 @@
  * `"claude"`). Linux sets `supported = false` — same policy as the first
  * Codex desktop ship (hide / unsupported even if a Linux package exists).
  */
-export type ToolDesktopApp = { supported: boolean, installed: boolean, running: boolean, kind: string | null, path: string | null, displayName: string | null, localVersion?: string | null, latestVersion?: string | null, updateAvailable?: boolean, };
+export type ToolDesktopApp = { supported: boolean, installed: boolean, running: boolean, kind: string | null, path: string | null, displayName: string | null, 
+/**
+ * Local app version when readable (e.g. Info.plist / FileVersion).
+ */
+localVersion?: string | null, 
+/**
+ * Latest published version when a reliable source exists for this OS.
+ */
+latestVersion?: string | null, 
+/**
+ * True only when both versions are known and latest is newer.
+ */
+updateAvailable: boolean, };
 
 /**
  * Transient folder-picker data. Never persisted in preferences or a service.

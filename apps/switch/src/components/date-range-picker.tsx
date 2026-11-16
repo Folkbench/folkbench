@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { motion, useReducedMotion } from 'motion/react'
-import { enUS, zhCN } from 'date-fns/locale'
+import { enUS, zhCN, zhTW } from 'date-fns/locale'
 import type { DateRange } from 'react-day-picker'
 import Calendar01Icon from '@hugeicons/core-free-icons/Calendar01Icon'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -36,7 +36,13 @@ function parseIso(iso: string) {
 }
 
 function formatDay(date: Date, locale: typeof enUS) {
-  return format(date, locale === zhCN ? 'PPP' : 'LLL dd, y', { locale })
+  return format(
+    date,
+    locale === zhCN || locale === zhTW ? 'PPP' : 'LLL dd, y',
+    {
+      locale,
+    }
+  )
 }
 
 function DateRangeField({
@@ -52,7 +58,13 @@ function DateRangeField({
 }) {
   const { t, i18n } = useTranslation()
   const reduceMotion = useReducedMotion()
-  const locale = normalizeLocale(i18n.resolvedLanguage) === 'zh' ? zhCN : enUS
+  const normalizedLocale = normalizeLocale(i18n.resolvedLanguage)
+  const locale =
+    normalizedLocale === 'zh-Hant'
+      ? zhTW
+      : normalizedLocale === 'zh-CN'
+        ? zhCN
+        : enUS
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState<DateRange | undefined>()
   const from = parseIso(value.start)

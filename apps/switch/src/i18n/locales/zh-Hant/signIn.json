@@ -1,0 +1,106 @@
+{
+  "signIn": {
+    "browser": {
+      "action": "登入或註冊 Folkbench",
+      "cancel": "取消登入",
+      "description": "在系統瀏覽器登入或註冊；已儲存的服務 Key 仍留在此電腦上。",
+      "failed": "登入未完成，請重試。",
+      "pending": "等待瀏覽器完成登入…",
+      "unavailable": "帳號登入暫時無法使用，仍可繼續在本機使用 Switch。"
+    },
+    "form": {
+      "email": {
+        "label": "電子郵件",
+        "placeholder": "name@example.com"
+      },
+      "password": {
+        "forgot": "忘記密碼？",
+        "hide": "隱藏密碼",
+        "label": "密碼",
+        "placeholder": "請輸入密碼",
+        "show": "顯示密碼"
+      },
+      "submit": "登入"
+    },
+    "providers": {
+      "divider": "或使用以下方式",
+      "github": "使用 GitHub 繼續",
+      "google": "使用 Google 繼續",
+      "line": "使用 LINE 繼續",
+      "linuxdo": "使用 LinuxDO 繼續"
+    },
+    "signUp": {
+      "action": "註冊",
+      "prompt": "還沒有帳號？"
+    },
+    "showcase": {
+      "account": {
+        "balance": "帳號",
+        "description": "登入為選用項目，已儲存的服務仍留在此電腦上。",
+        "eyebrow": "帳號",
+        "keys": "API Key",
+        "status": "選用",
+        "title": "登入或訪客都能使用 Switch",
+        "usage": "本機用量"
+      },
+      "apiKeys": {
+        "description": "服務 Key 儲存在本機，僅在手動切換工具時使用。",
+        "eyebrow": "API Key",
+        "masked": "已遮罩",
+        "status": "本機",
+        "title": "中轉站 Key 留在此電腦上"
+      },
+      "history": {
+        "applied": "設定已套用",
+        "description": "查看遮罩處理後的本機變更記錄與驗證結果。",
+        "eyebrow": "變更歷史",
+        "inspected": "目標已檢查",
+        "status": "有記錄",
+        "title": "每次本機修改都有記錄",
+        "verified": "結果已驗證"
+      },
+      "preview": {
+        "description": "寫入前先看清將要修改的欄位。",
+        "eyebrow": "變更預覽",
+        "preserved": "其他欄位保持不變",
+        "status": "套用前",
+        "title": "每次設定修改都可預覽"
+      },
+      "privacy": {
+        "description": "設定留在本機，不收集 Prompt 或回應內容。",
+        "eyebrow": "本機優先",
+        "local": "本機設定",
+        "noPrompts": "不儲存 Prompt",
+        "status": "隱私保護",
+        "title": "您的工作區仍由您掌控"
+      },
+      "rollback": {
+        "description": "需要時恢復原狀，同時避免覆蓋後續修改。",
+        "eyebrow": "復原",
+        "inspect": "檢查",
+        "preview": "預覽",
+        "restore": "恢復",
+        "status": "可復原",
+        "title": "計畫改變時也能安全恢復"
+      },
+      "tools": {
+        "description": "無需手動編輯設定檔，即可設定支援的程式開發用戶端。",
+        "eyebrow": "用戶端設定",
+        "status": "一鍵設定",
+        "title": "一處設定所有支援的用戶端"
+      },
+      "usage": {
+        "cost": "估算",
+        "description": "查看本機工作階段的 Token 彙整和標註清楚的費用估算。",
+        "eyebrow": "用量",
+        "requests": "工作階段",
+        "status": "可查看",
+        "title": "查看本機工作階段用量",
+        "tokens": "Token"
+      }
+    },
+    "skipToCatalog": "先使用本機模式",
+    "subtitle": "用 Folkbench 的公開評測數據管理並切換本機 AI 服務。",
+    "title": "開始使用 Folkbench Switch"
+  }
+}

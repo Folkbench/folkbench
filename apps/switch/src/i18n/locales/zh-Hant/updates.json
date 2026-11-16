@@ -1,0 +1,15 @@
+{
+  "updates": {
+    "actions": {
+      "installLater": "稍後安裝",
+      "restartNow": "立即重新啟動"
+    },
+    "available": {
+      "description": "有新的已簽章 Folkbench Switch 更新可用。",
+      "title": "發現更新"
+    },
+    "downloading": "正在下載更新…",
+    "none": "Folkbench Switch 已是最新版本。",
+    "ready": "更新已準備好安裝。"
+  }
+}

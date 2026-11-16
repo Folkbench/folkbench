@@ -1,0 +1,37 @@
+{
+  "navigation": {
+    "account": {
+      "label": "帳號"
+    },
+    "connection": {
+      "label": "連線狀態"
+    },
+    "groups": {
+      "general": "概覽",
+      "local": "本機",
+      "system": "系統",
+      "workspace": "工作區"
+    },
+    "items": {
+      "apiKeys": "API Keys",
+      "changes": "變更歷史",
+      "discover": "探索服務",
+      "overview": "概覽",
+      "services": "我的線路",
+      "settings": "設定",
+      "tools": "工具",
+      "usage": "本機用量",
+      "discoverEasy": "找服務",
+      "usageEasy": "用量",
+      "servicesEasy": "首頁"
+    },
+    "primary": "主導覽",
+    "mode": {
+      "label": "介面模式",
+      "easy": "簡易版",
+      "pro": "專業版",
+      "toPro": "專業版",
+      "toEasy": "回到簡易"
+    }
+  }
+}

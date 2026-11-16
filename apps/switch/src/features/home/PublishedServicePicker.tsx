@@ -6,10 +6,15 @@ import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { openPresetRelayWebsite } from '@/bridge'
+import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
 import { publishedCatalogQueryOptions } from '@/features/discovery/queries'
 import { DEFAULT_PUBLIC_MODEL_ID } from '@/lib/publicCatalog'
-import { easyPresetStations, type EasyStationChoice } from './easy-model'
+import {
+  easyPresetStations,
+  matchStationByBaseUrl,
+  type EasyStationChoice,
+} from './easy-model'
 import relayPresets from './relay-presets.json'
 
 export function PublishedServicePicker({
@@ -19,8 +24,11 @@ export function PublishedServicePicker({
 }) {
   const { t } = useTranslation()
   const [openingWebsite, setOpeningWebsite] = useState(false)
-  const catalog = useQuery(publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID))
-  const rows = easyPresetStations(relayPresets, catalog.data?.stations ?? [])
+  const catalog = useQuery(
+    publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID, 'availability')
+  )
+  const catalogStations = catalog.data?.stations ?? []
+  const rows = easyPresetStations(relayPresets, catalogStations)
 
   async function onRegister(row: EasyStationChoice) {
     setOpeningWebsite(true)
@@ -45,41 +53,59 @@ export function PublishedServicePicker({
           role="list"
           aria-label={t('discovery.list.title')}
         >
-          {rows.map((row) => (
-            <div
-              key={row.stationId}
-              role="listitem"
-              className="flex cursor-pointer items-center gap-3 border-b border-l-2 border-l-transparent px-3 py-2.5 last:border-b-0 transition-all hover:border-l-brand-signal hover:bg-accent hover:shadow-md active:bg-accent/80"
-            >
-              <button
-                type="button"
-                className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => onSelect(row)}
+          {rows.map((row) => {
+            const security =
+              catalogStations.find(
+                (item) => item.stationId === row.stationId && item.dataSecurity
+              )?.dataSecurity ??
+              (row.baseUrl
+                ? matchStationByBaseUrl(row.baseUrl, catalogStations)
+                    ?.dataSecurity
+                : undefined) ??
+              null
+            return (
+              <div
+                key={row.stationId}
+                role="listitem"
+                className="flex cursor-pointer items-center gap-3 border-b border-l-2 border-l-transparent px-3 py-2.5 last:border-b-0 transition-all hover:border-l-brand-signal hover:bg-accent hover:shadow-md active:bg-accent/80"
               >
-                <StationAvatar
-                  name={row.stationName}
-                  avatarPath={row.stationAvatarPath}
-                  origin={catalog.data?.origin ?? 'https://folkbench.com'}
-                />
-                <span className="min-w-0 truncate text-[14px] font-medium">
-                  {row.stationName}
-                </span>
-              </button>
-              <button
-                type="button"
-                className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                disabled={openingWebsite}
-                onClick={() => void onRegister(row)}
-              >
-                {t('configure.easyAdd.register')}
-                <HugeiconsIcon
-                  icon={LinkSquare01Icon}
-                  strokeWidth={1.8}
-                  className="size-3.5"
-                />
-              </button>
-            </div>
-          ))}
+                <button
+                  type="button"
+                  className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  onClick={() => onSelect(row)}
+                >
+                  <StationAvatar
+                    name={row.stationName}
+                    avatarPath={row.stationAvatarPath}
+                    origin={catalog.data?.origin ?? 'https://folkbench.com'}
+                  />
+                  <span className="min-w-0 truncate text-[14px] font-medium">
+                    {row.stationName}
+                  </span>
+                </button>
+                {security ? (
+                  <DataSecurityBadge
+                    summary={security}
+                    variant="badge"
+                    className="shrink-0"
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
+                  disabled={openingWebsite}
+                  onClick={() => void onRegister(row)}
+                >
+                  {t('configure.easyAdd.register')}
+                  <HugeiconsIcon
+                    icon={LinkSquare01Icon}
+                    strokeWidth={1.8}
+                    className="size-3.5"
+                  />
+                </button>
+              </div>
+            )
+          })}
         </div>
       )}
     </div>

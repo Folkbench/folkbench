@@ -1,0 +1,322 @@
+{
+  "discovery": {
+    "connect": {
+      "description": "公开榜单如果带有 API 地址，会自动填上；没有的话请向站点索取。Key 需要你自己填写。保存仅加入本机服务列表，不会立即改写工具配置。",
+      "result": {
+        "checkUnavailable": "服务已保存在本机，但连通性检查未能完成。",
+        "description": "服务已加入对应工具的本机列表。回到该工具后，你可以决定是否启用。",
+        "reachable": "服务已保存，目标主机可达（{{ms}} ms）。",
+        "scope": "这不是 API Key 或模型响应验证，工具配置也尚未改动。",
+        "title": "已加入我的服务",
+        "unreachable": "服务已保存，但目标主机无法连通；请核对 API 地址。",
+        "viewServices": "查看我的服务",
+        "reachableSlow": "服务已保存，目标主机可达但较慢（{{ms}} ms）。"
+      },
+      "review": {
+        "description": "先核对本次保存的对象。此步不会自动切换工具或发送付费请求。",
+        "keyHidden": "API Key：已填写，完整内容不会在此显示。",
+        "name": "服务名称：{{name}}",
+        "next": "保存",
+        "saveAndCheck": "保存并检查连通性",
+        "scope": "保存后只检查目标地址的 HTTP 可达与延迟；不会用 Key 发起模型请求，也不会改写工具配置。服务进入与该模型对应的本机工具列表，需要你再手动启用。",
+        "title": "确认接入信息"
+      },
+      "title": "准备接入服务"
+    },
+    "pick": {
+      "description": "先选一条已发布渠道。榜单里有 API 地址时会自动填上，否则填写站点给你的地址。Key 始终由你填写。",
+      "empty": "目前没有已发布的渠道。",
+      "title": "从发现服务选择"
+    },
+    "detail": {
+      "ambiguousFingerprintShort": "同底模推理档位，指纹不作单独区分",
+      "availability": "近期可用率",
+      "back": "← 返回发现服务",
+      "cacheDiscount": "缓存折扣",
+      "cacheHitRate": "缓存命中率",
+      "cachePrice": "缓存读取单价",
+      "cards": {
+        "authenticity": "探针一致率"
+      },
+      "channel": "渠道 / 分组",
+      "chartModes": {
+        "avail": "可用率",
+        "eff": "缓存折算会话",
+        "prices": "单价对比",
+        "stack": "无缓存会话",
+        "ttft": "首字延迟"
+      },
+      "chartSection": "同行横向对比",
+      "collectedDays": "已收录 {{days}} 天",
+      "continue": "准备接入 →",
+      "disclaimer": "榜单数据只说明该渠道近期表现，不代表你的 Key 已开通、余额充足或当前工具已适配。下一步需要你的 Key。榜单提供了 API 地址时会预先填上。",
+      "effectiveCost": "折算会话成本",
+      "facts": {
+        "customerService": "客服响应",
+        "domesticInvoice": "国内发票",
+        "limitations": "已知限制",
+        "minRecharge": "最低充值",
+        "overseasInvoice": "海外发票",
+        "paymentMethods": "支付方式",
+        "refund": "退款说明",
+        "serviceBillingTitle": "服务与结算",
+        "signupBonus": "注册赠送",
+        "strengths": "实测亮点"
+      },
+      "infoTitle": "公开资料",
+      "inputPrice": "输入 / 百万 Token",
+      "measuredAt": "最近评测",
+      "noCacheQuote": "未报缓存价",
+      "notFound": "该渠道目前不在这个模型的已发布榜单中。",
+      "openWebsite": "打开站点官网 ↗",
+      "openWebsiteShort": "官网",
+      "outputPrice": "输出 / 百万 Token",
+      "sampleSize": "近期样本",
+      "statusWindow": "最近 24 小时",
+      "statusWindowDirection": "较早 → 当前",
+      "website": "站点官网"
+    },
+    "list": {
+      "availability": "近期可用率",
+      "count": "{{count}} 条渠道",
+      "details": "查看详情 →",
+      "empty": "这个模型目前没有已发布的渠道。请选择其他模型。",
+      "input": "输入",
+      "output": "输出",
+      "refreshFailed": "更新失败，展示 {{time}} 获取的榜单；价格和排名可能已变化。",
+      "statusWindow": "{{station}} · {{channel}} 最近 24 小时渠道状态",
+      "updating": "正在更新榜单…",
+      "title": "已发布渠道",
+      "register": "去注册",
+      "routesCount": "{{routes}} 条线路 · {{stations}} 家中转站",
+      "sessionCostNote": "工作会话成本按 200 万输入 + 4 万输出 token 估算（{{symbol}}，1 美元 = {{rate}} 元），按数据安全等级优先排序。",
+      "allModels": "全部模型",
+      "window24h": "近 24 小时",
+      "syncNote": "每 15 分钟同步",
+      "unknownValue": "—",
+      "wilsonRange": "95% 置信区间：{{lo}}%–{{hi}}%",
+      "rankRangeSingle": "第 {{rank}} 名",
+      "rankRangeSpan": "第 {{best}}–{{worst}} 名",
+      "samplesValue": "{{count}} 次"
+    },
+    "tabs": {
+      "rankings": "排行榜",
+      "integrity": "降智监控",
+      "value": "性价比图",
+      "security": "数据安全榜"
+    },
+    "compare": {
+      "adjustedIntelligence": "折算智能分",
+      "button": "双站对比",
+      "clear": "清空",
+      "dimension": "维度",
+      "focus": {
+        "balanced": "均衡",
+        "integrity": "真实度",
+        "price": "低价",
+        "speed": "速度",
+        "stability": "稳定",
+        "value": "性价比"
+      },
+      "focusLabel": "对比侧重",
+      "metrics": {
+        "availability": "可用率",
+        "cache": "缓存折扣",
+        "integrity": "探针保持率",
+        "price": "会话成本",
+        "speed": "首字延迟",
+        "value": "每 {{symbol}} 智能分"
+      },
+      "needTwo": "当前模型至少需要 2 条已发布渠道才能对比。",
+      "relayA": "中转站 A",
+      "relayB": "中转站 B",
+      "selectedButton": "对比已选（{{count}}/2）",
+      "swap": "交换对比站点",
+      "title": "双站雷达对比",
+      "toggleRow": "加入对比：{{station}}",
+      "unmeasured": "未折算",
+      "verdictPending": "暂无足够实测数据生成结论",
+      "verdictTie": "两站在当前侧重下表现接近",
+      "verdictWin": "当前侧重更推荐：{{winner}}"
+    },
+    "frontier": {
+      "availAll": "不限可用率",
+      "axisAdjusted": "折算智能分",
+      "axisCost": "工作会话成本（{{symbol}}，对数坐标）",
+      "axisIntelligence": "智能指数",
+      "empty": "当前筛选下暂无可绘制线路。",
+      "frontierCount": "共 {{total}} 条线路，{{frontier}} 条位于帕累托前沿",
+      "listTitle": "帕累托前沿推荐",
+      "modes": {
+        "adjusted": "降智折算",
+        "official": "官方 API",
+        "relay": "中转站报价"
+      },
+      "scoreShort": "智能分"
+    },
+    "securityBoard": {
+      "answers": {
+        "no": "不支持",
+        "unspecified": "未说明",
+        "yes": "支持"
+      },
+      "columns": {
+        "domesticPay": "国内支付",
+        "invoice": "开发票",
+        "overseasPay": "海外支付",
+        "refund": "退款政策",
+        "station": "中转站",
+        "subject": "运营主体",
+        "support": "客服渠道"
+      },
+      "count": "{{count}} 家中转站",
+      "empty": "当前筛选下暂无中转站记录。",
+      "refund": {
+        "conditional": "有条件退款",
+        "contact_required": "需联系客服",
+        "not_supported": "不支持退款",
+        "supported": "支持退款",
+        "unspecified": "未说明"
+      },
+      "searchPlaceholder": "搜索中转站…"
+    },
+    "metrics": {
+      "availability": "可用率",
+      "connectivity": "首字延迟",
+      "stability": "稳定性",
+      "price": "会话成本"
+    },
+    "currency": {
+      "label": "计价币种",
+      "cny": "人民币 ¥",
+      "usd": "美元 $"
+    },
+    "columns": {
+      "rank": "排名",
+      "range": "区间",
+      "security": "数据安全",
+      "route": "模型 @ 中转站",
+      "samples": "样本",
+      "availability": "可用率",
+      "firstToken": "首字延迟",
+      "stability": "稳定性",
+      "sessionCost": "会话成本",
+      "apiRate": "API 倍率",
+      "status24h": "24h 状态",
+      "action": "操作"
+    },
+    "dataSecurity": {
+      "label": "数据安全",
+      "level": "数据安全 {{level}} 级",
+      "shortLevel": "{{level}} 级",
+      "expired": "证据已过期，待复核",
+      "unavailable": "暂无可见说明",
+      "names": {
+        "l0": "主体不可核验",
+        "l1": "留存未知",
+        "l2": "限期留存",
+        "l3": "默认不留存",
+        "l4": "核验不留存"
+      },
+      "descriptions": {
+        "l0": "还没有足够材料确认这家中转站是谁在运营，所以先不判断它会不会留下用户内容。",
+        "l1": "已经确认是谁在运营，但公开说明还不够判断它默认留不留、会留多久。",
+        "l2": "已经确认是谁在运营，公开政策写了保存期限、留下的条件，或删除规则。",
+        "l3": "已经确认运营方，公开政策写明默认不留下用户内容。",
+        "l4": "公开政策写明默认不留存，另外还有一份能公开查看的第三方报告或 Folkbench 核验说明，并写明了核验范围和限制。"
+      }
+    },
+    "officialStatus": {
+      "title": "官方服务状态",
+      "operational": "运行正常",
+      "degraded": "性能下降",
+      "partialOutage": "部分不可用",
+      "majorOutage": "服务中断",
+      "maintenance": "维护中",
+      "unknown": "状态暂不可用",
+      "stale": "数据更新延迟",
+      "updated": "更新于"
+    },
+    "integrity": {
+      "title": "降智监控",
+      "description": "同一个模型在各家中转站的身份探针原始实测数据：探针一致率、输入 token、思考 token、模型指纹与缓存检测。原始数值直接公开，不做判定。",
+      "coverage": "覆盖 {{models}} 个模型、{{routes}} 条线路",
+      "fingerprintNote": "gpt-6.1-sol（又名 astra-minor）本质上是 gpt-6-astra 降低了循环推理深度的产物，两者共享同一底模，无法通过模型指纹区分。",
+      "filterAll": "全部",
+      "filterClaude": "Claude",
+      "filterGpt": "GPT",
+      "filterGemini": "Gemini",
+      "filterOther": "其他",
+      "filterModel": "模型",
+      "filterStation": "中转站",
+      "filterAllModels": "全部模型",
+      "filterAllStations": "全部中转站",
+      "empty": "当前筛选下暂无降智监控实测数据。",
+      "pending": "待检测",
+      "accuracyValue": "{{rate}}（{{count}} 次）",
+      "cacheHits": "{{hits}}/{{reads}} 次",
+      "cacheHitsTitle": "最近 {{rounds}} 轮缓存检测：{{reads}} 次热请求中 {{hits}} 次命中缓存",
+      "cacheNotComparable": "未返回可比较缓存用量",
+      "addedTokensTitle": "请求前附加并按缓存读取计入的中位 token 数：{{count}}",
+      "columns": {
+        "route": "模型 @ 中转站",
+        "security": "数据安全",
+        "accuracy": "探针一致率",
+        "peer": "同行一致率",
+        "inputTokens": "输入 token",
+        "reasoning": "思考 token",
+        "fingerprint": "模型指纹",
+        "cacheHits": "缓存命中",
+        "addedTokens": "附加 token",
+        "availability": "可用率",
+        "firstToken": "首字延迟",
+        "sessionCost": "会话成本",
+        "detail": "详情"
+      },
+      "detail": {
+        "button": "详情",
+        "title": "检测详情",
+        "runId": "评测 ID",
+        "measuredAt": "检测时间",
+        "client": "调用方式",
+        "keyGroup": "Key 分组",
+        "probes": "探针 ID（{{count}}）",
+        "notReported": "未提供",
+        "close": "关闭"
+      }
+    },
+    "methods": {
+      "cacheBody": "按设定的缓存命中率将 200 万输入 token 拆分为缓存命中（按公开缓存读取单价计费，未报价时按原输入单价计）与未命中输入，再加上 4 万输出 token，还原长上下文编码场景的真实开销。",
+      "cacheTitle": "提示词缓存会话折算",
+      "compareBody": "在同一模型的全部已发布线路中，对探针保持率、首字延迟、会话成本、缓存折扣与近 24 小时可用率做同批百分位归一化（0–100），并按所选侧重维度加权汇总。",
+      "compareTitle": "双站五维雷达对比",
+      "description": "榜单表现、数据安全、降智监控与本机连通性关注不同维度的问题。",
+      "frontierBody": "横轴为标准编码会话成本（200 万输入 + 4 万输出 token，对数坐标），纵轴引用 Artificial Analysis 智能指数 v5。帕累托前沿标出没有其他线路同时更便宜且得分更高的组合；降智折算模式按实测探针保持率与近 24 小时可用率折算有效智能分。",
+      "frontierTitle": "性价比图与帕累托前沿",
+      "hostBody": "保存服务后可以检查目标地址的 HTTP 可达与延迟；这不会发送 Key，也不能证明该模型可用。",
+      "hostTitle": "本机连通性",
+      "integrityBody": "同一时段向各中转站发送相同的身份探针，并记录输入 token、思考 token 与模型指纹的原始实测数据，直接公开而不做主观判定。",
+      "integrityTitle": "降智监控",
+      "keyBody": "只有用用户自己的 Key 发起模型请求，才能确认授权、额度与模型响应；当前版本不自动发起可能计费的请求。",
+      "keyTitle": "Key 与模型验证",
+      "link": "了解这些数据如何判断 →",
+      "rankingBody": "公开榜单按数据安全等级优先排序，再比较近 24 小时可用率（含 95% Wilson 置信区间与同级名次区间）、首字延迟、稳定性或会话成本。",
+      "rankingTitle": "榜单表现与排序",
+      "securityBody": "依据公开政策与人工核验材料评定 0–4 级数据安全等级，区分是否确认运营主体与默认留存策略，与实时性能彼此独立。",
+      "securityTitle": "数据安全等级",
+      "title": "了解检测"
+    },
+    "model": "模型",
+    "sort": {
+      "availability": "可用率",
+      "price": "输入价格",
+      "rank": "榜单位次",
+      "title": "排序"
+    },
+    "title": "发现服务",
+    "easy": {
+      "title": "找服务",
+      "description": "从已发布站点接入。先注册拿到 Key，再点接入。"
+    }
+  }
+}

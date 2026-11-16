@@ -1,1 +1,1 @@
-export const DEFAULT_PUBLIC_MODEL_ID = 'gpt-6-astra'
+export const DEFAULT_PUBLIC_MODEL_ID = 'claude-opus-5-5'

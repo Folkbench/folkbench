@@ -40,18 +40,15 @@ export function AppShell() {
 
   useEffect(() => {
     void queryClient
-      .prefetchQuery(publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID))
+      .prefetchQuery(
+        publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID, 'availability')
+      )
       .catch(() => {})
   }, [queryClient])
 
   useEffect(() => {
     if (!isEasy) return
-    if (
-      pathname === '/tools' ||
-      pathname === '/methods' ||
-      pathname === '/usage' ||
-      pathname.startsWith('/discover')
-    ) {
+    if (pathname === '/tools' || pathname === '/usage') {
       void navigate({ to: '/' })
     }
   }, [isEasy, navigate, pathname])
@@ -75,7 +72,7 @@ export function AppShell() {
             height={30}
             className="size-8 rounded-lg"
           />
-          <span className="text-[15px] font-semibold tracking-tight">
+          <span className="text-[15px] font-medium tracking-tight">
             Folkbench{' '}
             <span className="font-normal text-muted-foreground">Switch</span>
           </span>
@@ -90,19 +87,21 @@ export function AppShell() {
               )}
             </span>
           </Link>
-          {!isEasy ? (
-            <Link
-              to="/discover"
-              search={{ modelId: DEFAULT_PUBLIC_MODEL_ID }}
-              aria-current={
-                pathname.startsWith('/discover') || pathname === '/methods'
-                  ? 'page'
-                  : undefined
-              }
-            >
-              <span>{t('navigation.items.discover')}</span>
-            </Link>
-          ) : null}
+          <Link
+            to="/discover"
+            search={{
+              modelId: DEFAULT_PUBLIC_MODEL_ID,
+              tab: 'rankings',
+              metric: 'availability',
+            }}
+            aria-current={
+              pathname.startsWith('/discover') || pathname === '/methods'
+                ? 'page'
+                : undefined
+            }
+          >
+            <span>{t('navigation.items.discover')}</span>
+          </Link>
           {!isEasy ? (
             <Link
               to="/usage"

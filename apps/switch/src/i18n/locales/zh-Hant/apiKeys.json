@@ -1,0 +1,41 @@
+{
+  "apiKeys": {
+    "copy": {
+      "success": "已安全複製 API Key。"
+    },
+    "create": {
+      "dialog": {
+        "description": "為目前裝置或工作流程建立專用 Key。",
+        "title": "建立 API Key"
+      },
+      "fields": {
+        "name": {
+          "label": "名稱",
+          "placeholder": "開發筆電"
+        }
+      },
+      "success": "API Key 已建立。"
+    },
+    "description": "管理遮罩處理後的 API Key 及其本機裝置關聯。",
+    "empty": {
+      "description": "設定工具前，請先建立一把專用 Key。",
+      "title": "尚無 API Key"
+    },
+    "list": {
+      "columns": {
+        "createdAt": "建立時間",
+        "lastUsed": "最近使用",
+        "name": "名稱",
+        "status": "狀態"
+      }
+    },
+    "revoke": {
+      "confirm": {
+        "description": "使用此 Key 的請求將停止運作，此操作無法復原。",
+        "title": "撤銷 API Key？"
+      },
+      "success": "API Key 已撤銷。"
+    },
+    "title": "API Keys"
+  }
+}

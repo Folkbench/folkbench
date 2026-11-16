@@ -1,0 +1,32 @@
+{
+  "overview": {
+    "description": "查看已儲存的服務、Folkbench 核驗情況和可切換的工具。",
+    "metrics": {
+      "apiKeyCount": "API Keys",
+      "balance": "餘額",
+      "configuredTools": "已設定工具",
+      "services": "我的服務",
+      "tools": "支援的工具",
+      "usageToday": "今日用量",
+      "verified": "已核驗"
+    },
+    "readiness": {
+      "action": "檢查工具",
+      "description": "先新增已購買的中轉服務，再選擇工具切換。餘額適配與 MCP 不在這一版。",
+      "manage": "管理服務",
+      "title": "下一步",
+      "tools": "查看工具"
+    },
+    "recentChanges": {
+      "empty": "還沒有本機設定變更。",
+      "title": "近期變更"
+    },
+    "recentUsage": {
+      "empty": "尚無可用的用量記錄。",
+      "requests_one": "{{count}} 次請求",
+      "requests_other": "{{count}} 次請求",
+      "title": "近期用量"
+    },
+    "title": "概覽"
+  }
+}
