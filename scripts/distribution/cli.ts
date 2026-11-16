@@ -6,6 +6,8 @@ import { readHistory, verifyArchive, writeArchive } from './archive'
 import { updateReadme } from './readme'
 import { isoWeek, prepareWeek, publishCompletedWeek, readPublishedReports, readWithdrawals, setWithdrawal } from './weekly'
 import { buildRelaySite, buildWeeklySite } from './sites'
+import { buildSubsite } from './subsites'
+import { isSubsite } from './subsite-core'
 
 const args = process.argv.slice(2); const command = args.shift()
 function option(name: string, fallback?: string): string {
@@ -35,7 +37,12 @@ async function verifySite(path: string): Promise<void> {
 }
 
 async function main():Promise<void>{
-  if(command==='archive'){
+  if(command==='subsite'){
+    const site=option('site');if(!isSubsite(site))throw new Error('subsite_unknown')
+    const data=resolve(option('data-root'));const snapshot=await verifyArchive(join(data,'latest'))
+    await buildSubsite(resolve(option('out')),site,snapshot,await readHistory(data))
+    await output('archive_date',snapshot.date);await output('snapshot_version',snapshot.snapshot_version);await output('site',site)
+  }else if(command==='archive'){
     const snapshot=args.includes('--snapshot')?await readSnapshot(resolve(option('snapshot'))):await fetchSnapshot()
     const changed=await writeArchive(root,snapshot);await output('changed',String(changed));await output('snapshot_version',snapshot.snapshot_version)
   }else if(command==='readme'){
