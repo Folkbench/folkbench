@@ -13,11 +13,20 @@ export function displayListPrice(amount: string | null): string | null {
 }
 
 export function formatTokenMagnitude(value: number, locale: string) {
+  const normalized = locale.trim().toLowerCase()
   const formatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 })
-  if (locale.startsWith('zh')) {
-    if (value >= 100_000_000)
-      return `${formatter.format(value / 100_000_000)} 亿`
-    if (value >= 10_000) return `${formatter.format(value / 10_000)} 万`
+  if (normalized.startsWith('zh')) {
+    const traditional =
+      normalized.includes('hant') ||
+      normalized.includes('-tw') ||
+      normalized.includes('-hk') ||
+      normalized.includes('-mo')
+    if (value >= 100_000_000) {
+      return `${formatter.format(value / 100_000_000)} ${traditional ? '億' : '亿'}`
+    }
+    if (value >= 10_000) {
+      return `${formatter.format(value / 10_000)} ${traditional ? '萬' : '万'}`
+    }
   } else {
     if (value >= 1_000_000_000)
       return `${formatter.format(value / 1_000_000_000)}B`

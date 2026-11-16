@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "version": "0.1.0-beta.7",
   "hashes": {
-    "package.json": "455930100615240e847e7b8e56ae113139bacb8c45e5aca95902625556234661",
-    "bun.lock": "c2d1f26a87564bf54ce3104c21bfc7733d020fd0456c33b7a2aee18138f4a083",
+    "package.json": "148b63160f5af9d1ab31f95970464457e3748c6268a98708019bf8929eaebab8",
+    "bun.lock": "231d61a49f3f16769c2034f5e30f7fc38824d906628edc0b3bbde18cb1b1a3cd",
     "src-tauri/Cargo.lock": "ec63b31266a8ff5cc26d06d18977de251264bb10fcd75997491f28bc0755e69a"
   },
   "packages": [
@@ -69,7 +69,13 @@
     },
     {
       "ecosystem": "npm",
-      "name": "@fontsource-variable/public-sans",
+      "name": "@fontsource-variable/inter",
+      "version": "5.3.0",
+      "license": "OFL-1.1"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@fontsource-variable/noto-sans-sc",
       "version": "5.3.0",
       "license": "OFL-1.1"
     },

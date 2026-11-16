@@ -1,0 +1,101 @@
+{
+  "settings": {
+    "telemetry": {
+      "title": "使用統計",
+      "label": "協助改進 Switch（選用）",
+      "description": "預設關閉。開啟後會向 FolkBench 傳送版本、作業系統、工具識別碼與操作結果。使用隨機安裝 ID，不讀取硬體指紋。",
+      "excluded": "不包含 API Key、密碼、對話內容、專案路徑、自訂 API 位址，或本機 Token 與費用總量。",
+      "disable": "關閉會清空待傳送佇列並停止後續回報；已經送出的請求可能完成，已傳送記錄依伺服器保存規則處理。",
+      "queue": "尚未傳送的事件：{{count}} 筆",
+      "error": "無法讀取或儲存統計設定，原來的選擇維持不變。"
+    },
+    "about": {
+      "title": "關於",
+      "version": "版本",
+      "channel": "發布頻道",
+      "beta": "Beta",
+      "commit": "建置提交",
+      "unavailable": "版本資訊暫時無法讀取，請重新開啟設定。",
+      "update": {
+        "check": "檢查更新",
+        "checking": "正在檢查更新…",
+        "none": "已是最新版本。",
+        "available": "發現新版本 {{version}}。",
+        "install": "下載並安裝",
+        "downloading": "正在下載更新… {{percent}}%",
+        "downloadingUnknown": "正在下載更新…",
+        "ready": "更新已安裝，重新啟動後生效。",
+        "restart": "立即重新啟動",
+        "failed": "檢查更新失敗，請檢查網路後重試。",
+        "installFailed": "更新安裝失敗，請稍後重試，或前往 Releases 頁面下載安裝包。"
+      }
+    },
+    "account": {
+      "checking": "正在檢查帳號…",
+      "dialog": {
+        "description": "將在系統瀏覽器開啟 Folkbench。您可以登入現有帳號或註冊新帳號，完成後會自動返回 Switch。",
+        "privacy": "用戶端僅儲存獨立的登入狀態；中轉站 Key、本機設定和本機用量不會上傳。",
+        "title": "登入或註冊 Folkbench"
+      },
+      "guest": "正在本機使用 Switch",
+      "localOnly": "登入為選用操作，已儲存的 Key 仍保留在本機。",
+      "signIn": "登入或註冊",
+      "signOut": "登出",
+      "signOutFailed": "登出失敗，請在網路恢復後重試。",
+      "title": "Folkbench 帳號",
+      "signInShort": "登入"
+    },
+    "appearance": {
+      "theme": {
+        "dark": "深色",
+        "light": "淺色",
+        "system": "跟隨系統",
+        "title": "主題"
+      },
+      "title": "外觀",
+      "description": "頁面、圖表、選單和對話框使用同一套主題。",
+      "switchToLight": "切換淺色模式",
+      "switchToDark": "切換深色模式",
+      "saveFailed": "外觀偏好儲存失敗，請重試。"
+    },
+    "description": "調整外觀、語言與隱私。",
+    "general": {
+      "title": "一般"
+    },
+    "language": {
+      "description": "英語為預設語言與備援語言。",
+      "options": {
+        "en": "English",
+        "zh-CN": "简体中文",
+        "zh-Hant": "繁體中文"
+      },
+      "saved": "語言偏好已儲存。",
+      "switchTo": "切換至 {{language}}",
+      "title": "語言"
+    },
+    "privacy": {
+      "body": "不傳送遙測資料。設定與 Key 儲存在本機，不會上傳至 Folkbench。本機用量只從工作階段檔案擷取模型與 token 計數，不上傳對話內容。",
+      "telemetry": {
+        "description": "Folkbench Switch 這個版本不會傳送遙測資料。",
+        "title": "遙測"
+      },
+      "title": "隱私"
+    },
+    "title": "設定",
+    "updates": {
+      "channel": {
+        "beta": "測試版",
+        "title": "更新頻道"
+      },
+      "title": "更新"
+    },
+    "uiMode": {
+      "title": "介面模式",
+      "description": "簡易模式僅保留核心功能；專業版顯示全部頁籤與進階選項。",
+      "easy": "簡易模式",
+      "pro": "專業版",
+      "saved": "介面模式已儲存。",
+      "saveFailed": "介面模式儲存失敗，請重試。"
+    }
+  }
+}

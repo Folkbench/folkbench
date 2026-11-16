@@ -1,0 +1,322 @@
+{
+  "discovery": {
+    "connect": {
+      "description": "公開榜單如果帶有 API 位址，會自動填入；沒有的話請向中轉站索取。Key 需要您自行填寫。儲存只會加入本機服務清單，不會立即改寫工具設定。",
+      "result": {
+        "checkUnavailable": "服務已儲存在本機，但連通性檢查未能完成。",
+        "description": "服務已加入對應工具的本機清單。回到該工具後，您可以決定是否啟用。",
+        "reachable": "服務已儲存，目標主機可連線（{{ms}} ms）。",
+        "scope": "這不是 API Key 或模型回應驗證，工具設定也尚未更動。",
+        "title": "已加入我的服務",
+        "unreachable": "服務已儲存，但目標主機無法連線；請核對 API 位址。",
+        "viewServices": "查看我的服務",
+        "reachableSlow": "服務已儲存，目標主機可連線但較慢（{{ms}} ms）。"
+      },
+      "review": {
+        "description": "先核對本次儲存的項目。此步驟不會自動切換工具或發送付費請求。",
+        "keyHidden": "API Key：已填寫，完整內容不會在此顯示。",
+        "name": "服務名稱：{{name}}",
+        "next": "儲存",
+        "saveAndCheck": "儲存並檢查連通性",
+        "scope": "儲存後僅檢查目標位址的 HTTP 可達與延遲；不會使用 Key 發起模型請求，也不會改寫工具設定。服務會進入與該模型對應的本機工具清單，仍需要您手動啟用。",
+        "title": "確認接入資訊"
+      },
+      "title": "準備接入服務"
+    },
+    "pick": {
+      "description": "先選一條已發布管道。榜單中有 API 位址時會自動填入，否則填寫中轉站給您的位址。Key 一律由您填寫。",
+      "empty": "目前沒有已發布的管道。",
+      "title": "從探索服務選擇"
+    },
+    "detail": {
+      "ambiguousFingerprintShort": "同底模推理檔位，指紋不作單獨區分",
+      "availability": "近期可用率",
+      "back": "← 返回探索服務",
+      "cacheDiscount": "快取折扣",
+      "cacheHitRate": "快取命中率",
+      "cachePrice": "快取讀取單價",
+      "cards": {
+        "authenticity": "探針一致率"
+      },
+      "channel": "管道 / 群組",
+      "chartModes": {
+        "avail": "可用率",
+        "eff": "快取折算成本",
+        "prices": "單價對比",
+        "stack": "無快取成本",
+        "ttft": "首 Token 延遲"
+      },
+      "chartSection": "同業橫向對比",
+      "collectedDays": "已收錄 {{days}} 天",
+      "continue": "準備接入 →",
+      "disclaimer": "榜單數據僅說明該管道近期表現，不代表您的 Key 已開通、餘額充足或目前工具已適配。下一步需要您的 Key。榜單提供 API 位址時會預先填入。",
+      "effectiveCost": "折算工作階段成本",
+      "facts": {
+        "customerService": "客服回應",
+        "domesticInvoice": "國內發票",
+        "limitations": "已知限制",
+        "minRecharge": "最低儲值",
+        "overseasInvoice": "海外發票",
+        "paymentMethods": "付款方式",
+        "refund": "退款說明",
+        "serviceBillingTitle": "服務與結算",
+        "signupBonus": "註冊贈金",
+        "strengths": "實測亮點"
+      },
+      "infoTitle": "公開資料",
+      "inputPrice": "輸入 / 百萬 Token",
+      "measuredAt": "最近評測",
+      "noCacheQuote": "未報快取價",
+      "notFound": "該管道目前不在這個模型的已發布榜單中。",
+      "openWebsite": "開啟中轉站官網 ↗",
+      "openWebsiteShort": "官網",
+      "outputPrice": "輸出 / 百萬 Token",
+      "sampleSize": "近期樣本",
+      "statusWindow": "最近 24 小時",
+      "statusWindowDirection": "較早 → 目前",
+      "website": "中轉站官網"
+    },
+    "list": {
+      "availability": "近期可用率",
+      "count": "{{count}} 條管道",
+      "details": "查看詳情 →",
+      "empty": "這個模型目前沒有已發布的管道。請選擇其他模型。",
+      "input": "輸入",
+      "output": "輸出",
+      "refreshFailed": "更新失敗，顯示 {{time}} 取得的榜單；價格和排名可能已變動。",
+      "statusWindow": "{{station}} · {{channel}} 最近 24 小時管道狀態",
+      "updating": "正在更新榜單…",
+      "title": "已發布管道",
+      "register": "前往註冊",
+      "routesCount": "{{routes}} 條線路 · {{stations}} 家中轉站",
+      "sessionCostNote": "工作階段成本依 200 萬輸入 + 4 萬輸出 Token 估算（{{symbol}}，1 美元 = {{rate}} 人民幣），依資料安全等級優先排序。",
+      "allModels": "全部模型",
+      "window24h": "近 24 小時",
+      "syncNote": "每 15 分鐘同步",
+      "unknownValue": "—",
+      "wilsonRange": "95% 信賴區間：{{lo}}%–{{hi}}%",
+      "rankRangeSingle": "第 {{rank}} 名",
+      "rankRangeSpan": "第 {{best}}–{{worst}} 名",
+      "samplesValue": "{{count}} 次"
+    },
+    "tabs": {
+      "rankings": "排行榜",
+      "integrity": "降級監控",
+      "value": "性價比圖",
+      "security": "資料安全榜"
+    },
+    "compare": {
+      "adjustedIntelligence": "折算智慧分",
+      "button": "雙站對比",
+      "clear": "清除",
+      "dimension": "維度",
+      "focus": {
+        "balanced": "均衡",
+        "integrity": "真實度",
+        "price": "低價",
+        "speed": "速度",
+        "stability": "穩定性",
+        "value": "性價比"
+      },
+      "focusLabel": "對比側重",
+      "metrics": {
+        "availability": "可用率",
+        "cache": "快取折扣",
+        "integrity": "探針保持率",
+        "price": "工作階段成本",
+        "speed": "首 Token 延遲",
+        "value": "每 {{symbol}} 智慧分"
+      },
+      "needTwo": "目前模型至少需要 2 條已發布管道才能對比。",
+      "relayA": "中轉站 A",
+      "relayB": "中轉站 B",
+      "selectedButton": "對比已選（{{count}}/2）",
+      "swap": "交換對比中轉站",
+      "title": "雙站雷達對比",
+      "toggleRow": "加入對比：{{station}}",
+      "unmeasured": "未折算",
+      "verdictPending": "尚無足夠實測數據產生結論",
+      "verdictTie": "兩站在目前側重下表現接近",
+      "verdictWin": "目前側重更推薦：{{winner}}"
+    },
+    "frontier": {
+      "availAll": "不限可用率",
+      "axisAdjusted": "折算智慧分",
+      "axisCost": "工作階段成本（{{symbol}}，對數座標）",
+      "axisIntelligence": "智慧指數",
+      "empty": "目前篩選條件下尚無可繪製線路。",
+      "frontierCount": "共 {{total}} 條線路，{{frontier}} 條位於柏拉圖前緣",
+      "listTitle": "柏拉圖前緣推薦",
+      "modes": {
+        "adjusted": "降級折算",
+        "official": "官方 API",
+        "relay": "中轉站報價"
+      },
+      "scoreShort": "智慧分"
+    },
+    "securityBoard": {
+      "answers": {
+        "no": "不支援",
+        "unspecified": "未說明",
+        "yes": "支援"
+      },
+      "columns": {
+        "domesticPay": "國內付款",
+        "invoice": "開立發票",
+        "overseasPay": "海外付款",
+        "refund": "退款政策",
+        "station": "中轉站",
+        "subject": "經營主體",
+        "support": "客服管道"
+      },
+      "count": "{{count}} 家中轉站",
+      "empty": "目前篩選條件下尚無中轉站紀錄。",
+      "refund": {
+        "conditional": "有條件退款",
+        "contact_required": "需聯絡客服",
+        "not_supported": "不支援退款",
+        "supported": "支援退款",
+        "unspecified": "未說明"
+      },
+      "searchPlaceholder": "搜尋中轉站…"
+    },
+    "metrics": {
+      "availability": "可用率",
+      "connectivity": "首 Token 延遲",
+      "stability": "穩定性",
+      "price": "工作階段成本"
+    },
+    "currency": {
+      "label": "計價幣別",
+      "cny": "人民幣 ¥",
+      "usd": "美元 $"
+    },
+    "columns": {
+      "rank": "排名",
+      "range": "區間",
+      "security": "資料安全",
+      "route": "模型 @ 中轉站",
+      "samples": "樣本",
+      "availability": "可用率",
+      "firstToken": "首 Token 延遲",
+      "stability": "穩定性",
+      "sessionCost": "工作階段成本",
+      "apiRate": "API 倍率",
+      "status24h": "24h 狀態",
+      "action": "操作"
+    },
+    "dataSecurity": {
+      "label": "資料安全",
+      "level": "資料安全 {{level}} 級",
+      "shortLevel": "{{level}} 級",
+      "expired": "證據已過期，待複核",
+      "unavailable": "尚無可查看的說明",
+      "names": {
+        "l0": "主體無法核驗",
+        "l1": "保留情況未知",
+        "l2": "限期保留",
+        "l3": "預設不保留",
+        "l4": "核驗不保留"
+      },
+      "descriptions": {
+        "l0": "目前還沒有足夠資料確認這家中轉站由誰經營，因此暫不判斷它是否會保留使用者內容。",
+        "l1": "已確認經營者，但公開說明不足以判斷它預設是否保留內容、會保留多久。",
+        "l2": "已確認經營者，公開政策載明了保存期限、保留條件或刪除規則。",
+        "l3": "已確認經營者，公開政策載明預設不保留使用者內容。",
+        "l4": "公開政策載明預設不保留，另外還有一份可公開查閱的第三方報告或 Folkbench 核驗說明，並寫明核驗範圍與限制。"
+      }
+    },
+    "officialStatus": {
+      "title": "官方服務狀態",
+      "operational": "運作正常",
+      "degraded": "效能下降",
+      "partialOutage": "部分無法使用",
+      "majorOutage": "服務中斷",
+      "maintenance": "維護中",
+      "unknown": "暫時無法取得狀態",
+      "stale": "資料更新延遲",
+      "updated": "更新於"
+    },
+    "integrity": {
+      "title": "降級監控",
+      "description": "同一個模型在各家中轉站的身分探針原始實測數據：探針一致率、輸入 Token、思考 Token、模型指紋與快取檢測。原始數值直接公開，不做判定。",
+      "coverage": "涵蓋 {{models}} 個模型、{{routes}} 條線路",
+      "fingerprintNote": "gpt-6.1-sol（又名 astra-minor）本質上是 gpt-6-astra 降低了循環推理深度的產物，兩者共享同一底模，無法透過模型指紋區分。",
+      "filterAll": "全部",
+      "filterClaude": "Claude",
+      "filterGpt": "GPT",
+      "filterGemini": "Gemini",
+      "filterOther": "其他",
+      "filterModel": "模型",
+      "filterStation": "中轉站",
+      "filterAllModels": "全部模型",
+      "filterAllStations": "全部中轉站",
+      "empty": "目前篩選條件下尚無降級監控實測數據。",
+      "pending": "待檢測",
+      "accuracyValue": "{{rate}}（{{count}} 次）",
+      "cacheHits": "{{hits}}/{{reads}} 次",
+      "cacheHitsTitle": "最近 {{rounds}} 輪快取檢測：{{reads}} 次熱請求中有 {{hits}} 次讀到快取",
+      "cacheNotComparable": "未回傳可比較快取用量",
+      "addedTokensTitle": "請求前額外加入並計為快取讀取的中位 Token 數：{{count}}",
+      "columns": {
+        "route": "模型 @ 中轉站",
+        "security": "資料安全",
+        "accuracy": "探針一致率",
+        "peer": "同業一致率",
+        "inputTokens": "輸入 Token",
+        "reasoning": "思考 Token",
+        "fingerprint": "模型指紋",
+        "cacheHits": "快取命中",
+        "addedTokens": "附加 Token",
+        "availability": "可用率",
+        "firstToken": "首 Token 延遲",
+        "sessionCost": "工作階段成本",
+        "detail": "詳情"
+      },
+      "detail": {
+        "button": "詳情",
+        "title": "檢測詳情",
+        "runId": "評測 ID",
+        "measuredAt": "檢測時間",
+        "client": "呼叫方式",
+        "keyGroup": "金鑰群組",
+        "probes": "探針 ID（{{count}}）",
+        "notReported": "未提供",
+        "close": "關閉"
+      }
+    },
+    "methods": {
+      "cacheBody": "依設定的快取命中率將 200 萬輸入 Token 拆分為快取命中（依公開快取讀取單價計費，未報價時依原輸入單價計算）與未命中輸入，再加上 4 萬輸出 Token，還原長脈絡編碼情境的真實開銷。",
+      "cacheTitle": "提示詞快取工作階段折算",
+      "compareBody": "在同一模型的全部已發布線路中，對探針保持率、首 Token 延遲、工作階段成本、快取折扣與近 24 小時可用率進行同批百分位正規化（0–100），並依所選側重維度加權彙整。",
+      "compareTitle": "雙站五維雷達對比",
+      "description": "榜單表現、資料安全、降級監控與本機連通性關注不同維度的問題。",
+      "frontierBody": "橫軸為標準編碼工作階段成本（200 萬輸入 + 4 萬輸出 Token，對數座標），縱軸引用 Artificial Analysis 智慧指數 v5。柏拉圖前緣標出沒有其他線路同時更便宜且得分更高的組合；降級折算模式依實測探針保持率與近 24 小時可用率折算有效智慧分。",
+      "frontierTitle": "性價比圖與柏拉圖前緣",
+      "hostBody": "儲存服務後可以檢查目標位址的 HTTP 可達與延遲；這不會發送 Key，也不能證明該模型可用。",
+      "hostTitle": "本機連通性",
+      "integrityBody": "同一時段向各中轉站送出相同的身分探針，並記錄輸入 Token、思考 Token 與模型指紋的原始實測數據，直接公開而不做主觀判定。",
+      "integrityTitle": "降級監控",
+      "keyBody": "只有用使用者自己的 Key 發起模型請求，才能確認授權、額度與模型回應；目前版本不會自動發起可能計費的請求。",
+      "keyTitle": "Key 與模型驗證",
+      "link": "了解這些數據如何判斷 →",
+      "rankingBody": "公開榜單依資料安全等級優先排序，再比較近 24 小時可用率（含 95% Wilson 信賴區間與同級名次區間）、首 Token 延遲、穩定性或工作階段成本。",
+      "rankingTitle": "榜單表現與排序",
+      "securityBody": "依據公開政策與人工核驗材料評定 0–4 級資料安全等級，區分是否確認經營主體與預設保留策略，與即時效能彼此獨立。",
+      "securityTitle": "資料安全等級",
+      "title": "了解檢測"
+    },
+    "model": "模型",
+    "sort": {
+      "availability": "可用率",
+      "price": "輸入價格",
+      "rank": "榜單位次",
+      "title": "排序"
+    },
+    "title": "探索服務",
+    "easy": {
+      "title": "找服務",
+      "description": "從已發布中轉站接入。先註冊拿到 Key，再點接入。"
+    }
+  }
+}

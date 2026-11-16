@@ -359,9 +359,7 @@ export function UsageTrendCard({
   const { t } = useTranslation()
   const summary = recentUsage(row, 1)
   // Scanned total (including 0) vs missing/unsupported/no row.
-  const hasReading = Boolean(
-    supported && !loading && !error && summary != null
-  )
+  const hasReading = Boolean(supported && !loading && !error && summary != null)
   const ready = Boolean(hasReading && summary && summary.turns > 0)
   const emptyCopy = !supported
     ? t('usage.trend.unsupported')
@@ -411,7 +409,7 @@ export function UsageTrendCard({
         </div>
       </header>
       <div>
-        <p className="home-usage-total text-[26px] font-semibold tracking-tight tabular-nums">
+        <p className="home-usage-total text-[26px] font-medium tracking-tight tabular-nums">
           <span className="home-usage-total-value">
             {hasReading && summary
               ? formatTokenMagnitude(summary.tokens, locale)

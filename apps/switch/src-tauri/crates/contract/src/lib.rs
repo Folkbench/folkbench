@@ -20,8 +20,17 @@ mod usage;
 
 pub use bootstrap::{AdapterMaturity, BootstrapState, ToolDescriptor};
 pub use catalog::{
-    CatalogError, CatalogModel, PublishedCatalog, PublishedPrice,
-    PublishedStation, PublishedStatusState,
+    BillingMode, CatalogError, CatalogModel, DataSecurityBoardAnswer,
+    DataSecurityBoardCatalog, DataSecurityBoardRefund, DataSecurityBoardRow,
+    DataSecurityDescriptions, DataSecurityEvidenceSource, DataSecurityValidity,
+    IntegrityCacheSummary, IntegrityClientMode, IntegrityPeerAgreement,
+    IntegrityTokenRange, InvoiceStatus, ModelRiskLevel,
+    OfficialProviderHealthState, OfficialProviderStatus,
+    OfficialProviderStatusCatalog, OfficialTokenPrice, PublicIntegrityCatalog,
+    PublicIntegrityMeasurement, PublishedCatalog, PublishedDataSecurity,
+    PublishedPrice, PublishedStation, PublishedStationBilling,
+    PublishedStationProfile, PublishedStationRecharge, PublishedStationSupport,
+    PublishedStatusState, RouteType,
 };
 pub use connect::{ConnectNotice, ConnectPreview, ConnectPublicStatus};
 pub use links::{ExternalLink, ExternalLinkError};

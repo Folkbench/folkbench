@@ -51,7 +51,7 @@ export function StationAvatar({
     <span
       aria-hidden="true"
       className={cn(
-        'inline-grid size-8 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-muted text-[11px] font-semibold text-muted-foreground',
+        'inline-grid size-8 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-muted text-[11px] font-medium text-muted-foreground',
         className
       )}
     >

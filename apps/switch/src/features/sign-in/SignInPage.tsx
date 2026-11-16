@@ -56,7 +56,7 @@ export function SignInPage() {
         <header className="flex flex-col items-center gap-5 text-center">
           <img src={appIcon} alt="" className="size-20" />
           <div className="flex flex-col gap-2">
-            <h1 className="m-0 text-[1.75rem] leading-tight font-semibold tracking-[-0.03em]">
+            <h1 className="m-0 text-[1.75rem] leading-tight font-medium tracking-[-0.03em]">
               {t('signIn.title')}
             </h1>
             <p className="m-0 text-sm text-muted-foreground">
