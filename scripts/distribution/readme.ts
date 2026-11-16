@@ -21,7 +21,7 @@ export function renderBoard(snapshot: PublicDataExport): string {
     lines.push(`| | | [完整 ${escapeMarkdown(rows[0]!.model_name)} 榜单 →](${link(`/rankings/${board.model_id}`, `daily-board-${board.model_id}-more`)}) | | | | | |`)
   }
   if (!count) throw new Error('distribution_board_has_no_eligible_rows')
-  lines.push('', '<details><summary>各模型的来源窗口与版本</summary>', '', '| 模型 | 来源窗口 | 方法版本 | 来源快照 | 发布时间（北京时间） |', '| :-- | :-- | :-- | :-- | :-- |')
+  lines.push('', '<details open><summary>各模型的来源窗口与版本</summary>', '', '| 模型 | 来源窗口 | 方法版本 | 来源快照 | 发布时间（北京时间） |', '| :-- | :-- | :-- | :-- | :-- |')
   for (const board of snapshot.boards) lines.push(`| ${escapeMarkdown(board.model_id)} | ${escapeMarkdown(windowLabel(board.observed_window))} | ${escapeMarkdown(board.method_version ?? '—')} | ${escapeMarkdown(board.snapshot_version ?? '—')} | ${board.published_at ? beijingTime(board.published_at) : '—'} |`)
   const agree = snapshot.integrity.reduce((n, row) => n + row.agree, 0); const total = snapshot.integrity.reduce((n, row) => n + row.total, 0)
   lines.push('', '</details>', '', `**探针汇总：快照收录 ${snapshot.integrity.length} 条探针结果，覆盖 ${new Set(snapshot.integrity.map(row => row.station_slug)).size} 家站点。** 汇总一致率：${agreement(agree, total)}。[查看公开结果 →](${link('/arena', 'daily-board-integrity')})`, '', `[下载对应日期的公开快照](${DATA_REPO}/tree/main/${archivePath(snapshot.date)}) · [方法说明](${link('/methodology', 'daily-board-method')}) · [提交纠错](${link('/corrections', 'daily-board-corrections')})`)
