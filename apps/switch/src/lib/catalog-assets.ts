@@ -1,4 +1,4 @@
-import type { PublishedCatalog } from '@/bridge'
+import type { DataSecurityBoardCatalog, PublishedCatalog } from '@/bridge'
 import { resolveCatalogAsset } from '@/bridge/commands/catalog'
 
 const memory = new Map<string, string>()
@@ -54,6 +54,20 @@ export function prefetchPublishedCatalogAssets(catalog: PublishedCatalog) {
   }
   for (const model of catalog.models) {
     if (model.vendorLogoPath) paths.add(model.vendorLogoPath)
+  }
+  for (const path of paths) {
+    void resolveCatalogAssetSrc(path, origin)
+  }
+}
+
+/** Prefetches station avatars on the data-security board. */
+export function prefetchDataSecurityBoardAssets(
+  board: DataSecurityBoardCatalog
+) {
+  const origin = board.origin || 'https://folkbench.com'
+  const paths = new Set<string>()
+  for (const item of board.items) {
+    if (item.avatarPath) paths.add(item.avatarPath)
   }
   for (const path of paths) {
     void resolveCatalogAssetSrc(path, origin)

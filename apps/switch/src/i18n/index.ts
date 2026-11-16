@@ -12,7 +12,7 @@ void i18n.use(initReactI18next).init({
   lng: DEFAULT_LOCALE,
   fallbackLng: DEFAULT_LOCALE,
   supportedLngs: [...SUPPORTED_LOCALES],
-  load: 'languageOnly',
+  load: 'currentOnly',
   ns: ['translation'],
   defaultNS: 'translation',
   returnNull: false,

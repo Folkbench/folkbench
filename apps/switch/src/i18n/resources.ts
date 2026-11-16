@@ -1,11 +1,15 @@
 import { en } from './locales/en'
-import { zh } from './locales/zh'
+import { zhCN } from './locales/zh-CN'
+import { zhHant } from './locales/zh-Hant'
 
 export const resources = {
   en: {
     translation: en,
   },
-  zh: {
-    translation: zh,
+  'zh-CN': {
+    translation: zhCN,
+  },
+  'zh-Hant': {
+    translation: zhHant,
   },
 } as const

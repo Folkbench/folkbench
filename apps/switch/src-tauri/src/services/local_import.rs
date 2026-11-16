@@ -49,13 +49,15 @@ struct ToolImportState {
 /// Display name for auto-imported (and live-imported) local CLI configs.
 pub fn local_default_service_name(language: PreferredLanguage) -> &'static str {
     match language {
-        PreferredLanguage::Zh => "默认配置（本机已有）",
+        PreferredLanguage::ZhCn => "默认配置（本机已有）",
+        PreferredLanguage::ZhHant => "預設設定（本機已有）",
         PreferredLanguage::En => "Default config (existing on this machine)",
     }
 }
 
 fn is_local_default_name(name: &str) -> bool {
     name == "默认配置（本机已有）"
+        || name == "預設設定（本機已有）"
         || name == "Default config (existing on this machine)"
 }
 

@@ -14,12 +14,11 @@ import { sessionQueryOptions } from '@/features/session/queries'
 import { bootstrapQueryOptions } from '@/features/bootstrap/queries'
 import { normalizeLocale } from '@/i18n/config'
 import type { SupportedLocale } from '@/i18n/config'
-import { cn } from '@/lib/utils'
 
 import { AppUpdateCheck } from './AppUpdateCheck'
 import { TelemetrySettings } from './TelemetrySettings'
 
-const LOCALES: SupportedLocale[] = ['zh', 'en']
+const LOCALES: SupportedLocale[] = ['zh-CN', 'zh-Hant', 'en']
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation()
@@ -50,11 +49,11 @@ export function SettingsPage() {
         </p>
       </header>
       <TelemetrySettings />
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-2.5">
         <h2 className="switch-section-title">
           {t('settings.appearance.title')}
         </h2>
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card px-5 py-4">
+        <div className="fbd-panel flex flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div>
             <p className="text-[14px] font-medium">
               {t('settings.appearance.theme.title')}
@@ -87,9 +86,9 @@ export function SettingsPage() {
           </p>
         ) : null}
       </section>
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-2.5">
         <h2 className="switch-section-title">{t('settings.uiMode.title')}</h2>
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card px-5 py-4">
+        <div className="fbd-panel flex flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div>
             <p className="text-[14px] font-medium">
               {t('settings.uiMode.title')}
@@ -122,19 +121,17 @@ export function SettingsPage() {
           </p>
         ) : null}
       </section>
-      <section className="flex min-w-0 flex-col gap-2">
-        <h2 className="px-1 text-[11px] tracking-wider text-muted-foreground uppercase">
-          {t('settings.account.title')}
-        </h2>
-        <div className="flex min-w-0 items-center justify-between gap-4 rounded-xl border bg-card px-4 py-3">
+      <section className="flex min-w-0 flex-col gap-2.5">
+        <h2 className="switch-section-title">{t('settings.account.title')}</h2>
+        <div className="fbd-panel flex min-w-0 items-center justify-between gap-4 px-5 py-4">
           <div className="min-w-0">
-            <p className="m-0 truncate text-[15px] text-foreground">
+            <p className="m-0 truncate text-[14px] font-medium text-foreground">
               {session.isPending
                 ? t('settings.account.checking')
                 : (session.data?.user?.displayName ??
                   t('settings.account.guest'))}
             </p>
-            <p className="m-0 truncate text-[13px] text-muted-foreground">
+            <p className="m-0 mt-0.5 truncate text-[12px] text-muted-foreground">
               {session.isPending
                 ? ''
                 : (session.data?.user?.email ??
@@ -168,12 +165,14 @@ export function SettingsPage() {
           </p>
         )}
       </section>
-      <section className="flex min-w-0 flex-col gap-2">
-        <h2 className="px-1 text-[11px] tracking-wider text-muted-foreground uppercase">
-          {t('settings.language.title')}
-        </h2>
-        <div className="rounded-xl border bg-card p-2.5">
-          <div className="inline-flex max-w-full flex-wrap rounded-full bg-muted p-[3px]">
+      <section className="flex min-w-0 flex-col gap-2.5">
+        <h2 className="switch-section-title">{t('settings.language.title')}</h2>
+        <div className="fbd-panel flex flex-wrap items-center justify-between gap-4 px-5 py-4">
+          <div
+            className="switch-segmented can-wrap"
+            role="group"
+            aria-label={t('settings.language.title')}
+          >
             {LOCALES.map((code) => {
               const active = locale === code
               return (
@@ -183,12 +182,6 @@ export function SettingsPage() {
                   disabled={languageMutation.isPending}
                   aria-pressed={active}
                   onClick={() => languageMutation.mutate(code)}
-                  className={cn(
-                    'h-[26px] cursor-pointer rounded-full px-3.5 text-[13px] transition-colors',
-                    active
-                      ? 'bg-card text-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
                 >
                   {t(`settings.language.options.${code}`)}
                 </button>
@@ -197,23 +190,21 @@ export function SettingsPage() {
           </div>
         </div>
       </section>
-      <section className="flex min-w-0 flex-col gap-2">
-        <h2 className="px-1 text-[11px] tracking-wider text-muted-foreground uppercase">
-          {t('settings.privacy.title')}
-        </h2>
-        <p className="rounded-xl border bg-card px-4 py-3 text-[15px] text-muted-foreground">
+      <section className="flex min-w-0 flex-col gap-2.5">
+        <h2 className="switch-section-title">{t('settings.privacy.title')}</h2>
+        <p className="fbd-panel px-5 py-4 text-[13px] leading-relaxed text-muted-foreground">
           {t('settings.privacy.body')}
         </p>
       </section>
       <section
-        className="flex min-w-0 flex-col gap-2"
+        className="flex min-w-0 flex-col gap-2.5"
         aria-labelledby="switch-about-heading"
       >
         <h2 id="switch-about-heading" className="switch-section-title">
           {t('settings.about.title')}
         </h2>
-        <div className="rounded-xl border bg-card px-4 py-3">
-          <p className="text-[15px] font-medium">Folkbench Switch</p>
+        <div className="fbd-panel px-5 py-4">
+          <p className="text-[14px] font-medium">Folkbench Switch</p>
           {bootstrap.isPending ? (
             <p className="mt-2 text-[13px] text-muted-foreground">
               {t('common.status.loading')}

@@ -20,19 +20,42 @@ pub struct SwitchUndo {
 ///
 /// A test in the application crate cross-checks these variants against that
 /// manifest so the locale range keeps a single source of truth.
-#[derive(
-    Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq, Serialize,
-)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize)]
 #[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-bindings",
     ts(export, export_to = "preferences.ts")
 )]
-#[serde(rename_all = "lowercase")]
 pub enum PreferredLanguage {
     #[default]
+    #[serde(rename = "en")]
     En,
-    Zh,
+    #[serde(rename = "zh-CN")]
+    ZhCn,
+    #[serde(rename = "zh-Hant")]
+    ZhHant,
+}
+
+impl<'de> serde::Deserialize<'de> for PreferredLanguage {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let raw = String::deserialize(deserializer)?;
+        let normalized = raw.trim().replace('_', "-").to_ascii_lowercase();
+        match normalized.as_str() {
+            "en" => Ok(Self::En),
+            "zh" | "zh-cn" | "zh-sg" | "zh-hans" => Ok(Self::ZhCn),
+            "zh-hant" | "zh-tw" | "zh-hk" | "zh-mo" => Ok(Self::ZhHant),
+            _ if normalized.starts_with("en-") => Ok(Self::En),
+            _ if normalized.starts_with("zh-hant") => Ok(Self::ZhHant),
+            _ if normalized.starts_with("zh-hans") => Ok(Self::ZhCn),
+            _ => Err(serde::de::Error::unknown_variant(
+                &raw,
+                &["en", "zh-CN", "zh-Hant"],
+            )),
+        }
+    }
 }
 
 /// Non-secret appearance choice; system follows the operating-system theme.

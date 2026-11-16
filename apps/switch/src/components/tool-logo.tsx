@@ -133,7 +133,7 @@ export function ToolLogo({
     <span
       aria-hidden="true"
       className={cn(
-        'inline-grid size-4 shrink-0 place-items-center rounded-[4px] bg-muted text-[10px] font-medium text-muted-foreground',
+        'inline-grid size-4 shrink-0 place-items-center rounded-[4px] bg-muted text-[11px] font-medium text-muted-foreground',
         className
       )}
     >

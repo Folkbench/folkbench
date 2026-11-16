@@ -16,7 +16,7 @@ import validation from './validation.json'
 import type { en } from '../en'
 import type { StringLeaves } from '../../types'
 
-export const zh = {
+export const zhCN = {
   ...apiKeys,
   ...changes,
   ...common,

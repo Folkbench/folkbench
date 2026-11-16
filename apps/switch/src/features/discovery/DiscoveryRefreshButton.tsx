@@ -34,9 +34,7 @@ export function DiscoveryRefreshButton({
     >
       <motion.span
         className="inline-flex"
-        animate={
-          refreshing && !reduceMotion ? { rotate: 360 } : { rotate: 0 }
-        }
+        animate={refreshing && !reduceMotion ? { rotate: 360 } : { rotate: 0 }}
         transition={
           refreshing && !reduceMotion
             ? { repeat: Infinity, duration: 0.85, ease: 'linear' }

@@ -24,7 +24,7 @@ type ChoiceGroup<T extends string> = {
 }
 
 function groupChoiceOptions<T extends string>(
-  options: Array<ChoiceOption<T>>,
+  options: Array<ChoiceOption<T>>
 ): Array<ChoiceGroup<T>> {
   const groups: Array<ChoiceGroup<T>> = []
   for (const option of options) {
@@ -71,11 +71,12 @@ export function ChoiceSelect<T extends string>({
   const groups = useMemo(() => groupChoiceOptions(options), [options])
   // Base UI items registry: value/label only (section is UI metadata).
   const items = useMemo(
-    () => options.map(({ value: itemValue, label: itemLabel }) => ({
-      value: itemValue,
-      label: itemLabel,
-    })),
-    [options],
+    () =>
+      options.map(({ value: itemValue, label: itemLabel }) => ({
+        value: itemValue,
+        label: itemLabel,
+      })),
+    [options]
   )
   useEffect(() => {
     if (!canShowPopup && open) setOpen(false)
@@ -83,9 +84,7 @@ export function ChoiceSelect<T extends string>({
   return (
     <div className="grid min-w-0 gap-1.5">
       <div
-        className={
-          hideLabel ? 'sr-only' : 'flex min-w-0 items-center gap-1'
-        }
+        className={hideLabel ? 'sr-only' : 'flex min-w-0 items-center gap-1'}
       >
         <Label id={id}>{label}</Label>
         {labelAccessory}
@@ -147,7 +146,9 @@ export function ChoiceSelect<T extends string>({
                 {options.length ? (
                   <Select.List className="max-h-72 overflow-y-auto">
                     {groups.map((group, groupIndex) => (
-                      <Select.Group key={`${group.label ?? 'items'}-${groupIndex}`}>
+                      <Select.Group
+                        key={`${group.label ?? 'items'}-${groupIndex}`}
+                      >
                         {groupIndex > 0 ? (
                           <Select.Separator className="choice-select-separator" />
                         ) : null}
@@ -200,7 +201,7 @@ function ChoiceOptionLabel<T extends string>({
       name={option.avatar.name}
       avatarPath={option.avatar.path}
       origin={option.avatar.origin}
-      className="size-4 rounded-[4px] text-[8px]"
+      className="size-4 rounded-[4px] text-[11px]"
     />
   ) : null
   const label = itemText ? (

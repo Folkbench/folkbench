@@ -22,7 +22,7 @@ export type Preferences = { language: PreferredLanguage, theme: PreferredTheme, 
  * A test in the application crate cross-checks these variants against that
  * manifest so the locale range keeps a single source of truth.
  */
-export type PreferredLanguage = "en" | "zh";
+export type PreferredLanguage = "en" | "zh-CN" | "zh-Hant";
 
 /**
  * Non-secret appearance choice; system follows the operating-system theme.

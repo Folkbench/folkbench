@@ -1,4 +1,11 @@
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import ArrowDown01Icon from '@hugeicons/core-free-icons/ArrowDown01Icon'
@@ -33,8 +40,7 @@ const DEFAULT_OPUS = 'claude-opus-5-5'
 const DEFAULT_HAIKU = 'claude-haiku-4-5'
 const DEFAULT_FABLE = 'claude-fable-5-1'
 
-const SAFE_ROLE =
-  /^(?:anthropic\/)?claude-(?:sonnet|opus|haiku|fable)-.+/i
+const SAFE_ROLE = /^(?:anthropic\/)?claude-(?:sonnet|opus|haiku|fable)-.+/i
 
 function isSafeClaudeModel(id: string): boolean {
   const trimmed = id.trim()
@@ -51,7 +57,10 @@ const ROLE_DESKTOP_ROUTE = {
 } as const
 
 function stripOneM(id: string): string {
-  return id.trim().replace(/\[1m\]$/i, '').trimEnd()
+  return id
+    .trim()
+    .replace(/\[1m\]$/i, '')
+    .trimEnd()
 }
 
 /** Match Rust `fill_defaults` so the form preview matches save. */
@@ -69,9 +78,7 @@ export function fillClaudeRoleDefaults(
   ): ClaudeRoleModel => {
     const requestModel = row.requestModel.trim() || fallback
     const displayName =
-      fillDisplay && !row.displayName.trim()
-        ? requestModel
-        : row.displayName
+      fillDisplay && !row.displayName.trim() ? requestModel : row.displayName
     return {
       displayName,
       requestModel,
@@ -93,13 +100,7 @@ export function fillClaudeRoleDefaults(
 
 type RoleKey = keyof ClaudeRoleModels
 
-const ROLE_ORDER: RoleKey[] = [
-  'sonnet',
-  'opus',
-  'fable',
-  'haiku',
-  'subagent',
-]
+const ROLE_ORDER: RoleKey[] = ['sonnet', 'opus', 'fable', 'haiku', 'subagent']
 
 type Props = {
   value: ClaudeRoleModels
@@ -199,10 +200,8 @@ function ModelIdCombobox({
     const clipLeft = clipRect ? clipRect.left : 0
     const clipRight = clipRect ? clipRect.right : window.innerWidth
 
-    const spaceBelow = Math.min(
-      window.innerHeight,
-      clipBottom
-    ) - rect.bottom - pad
+    const spaceBelow =
+      Math.min(window.innerHeight, clipBottom) - rect.bottom - pad
     const spaceAbove = rect.top - Math.max(0, clipTop) - pad
 
     // Flip when below cannot fit the menu, or caller prefers up (lower rows).
@@ -226,10 +225,7 @@ function ModelIdCombobox({
           : [model.id]
       )
     )
-    const width = Math.min(
-      maxAllowed,
-      Math.max(rect.width, 192, contentWidth)
-    )
+    const width = Math.min(maxAllowed, Math.max(rect.width, 192, contentWidth))
     let left = rect.left
     if (left + width > maxRight) {
       // Prefer keeping the menu's right edge on the trigger's right edge.
@@ -244,9 +240,7 @@ function ModelIdCombobox({
       width,
       maxHeight,
       side: openUp ? 'top' : 'bottom',
-      offset: openUp
-        ? window.innerHeight - rect.top + gap
-        : rect.bottom + gap,
+      offset: openUp ? window.innerHeight - rect.top + gap : rect.bottom + gap,
     })
   }
 
@@ -508,9 +502,7 @@ export function ClaudeRoleMappingFields({
   }
 
   function applyOneClick() {
-    onChange(
-      fillClaudeRoleDefaults(EMPTY_CLAUDE_ROLE_MODELS, primaryModel)
-    )
+    onChange(fillClaudeRoleDefaults(EMPTY_CLAUDE_ROLE_MODELS, primaryModel))
   }
 
   return (
@@ -647,14 +639,12 @@ export function ClaudeRoleMappingFields({
                       emptyHint={t(
                         'configure.form.claudeRoles.requestModelEmpty'
                       )}
-                      onChange={(requestModel) =>
-                        patch(role, { requestModel })
-                      }
+                      onChange={(requestModel) => patch(role, { requestModel })}
                     />
                     {!isSubagent &&
                     row.requestModel.trim() &&
                     !isSafeClaudeModel(stripOneM(row.requestModel)) ? (
-                      <p className="text-[10px] leading-snug text-muted-foreground">
+                      <p className="text-[11px] leading-snug text-muted-foreground">
                         {t('configure.form.claudeRoles.desktopRemap', {
                           route: ROLE_DESKTOP_ROUTE[role],
                         })}

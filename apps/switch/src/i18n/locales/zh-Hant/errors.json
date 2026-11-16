@@ -1,0 +1,47 @@
+{
+  "errors": {
+    "api": {
+      "rateLimited": "請求過於頻繁，請稍後再試。",
+      "unavailable": "Modelflare 服務目前無法使用。"
+    },
+    "auth": {
+      "authorizationFailed": "授權失敗，本機設定沒有改變。",
+      "sessionExpired": "登入狀態已過期，請重新登入。"
+    },
+    "bridge": {
+      "commandFailed": "桌面操作未能完成。",
+      "desktopUnavailable": "桌面 runtime 無法使用，無法執行特權操作。"
+    },
+    "catalog": {
+      "invalidModel": "此模型不是 Folkbench 公開榜單模型。",
+      "invalidResponse": "公開目錄回應無法使用。",
+      "unavailable": "Folkbench 公開目錄目前無法使用。",
+      "websiteUnavailable": "目前無法安全開啟該中轉站官網，請稍後再試。"
+    },
+    "config": {
+      "concurrentModification": "檔案在檢查後發生了變化，請重新產生預覽後再套用。",
+      "verifyFailed": "設定已寫入，但驗證失敗。",
+      "writeFailed": "無法寫入設定，原始檔案已保留。"
+    },
+    "generic": {
+      "title": "操作失敗",
+      "unknown": "發生了未知錯誤。"
+    },
+    "network": {
+      "offline": "目前似乎處於離線狀態。",
+      "timeout": "請求逾時。"
+    },
+    "service": {
+      "applyUnsupported": "目前操作不被支援，或本版尚未適配該工具。",
+      "credentialMissing": "這條服務沒有儲存的 Key。",
+      "driftDetected": "目前工具設定已被修改，為避免覆蓋您的更動，此次操作已停止。",
+      "inUse": "請先停止使用或切換到其他服務，再刪除這一條。",
+      "invalidInput": "輸入無效：名稱、URL、Key 或工作目錄不符合要求。",
+      "locationUnavailable": "找不到本機設定目錄。",
+      "notFound": "這條服務已經不在本機紀錄中。",
+      "toolUnknown": "目錄中沒有這個工具。",
+      "writeFailed": "無法寫入設定，原始檔案已保留。",
+      "terminalLaunchFailed": "無法開啟終端機啟動該 CLI。請確認本機已安裝可用的終端機（Windows 使用 PowerShell；Mac 可使用「終端機」或 iTerm）。"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "tools": {
+    "configuration": {
+      "actions": {
+        "configure": "設定",
+        "inspect": "檢查"
+      },
+      "apply": {
+        "success": "設定已套用。"
+      },
+      "preview": {
+        "description": "寫入前檢查每一項遮罩變更。",
+        "title": "預覽變更"
+      },
+      "steps": {
+        "apply": "套用",
+        "inspect": "檢查",
+        "preview": "預覽",
+        "receipt": "憑證",
+        "select": "選擇 Key/Profile",
+        "verify": "驗證"
+      },
+      "verify": {
+        "success": "設定已驗證。"
+      }
+    },
+    "description": "安裝、更新 Dock 欄中的本機 CLI，並查看本機與最新版本。",
+    "effect": {
+      "hotReload": "切換後目前工作階段即可生效。",
+      "notImplemented": "這一版還不能寫入該工具的設定。",
+      "requiresRestart": "寫入後需要重新啟動該工具。"
+    },
+    "runtime": {
+      "title": "工具",
+      "checking": "檢測中",
+      "checkingProgress": "正在檢測 {{done}}/{{total}}",
+      "scanFailed": "檢測失敗，請稍後重試。",
+      "versionUnknown": "—",
+      "status": {
+        "probeFailed": "檢測失敗"
+      },
+      "actions": {
+        "install": "安裝 CLI",
+        "update": "更新",
+        "updateAll": "全部更新",
+        "copyInstall": "複製安裝指令",
+        "copyNodeInstall": "複製 Node 安裝指令",
+        "copyBrewInstall": "複製 Homebrew 安裝指令",
+        "copyOfficialDownload": "複製官網下載連結",
+        "updating": "正在更新…"
+      },
+      "toast": {
+        "actionFailed": "操作失敗，請稍後重試。",
+        "copiedInstall": "安裝指令已複製到剪貼簿。",
+        "copyFailed": "複製失敗。",
+        "grokInstallRisk": "此指令會從網路下載並執行安裝腳本，請在終端機自行確認後執行。",
+        "updateAllSuccess": "已更新 {{count}} 個工具。",
+        "updateAllSummary": "全部更新完成：成功 {{ok}}，失敗 {{fail}}。",
+        "copiedPrereq": "安裝指令已複製到剪貼簿。",
+        "brewInstallRisk": "此指令會從網路下載並執行 Homebrew 安裝腳本，請在終端機自行確認後執行。"
+      },
+      "updatesAvailable": "{{count}} 個可更新",
+      "updatesNone": "全部最新",
+      "versionCurrent": "目前",
+      "versionLatest": "最新",
+      "installPrimary": "主用",
+      "installMultiBanner": "本機偵測到 {{count}} 處安裝",
+      "prereq": {
+        "missingNpm": "本機未偵測到 Node.js / npm，無法透過 npm 安裝或更新部分工具。",
+        "missingBrew": "本機未偵測到 Homebrew，無法透過 brew 安裝或更新部分工具。",
+        "blocked": "缺少執行環境",
+        "restartHint": "安裝完成後請完全結束 Folkbench 再重新開啟",
+        "officialDownloadUrl": "https://nodejs.org/zh-tw/download"
+      },
+      "updateAvailable": "CLI 可更新",
+      "updateHint": "{{tool}} CLI 有新版本（{{local}} → {{latest}}）",
+      "updateHintShort": "{{tool}} CLI 有新版本可更新"
+    },
+    "search": {
+      "placeholder": "搜尋工具"
+    },
+    "status": {
+      "configured": "已設定",
+      "detected": "已偵測",
+      "needsAttention": "需要處理",
+      "notConfigured": "未設定",
+      "notDetected": "未偵測"
+    },
+    "title": "工具"
+  }
+}

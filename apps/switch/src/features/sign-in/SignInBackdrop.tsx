@@ -69,7 +69,7 @@ function ShowcasePreview({ kind }: { kind: PreviewKind }) {
               key={label}
               className="flex min-w-0 flex-col gap-2 rounded-md border bg-muted/45 p-2"
             >
-              <span className="truncate font-mono text-[0.625rem] tracking-[0.05em] text-muted-foreground uppercase">
+              <span className="truncate font-mono text-[0.6875rem] tracking-[0.05em] text-muted-foreground uppercase">
                 {label}
               </span>
               <span
@@ -89,7 +89,7 @@ function ShowcasePreview({ kind }: { kind: PreviewKind }) {
           <code className="truncate text-[0.6875rem] text-muted-foreground">
             mf_••••••••••••
           </code>
-          <span className="shrink-0 font-mono text-[0.625rem] tracking-[0.06em] text-brand-signal uppercase">
+          <span className="shrink-0 font-mono text-[0.6875rem] tracking-[0.06em] text-brand-signal uppercase">
             {t('signIn.showcase.apiKeys.masked')}
           </span>
         </div>
@@ -122,7 +122,7 @@ function ShowcasePreview({ kind }: { kind: PreviewKind }) {
 
     case 'preview':
       return (
-        <div className="overflow-hidden rounded-md border bg-background/80 font-mono text-[0.625rem] leading-relaxed">
+        <div className="overflow-hidden rounded-md border bg-background/80 font-mono text-[0.6875rem] leading-relaxed">
           <div className="bg-destructive/10 px-2 py-1 text-destructive">
             − provider = &quot;previous&quot;
           </div>
@@ -146,7 +146,7 @@ function ShowcasePreview({ kind }: { kind: PreviewKind }) {
             <div
               key={label}
               className={cn(
-                'rounded-md border bg-muted/45 px-1 py-2 text-center font-mono text-[0.625rem] tracking-[0.04em] uppercase',
+                'rounded-md border bg-muted/45 px-1 py-2 text-center font-mono text-[0.6875rem] tracking-[0.04em] uppercase',
                 index === 1 && 'border-brand-signal/35 text-brand-signal'
               )}
             >
@@ -209,11 +209,11 @@ function ShowcaseCard({ panel }: { panel: ShowcasePanel }) {
             size={14}
             className="shrink-0 text-muted-foreground"
           />
-          <span className="truncate font-mono text-[0.625rem] tracking-[0.08em] text-muted-foreground uppercase">
+          <span className="truncate font-mono text-[0.6875rem] tracking-[0.08em] text-muted-foreground uppercase">
             {panel.eyebrow}
           </span>
         </div>
-        <span className="flex shrink-0 items-center gap-1.5 font-mono text-[0.625rem] tracking-[0.05em] text-muted-foreground uppercase">
+        <span className="flex shrink-0 items-center gap-1.5 font-mono text-[0.6875rem] tracking-[0.05em] text-muted-foreground uppercase">
           <span className="size-1.5 rounded-full bg-brand-signal" />
           {panel.status}
         </span>
@@ -221,7 +221,7 @@ function ShowcaseCard({ panel }: { panel: ShowcasePanel }) {
 
       <div className="flex flex-1 flex-col gap-2.5 p-3.5">
         <div className="flex flex-col gap-1">
-          <h2 className="m-0 text-[0.8125rem] leading-snug font-semibold">
+          <h2 className="m-0 text-[0.8125rem] leading-snug font-medium">
             {panel.title}
           </h2>
           <p className="m-0 text-[0.6875rem] leading-relaxed text-muted-foreground">
