@@ -62,9 +62,9 @@ Essa resposta pode não ter nenhum erro óbvio no nível das palavras. Ela só n
 - Com só uma frigideira de inox, como diminuir a chance de grudar?
 - A massa que sobrou, e um crepe pronto já pincelado com molho e recheado com presunto, ainda podem ser comidos no dia seguinte?
 
-![Uma cozinha de casa com recursos limitados: uma frigideira antiaderente, uma espátula e uma concha, com massa, ovos e cebolinha ao lado.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![Uma cozinha de casa com recursos limitados: uma frigideira antiaderente, uma espátula e uma concha, com massa, ovos e cebolinha ao lado.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![Quatro substitutos para quando não há biscoito crocante: massa de wonton, youtiao, batata chips e pão folha comum.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Quatro substitutos para quando não há biscoito crocante: massa de wonton, youtiao, batata chips e pão folha comum.](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 Perguntas assim pedem que o modelo lide ao mesmo tempo com ingredientes, utensílios, tempo, ordem, mudança de estado e risco. Não se trata de tirar conhecimento da memória. Trata-se de reconstruir a próxima ação a partir das condições que estão na sua frente.
 
@@ -76,11 +76,11 @@ O GLM 5.2 é um bom exemplo nesta rodada. Sua nota de procedimento chega a 90, o
 
 A página também aponta que, na questão da frigideira de inox, ele sugere aquecer a frigideira “até sair fumaça azulada” e repetir a cura. Esse tipo de preaquecimento em fogo alto não é nada suave para uma casa comum. Quanto mais concreta é a ação numa resposta, maior a chance de o usuário fazer exatamente aquilo. Uma sugestão concreta que não combina com a situação transforma “parece profissional” num risco real.
 
-![Uma mão parada acima de uma frigideira de inox para sentir a temperatura. A chama é baixa, a frigideira está seca e não há fumaça.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![Uma mão parada acima de uma frigideira de inox para sentir a temperatura. A chama é baixa, a frigideira está seca e não há fumaça.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 O Kimi K2.7 Code mostra com ainda mais clareza por que a média não basta. Ele tem a nota mais alta em “o crepe rasgou, como salvo?”. Diante de uma frigideira em que o crepe já rasgou e o ovo ainda não firmou por completo, ele dá passos de resgate que parecem aplicáveis de verdade. Também traz detalhes úteis nas cenas da massa e das três pessoas.
 
-![O crepe rasgou e o ovo ainda não firmou por completo. Uma concha acrescenta uma conchada de massa para remendar.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![O crepe rasgou e o ovo ainda não firmou por completo. Uma concha acrescenta uma conchada de massa para remendar.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 Em “terminar em 20 minutos de manhã”, a página marca um risco grave de segurança alimentar que não pode ser ignorado: a resposta dá a entender que os ovos podem ser tirados da geladeira com antecedência e deixados em temperatura ambiente. Por melhores que sejam as outras respostas, esta deve ser mostrada à parte. Ela não deve ser compensada pela “nota mais alta na questão do resgate”.
 
@@ -92,7 +92,7 @@ Isso não quer dizer que toda sugestão do Kimi K2.7 Code seja pouco confiável,
 
 A vantagem do Sonnet 5 não está em alguma questão espetacular. Nas 12 questões, ele é relativamente equilibrado. Fica à frente na primeira tentativa, no fogo da frigideira e no café da manhã de 20 minutos, e não aciona nenhum aviso de regra nem risco grave registrado na página.
 
-![Duas mãos enrolam um crepe ainda inteiro, com youtiao, ovo, cebolinha e molho dentro.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Duas mãos enrolam um crepe ainda inteiro, com youtiao, ovo, cebolinha e molho dentro.](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 Esse tipo de modelo combina com um usuário que ainda não formou o próprio julgamento na cozinha. Deixe que ele escreva primeiro o processo, a ordem e os pontos de decisão, e depois enxugue tudo de acordo com a frigideira e os ingredientes que você realmente tem. O limite dele também é claro. Conservação e diagnóstico de falhas não são as questões em que ele vai melhor. O tutorial traz muita informação, e antes de cozinhar de verdade você ainda precisa resumir a explicação longa em poucos passos que dê para consultar enquanto cozinha.
 
@@ -140,7 +140,7 @@ Ela não aponta um modelo que seja o melhor em todas as questões de cozinha. Of
 - Quando há uma criança, conservação de um dia para o outro ou fogo alto envolvidos: confira primeiro os rótulos de risco, depois a nota total e a qualidade do texto.
 - Quando precisa ficar pronto em 20 minutos: veja se o modelo separa uma parte que pode ser preparada na noite anterior e se ele explica com clareza as condições de conservação.
 
-![Um jianbing enrolado numa mesa de café da manhã, cortado ao meio para mostrar o ovo, a cebolinha e o molho.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![Um jianbing enrolado numa mesa de café da manhã, cortado ao meio para mostrar o ovo, a cebolinha e o molho.](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 Uma forma mais segura de usar a resposta é tratá-la como um primeiro rascunho de plano e então fazer mais três perguntas:
 

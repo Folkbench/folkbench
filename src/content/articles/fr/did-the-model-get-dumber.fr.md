@@ -55,7 +55,7 @@ sources:
 
 « Ce modèle a-t-il encore été nerfé ? » Un pélican dont un pied pend à côté de la pédale, un vélo dont le cadre est tordu comme une torsade, posés à côté d’une capture qui avait plutôt fière allure la semaine dernière : il n’en faut pas plus pour que la question surgisse.
 
-![Planche d’histoire naturelle : un pélican sur un vélo, un pied à côté de la pédale.](/blog/figures/did-the-model-get-dumber/pelican.webp)
+![Planche d’histoire naturelle : un pélican sur un vélo, un pied à côté de la pédale.](/blog/figures/did-the-model-get-dumber/pelican.jpg)
 
 Ce soupçon ne mérite pas d’être balayé d’un « les modèles sont aléatoires ». Quelqu’un a payé pour une tâche que le service savait accomplir, et il n’y arrive plus : la question est légitime. Deux captures d’écran ne suffisent pas pour autant à montrer que le modèle a été remplacé, que le budget de raisonnement a été réduit ou qu’un service en particulier a été dilué.
 

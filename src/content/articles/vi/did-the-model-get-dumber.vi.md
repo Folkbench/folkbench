@@ -55,7 +55,7 @@ sources:
 
 “Mô hình này lại bị giảm trí rồi sao?” Một con bồ nông có một chân lơ lửng ngoài bàn đạp, một chiếc xe đạp có khung bị vặn xoắn như bện thừng, đặt cạnh một ảnh chụp màn hình tuần trước còn vẽ khá đẹp – chừng ấy là đủ để người ta nảy ra câu hỏi này.
 
-![Tranh minh họa kiểu sách tự nhiên học: một con bồ nông đạp xe đạp, một chân không đặt lên bàn đạp.](/blog/figures/did-the-model-get-dumber/pelican.webp)
+![Tranh minh họa kiểu sách tự nhiên học: một con bồ nông đạp xe đạp, một chân không đặt lên bàn đạp.](/blog/figures/did-the-model-get-dumber/pelican.jpg)
 
 Không nên gạt mối nghi ngờ này đi chỉ bằng một câu “mô hình vốn có tính ngẫu nhiên”. Người dùng đã trả tiền, một việc trước đây dịch vụ làm được giờ lại làm không tốt – điều đó đương nhiên đáng để truy hỏi. Nhưng ngược lại, hai ảnh chụp màn hình cũng không đủ để cho thấy mô hình đã bị tráo, ngân sách suy luận đã bị cắt, hay một dịch vụ cụ thể nào đó chắc chắn đã bị “pha loãng”.
 

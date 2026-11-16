@@ -18,7 +18,7 @@ export function articleJsonLd(entry: ArticleEntry, locale: BlogLocale): Record<s
       '@type': 'Person',
       name: entry.data.contributor ?? getPersona(entry.data.authorId).name,
     },
-    image: absoluteUrl(`/covers/${entry.data.translationKey}.webp`),
+    image: absoluteUrl(`/covers/${entry.data.translationKey}.jpg`),
     publisher: { '@id': 'https://folkbench.com/#organization' },
     articleSection: entry.data.category,
     keywords: entry.data.tags,

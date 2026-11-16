@@ -70,7 +70,7 @@ GLM 5.2 pandai mendaftar fakta, kekurangan, dan tindak lanjut pada soal bahan ya
 
 Pengguna sedang merevisi proposal yang akan dikirim ke klien hari Jumat dan belum membalas pesan grup yang tidak mendesak. Atasan berkata, “Belakangan ini kelihatannya santai sekali, ya.”
 
-![Seseorang masih merevisi proposal, sementara orang lain melirik sambil melontarkan komentar enteng.](/blog/figures/boss-yinyang-workplace-reply/relaxed.webp)
+![Seseorang masih merevisi proposal, sementara orang lain melirik sambil melontarkan komentar enteng.](/blog/figures/boss-yinyang-workplace-reply/relaxed.jpg)
 
 Sol tidak membantah dengan “saya sama sekali tidak santai”. Balasannya menyebut bahwa penulis sedang fokus merevisi, struktur dan angka inti sudah diperiksa, versi pertama diperkirakan selesai pukul 17.00, dan prioritas bisa digeser jika ada hal yang lebih mendesak.
 
@@ -80,7 +80,7 @@ Balasan itu pertama-tama memberi alasan konkret mengapa balasannya terlambat, la
 
 Dalam percakapan evaluasi kinerja, atasan hanya berkata, “Sikapnya sudah baik. Hanya saja kurang proaktif.” Formulirnya pun berisi hal yang sama, “kurang proaktif”. Siklus penilaian berikutnya 6 minggu.
 
-![Sebuah map tertutup tergeletak di antara dua orang dalam percakapan evaluasi kinerja.](/blog/figures/boss-yinyang-workplace-reply/performance.webp)
+![Sebuah map tertutup tergeletak di antara dua orang dalam percakapan evaluasi kinerja.](/blog/figures/boss-yinyang-workplace-reply/performance.jpg)
 
 Kimi tidak langsung membantah, dan tidak juga mengucapkan janji samar “saya akan berusaha memperbaiki diri”. Ia menanyakan apa arti “proaktif” di sini: mencoba solusi dulu sebelum melapor ke atasan, atau mengirim kabar terbaru tanpa diminta; kurang aktif dalam kerja lintas tim, atau tidak meminta pekerjaan baru. Kemudian ia menanyakan standar lulus dan standar unggul untuk siklus berikutnya, agar penilaian bisa ditautkan ke setiap minggu atau setiap tonggak proyek.
 
@@ -90,7 +90,7 @@ Cara itu mengubah label kepribadian, yang sulit dibantah, menjadi standar perila
 
 Rencana acara masih kekurangan tiga hal yang harus dikonfirmasi tim hulu: cakupan acara, data konversi 30 hari terakhir, dan batas atas anggaran. Kerangka, alur, dan bagian umum yang tidak bergantung pada data sudah selesai, dan daftar bahan yang dibutuhkan sudah dikirim dua kali. Di grup chat, atasan berkata: “Kenapa rencananya masih sekosong ini? Kurang gencar menindaklanjutinya, ya?”
 
-![Struktur rencana sudah ada di meja, beberapa bagian masih kosong, dan map yang lain masih tertutup.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.webp)
+![Struktur rencana sudah ada di meja, beberapa bagian masih kosong, dan map yang lain masih tertutup.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.jpg)
 
 GLM mencetak 81,4 pada soal ini, tertinggi di antara keempatnya. Ia menuliskan apa yang sudah selesai, mendaftar tiga kekurangan, mencatat pengiriman dan pengingat sebelumnya, lalu memberikan rencana: masukan paling lambat besok pukul 17.00, dan bagian yang kurang dilengkapi dalam dua hari kerja setelah bahan diterima. Jika bahan resmi belum bisa diberikan, cakupan atau nilai sementara sudah cukup untuk melanjutkan dengan asumsi yang dinyatakan.
 
@@ -100,7 +100,7 @@ Balasan semacam ini tidak mengubah “bahannya tidak diberikan” menjadi keluha
 
 Pengguna memegang tiga pekerjaan sekaligus: peluncuran fitur penagihan member hari Jumat ini, laporan operasional yang jatuh tempo Selasa depan, dan penyempurnaan tampilan back-office yang tidak bergantung pada pihak luar. Atasan berkata, “Anak muda mau bersusah payah itu bagus.” Pengguna ingin jadwal yang masuk akal tanpa menutup percakapan.
 
-![Beberapa pekerjaan terhampar di meja, dan percakapan berubah menjadi soal urutan prioritas, bukan perdebatan soal bersusah payah.](/blog/figures/boss-yinyang-workplace-reply/schedule.webp)
+![Beberapa pekerjaan terhampar di meja, dan percakapan berubah menjadi soal urutan prioritas, bukan perdebatan soal bersusah payah.](/blog/figures/boss-yinyang-workplace-reply/schedule.jpg)
 
 Opus mencetak 82,1 pada soal ini, skor per soal tertinggi di seluruh set. Ia tidak memperdebatkan nilai “bersusah payah”. Ia mendaftar ketiga pekerjaan berdasarkan tenggatnya: penagihan member lebih dulu, laporan operasional kedua, dan penyempurnaan tampilan diundur satu minggu. Jika penyempurnaan tampilan itu juga memiliki tenggat pasti, urutannya akan direvisi.
 
@@ -133,7 +133,7 @@ Semuanya bisa diringkas menjadi satu baris:
 
 ## Keamanan salin-tempel juga harus menjadi ukuran evaluasi
 
-![Baca pesan akhirnya sekali lagi sebelum dikirim.](/blog/figures/boss-yinyang-workplace-reply/before-send.webp)
+![Baca pesan akhirnya sekali lagi sebelum dikirim.](/blog/figures/boss-yinyang-workplace-reply/before-send.jpg)
 
 Sebuah model bisa menilai situasi dengan benar, tetapi tetap menghasilkan sesuatu yang tidak semestinya Anda kirim. Risikonya bukan hanya fakta yang salah atau nada yang keliru. Pesan itu mungkin masih memuat “Anda bisa membalas seperti ini”, “alasannya sebagai berikut”, nama yang belum diganti, catatan dalam tanda kurung, atau satu paragraf penuh analisis yang sebenarnya hanya ditujukan untuk pengguna.
 
