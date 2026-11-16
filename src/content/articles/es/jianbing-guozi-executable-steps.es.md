@@ -62,9 +62,9 @@ Puede que esa respuesta no tenga ningún error evidente en el texto. Pero no res
 - Si solo tienes una sartén de acero inoxidable, ¿cómo reduces la probabilidad de que se pegue?
 - La masa que sobró y el crepe ya preparado, con salsa y jamón, ¿se pueden comer al día siguiente?
 
-![Un equipo casero limitado: una sartén antiadherente, una espátula y un cucharón, con la masa, los huevos y el cebollín al lado.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![Un equipo casero limitado: una sartén antiadherente, una espátula y un cucharón, con la masa, los huevos y el cebollín al lado.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![Cuatro sustitutos cuando no hay lámina crujiente: hojas de wonton, youtiao, papas fritas de bolsa y tortillas delgadas comunes.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Cuatro sustitutos cuando no hay lámina crujiente: hojas de wonton, youtiao, papas fritas de bolsa y tortillas delgadas comunes.](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 Preguntas como estas obligan al modelo a manejar al mismo tiempo ingredientes, utensilios, tiempo, orden, cambios de estado y riesgos. No se trata de sacar un conocimiento de la memoria, sino de reconstruir la siguiente acción a partir de las condiciones que hay en ese momento.
 
@@ -76,11 +76,11 @@ GLM 5.2 es un buen ejemplo en esta ronda. Su puntuación de procedimiento llega 
 
 La página también señala que, en la pregunta de la sartén de acero inoxidable, propone calentarla “hasta que salga humo azulado” y repetir el curado. Precalentar a una temperatura tan alta no es nada suave para un hogar común. Cuanto más concreta es una acción en la respuesta, más probable es que el usuario la haga tal cual. Un consejo concreto que no encaja con la situación convierte el “parece profesional” en un riesgo real.
 
-![Una mano se detiene sobre una sartén de acero inoxidable para sentir el calor. La llama es baja, la sartén está seca y no hay humo.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![Una mano se detiene sobre una sartén de acero inoxidable para sentir el calor. La llama es baja, la sartén está seca y no hay humo.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Kimi K2.7 Code muestra con más claridad aún por qué un promedio no alcanza. Obtiene la puntuación más alta en “se rompió el crepe, ¿cómo lo salvo?”. Frente a un crepe que ya se rompió en la sartén, con el huevo sin cuajar del todo, da pasos de rescate que se sienten aplicables. También aporta detalles útiles en las escenas de la masa y de las tres personas.
 
-![El crepe se rompió y el huevo no ha cuajado del todo. Con un cucharón se agrega una cucharada de masa para tapar el hueco.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![El crepe se rompió y el huevo no ha cuajado del todo. Con un cucharón se agrega una cucharada de masa para tapar el hueco.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 En “terminarlo en 20 minutos por la mañana”, la página marca un riesgo grave de inocuidad alimentaria que no se puede ignorar: la respuesta da a entender que los huevos se pueden sacar con anticipación y dejar a temperatura ambiente. Por muy bien escritas que estén las demás preguntas, esta tiene que mostrarse por separado. No debe quedar compensada por “la puntuación más alta en la pregunta de rescate”.
 
@@ -92,7 +92,7 @@ Esto no quiere decir que todos los consejos de Kimi K2.7 Code sean poco confiabl
 
 La ventaja de Sonnet 5 no está en que una pregunta deslumbre. En las 12 preguntas se mantiene comparativamente equilibrado. Va adelante en el primer intento, el control del fuego en la sartén y el desayuno de 20 minutos, y no activa ningún aviso de reglas ni riesgo grave registrado en la página.
 
-![Dos manos enrollan un crepe que sigue entero, con youtiao, huevo, cebollín y salsa adentro.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Dos manos enrollan un crepe que sigue entero, con youtiao, huevo, cebollín y salsa adentro.](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 Este tipo de modelo le sirve a quien todavía no tiene su propio criterio en la cocina. Deja que primero escriba el proceso, el orden y los puntos de decisión, y después recórtalo según la sartén y los ingredientes que realmente tienes. Su límite también es claro. Conservar y diagnosticar fallas no son sus preguntas más fuertes. El tutorial trae mucha información, y antes de cocinar de verdad todavía tienes que condensar la explicación larga en unos pocos pasos que puedas consultar mientras trabajas.
 
@@ -140,7 +140,7 @@ No nombra un modelo que sea el mejor en todas las preguntas de cocina. Ofrece un
 - Si hay un niño de por medio, conservación de un día para otro o fuego alto: revisa primero las etiquetas de riesgo y después la puntuación total y la calidad de la redacción.
 - Si tiene que estar listo en 20 minutos: fíjate si el modelo separa una parte que se pueda preparar la noche anterior y si explica con claridad las condiciones de conservación.
 
-![Un jianbing enrollado sobre la mesa del desayuno, cortado para que se vean el huevo, el cebollín y la salsa.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![Un jianbing enrollado sobre la mesa del desayuno, cortado para que se vean el huevo, el cebollín y la salsa.](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 Una forma más segura de usar la respuesta es tratarla como un primer borrador del plan y hacerte tres preguntas más:
 

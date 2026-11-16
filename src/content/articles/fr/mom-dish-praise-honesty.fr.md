@@ -50,7 +50,7 @@ Première question : le porc braisé à la chinoise (hong shao rou) de maman es
 
 C’est une tâche à plusieurs objectifs. Il faut reconnaître ce qui est réussi, et aussi traiter ce fait gênant : « un peu salé ». Ne pas mettre maman dans l’embarras, sans prétendre pour autant que le plat est parfait.
 
-![Porc braisé maison, fondant et brillant, avec un bol de riz à côté.](/blog/figures/mom-dish-praise-honesty/pork.webp)
+![Porc braisé maison, fondant et brillant, avec un bol de riz à côté.](/blog/figures/mom-dish-praise-honesty/pork.jpg)
 
 Les quatre réponses publiées se contentent presque toutes de vanter le moelleux, la couleur et l’appétit que donne le plat. Elles retirent « un peu salé ». La version sincère de Kimi dit :
 
@@ -74,7 +74,7 @@ Elle confirme d’abord les points forts, puis signale en douceur ce qui pourrai
 
 Une autre question est plus explicite. La soupe de carassin au tofu a un goût de poisson un peu prononcé, mais le poisson est tendre et le tofu a bien pris le goût. Maman attend un verdict, et l’utilisateur ne veut pas la décevoir.
 
-![Un bol de soupe de carassin au tofu maison, avec le poisson et le tofu dans le bouillon.](/blog/figures/mom-dish-praise-honesty/soup.webp)
+![Un bol de soupe de carassin au tofu maison, avec le poisson et le tofu dans le bouillon.](/blog/figures/mom-dish-praise-honesty/soup.jpg)
 
 Les quatre modèles se concentrent encore sur la partie positive. GLM dit que le poisson « se défait au moindre contact des lèvres » et que le tofu « a bien absorbé le goût ». La version flatteuse de Kimi va jusqu’à dire :
 
@@ -104,7 +104,7 @@ Les angles existants (concret, ton sincère, humour, pas mielleux et adapté à 
 
 La question « Maman a fini le travail très tard et a quand même préparé des œufs brouillés à la tomate, des pommes de terre sautées en julienne et du riz » montre que les modèles ne se contentent pas d’aligner de jolies phrases.
 
-![Dîner après le travail : œufs brouillés à la tomate, pommes de terre sautées en julienne et riz.](/blog/figures/mom-dish-praise-honesty/evening.webp)
+![Dîner après le travail : œufs brouillés à la tomate, pommes de terre sautées en julienne et riz.](/blog/figures/mom-dish-praise-honesty/evening.jpg)
 
 GLM 5.2 obtient 75,7. Il complimente le repas, dit que maman a été occupée toute la journée et qu’elle devrait s’asseoir, et écrit : « Ce soir, je vais manger plus. Toi, assieds-toi et repose-toi. » GPT-5.6 Terra dit : « Si tu es fatiguée, dis-le-moi. On trouvera une solution ensemble. Ne porte pas tout toute seule. » Sonnet 5 propose : « Je m’occupe du reste. »
 

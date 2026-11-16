@@ -55,7 +55,7 @@ sources:
 
 “Did this model get dumber again?” A pelican with one foot hanging off the pedal, a bicycle whose frame is twisted into a knot, set beside a screenshot that looked quite good last week: that is enough to raise the question.
 
-![Natural-history plate of a pelican on a bicycle, with one foot off the pedal.](/blog/figures/did-the-model-get-dumber/pelican.webp)
+![Natural-history plate of a pelican on a bicycle, with one foot off the pedal.](/blog/figures/did-the-model-get-dumber/pelican.jpg)
 
 That suspicion should not be waved away with “models are random.” Someone paid for a task the service used to finish, and now it does not. That is worth asking about. Two screenshots, though, are not enough to show that the model was swapped, that the thinking budget was cut, or that a particular service was watered down.
 

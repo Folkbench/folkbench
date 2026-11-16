@@ -55,7 +55,7 @@ sources:
 
 “Apakah model ini jadi lebih bodoh lagi?” Seekor pelikan dengan satu kaki menggantung di luar pedal, sepeda dengan rangka yang terpelintir seperti simpul, lalu disandingkan dengan tangkapan layar minggu lalu yang tampak cukup bagus: itu sudah cukup untuk memunculkan pertanyaan tersebut.
 
-![Ilustrasi bergaya lukisan sejarah alam: seekor pelikan mengendarai sepeda dengan satu kaki terlepas dari pedal.](/blog/figures/did-the-model-get-dumber/pelican.webp)
+![Ilustrasi bergaya lukisan sejarah alam: seekor pelikan mengendarai sepeda dengan satu kaki terlepas dari pedal.](/blog/figures/did-the-model-get-dumber/pelican.jpg)
 
 Kecurigaan seperti itu tidak sepatutnya ditepis dengan “model memang acak”. Seseorang membayar untuk tugas yang dulu bisa diselesaikan layanan itu, dan sekarang tidak lagi. Hal itu layak dipertanyakan. Meski begitu, dua tangkapan layar belum cukup untuk menunjukkan bahwa modelnya ditukar, anggaran penalarannya dipangkas, atau layanan tertentu telah diencerkan.
 

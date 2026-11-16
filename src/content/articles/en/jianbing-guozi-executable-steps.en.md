@@ -62,9 +62,9 @@ That answer may have no obvious error at the level of words. It does not answer 
 - With only a stainless-steel pan, how do you lower the chance of sticking?
 - Can leftover batter, and a finished crepe already brushed with sauce and filled with ham, still be eaten the next day?
 
-![A limited home setup: one nonstick pan, one spatula, and one ladle, with batter, eggs, and scallion beside them.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![A limited home setup: one nonstick pan, one spatula, and one ladle, with batter, eggs, and scallion beside them.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![Four stand-ins when there is no crispy cracker: wonton wrappers, youtiao, potato chips, and ordinary thin flatbreads.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Four stand-ins when there is no crispy cracker: wonton wrappers, youtiao, potato chips, and ordinary thin flatbreads.](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 Questions like these ask the model to handle ingredients, tools, time, order, changing state, and risk at once. This is not pulling knowledge out of memory. It is rebuilding the next action from the conditions in front of it.
 
@@ -76,11 +76,11 @@ GLM 5.2 is a good example in this round. Its procedure score reaches 90, which m
 
 The page also points out that, on the stainless-steel pan question, it suggests heating the pan "until it smokes blue," and repeating the seasoning. That kind of high-heat preheat is not gentle for an ordinary home. The more concrete the action in an answer, the more likely a user is to do it directly. A concrete suggestion that does not match the situation turns "looks professional" into a real risk.
 
-![A hand pauses above a stainless-steel pan to judge the heat. The flame is small, the pan is dry, and there is no smoke.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![A hand pauses above a stainless-steel pan to judge the heat. The flame is small, the pan is dry, and there is no smoke.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Kimi K2.7 Code shows even more clearly why an average is not enough. It scores highest on "the crepe tore, how do I save it." Faced with a pan that has already torn, and an egg that has not fully set, it gives rescue steps that feel operable. It also offers useful detail on the batter and the three-person scenes.
 
-![The crepe has torn and the egg has not fully set. A ladle adds a spoon of batter to patch it.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![The crepe has torn and the egg has not fully set. A ladle adds a spoon of batter to patch it.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 On "finish it in 20 minutes in the morning," the page marks a food-safety hard risk that cannot be ignored: the answer implies that eggs can be taken out ahead of time and left at room temperature. However well the other questions are written, this one should be shown on its own. It should not be cancelled out by "highest score on the rescue question."
 
@@ -92,7 +92,7 @@ This is not a claim that every suggestion from Kimi K2.7 Code is unreliable, and
 
 Sonnet 5's advantage is not that one question is stunning. Across the 12 questions it is comparatively balanced. It stays ahead on the first attempt, pan heat, and the 20-minute breakfast, and it does not trigger a rule note or a hard risk recorded on the page.
 
-![Two hands roll a crepe that is still intact, with youtiao, egg, scallion, and sauce inside.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Two hands roll a crepe that is still intact, with youtiao, egg, scallion, and sauce inside.](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 This kind of model suits a user who has not yet formed their own kitchen judgment. Let it write the process, the order, and the decision points first, then cut it down to the pan and the ingredients actually on hand. Its limit is also clear. Storage and failure diagnosis are not its strongest questions. The tutorial carries a lot of information, and before you really cook you still need to compress the long explanation into a few steps you can look at while you work.
 
@@ -140,7 +140,7 @@ It does not name a model that is best on every kitchen question. It offers a mor
 - When a child, overnight storage, or high heat is involved: check the risk labels first, then the total and the quality of the writing.
 - When it has to be done in 20 minutes: see whether the model sets aside a part that can be prepared the night before, and whether its storage conditions are stated clearly.
 
-![A rolled jianbing on a morning table, cut open so the egg, scallion, and sauce show.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![A rolled jianbing on a morning table, cut open so the egg, scallion, and sauce show.](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 A steadier way to use the answer is to treat it as a first draft of a plan, and then ask three more questions:
 

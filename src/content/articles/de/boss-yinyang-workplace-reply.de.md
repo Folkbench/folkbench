@@ -70,7 +70,7 @@ GLM 5.2 listet bei der Frage zum fehlenden Material und beim Eingestehen eines F
 
 Die Person überarbeitet gerade ein Konzept, das am Freitag an den Kunden geht, und hat auf eine nicht dringende Nachricht im Gruppenchat noch nicht geantwortet. Der Chef sagt: „Sie wirken in letzter Zeit ziemlich entspannt.“
 
-![Jemand überarbeitet noch das Konzept, während eine andere Person mit einer lockeren Bemerkung herüberschaut.](/blog/figures/boss-yinyang-workplace-reply/relaxed.webp)
+![Jemand überarbeitet noch das Konzept, während eine andere Person mit einer lockeren Bemerkung herüberschaut.](/blog/figures/boss-yinyang-workplace-reply/relaxed.jpg)
 
 Sol widerspricht nicht mit „Ich bin überhaupt nicht entspannt“. Die Antwort sagt, man konzentriere sich auf die Überarbeitung, Struktur und Kernzahlen seien bereits geprüft, die erste Version komme voraussichtlich um 17:00 Uhr, und die Priorität lasse sich verschieben, falls etwas Dringenderes anliege.
 
@@ -80,7 +80,7 @@ Sie nennt zuerst den konkreten Grund für die späte Reaktion, zeigt dann mit Fo
 
 Im Beurteilungsgespräch sagt der Chef nur: „An Ihrer Einstellung liegt es nicht. Ihnen fehlt nur etwas Eigeninitiative.“ Im Beurteilungsbogen steht dasselbe: „zu wenig Eigeninitiative“. Der nächste Beurteilungszeitraum beträgt 6 Wochen.
 
-![Ein geschlossener Ordner liegt in einem Beurteilungsgespräch zwischen zwei Personen.](/blog/figures/boss-yinyang-workplace-reply/performance.webp)
+![Ein geschlossener Ordner liegt in einem Beurteilungsgespräch zwischen zwei Personen.](/blog/figures/boss-yinyang-workplace-reply/performance.jpg)
 
 Kimi widerspricht nicht sofort und sagt auch kein vages „Ich werde mich bemühen“. Es fragt, was „Eigeninitiative“ hier bedeutet: erst selbst eine Lösung versuchen, bevor man eskaliert, oder unaufgefordert Updates schicken; in der Zusammenarbeit mit anderen Teams nicht aktiv genug sein oder nicht von sich aus nach neuen Aufgaben fragen. Danach fragt es nach dem Maßstab für „erfüllt“ und für „sehr gut“ im nächsten Zeitraum, damit sich die Beurteilung an jeder Woche oder jedem Projektmeilenstein festmachen lässt.
 
@@ -90,7 +90,7 @@ So wird aus einem Charakteretikett, gegen das man kaum argumentieren kann, ein V
 
 Dem Veranstaltungskonzept fehlen drei Dinge, die die vorgelagerte Stelle bestätigen muss: der Umfang der Aktion, die Konversionsdaten der letzten 30 Tage und die Budgetobergrenze. Gliederung, Ablauf und die allgemeinen Teile, die nicht von den Daten abhängen, sind fertig, und die Materialliste wurde zweimal verschickt. Im Gruppenchat sagt der Chef: „Warum ist das Konzept immer noch so leer? Sie haben da wohl nicht genug Druck gemacht, oder?“
 
-![Die Struktur des Konzepts liegt auf dem Tisch, mehrere Blöcke sind noch leer, und der andere Ordner ist noch geschlossen.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.webp)
+![Die Struktur des Konzepts liegt auf dem Tisch, mehrere Blöcke sind noch leer, und der andere Ordner ist noch geschlossen.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.jpg)
 
 GLM erreicht bei dieser Frage 81,4 Punkte, den höchsten Wert der vier. Es schreibt, was bereits erledigt ist, listet die drei Lücken auf, vermerkt die früheren Sendungen und Erinnerungen und legt dann einen Plan vor: Rückmeldung bis morgen 17:00 Uhr und Ergänzung der fehlenden Teile innerhalb von zwei Arbeitstagen nach Eingang des Materials. Wenn das offizielle Material noch nicht geliefert werden kann, reicht ein Rahmen oder ein vorläufiger Wert, um auf Basis klar benannter Annahmen weiterzuarbeiten.
 
@@ -100,7 +100,7 @@ Eine solche Antwort macht aus „das Material kam nicht“ keine emotionale Besc
 
 Die Person verantwortet gleichzeitig drei Dinge: den Launch einer Mitgliederabrechnung an diesem Freitag, einen Operations-Bericht, der am nächsten Dienstag fällig ist, und einen Feinschliff am Design des Backoffice ohne externe Abhängigkeit. Der Chef sagt: „Es tut jungen Leuten gut, sich mal durchzubeißen.“ Die Person möchte einen vernünftigen Zeitplan, will das Gespräch aber nicht abwürgen.
 
-![Mehrere Aufgaben liegen ausgebreitet auf dem Tisch, und aus dem Gespräch wird eine Frage der Reihenfolge statt eines Streits über das Durchbeißen.](/blog/figures/boss-yinyang-workplace-reply/schedule.webp)
+![Mehrere Aufgaben liegen ausgebreitet auf dem Tisch, und aus dem Gespräch wird eine Frage der Reihenfolge statt eines Streits über das Durchbeißen.](/blog/figures/boss-yinyang-workplace-reply/schedule.jpg)
 
 Opus erreicht bei dieser Frage 82,1 Punkte, den höchsten Einzelwert des gesamten Sets. Es diskutiert nicht darüber, welchen Wert das Durchbeißen hat. Es ordnet die drei Aufgaben nach Fristen: zuerst die Mitgliederabrechnung, dann der Operations-Bericht, und der Design-Feinschliff wird um eine Woche verschoben. Falls auch der Feinschliff einen festen Termin hat, wird die Reihenfolge angepasst.
 
@@ -133,7 +133,7 @@ Zusammengefasst in einer Zeile:
 
 ## Auch Copy-Paste-Sicherheit sollte ein Bewertungsmaßstab sein
 
-![Die endgültige Nachricht vor dem Abschicken noch einmal lesen.](/blog/figures/boss-yinyang-workplace-reply/before-send.webp)
+![Die endgültige Nachricht vor dem Abschicken noch einmal lesen.](/blog/figures/boss-yinyang-workplace-reply/before-send.jpg)
 
 Ein Modell kann die Situation richtig einschätzen und trotzdem etwas liefern, das man nicht abschicken sollte. Das Risiko liegt nicht nur in falschen Fakten oder dem falschen Ton. Die Nachricht kann noch „So könnten Sie antworten“, „Die Begründung folgt unten“, einen nie ersetzten Namen, eine Anmerkung in Klammern oder einen ganzen Absatz Analyse enthalten, der nur für die Person selbst gedacht war.
 

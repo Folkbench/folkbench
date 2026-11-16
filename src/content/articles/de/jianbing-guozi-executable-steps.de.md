@@ -62,9 +62,9 @@ Auf der Ebene der Worte hat diese Antwort vielleicht keinen offensichtlichen Feh
 - Wenn nur eine Edelstahlpfanne da ist: Wie verringert man das Risiko, dass etwas anhängt?
 - Kann man übrigen Teig und eine fertige Crêpe, die schon mit Soße bestrichen und mit Schinken belegt ist, am nächsten Tag noch essen?
 
-![Eine begrenzte Ausstattung zu Hause: eine beschichtete Pfanne, ein Pfannenwender und eine Schöpfkelle, daneben Teig, Eier und Frühlingszwiebeln.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![Eine begrenzte Ausstattung zu Hause: eine beschichtete Pfanne, ein Pfannenwender und eine Schöpfkelle, daneben Teig, Eier und Frühlingszwiebeln.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![Vier Ersatzlösungen, wenn das Knusperblatt fehlt: Wan-Tan-Blätter, Youtiao, Kartoffelchips und gewöhnliche dünne Fladenbrote.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Vier Ersatzlösungen, wenn das Knusperblatt fehlt: Wan-Tan-Blätter, Youtiao, Kartoffelchips und gewöhnliche dünne Fladenbrote.](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 Solche Fragen verlangen vom Modell, Zutaten, Werkzeuge, Zeit, Reihenfolge, wechselnde Zustände und Risiken gleichzeitig zu berücksichtigen. Es geht nicht darum, Wissen aus dem Gedächtnis abzurufen. Es geht darum, den nächsten Handgriff aus den vorliegenden Bedingungen neu zu entwickeln.
 
@@ -76,11 +76,11 @@ GLM 5.2 ist in dieser Runde ein gutes Beispiel. Bei den Arbeitsschritten erreich
 
 Die Seite weist aber auch darauf hin, dass es bei der Frage zur Edelstahlpfanne empfiehlt, die Pfanne zu erhitzen, „bis sie bläulich raucht“, und das Einbrennen zu wiederholen. Ein solches Vorheizen bei hoher Hitze ist für einen normalen Haushalt alles andere als schonend. Je konkreter die Handlung in einer Antwort beschrieben ist, desto eher setzen Nutzer sie direkt um. Ein konkreter Rat, der nicht zur Situation passt, macht aus „wirkt professionell“ ein echtes Risiko.
 
-![Eine Hand hält über einer Edelstahlpfanne inne, um die Hitze zu prüfen. Die Flamme ist klein, die Pfanne ist trocken, und es raucht nicht.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![Eine Hand hält über einer Edelstahlpfanne inne, um die Hitze zu prüfen. Die Flamme ist klein, die Pfanne ist trocken, und es raucht nicht.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Kimi K2.7 Code zeigt noch deutlicher, warum ein Durchschnitt nicht reicht. Bei „Die Crêpe ist gerissen, wie rette ich sie?“ erzielt es den höchsten Wert. Bei einer Pfanne mit gerissener Crêpe und noch nicht ganz gestocktem Ei gibt es Rettungsschritte, die sich gut umsetzen lassen. Auch bei den Szenarien zum Teig und für drei Personen liefert es brauchbare Details.
 
-![Die Crêpe ist gerissen, und das Ei ist noch nicht ganz gestockt. Mit einer Schöpfkelle wird ein Löffel Teig zum Flicken nachgegeben.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![Die Crêpe ist gerissen, und das Ei ist noch nicht ganz gestockt. Mit einer Schöpfkelle wird ein Löffel Teig zum Flicken nachgegeben.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 Bei „Morgens in 20 Minuten fertig“ markiert die Seite jedoch ein hartes Risiko für die Lebensmittelsicherheit, das sich nicht ignorieren lässt: Die Antwort legt nahe, dass Eier vorab herausgenommen und bei Zimmertemperatur stehen gelassen werden können. Wie gut die anderen Fragen auch beantwortet sind – dieser Punkt sollte gesondert ausgewiesen werden. Er darf nicht durch den „höchsten Wert bei der Rettungsfrage“ aufgewogen werden.
 
@@ -92,7 +92,7 @@ Das heißt nicht, dass jeder Vorschlag von Kimi K2.7 Code unzuverlässig ist, un
 
 Der Vorteil von Sonnet 5 liegt nicht darin, dass es eine Frage besonders beeindruckend löst. Über die 12 Fragen hinweg ist es vergleichsweise ausgewogen. Beim ersten Versuch, bei der Hitze der Pfanne und beim 20-Minuten-Frühstück bleibt es vorn, und es löst weder einen Regelhinweis noch ein hartes Risiko aus, das auf der Seite vermerkt wäre.
 
-![Zwei Hände rollen eine noch intakte Crêpe auf, gefüllt mit Youtiao, Ei, Frühlingszwiebeln und Soße.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Zwei Hände rollen eine noch intakte Crêpe auf, gefüllt mit Youtiao, Ei, Frühlingszwiebeln und Soße.](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 Ein solches Modell eignet sich für Nutzer, die noch kein eigenes Gespür für die Küche entwickelt haben. Lassen Sie es zuerst den Ablauf, die Reihenfolge und die Entscheidungspunkte aufschreiben, und kürzen Sie das dann auf die Pfanne und die Zutaten, die Sie tatsächlich zur Hand haben. Auch seine Grenzen sind klar. Aufbewahrung und Fehlerdiagnose gehören nicht zu seinen stärksten Fragen. Die Anleitung enthält viele Informationen, und bevor Sie wirklich kochen, müssen Sie die langen Erklärungen noch zu wenigen Schritten verdichten, die Sie beim Arbeiten im Blick behalten können.
 
@@ -140,7 +140,7 @@ Sie benennt kein Modell, das bei jeder Küchenfrage das beste ist. Sie bietet ei
 - Wenn ein Kind, Aufbewahrung über Nacht oder hohe Hitze im Spiel sind: zuerst die Risikokennzeichnungen prüfen, dann die Gesamtpunktzahl und die Qualität des Textes.
 - Wenn es in 20 Minuten fertig sein muss: prüfen, ob das Modell einen Teil einplant, der sich am Vorabend vorbereiten lässt, und ob es die Aufbewahrungsbedingungen klar nennt.
 
-![Ein aufgerollter Jianbing auf einem Frühstückstisch, aufgeschnitten, sodass Ei, Frühlingszwiebeln und Soße zu sehen sind.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![Ein aufgerollter Jianbing auf einem Frühstückstisch, aufgeschnitten, sodass Ei, Frühlingszwiebeln und Soße zu sehen sind.](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 Sicherer ist es, die Antwort als ersten Entwurf eines Plans zu behandeln und dann drei weitere Fragen zu stellen:
 
