@@ -18,7 +18,8 @@
     "test:switch:rust": "bun run --cwd apps/switch rust:test",
     "switch:dev": "bun run --cwd apps/switch tauri dev",
     "switch:version": "node apps/switch/scripts/version.mjs",
-    "test:repository-tools": "node --test scripts/*.test.mjs"
+    "test:repository-tools": "node --test scripts/*.test.mjs && bun run test:distribution",
+    "test:distribution": "bun test scripts/distribution/*.test.ts"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",
