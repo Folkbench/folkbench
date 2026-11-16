@@ -50,6 +50,7 @@ test('CSV guards formulas while keeping numbers and escaped text usable',()=>{
 test('README preserves all bytes outside markers, includes disclosure and avoids execution-count claims',()=>{
   const original=`中文前缀\r\n${START}\r\nold\r\n${END}\r\n尾部 unchanged\r\n`
   const result=updateReadme(original,input());assert.equal(result.slice(0,result.indexOf(START)),original.slice(0,original.indexOf(START)));assert.equal(result.slice(result.indexOf(END)),original.slice(original.indexOf(END)))
+  for (const tag of result.match(/<details\b[^>]*>/gi) ?? []) assert.match(tag, /\bopen(?:\s|=|>)/i)
   assert.match(result,/今日|快照/u);assert.match(result,/展示样本/u);assert.match(result,/快照收录 1 条探针结果，覆盖 1 家站点/u);assert.match(result,/2026-11-09 20:00:00/u);assert.doesNotMatch(result,/过去 24 小时.*运行/u)
   assert.equal(updateReadme(result,input()),result);assert.throws(()=>updateReadme(original+START,input()),/markers/)
 })
