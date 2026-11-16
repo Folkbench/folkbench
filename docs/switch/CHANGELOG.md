@@ -1,5 +1,16 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.8 — Beta
+
+- 升级至 Precision Spectrum v0.5 视觉体系，对齐深浅色主题、字重字号规范，并支持简体中文、繁体中文与英文三语界面切换。
+- 发现服务升级为四视图：综合排行榜、降智监控、跨模型帕累托性价比前沿图与数据安全榜（L4–L0），并支持底部浮动双站对比栏。
+- 新增双站五维雷达对比弹窗，重构站点详情页（四张核心判定卡、缓存命中率交互折算器与完整运营及上游状态档案）。
+- 将排行评分与价格折算方法统一归口至「了解检测」页面说明。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.7 — Beta
 
 - 统一简易模式、添加向导和专业模式的预设线路：Modelflare、IKunCode、智流 FluxLane。
