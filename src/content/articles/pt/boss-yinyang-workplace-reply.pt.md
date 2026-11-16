@@ -70,7 +70,7 @@ O GLM 5.2 é bom em listar fatos, lacunas e ações de acompanhamento na pergunt
 
 O usuário está revisando um plano que vai para o cliente na sexta-feira e não respondeu a uma mensagem não urgente do grupo. O chefe diz: “Você anda bem tranquilo ultimamente, hein.”
 
-![Alguém ainda está revisando o plano, e ao lado outra pessoa já olha com um comentário em tom leve.](/blog/figures/boss-yinyang-workplace-reply/relaxed.webp)
+![Alguém ainda está revisando o plano, e ao lado outra pessoa já olha com um comentário em tom leve.](/blog/figures/boss-yinyang-workplace-reply/relaxed.jpg)
 
 O Sol não argumenta “não estou nada tranquilo”. Ele diz que está concentrado na revisão, que a estrutura e os números principais já foram conferidos, que a primeira versão deve sair às 17:00 e que a prioridade pode mudar se surgir algo mais urgente.
 
@@ -80,7 +80,7 @@ A resposta primeiro dá o motivo concreto da demora, depois usa o andamento e um
 
 Numa conversa de avaliação de desempenho, o chefe diz apenas: “Sua atitude é boa. Só falta um pouco de proatividade.” O formulário diz a mesma coisa: “falta proatividade”. O próximo ciclo de avaliação é de 6 semanas.
 
-![Uma pasta fechada entre duas pessoas numa conversa de avaliação de desempenho.](/blog/figures/boss-yinyang-workplace-reply/performance.webp)
+![Uma pasta fechada entre duas pessoas numa conversa de avaliação de desempenho.](/blog/figures/boss-yinyang-workplace-reply/performance.jpg)
 
 O Kimi não rebate de imediato e não solta um vago “vou me esforçar para melhorar”. Ele pergunta o que “proatividade” significa aqui: tentar uma solução antes de escalar ou mandar atualizações sem que ninguém peça; ser pouco ativo entre equipes ou não buscar novas tarefas. Depois pede o critério para ser aprovado e o critério para se destacar no próximo ciclo, para que a avaliação possa se apoiar em cada semana ou em cada marco do projeto.
 
@@ -90,7 +90,7 @@ Isso transforma um rótulo de personalidade, difícil de contestar, em um crité
 
 O plano do evento está sem três itens que a outra área precisa confirmar: o escopo do evento, os dados de conversão dos últimos 30 dias e o teto do orçamento. O roteiro, o fluxo e as partes gerais que não dependem dos dados estão prontos, e a lista de materiais já foi enviada duas vezes. No grupo, o chefe diz: “Por que esse plano ainda está tão vazio? Você não cobrou com força suficiente, né?”
 
-![A estrutura do plano está sobre a mesa, vários blocos ainda estão vazios, e a outra pasta continua fechada.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.webp)
+![A estrutura do plano está sobre a mesa, vários blocos ainda estão vazios, e a outra pasta continua fechada.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.jpg)
 
 O GLM marca 81,4 nessa pergunta, a maior nota dos quatro. Ele escreve o que já está feito, lista as três lacunas, registra os envios e lembretes anteriores e então apresenta um plano: retorno até amanhã às 17:00 e as partes que faltam preenchidas em até dois dias úteis depois que o material chegar. Se o material formal ainda não puder ser entregue, basta um escopo ou um valor provisório para seguir com premissas declaradas.
 
@@ -100,7 +100,7 @@ Esse tipo de resposta não transforma “o material não foi entregue” em uma 
 
 O usuário é responsável por três coisas ao mesmo tempo: o lançamento do faturamento de membros nesta sexta-feira, um relatório de operações para a próxima terça e um ajuste visual no painel interno sem dependência externa. O chefe diz: “Faz bem pra jovem ralar um pouco.” O usuário quer um cronograma razoável e não quer encerrar a conversa.
 
-![Várias tarefas espalhadas sobre a mesa, e a conversa vira uma questão de ordem de prioridade, não uma discussão sobre ralar ou não.](/blog/figures/boss-yinyang-workplace-reply/schedule.webp)
+![Várias tarefas espalhadas sobre a mesa, e a conversa vira uma questão de ordem de prioridade, não uma discussão sobre ralar ou não.](/blog/figures/boss-yinyang-workplace-reply/schedule.jpg)
 
 O Opus marca 82,1 nessa pergunta, a maior nota individual do conjunto. Ele não discute o valor de “ralar”. Lista as três tarefas por prazo: faturamento de membros primeiro, relatório de operações em segundo e o ajuste visual adiado em uma semana. Se o ajuste também tiver uma data fixa, a ordem é revista.
 
@@ -133,7 +133,7 @@ Dá para resumir em uma linha:
 
 ## A segurança para copiar e colar também deveria ser um critério de avaliação
 
-![Leia a mensagem final uma vez antes de enviar.](/blog/figures/boss-yinyang-workplace-reply/before-send.webp)
+![Leia a mensagem final uma vez antes de enviar.](/blog/figures/boss-yinyang-workplace-reply/before-send.jpg)
 
 Um modelo pode avaliar a situação corretamente e ainda assim produzir algo que você não deveria enviar. O risco não é só um fato errado ou o tom errado. A mensagem pode ainda trazer “você poderia responder assim”, “o motivo está abaixo”, um nome que nunca foi substituído, uma observação entre parênteses ou um parágrafo inteiro de análise que era só para o usuário.
 

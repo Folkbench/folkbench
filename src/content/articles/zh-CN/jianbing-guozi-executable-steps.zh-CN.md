@@ -62,9 +62,9 @@ Sonnet 5 以 80.4 分领先，整体上更像一份可以交给新手的教程�
 - 只有不锈钢锅时，怎样降低粘锅概率？
 - 调多的面糊和已经刷酱夹火腿的熟饼，第二天还能不能吃？
 
-![家里常见的有限工具：一口不粘锅、一把锅铲、一个汤勺，旁边是面糊、鸡蛋和葱。](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![家里常见的有限工具：一口不粘锅、一把锅铲、一个汤勺，旁边是面糊、鸡蛋和葱。](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![没有薄脆时桌上的四种替代：馄饨皮、油条、薯片和普通薄饼。](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![没有薄脆时桌上的四种替代：馄饨皮、油条、薯片和普通薄饼。](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 这类问题要求模型同时处理材料、工具、时间、顺序、状态变化和风险。它不是把知识从记忆里取出来，而是要根据当前条件重新组织行动。
 
@@ -76,11 +76,11 @@ Sonnet 5 以 80.4 分领先，整体上更像一份可以交给新手的教程�
 
 但页面同时指出，它在不锈钢锅题里建议“烧到冒青烟”，并重复养锅。这种高温预热方式对普通家庭并不温和。回答里的动作越具体，用户越可能直接照做；具体建议如果没有和使用场景匹配，就会把“看起来专业”变成实际风险。
 
-![手停在不锈钢锅上方试温度。火很小，锅是干的，没有油烟。](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![手停在不锈钢锅上方试温度。火很小，锅是干的，没有油烟。](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Kimi K2.7 Code 的情况更能说明平均分为什么不够用。它在“摊破了怎么救”一题得分最高，面对一锅已经破掉、蛋还没有完全凝固的半成品时，给出了很有操作感的补救步骤。它在面糊和三人份场景里也提供了不错的细节。
 
-![饼已经摊破，蛋还没有完全凝固，用汤勺补进一勺面糊。](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![饼已经摊破，蛋还没有完全凝固，用汤勺补进一勺面糊。](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 但在“早上 20 分钟搞定”这一题里，页面标记了一个不能忽略的食品安全硬风险：回答暗示鸡蛋可以提前取出后在室温放置。无论其他题写得多好，这一项都应该单独呈现，不能被“补救题得分最高”抵消。
 
@@ -92,7 +92,7 @@ Kimi K2.7 Code 的情况更能说明平均分为什么不够用。它在“摊�
 
 Sonnet 5 的优势不是某一道题特别惊艳，而是 12 道题里整体比较均衡。它在首次制作、锅具控火和 20 分钟早餐等场景保持领先，并且没有触发页面记录的规则提示或硬性风险。
 
-![双手把还完整的饼卷起来，里面是油条、蛋、葱和酱。](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![双手把还完整的饼卷起来，里面是油条、蛋、葱和酱。](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 这类模型适合用户还没有形成自己的厨房判断时使用：先让它把流程、顺序和判断节点写出来，再根据自己手头的锅具和材料删减。它的限制也很明确：保存和失败诊断题并不是最强，教程信息量较大，真正下厨前仍然需要把长段解释压缩成几步可以看着执行的步骤卡。
 
@@ -140,7 +140,7 @@ GPT-5.6 Terra 的首次完整教程得分达到 84.2，比例、锅温和基础�
 - 涉及儿童、隔夜保存或高温操作：先检查风险标签，再看总分和表达质量。
 - 要在 20 分钟内完成：看模型是否安排了前一晚可以准备的部分，以及它对保存条件的说明是否明确。
 
-![早上桌上的一份卷好的煎饼果子，切开后能看到蛋、葱和酱。](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![早上桌上的一份卷好的煎饼果子，切开后能看到蛋、葱和酱。](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 更稳妥的使用方式，是把模型回答当作“第一版操作方案”，继续追问三个问题：
 

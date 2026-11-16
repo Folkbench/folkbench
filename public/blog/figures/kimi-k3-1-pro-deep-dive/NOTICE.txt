@@ -11,7 +11,7 @@ Scales start at zero; different metrics are never averaged.
 Kimi mark: existing LobeHub icon distributed in the Folkbench UI package.
 Outline icons: existing Lucide registry used by the Folkbench UI package.
 The following license notices accompany the icon-derived illustrations,
-including cover.svg and ../../covers/kimi-k3-1-pro-deep-dive.webp.
+including cover.svg and ../../covers/kimi-k3-1-pro-deep-dive.jpg.
 
 MIT License
 
