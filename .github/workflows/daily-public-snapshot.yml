@@ -1,7 +1,7 @@
 name: Daily public snapshot distribution
 on:
   schedule:
-    - cron: '40 12 * * *'
+    - cron: '50 12 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           repository: Folkbench/folkbench-data
-          ssh-key: ${{ secrets.FOLKBENCH_DATA_DEPLOY_KEY }}
+          persist-credentials: false
           path: distribution-data
           fetch-depth: 0
       - name: Prepare normal Git hooks
@@ -32,22 +32,6 @@ jobs:
           git config core.hooksPath .githooks
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git -C distribution-data config core.hooksPath .githooks
-          git -C distribution-data config user.name 'github-actions[bot]'
-          git -C distribution-data config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      - name: Collect and validate published snapshot
-        id: snapshot
-        run: bun scripts/distribution/cli.ts archive --root distribution-data
-      - name: Publish immutable data before README
-        if: steps.snapshot.outputs.changed == 'true'
-        env:
-          FOLKBENCH_DISTRIBUTION_TOOL_ROOT: ${{ github.workspace }}
-          SNAPSHOT_VERSION: ${{ steps.snapshot.outputs.snapshot_version }}
-        run: |
-          test "$(git -C distribution-data config --get core.hooksPath)" = .githooks
-          git -C distribution-data add daily latest
-          git -C distribution-data commit -m "数据：归档公开快照（快照 ${SNAPSHOT_VERSION}）"
-          git -C distribution-data push origin HEAD:main
       - name: Update only the README marker block
         id: readme
         run: bun scripts/distribution/cli.ts readme --root . --data-root distribution-data
