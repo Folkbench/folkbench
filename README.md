@@ -45,6 +45,8 @@
 
 查看 [Folkbench 中转站排行榜](https://folkbench.com/rankings?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=relay-guide-rankings)，或阅读完整的[中转站推荐清单（GitHub）](https://github.com/magnus-minor/relay-api-recommend)，结合自己的模型需求与小额试用结果选择。
 
+想先自己验一下手上的中转站？用 [Folkbench 实时检测](https://folkbench.com/evaluations/api-quality?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=relay-guide-check)，填入你自己的 Key 检测一个接口：报告仅自己可见，密钥不保留。
+
 ## 今日公开快照
 
 <!-- FOLKBENCH-BOARD:START -->
@@ -219,6 +221,7 @@ Switch 在本地管理工具配置。公开目录、模型查询和服务商请�
 ## 相关链接
 
 - [中转站推荐清单（GitHub）](https://github.com/magnus-minor/relay-api-recommend)
+- [中转站实时检测（用自己的 Key）](https://folkbench.com/evaluations/api-quality?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=links-check)
 
 ## 许可证
 
