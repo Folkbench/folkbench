@@ -12,13 +12,14 @@ import type {
 import { ChoiceSelect, type ChoiceOption } from '@/components/choice-select'
 import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { ConnectRouteAction } from '@/features/discovery/route-actions'
 import { aaReferenceFor } from '@/lib/aa-reference'
 import {
   USD_CNY,
@@ -338,41 +339,13 @@ export function RelayCompareDialog({
   }
 
   function renderConnectAction(row: PublishedStation) {
-    if (isEasy) {
-      return (
-        <Button
-          type="button"
-          size="sm"
-          disabled={!row.baseUrl}
-          className="bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88 disabled:opacity-40"
-          onClick={() => {
-            onOpenChange(false)
-            onEasyConnect(row)
-          }}
-        >
-          {t('configure.actions.connect')}
-        </Button>
-      )
-    }
     return (
-      <Link
-        to="/"
-        search={{
-          add: true,
-          stationId: row.stationId,
-          channelId: row.channelId,
-          modelId: row.modelId,
-          stationName: row.stationName,
-          channelName: row.channelName,
-        }}
-        onClick={() => onOpenChange(false)}
-        className={cn(
-          buttonVariants({ size: 'sm' }),
-          'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88'
-        )}
-      >
-        {t('configure.actions.connect')}
-      </Link>
+      <ConnectRouteAction
+        row={row}
+        isEasy={isEasy}
+        onEasyConnect={onEasyConnect}
+        onNavigate={() => onOpenChange(false)}
+      />
     )
   }
 

@@ -6,12 +6,17 @@ import { useTranslation } from 'react-i18next'
 import type { CatalogModel, PublishedStation } from '@/bridge'
 import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
-import { buttonVariants } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@/components/ui/badge'
 import {
   publicIntegrityQueryOptions,
   publishedCatalogQueryOptions,
 } from '@/features/discovery/queries'
+import {
+  ConnectRouteAction,
+  DiscoveryLoading,
+  DiscoveryNotice,
+  RegisterRouteButton,
+} from '@/features/discovery/route-actions'
 import {
   AA_MODELS,
   aaReferenceFor,
@@ -48,6 +53,17 @@ const FALLBACK_PUBLIC_MODELS: readonly { id: string; name: string }[] = [
 
 export type FrontierViewMode = 'relay' | 'adjusted' | 'official'
 
+/**
+ * The degradation-adjusted frontier discounts each relay by measured answer
+ * integrity and uptime, so it is the default and recommended view.
+ */
+const RECOMMENDED_MODE: FrontierViewMode = 'adjusted'
+const MODE_ORDER: readonly FrontierViewMode[] = [
+  'adjusted',
+  'relay',
+  'official',
+]
+
 interface FrontierChartPoint {
   id: string
   label: string
@@ -77,7 +93,7 @@ export function ValueFrontierPanel({
   onEasyConnect: (station: PublishedStation) => void
 }) {
   const { t } = useTranslation()
-  const [mode, setMode] = useState<FrontierViewMode>('relay')
+  const [mode, setMode] = useState<FrontierViewMode>(RECOMMENDED_MODE)
   const [minAvail, setMinAvail] = useState<0 | 90 | 95>(90)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
@@ -95,8 +111,8 @@ export function ValueFrontierPanel({
 
   const isLoading =
     mode !== 'official' &&
-    catalogQueries.length > 0 &&
-    catalogQueries.every((q) => q.isPending)
+    ((catalogQueries.length > 0 && catalogQueries.every((q) => q.isPending)) ||
+      (mode === 'adjusted' && integrityQuery.isPending))
 
   const accuracyMap = useMemo(
     () => buildIntegrityAccuracyMap(integrityQuery.data?.items ?? []),
@@ -293,14 +309,19 @@ export function ValueFrontierPanel({
           role="group"
           aria-label={t('discovery.tabs.value')}
         >
-          {(['relay', 'adjusted', 'official'] as const).map((m) => (
+          {MODE_ORDER.map((m) => (
             <button
               key={m}
               type="button"
               aria-pressed={mode === m}
               onClick={() => setMode(m)}
             >
-              {t(`discovery.frontier.modes.${m}`)}
+              <span>{t(`discovery.frontier.modes.${m}`)}</span>
+              {m === RECOMMENDED_MODE ? (
+                <Badge className="h-4 border-0 bg-brand-signal/14 px-1.5 py-0 text-[10px] leading-4 font-medium text-brand-signal">
+                  {t('discovery.frontier.recommended')}
+                </Badge>
+              ) : null}
             </button>
           ))}
         </div>
@@ -328,13 +349,9 @@ export function ValueFrontierPanel({
       </div>
 
       {isLoading ? (
-        <div className="fbd-panel space-y-2 p-4" role="status" aria-busy="true">
-          <Skeleton className="h-64 w-full" />
-        </div>
+        <DiscoveryLoading rows={1} rowClassName="h-64" />
       ) : !geometry || points.length === 0 ? (
-        <p className="rounded-xl border bg-card px-4 py-6 text-center text-[13px] text-muted-foreground">
-          {t('discovery.frontier.empty')}
-        </p>
+        <DiscoveryNotice>{t('discovery.frontier.empty')}</DiscoveryNotice>
       ) : (
         <div className="grid grid-cols-1 items-start gap-3 xl:grid-cols-[1.35fr_1fr]">
           {/* Scatter Plot Card */}
@@ -651,37 +668,14 @@ export function ValueFrontierPanel({
                         {mode !== 'official' ? (
                           <td className="fbd-r whitespace-nowrap">
                             {row ? (
-                              isEasy ? (
-                                <button
-                                  type="button"
-                                  disabled={!row.baseUrl}
-                                  className={cn(
-                                    buttonVariants({ size: 'xs' }),
-                                    'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88 disabled:opacity-40'
-                                  )}
-                                  onClick={() => onEasyConnect(row)}
-                                >
-                                  {t('configure.actions.connect')}
-                                </button>
-                              ) : (
-                                <Link
-                                  to="/"
-                                  search={{
-                                    add: true,
-                                    stationId: row.stationId,
-                                    channelId: row.channelId,
-                                    modelId: row.modelId,
-                                    stationName: row.stationName,
-                                    channelName: row.channelName,
-                                  }}
-                                  className={cn(
-                                    buttonVariants({ size: 'xs' }),
-                                    'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88'
-                                  )}
-                                >
-                                  {t('configure.actions.connect')}
-                                </Link>
-                              )
+                              <div className="inline-flex items-center justify-end gap-1.5">
+                                <RegisterRouteButton target={row} />
+                                <ConnectRouteAction
+                                  row={row}
+                                  isEasy={isEasy}
+                                  onEasyConnect={onEasyConnect}
+                                />
+                              </div>
                             ) : null}
                           </td>
                         ) : null}

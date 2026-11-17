@@ -593,6 +593,25 @@
       "openToUpdate": "Open app to update",
       "downloadPage": "Download page",
       "detecting": "Checking version…"
+    },
+    "profiles": {
+      "button": "Profiles",
+      "title": "Named profiles",
+      "description": "Save your active relay for every tool and switch them all in one click.",
+      "empty": "No saved profiles yet. Name and save your current setup below.",
+      "namePlaceholder": "Profile name (e.g. Work, Budget)",
+      "save": "Save",
+      "update": "Overwrite with current setup",
+      "rename": "Rename profile",
+      "cancel": "Cancel",
+      "delete": "Delete profile",
+      "saved": "Profile saved",
+      "updated": "Profile updated with current setup",
+      "renamed": "Profile renamed",
+      "applied": "Switched {{count}} tool(s) to profile",
+      "appliedPartial": "Switched {{applied}} tool(s); {{skipped}} skipped",
+      "noActiveServices": "Switch at least one tool to a service before saving a profile.",
+      "errorFailed": "Could not update profile. Please try again."
     }
   }
 }

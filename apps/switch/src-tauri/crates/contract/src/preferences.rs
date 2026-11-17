@@ -93,6 +93,8 @@ pub enum UiMode {
     Pro,
 }
 
+use crate::privacy::PrivacySettings;
+
 /// Local, non-secret application preferences owned by the Rust core.
 ///
 /// This structure never carries credentials, account identifiers, or server
@@ -115,6 +117,8 @@ pub struct Preferences {
     pub account_onboarding_completed: bool,
     pub easy_onboarding_completed: bool,
     pub ui_mode: UiMode,
+    pub active_profile_id: Option<String>,
+    pub privacy: PrivacySettings,
 }
 
 /// Stable machine codes for preference failures.

@@ -79,7 +79,34 @@
         "description": "Folkbench Switch does not send telemetry in this version.",
         "title": "Telemetry"
       },
-      "title": "Privacy"
+      "title": "Privacy",
+      "masking": {
+        "title": "Local privacy masking",
+        "statusActive": "Active · 127.0.0.1:{{port}}",
+        "statusReady": "Enabled",
+        "statusOff": "Off",
+        "enableTitle": "Mask secrets and personal data locally",
+        "enableDescription": "Routes active tools through a localhost proxy that replaces sensitive values with placeholders before sending, and restores them in replies.",
+        "secretsTitle": "Secrets & API keys",
+        "secretsDescription": "API keys, tokens, JWTs, and PEM private keys.",
+        "personalTitle": "Personal data",
+        "personalDescription": "Email addresses and public IPv4 addresses.",
+        "customWordsLabel": "Custom words to mask",
+        "customWordsPlaceholder": "Comma-separated (3+ Latin chars or 2+ CJK)",
+        "allowlistLabel": "Never mask (allowlist)",
+        "allowlistPlaceholder": "Comma-separated exact values",
+        "saveRules": "Save word rules",
+        "rulesSaved": "Word rules saved",
+        "tryTitle": "Try it",
+        "tryAction": "Test masking",
+        "tryMatched": "{{count}} masked",
+        "tryNoMatch": "No sensitive values matched",
+        "recentTitle": "Recent masked items",
+        "totalCount": "{{count}} masked this session",
+        "recentEmpty": "No items masked in this session yet.",
+        "errorSave": "Could not save privacy settings. Please try again.",
+        "errorPreview": "Could not run masking preview."
+      }
     },
     "title": "Settings",
     "updates": {
