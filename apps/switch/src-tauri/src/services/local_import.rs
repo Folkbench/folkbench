@@ -141,7 +141,10 @@ fn save_state(
 
 /// Resolve live projection into a concrete URL+Key pair for import/switch.
 /// Key-only configs become official endpoint + Key. URL-only is not importable.
+/// A privacy-proxy URL resolves to the saved service's real upstream, so the
+/// local proxy address is never imported as a new service.
 pub fn resolve_importable(
+    config_dir: &Path,
     tool_id: &str,
     home: &Path,
 ) -> Result<Option<(String, String)>, ServiceError> {
@@ -153,6 +156,13 @@ pub fn resolve_importable(
         (Some(url), Some(key))
             if !url.trim().is_empty() && !key.trim().is_empty() =>
         {
+            let url = super::privacy_proxy::deproxy_live_url(
+                config_dir, tool_id, url,
+            );
+            if super::privacy_proxy::proxied_service_id(&url).is_some() {
+                // Proxy URL for a service that no longer exists.
+                return Ok(None);
+            }
             Ok(Some((url, key)))
         }
         (None, Some(key)) if !key.trim().is_empty() => {
@@ -224,7 +234,9 @@ fn auto_import_tool(
     name: &str,
     state: &mut LocalImportState,
 ) -> Result<bool, ServiceError> {
-    let Some((base_url, api_key)) = resolve_importable(tool_id, home)? else {
+    let Some((base_url, api_key)) =
+        resolve_importable(config_dir, tool_id, home)?
+    else {
         return Ok(false);
     };
     let fp = fingerprint(&base_url, &api_key);

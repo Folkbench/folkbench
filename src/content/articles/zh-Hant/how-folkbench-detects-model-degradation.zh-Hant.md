@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Folkbench 降智監控（Integrity Monitor）
@@ -161,6 +161,9 @@ Folkbench 現已在[降智監控（Integrity Monitor）](https://folkbench.com/z
 
 - **寫入前設定差異預覽**：在修改本地工具設定檔之前展示清晰差異，並保留原有的其他自訂設定。
 - **Codex 官方憑證保護**：切往第三方服務商時自動暫存原有的官方 OAuth 憑證，切回官方路線時一鍵無損恢復。
+- **命名組合檔案與系統匣快速切換**：把各工具目前連接的線路儲存為「日常」「備用」等組合，一鍵整組切換；系統匣選單無需開啟主視窗即可切換組合或單一工具的服務。
+- **本機隱私遮罩（可選）**：開啟後，請求經本機回環代理轉發，送往上游前把 API Key、憑證私鑰、電子郵件、公網 IP 與自訂敏感詞替換為佔位符，並在回應（含串流輸出）中還原；結束 Switch 時自動恢復工具直連設定。
+- **按降智折算的性價比前沿**：探索頁的跨模型帕累托前沿圖預設結合公開降智監控資料折算性價比，前沿線路可直接「註冊」或「接入」。
 - **公開線路瀏覽與本地用量估算**：可在用戶端內查看公開目錄中的線路可用率、狀態視窗與參考價格，並在本地統計會話 Token 估算成本。
 
 *註：降智監控與快取補償等線上觀測資訊屬於 Folkbench 網站端的持續評測能力，不等於桌面用戶端已經本地整合的檢測功能。*
@@ -172,6 +175,6 @@ Folkbench 現已在[降智監控（Integrity Monitor）](https://folkbench.com/z
 1. **按業務優先級篩選候選分組**：在[可用率榜](https://folkbench.com/zh-Hant/rankings)、[穩定性榜](https://folkbench.com/zh-Hant/rankings/stability)、[回應速度榜](https://folkbench.com/zh-Hant/rankings/latency)與[會話成本榜](https://folkbench.com/zh-Hant/rankings/cost)中，先鎖定目標模型下符合穩定性與預算預期的具體服務分組。
 2. **在降智監控核對官方基準對齊度**：打開[降智監控](https://folkbench.com/zh-Hant/arena)，對照獨立官方直連基準查看該分組近期的探針一致率、思考 Token 與模型指紋；當日常體驗出現異常波動時，先結合連續幾個時間視窗的資料核實偏離是否持續存在。
 3. **並排核對具體分組規格**：在儲值或正式接取前，透過[中轉站對比](https://folkbench.com/zh-Hant/stations/compare)確認所選分組的各項指標，避免把高價穩定分組的測試表現直接套用到特惠分組上。
-4. **藉助 Switch 保持多線路容災能力**：使用開源的 [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) 在本地同時保存主力線路與備用線路；當監控顯示某條路由出現持續異常或波動時，預覽設定差異即可在數秒內完成安全切換。
+4. **藉助 Switch 保持多線路容災能力**：使用開源的 [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) 把主力線路與備用線路分別儲存為組合檔案；當監控顯示某條路由出現持續異常或波動時，在主視窗預覽設定差異或直接從系統匣整組切換，數秒內即可完成。
 
 隨著越來越多工作流依賴第三方 API 路由，評測的價值已不再只是回答「哪個模型本身更強」，更在於持續驗證「使用者實際拿到的服務是否依然如約交付」。透過把**時事探針**、**模型指紋**與**獨立官方直連校準**納入公開常態監測，Folkbench 為 AI 服務的日常選擇提供了一把清晰、可複核的公開標尺。

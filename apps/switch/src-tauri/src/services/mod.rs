@@ -12,6 +12,9 @@ mod credentials;
 mod journal;
 mod local_import;
 mod preferences;
+mod privacy_masking;
+mod privacy_proxy;
+mod profiles;
 mod session_usage;
 pub(crate) mod share_image;
 mod switch;
@@ -19,6 +22,7 @@ pub(crate) mod telemetry;
 pub(crate) mod tool_desktop;
 pub(crate) mod tool_launch;
 pub(crate) mod tool_runtime;
+pub(crate) mod tray;
 pub(crate) mod window_layout;
 
 pub use account::{
@@ -48,11 +52,56 @@ pub use tool_runtime::{
 };
 
 use crate::domain::{
-    ClaudeRoleModels, FetchedModel, MyService, PreferenceError, Preferences,
-    PreferredLanguage, PreferredTheme, ServiceError, ServiceProtocol,
-    SwitchResult, UiMode,
+    ApplyProfileResult, ClaudeRoleModels, FetchedModel, MyService,
+    PreferenceError, Preferences, PreferredLanguage, PreferredTheme,
+    PrivacySettings, PrivacyStatus, ProfilesSnapshot, ServiceError,
+    ServiceProtocol, SwitchResult, UiMode,
 };
 use std::path::Path;
+
+pub use privacy_masking::preview as preview_privacy_masking;
+pub use tray::{refresh as tray_refresh, setup as tray_setup};
+
+pub fn get_privacy_status(config_dir: &Path) -> PrivacyStatus {
+    let settings = preferences::load(config_dir).privacy;
+    let (total_masked, recent_events) = privacy_masking::shared_vault()
+        .lock()
+        .map(|v| v.stats())
+        .unwrap_or_default();
+    PrivacyStatus {
+        settings,
+        proxy_port: privacy_proxy::current_port(),
+        total_masked,
+        recent_events,
+    }
+}
+
+pub fn update_privacy_settings(
+    config_dir: &Path,
+    home: &Path,
+    settings: PrivacySettings,
+) -> Result<PrivacyStatus, PreferenceError> {
+    let _guard = configuration_lock::lock();
+    preferences::save_privacy(config_dir, settings)?;
+    switch::reapply_active_for_privacy(config_dir, home);
+    Ok(get_privacy_status(config_dir))
+}
+
+/// App launch: when masking is on, start the proxy and point tools at it
+/// again (tool configs were restored to direct upstreams on the last exit).
+pub fn resume_privacy_routing(config_dir: &Path, home: &Path) {
+    let _guard = configuration_lock::lock();
+    if preferences::load(config_dir).privacy.enabled {
+        switch::reapply_active_for_privacy(config_dir, home);
+    }
+}
+
+/// App exit: point proxied tools back at their direct upstreams so they keep
+/// working while Switch is closed.
+pub fn suspend_privacy_routing(config_dir: &Path, home: &Path) {
+    let _guard = configuration_lock::lock();
+    switch::restore_direct_for_privacy(config_dir, home);
+}
 
 // Lock once at the application-service boundary. Internal helpers must not
 // reacquire this non-reentrant lock. Network requests are not wrapped here.
@@ -117,4 +166,13 @@ locked_api! {
         -> Result<Preferences, PreferenceError> = preferences::save_favorite_tool_ids;
     fn save_favorite_service_ids(config_dir: &Path, tool_id: String, service_ids: Vec<String>)
         -> Result<Preferences, PreferenceError> = preferences::save_favorite_service_ids;
+    fn list_profiles(config_dir: &Path) -> ProfilesSnapshot = profiles::list;
+    fn save_profile(config_dir: &Path, name: String, id: Option<String>)
+        -> Result<ProfilesSnapshot, ServiceError> = profiles::save;
+    fn apply_profile(config_dir: &Path, home: &Path, profile_id: &str)
+        -> Result<ApplyProfileResult, ServiceError> = profiles::apply;
+    fn rename_profile(config_dir: &Path, profile_id: &str, name: String)
+        -> Result<ProfilesSnapshot, ServiceError> = profiles::rename;
+    fn delete_profile(config_dir: &Path, profile_id: &str)
+        -> Result<ProfilesSnapshot, ServiceError> = profiles::delete;
 }

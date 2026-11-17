@@ -18,6 +18,7 @@ import {
   openPresetRelayWebsite,
 } from '@/bridge'
 import { DataSecurityBadge } from '@/components/DataSecurityBadge'
+import { ProfileSwitcher } from '@/features/home/ProfileSwitcher'
 import { ToolLogo } from '@/components/tool-logo'
 import { StationAvatar } from '@/components/station-avatar'
 import { UpstreamStatusNotice } from '@/components/UpstreamStatusNotice'
@@ -246,6 +247,7 @@ export function EasyHomePage() {
           <p>{t('easy.boundary')}</p>
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <ProfileSwitcher className="min-h-[34px] rounded-full" />
           <button
             type="button"
             className="inline-flex min-h-[34px] items-center justify-center rounded-full border border-border bg-card px-3 py-1.5 text-[12px] font-medium text-foreground shadow-xs transition-colors hover:bg-muted/60 disabled:pointer-events-none disabled:opacity-50"

@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Folkbench 무결성 모니터(Integrity Monitor)
@@ -124,13 +124,13 @@ Folkbench는 [무결성 모니터(Integrity Monitor)](https://folkbench.com/ko/a
 1. **모델 및 서비스 그룹 단위 실측**: 한 업체 안의 특가 그룹과 공식 키 안정 그룹을 섞지 않고 실제 구매 단위별로 분리 평가합니다.
 2. **4대 전문 공개 순위**: **[가용률](/ko/rankings)**(가짜 `200` 오류와 스트림 중단을 걸러냄), **[안정성](/ko/rankings/stability)**(장시간·피크 타임 지속성), **[응답 속도](/ko/rankings/latency)**(TTFT와 지속 생성 속도 분리), **[세션 비용](/ko/rankings/cost)**(실제 코딩 세션 기준 지출).
 3. **무료 [무결성 모니터](/ko/arena) 및 [중계 서비스 비교](/ko/stations/compare)**: 개인이 별도 공식 키와 동적 문제 세트를 유지하지 않고도 보정된 지표와 동화면 비교를 바로 활용할 수 있습니다.
-4. **오픈소스 클라이언트 [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Tauri + Rust 기반(macOS `.dmg` / Windows `.exe`)으로 Claude Code, Codex, Gemini CLI, Aider, OpenCode, Kimi CLI 설정을 관리하며 **diff 미리보기**, **Codex 공식 OAuth 자격 증명 보호**, 공개 경로 탐색 및 로컬 사용량 추정을 지원합니다. *(무결성 및 캐시 모니터링은 웹 평가 플랫폼 기능입니다.)*
+4. **오픈소스 클라이언트 [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Tauri + Rust 기반(macOS `.dmg` / Windows `.exe`)으로 Claude Code, Codex, Gemini CLI, Aider, OpenCode, Kimi CLI 설정을 관리하며 **diff 미리보기**, **Codex 공식 OAuth 자격 증명 보호**, 공개 경로 탐색 및 로컬 사용량 추정을 지원합니다. 새로 **이름 있는 프로필**로 모든 도구를 한 번에 전환하고, **시스템 트레이**에서 바로 바꾸며, 선택형 **로컬 개인정보 마스킹**으로 API 키·이메일·공인 IP·사용자 지정 민감어를 전송 전에 자리표시자로 바꾼 뒤 응답(스트리밍 포함)에서 복원하고, 기본값으로 **성능 저하를 반영한 가성비 파레토 프런티어**를 제공합니다. *(무결성 및 캐시 모니터링은 웹 평가 플랫폼 기능입니다.)*
 
 ## 실전 활용 4단계
 
 1. [가용률](/ko/rankings), [안정성](/ko/rankings/stability), [응답 속도](/ko/rankings/latency), [세션 비용](/ko/rankings/cost)에서 작업 요구에 맞는 모델·그룹 후보를 먼저 추립니다.
 2. [무결성 모니터](/ko/arena)에서 연속 시간 창의 프로브 일치율, 사고 토큰, 모델 지문이 공식 기준선과 일치하는지 점검합니다.
 3. 결제 전 [중계 서비스 비교](/ko/stations/compare)에서 내가 사용할 정확한 그룹 지표를 대조합니다.
-4. [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)에 주 경로와 예비 경로를 저장해 두어 지표 이탈 시 diff를 확인하고 몇 초 만에 전환합니다.
+4. [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)에 주 경로와 예비 경로를 프로필로 저장해 두어 지표 이탈 시 diff를 확인하거나 시스템 트레이에서 몇 초 만에 일괄 전환합니다.
 
 오늘날 API 인프라는 서류상 모델 성능뿐 아니라 실제 경로가 약속된 역량을 그대로 전달하는지까지 검증해야 합니다. Folkbench는 시사 프로브, 모델 지문, 독립 공식 직연결 보정을 상시 공개 체계로 통합해 투명하고 재검토 가능한 선택 기준을 제시합니다.

@@ -5,6 +5,7 @@ import {
   useRouterState,
 } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { listen } from '@tauri-apps/api/event'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import Settings01Icon from '@hugeicons/core-free-icons/Settings01Icon'
@@ -44,6 +45,21 @@ export function AppShell() {
         publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID, 'availability')
       )
       .catch(() => {})
+  }, [queryClient])
+
+  useEffect(() => {
+    let unlisten: (() => void) | undefined
+    void listen('tray-state-changed', () => {
+      void queryClient.invalidateQueries({ queryKey: ['preferences'] })
+      void queryClient.invalidateQueries({ queryKey: ['myServices'] })
+      void queryClient.invalidateQueries({ queryKey: ['profiles'] })
+      void queryClient.invalidateQueries({ queryKey: ['privacyStatus'] })
+    }).then((fn) => {
+      unlisten = fn
+    })
+    return () => {
+      unlisten?.()
+    }
   }, [queryClient])
 
   useEffect(() => {

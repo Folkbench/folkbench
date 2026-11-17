@@ -1,23 +1,17 @@
 import ArrowLeftRightIcon from '@hugeicons/core-free-icons/ArrowLeftRightIcon'
-import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  BRIDGE_ERROR,
-  BridgeError,
-  openPublishedStationWebsite,
-} from '@/bridge'
+import { BRIDGE_ERROR, BridgeError } from '@/bridge'
 import type { PublishedStation } from '@/bridge'
 import { ChoiceSelect, type ChoiceOption } from '@/components/choice-select'
 import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
 import { StatusWindow } from '@/components/status-window'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
 import { UpstreamStatusNotice } from '@/components/UpstreamStatusNotice'
 import { switchToolsQueryOptions } from '@/features/catalog/queries'
 import {
@@ -30,7 +24,6 @@ import {
   sessionCostCny,
   type DiscoveryMetricKey,
   type DiscoveryTabKey,
-  type DisplayCurrency,
 } from '@/features/discovery/catalog'
 import { DataSecurityPanel } from '@/features/discovery/DataSecurityPanel'
 import { DiscoveryRefreshButton } from '@/features/discovery/DiscoveryRefreshButton'
@@ -42,6 +35,15 @@ import {
   publishedCatalogQueryOptions,
 } from '@/features/discovery/queries'
 import { RelayCompareDialog } from '@/features/discovery/RelayCompareDialog'
+import {
+  BRAND_CTA_CLASS,
+  ConnectRouteAction,
+  CurrencyToggle,
+  DiscoveryLoading,
+  DiscoveryNotice,
+  RegisterRouteButton,
+  useDisplayCurrency,
+} from '@/features/discovery/route-actions'
 import { ValueFrontierPanel } from '@/features/discovery/ValueFrontierPanel'
 import { EasyAddWizard } from '@/features/home/EasyAddWizard'
 import { easySelectableTools } from '@/features/home/easy-model'
@@ -64,18 +66,6 @@ const METRIC_KEYS: readonly DiscoveryMetricKey[] = [
   'price',
 ]
 
-const CURRENCY_STORAGE_KEY = 'folkbench.currency'
-
-function readStoredCurrency(locale: string): DisplayCurrency {
-  try {
-    const raw = window.localStorage.getItem(CURRENCY_STORAGE_KEY)
-    if (raw === 'CNY' || raw === 'USD') return raw
-  } catch {
-    // Ignore storage unavailability; fall back to locale default.
-  }
-  return locale.startsWith('zh') ? 'CNY' : 'USD'
-}
-
 function modelBarColor(modelId: string): string {
   const lower = modelId.toLowerCase()
   if (lower.startsWith('claude')) return '#533afd'
@@ -93,10 +83,7 @@ export function DiscoveryPage() {
   const { modelId, tab, metric, compare } = useSearch({
     from: '/console/discover',
   })
-  const [currency, setCurrency] = useState<DisplayCurrency>(() =>
-    readStoredCurrency(locale)
-  )
-  const [openingWebsite, setOpeningWebsite] = useState<string | null>(null)
+  const [currency, changeCurrency] = useDisplayCurrency()
   const [easyWizardOpen, setEasyWizardOpen] = useState(false)
   const [easyWizardStation, setEasyWizardStation] =
     useState<PublishedStation | null>(null)
@@ -132,15 +119,6 @@ export function DiscoveryPage() {
     ...officialProviderStatusQueryOptions(modelId),
     enabled: tab === 'rankings',
   })
-
-  function changeCurrency(next: DisplayCurrency) {
-    setCurrency(next)
-    try {
-      window.localStorage.setItem(CURRENCY_STORAGE_KEY, next)
-    } catch {
-      // Ignore storage failures.
-    }
-  }
 
   function switchTab(nextTab: DiscoveryTabKey) {
     void navigate({
@@ -228,21 +206,9 @@ export function DiscoveryPage() {
       ? t('discovery.columns.firstToken')
       : t('discovery.columns.sessionCost')
 
-  async function onRegister(row: PublishedStation) {
-    const key = `${row.stationId}:${row.channelId}`
-    setOpeningWebsite(key)
-    try {
-      await openPublishedStationWebsite({
-        modelId: row.modelId,
-        stationId: row.stationId,
-        channelId: row.channelId,
-        locale,
-      })
-    } catch {
-      // Keep the row usable; website may be missing from the catalog.
-    } finally {
-      setOpeningWebsite(null)
-    }
+  function openEasyWizard(row: PublishedStation) {
+    setEasyWizardStation(row)
+    setEasyWizardOpen(true)
   }
 
   const modelOptions = catalog.data?.models ?? []
@@ -306,24 +272,7 @@ export function DiscoveryPage() {
             </nav>
             <div className="flex flex-wrap items-center gap-2 px-3 py-2">
               {tab !== 'security' ? (
-                <div
-                  className="switch-segmented"
-                  role="group"
-                  aria-label={t('discovery.currency.label')}
-                >
-                  {(['CNY', 'USD'] as const).map((unit) => (
-                    <button
-                      key={unit}
-                      type="button"
-                      aria-pressed={currency === unit}
-                      onClick={() => changeCurrency(unit)}
-                    >
-                      {unit === 'CNY'
-                        ? t('discovery.currency.cny')
-                        : t('discovery.currency.usd')}
-                    </button>
-                  ))}
-                </div>
+                <CurrencyToggle value={currency} onChange={changeCurrency} />
               ) : null}
               <DiscoveryRefreshButton
                 refreshing={refreshing}
@@ -428,27 +377,11 @@ export function DiscoveryPage() {
             ) : null}
 
             {catalog.isPending ? (
-              <div
-                className="fbd-panel space-y-2 p-4"
-                role="status"
-                aria-busy="true"
-              >
-                <span className="sr-only">{t('common.status.loading')}</span>
-                {Array.from({ length: 5 }, (_, index) => (
-                  <Skeleton key={index} className="h-10 w-full" />
-                ))}
-              </div>
+              <DiscoveryLoading />
             ) : catalog.isError && !catalog.data ? (
-              <p
-                className="rounded-xl border bg-card px-4 py-3 text-[14px] text-destructive"
-                role="alert"
-              >
-                {errorMessage}
-              </p>
+              <DiscoveryNotice tone="error">{errorMessage}</DiscoveryNotice>
             ) : rankedEntries.length === 0 ? (
-              <p className="rounded-xl border bg-card px-4 py-6 text-center text-[13px] text-muted-foreground">
-                {t('discovery.list.empty')}
-              </p>
+              <DiscoveryNotice>{t('discovery.list.empty')}</DiscoveryNotice>
             ) : (
               <div className="fbd-panel">
                 <div className="fbd-scrollx">
@@ -674,55 +607,12 @@ export function DiscoveryPage() {
                                     />
                                   </button>
                                 ) : null}
-                                <button
-                                  type="button"
-                                  className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[12px] font-medium text-brand-signal underline-offset-2 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40"
-                                  disabled={
-                                    !row.websiteUrl || openingWebsite === rKey
-                                  }
-                                  onClick={() => void onRegister(row)}
-                                >
-                                  <span>{t('discovery.list.register')}</span>
-                                  <HugeiconsIcon
-                                    icon={LinkSquare01Icon}
-                                    strokeWidth={1.8}
-                                    className="size-3.5"
-                                  />
-                                </button>
-                                {isEasy ? (
-                                  <button
-                                    type="button"
-                                    disabled={!row.baseUrl}
-                                    className={cn(
-                                      buttonVariants({ size: 'sm' }),
-                                      'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88 disabled:opacity-40'
-                                    )}
-                                    onClick={() => {
-                                      setEasyWizardStation(row)
-                                      setEasyWizardOpen(true)
-                                    }}
-                                  >
-                                    {t('configure.actions.connect')}
-                                  </button>
-                                ) : (
-                                  <Link
-                                    to="/"
-                                    search={{
-                                      add: true,
-                                      stationId: row.stationId,
-                                      channelId: row.channelId,
-                                      modelId: row.modelId,
-                                      stationName: row.stationName,
-                                      channelName: row.channelName,
-                                    }}
-                                    className={cn(
-                                      buttonVariants({ size: 'sm' }),
-                                      'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88'
-                                    )}
-                                  >
-                                    {t('configure.actions.connect')}
-                                  </Link>
-                                )}
+                                <RegisterRouteButton target={row} />
+                                <ConnectRouteAction
+                                  row={row}
+                                  isEasy={isEasy}
+                                  onEasyConnect={openEasyWizard}
+                                />
                               </div>
                             </td>
                           </tr>
@@ -764,7 +654,7 @@ export function DiscoveryPage() {
                   <Button
                     type="button"
                     size="sm"
-                    className="bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88"
+                    className={BRAND_CTA_CLASS}
                     onClick={() => setCompareOpen(true)}
                   >
                     {t('discovery.compare.selectedButton', {
@@ -788,10 +678,7 @@ export function DiscoveryPage() {
             models={catalog.data?.models ?? []}
             origin={catalogOrigin}
             isEasy={isEasy}
-            onEasyConnect={(row) => {
-              setEasyWizardStation(row)
-              setEasyWizardOpen(true)
-            }}
+            onEasyConnect={openEasyWizard}
           />
         ) : (
           <DataSecurityPanel />
@@ -823,10 +710,7 @@ export function DiscoveryPage() {
         origin={catalogOrigin}
         initialKeys={initialComparePair}
         isEasy={isEasy}
-        onEasyConnect={(row) => {
-          setEasyWizardStation(row)
-          setEasyWizardOpen(true)
-        }}
+        onEasyConnect={openEasyWizard}
       />
 
       {isEasy ? (

@@ -105,6 +105,7 @@ import {
   switcherTools,
 } from '@/features/home/effects'
 import { SharePosterDialog } from './SharePosterDialog'
+import { ProfileSwitcher } from './ProfileSwitcher'
 import { ToolDock } from './ToolDock'
 import {
   toolRuntimeQueryOptions,
@@ -1814,13 +1815,14 @@ function ProHomePage() {
             }}
           />
         </div>
-        <div className="home-tool-actions">
-          <span className="min-w-0 text-right text-[12px] leading-snug text-muted-foreground">
-            {effect === 'requiresRestart'
-              ? null
-              : (effectExplanation(toolId, toolName, effect, t) ??
-                effectLabel(effect, t))}
-          </span>
+        <div className="home-tool-actions justify-between">
+          <ProfileSwitcher />
+          {effect !== 'requiresRestart' ? (
+            <span className="min-w-0 text-right text-[12px] leading-snug text-muted-foreground">
+              {effectExplanation(toolId, toolName, effect, t) ??
+                effectLabel(effect, t)}
+            </span>
+          ) : null}
         </div>
       </div>
       {loadError ? (

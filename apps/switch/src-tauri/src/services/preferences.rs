@@ -6,7 +6,7 @@ use std::{
 
 use crate::domain::{
     PreferenceError, Preferences, PreferredLanguage, PreferredTheme,
-    SwitchUndo, UiMode,
+    PrivacySettings, SwitchUndo, UiMode,
 };
 
 const FILE_NAME: &str = "preferences.json";
@@ -337,6 +337,50 @@ pub fn forget_service_for_tool(
     preferences
 }
 
+pub fn save_active_profile_id(
+    config_dir: &Path,
+    profile_id: Option<String>,
+) -> Result<Preferences, PreferenceError> {
+    let mut preferences = load(config_dir);
+    if preferences.active_profile_id == profile_id {
+        return Ok(preferences);
+    }
+    preferences.active_profile_id = profile_id;
+    write_atomically(config_dir, &preferences)?;
+    Ok(preferences)
+}
+
+const MAX_PRIVACY_WORDS: usize = 200;
+const MAX_PRIVACY_WORD_CHARS: usize = 200;
+
+/// Trims, de-duplicates, and caps user-supplied word lists so a pasted list
+/// cannot grow unbounded or contain blank entries.
+fn sanitize_privacy_words(words: Vec<String>) -> Vec<String> {
+    let mut seen = std::collections::HashSet::new();
+    words
+        .into_iter()
+        .map(|word| word.trim().to_string())
+        .filter(|word| {
+            !word.is_empty()
+                && word.chars().count() <= MAX_PRIVACY_WORD_CHARS
+                && seen.insert(word.clone())
+        })
+        .take(MAX_PRIVACY_WORDS)
+        .collect()
+}
+
+pub fn save_privacy(
+    config_dir: &Path,
+    mut privacy: PrivacySettings,
+) -> Result<Preferences, PreferenceError> {
+    privacy.custom_words = sanitize_privacy_words(privacy.custom_words);
+    privacy.allowlist = sanitize_privacy_words(privacy.allowlist);
+    let mut preferences = load(config_dir);
+    preferences.privacy = privacy;
+    write_atomically(config_dir, &preferences)?;
+    Ok(preferences)
+}
+
 /// Writes through a same-directory temporary file, flushes it to disk, then
 /// replaces the target, so neither a crash nor a concurrent reader can observe
 /// a partially written file.
@@ -464,12 +508,14 @@ mod tests {
             keys,
             [
                 "accountOnboardingCompleted",
+                "activeProfileId",
                 "currentByTool",
                 "easyOnboardingCompleted",
                 "favoriteServiceIdsByTool",
                 "favoriteToolIds",
                 "language",
                 "lastToolId",
+                "privacy",
                 "theme",
                 "uiMode",
                 "undoByTool",
@@ -480,6 +526,7 @@ mod tests {
         assert_eq!(value["language"], "zh-CN");
         assert_eq!(value["theme"], "system");
         assert!(value["lastToolId"].is_null());
+        assert!(value["activeProfileId"].is_null());
         assert_eq!(value["favoriteServiceIdsByTool"], serde_json::json!({}));
         assert_eq!(value["favoriteToolIds"], serde_json::json!([]));
         assert_eq!(value["currentByTool"], serde_json::json!({}));
@@ -487,6 +534,16 @@ mod tests {
         assert_eq!(value["accountOnboardingCompleted"], false);
         assert_eq!(value["easyOnboardingCompleted"], false);
         assert_eq!(value["uiMode"], "easy");
+        assert_eq!(
+            value["privacy"],
+            serde_json::json!({
+                "enabled": false,
+                "maskSecrets": true,
+                "maskPersonal": true,
+                "customWords": [],
+                "allowlist": [],
+            })
+        );
     }
 
     #[test]

@@ -13,6 +13,8 @@ mod connect;
 mod links;
 mod my_service;
 mod preferences;
+mod privacy;
+mod profiles;
 mod session;
 mod tool_launch;
 mod tool_runtime;
@@ -44,6 +46,10 @@ pub use preferences::{
     PreferenceError, Preferences, PreferredLanguage, PreferredTheme,
     SwitchUndo, UiMode,
 };
+pub use privacy::{
+    PrivacyMaskEvent, PrivacyMaskPreview, PrivacySettings, PrivacyStatus,
+};
+pub use profiles::{ApplyProfileResult, ProfilesSnapshot, SwitchProfile};
 pub use session::{
     AuthorizationError, AuthorizationSupport, SessionState, SessionStatus,
     SessionUser,

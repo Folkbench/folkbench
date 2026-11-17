@@ -29,7 +29,11 @@ pub fn set_preferred_language(
     app: AppHandle,
     language: PreferredLanguage,
 ) -> Result<Preferences, PreferenceError> {
-    services::save_preferred_language(&config_dir(&app)?, language)
+    let saved =
+        services::save_preferred_language(&config_dir(&app)?, language)?;
+    // Tray labels are localized in Rust; rebuild them in the new language.
+    services::tray_refresh(&app);
+    Ok(saved)
 }
 
 #[tauri::command]

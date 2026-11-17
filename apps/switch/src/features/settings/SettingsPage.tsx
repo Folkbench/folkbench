@@ -16,6 +16,7 @@ import { normalizeLocale } from '@/i18n/config'
 import type { SupportedLocale } from '@/i18n/config'
 
 import { AppUpdateCheck } from './AppUpdateCheck'
+import { PrivacyMaskingPanel } from './PrivacyMaskingPanel'
 import { TelemetrySettings } from './TelemetrySettings'
 
 const LOCALES: SupportedLocale[] = ['zh-CN', 'zh-Hant', 'en']
@@ -48,6 +49,7 @@ export function SettingsPage() {
           {t('settings.description')}
         </p>
       </header>
+      <PrivacyMaskingPanel />
       <TelemetrySettings />
       <section className="flex flex-col gap-2.5">
         <h2 className="switch-section-title">

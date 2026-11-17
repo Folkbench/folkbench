@@ -45,13 +45,23 @@ pub fn run() {
                 );
             }
             commands::connect::install(app.handle());
+            #[cfg(desktop)]
+            services::tray_setup(app.handle());
+            if let (Ok(config), Ok(home)) =
+                (app.path().app_config_dir(), app.path().home_dir())
+            {
+                tauri::async_runtime::spawn_blocking(move || {
+                    services::resume_privacy_routing(&config, &home);
+                });
+            }
             Ok(())
         })
         // Window close policy:
         // - macOS main: hide (Dock reopen); Cmd+Q still exits.
         // - Windows/Linux main: EXIT the process. Previously this path called
         //   prevent_close()+minimize(), which left Folkbench alive in the
-        //   taskbar after the user clicked X (no tray product).
+        //   taskbar after the user clicked X. The tray menu is a quick
+        //   switcher while the window is open, not a background mode.
         // - Install helper windows (easy-cli-install-*): allow normal close;
         //   the WebView cancels the npm/brew job via cancel_easy_tool_install.
         .on_window_event(|window, event| {
@@ -143,6 +153,14 @@ pub fn run() {
             commands::preferences::set_preferred_theme,
             commands::preferences::set_ui_mode,
             commands::preferences::fit_window_to_content,
+            commands::privacy::get_privacy_status,
+            commands::privacy::save_privacy_settings,
+            commands::privacy::preview_privacy_masking,
+            commands::profiles::list_profiles,
+            commands::profiles::save_profile,
+            commands::profiles::apply_profile,
+            commands::profiles::rename_profile,
+            commands::profiles::delete_profile,
             commands::session::get_session_state,
             commands::session::cancel_account_sign_in,
             commands::session::start_account_sign_in,
@@ -167,10 +185,17 @@ pub fn run() {
         ])
         .build(tauri::generate_context!())
         .expect("failed to run MF Switch")
-        .run(|_app, _event| {
+        .run(|app, event| {
+            if let tauri::RunEvent::Exit = event {
+                if let (Ok(config), Ok(home)) =
+                    (app.path().app_config_dir(), app.path().home_dir())
+                {
+                    services::suspend_privacy_routing(&config, &home);
+                }
+            }
             #[cfg(target_os = "macos")]
-            if let tauri::RunEvent::Reopen { .. } = _event {
-                if let Some(window) = _app.get_webview_window("main") {
+            if let tauri::RunEvent::Reopen { .. } = event {
+                if let Some(window) = app.get_webview_window("main") {
                     let _ = window.unminimize();
                     let _ = window.show();
                     let _ = window.set_focus();
