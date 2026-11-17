@@ -62,9 +62,9 @@ Nếu chỉ hỏi “làm jianbing thế nào”, mô hình rất dễ đưa ra 
 - Khi chỉ có chảo inox, làm sao giảm khả năng dính chảo?
 - Phần bột pha dư, và chiếc bánh đã chín, đã quét tương và kẹp giăm bông, hôm sau còn ăn được không?
 
-![Bộ dụng cụ hạn chế thường thấy trong nhà: một chảo chống dính, một cái xẻng, một cái muôi, bên cạnh là bột, trứng và hành lá.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![Bộ dụng cụ hạn chế thường thấy trong nhà: một chảo chống dính, một cái xẻng, một cái muôi, bên cạnh là bột, trứng và hành lá.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![Bốn thứ thay thế trên bàn khi không có bánh giòn: vỏ hoành thánh, quẩy, snack khoai tây và bánh bột mỏng thông thường.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Bốn thứ thay thế trên bàn khi không có bánh giòn: vỏ hoành thánh, quẩy, snack khoai tây và bánh bột mỏng thông thường.](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 Những câu hỏi như vậy đòi hỏi mô hình xử lý cùng lúc nguyên liệu, dụng cụ, thời gian, thứ tự, sự thay đổi trạng thái và rủi ro. Đây không phải là lấy kiến thức ra từ trí nhớ, mà là sắp xếp lại hành động dựa trên điều kiện trước mắt.
 
@@ -76,11 +76,11 @@ Trong vòng này, GLM 5.2 là một ví dụ rất điển hình. Điểm các b
 
 Nhưng trang đánh giá cũng chỉ ra rằng ở đề chảo inox, nó khuyên đun chảo “đến khi bốc khói xanh” và tôi chảo nhiều lần. Cách làm nóng ở nhiệt độ cao như vậy không hề nhẹ nhàng với một gia đình bình thường. Hành động trong câu trả lời càng cụ thể, người dùng càng dễ làm theo ngay; một lời khuyên cụ thể mà không khớp với hoàn cảnh sử dụng sẽ biến “trông chuyên nghiệp” thành rủi ro thật.
 
-![Bàn tay dừng phía trên chảo inox để thử độ nóng. Lửa rất nhỏ, chảo khô, không có khói dầu.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![Bàn tay dừng phía trên chảo inox để thử độ nóng. Lửa rất nhỏ, chảo khô, không có khói dầu.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Trường hợp của Kimi K2.7 Code càng cho thấy vì sao điểm trung bình là không đủ. Nó đạt điểm cao nhất ở đề “bánh rách rồi, cứu thế nào”: trước một chảo bánh đã rách, trứng còn chưa chín hẳn, nó đưa ra các bước cứu vãn rất có tính thao tác. Ở các tình huống về bột và khẩu phần ba người, nó cũng cung cấp những chi tiết khá tốt.
 
-![Bánh đã rách, trứng chưa chín hẳn; dùng muôi thêm một muôi bột để vá.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![Bánh đã rách, trứng chưa chín hẳn; dùng muôi thêm một muôi bột để vá.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 Nhưng ở đề “làm xong trong 20 phút buổi sáng”, trang đánh giá đã đánh dấu một rủi ro nghiêm trọng về an toàn thực phẩm không thể bỏ qua: câu trả lời ngụ ý rằng có thể lấy trứng ra trước rồi để ở nhiệt độ phòng. Dù các đề khác viết tốt đến đâu, mục này cũng cần được trình bày riêng, không thể bị “điểm cao nhất ở đề cứu vãn” bù trừ.
 
@@ -92,7 +92,7 @@ Nhưng ở đề “làm xong trong 20 phút buổi sáng”, trang đánh giá 
 
 Ưu thế của Sonnet 5 không nằm ở một đề nào đặc biệt xuất sắc, mà ở chỗ nó khá cân bằng trên cả 12 đề. Nó giữ vị trí dẫn đầu ở các tình huống làm lần đầu, kiểm soát lửa theo loại chảo và bữa sáng 20 phút, đồng thời không kích hoạt lưu ý quy tắc hay rủi ro nghiêm trọng nào được ghi nhận trên trang.
 
-![Hai bàn tay cuộn một chiếc bánh vẫn còn nguyên vẹn, bên trong có quẩy, trứng, hành lá và tương.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Hai bàn tay cuộn một chiếc bánh vẫn còn nguyên vẹn, bên trong có quẩy, trứng, hành lá và tương.](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 Kiểu mô hình này hợp với người dùng chưa hình thành được phán đoán bếp núc của riêng mình: trước hết để nó viết ra quy trình, thứ tự và các điểm cần phán đoán, rồi cắt gọt lại theo chảo và nguyên liệu thực có trong tay. Giới hạn của nó cũng rõ ràng: các đề về bảo quản và chẩn đoán thất bại không phải thế mạnh nhất; bài hướng dẫn chứa khá nhiều thông tin, nên trước khi thật sự vào bếp, bạn vẫn cần rút gọn những đoạn giải thích dài thành vài bước có thể vừa nhìn vừa làm.
 
@@ -140,7 +140,7 @@ Nó không chỉ ra một mô hình tốt nhất cho mọi câu hỏi bếp núc
 - Liên quan đến trẻ em, bảo quản qua đêm hoặc thao tác nhiệt độ cao: kiểm tra nhãn rủi ro trước, rồi mới xem tổng điểm và chất lượng diễn đạt.
 - Cần xong trong 20 phút: xem mô hình có sắp xếp phần nào có thể chuẩn bị từ tối hôm trước không, và phần giải thích về điều kiện bảo quản có rõ ràng không.
 
-![Một chiếc jianbing đã cuộn trên bàn ăn sáng, cắt đôi để thấy trứng, hành lá và tương bên trong.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![Một chiếc jianbing đã cuộn trên bàn ăn sáng, cắt đôi để thấy trứng, hành lá và tương bên trong.](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 Cách dùng an toàn hơn là coi câu trả lời của mô hình như “phương án thao tác bản đầu tiên”, rồi hỏi tiếp ba câu:
 

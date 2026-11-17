@@ -70,7 +70,7 @@ GLM 5.2 giỏi liệt kê sự việc, phần còn thiếu và việc cần làm
 
 Người dùng đang sửa bản kế hoạch phải gửi khách hàng vào thứ Sáu và chưa trả lời một tin nhắn không gấp trong nhóm. Sếp nói: “Dạo này trông em thảnh thơi nhỉ.”
 
-![Một người vẫn đang sửa kế hoạch, trong khi người khác nhìn sang với một câu nói bâng quơ.](/blog/figures/boss-yinyang-workplace-reply/relaxed.webp)
+![Một người vẫn đang sửa kế hoạch, trong khi người khác nhìn sang với một câu nói bâng quơ.](/blog/figures/boss-yinyang-workplace-reply/relaxed.jpg)
 
 Sol không cãi “em có thảnh thơi chút nào đâu”. Nó nói người viết đang tập trung sửa bản kế hoạch, cấu trúc và các số liệu cốt lõi đã kiểm xong, dự kiến gửi bản đầu tiên lúc 17:00, và nếu có việc gấp hơn thì có thể điều chỉnh thứ tự ưu tiên.
 
@@ -80,7 +80,7 @@ Câu trả lời trước tiên nêu lý do cụ thể của việc trả lời 
 
 Trong buổi trao đổi về hiệu suất, sếp chỉ nói: “Thái độ của em thì ổn, chỉ là chưa đủ chủ động.” Phiếu đánh giá cũng ghi y như vậy: “chưa đủ chủ động”. Kỳ đánh giá tiếp theo kéo dài 6 tuần.
 
-![Một tập hồ sơ đóng nằm giữa hai người trong buổi trao đổi về hiệu suất.](/blog/figures/boss-yinyang-workplace-reply/performance.webp)
+![Một tập hồ sơ đóng nằm giữa hai người trong buổi trao đổi về hiệu suất.](/blog/figures/boss-yinyang-workplace-reply/performance.jpg)
 
 Kimi không phản bác ngay, cũng không nói chung chung “em sẽ cố gắng cải thiện”. Nó hỏi “chủ động” ở đây cụ thể là gì: tự thử tìm giải pháp trước khi báo lên, hay tự cập nhật mà không cần ai hỏi; chưa tích cực khi phối hợp liên phòng ban, hay chưa chủ động nhận việc mới. Sau đó nó hỏi tiếp tiêu chuẩn đạt và tiêu chuẩn tốt cho kỳ tới, để việc đánh giá có thể gắn vào từng tuần hoặc từng mốc dự án.
 
@@ -90,7 +90,7 @@ Cách đó biến một cái nhãn tính cách khó cãi thành một tiêu chu�
 
 Bản kế hoạch sự kiện còn thiếu ba thứ mà phía cung cấp đầu vào phải xác nhận: phạm vi sự kiện, dữ liệu chuyển đổi trong 30 ngày qua và mức trần ngân sách. Dàn ý, quy trình và các phần chung không phụ thuộc vào dữ liệu đã xong, danh sách tài liệu cần có đã được gửi hai lần. Trong nhóm chat, sếp nói: “Sao bản kế hoạch vẫn trống thế này? Em chưa đẩy đủ mạnh phải không?”
 
-![Khung của bản kế hoạch đã nằm trên bàn, vài khối vẫn còn trống, tập hồ sơ bên kia vẫn chưa mở.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.webp)
+![Khung của bản kế hoạch đã nằm trên bàn, vài khối vẫn còn trống, tập hồ sơ bên kia vẫn chưa mở.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.jpg)
 
 GLM đạt 81,4 điểm ở câu này, cao nhất trong bốn mô hình. Nó viết những gì đã làm xong, liệt kê ba phần còn thiếu, ghi lại các lần đã gửi và nhắc trước đó, rồi đưa ra kế hoạch: phản hồi trước 17:00 ngày mai, và bổ sung các phần còn thiếu trong vòng hai ngày làm việc sau khi nhận được tài liệu. Nếu chưa thể cung cấp tài liệu chính thức, chỉ cần một phạm vi hoặc một giá trị tạm tính là có thể làm tiếp dựa trên các giả định đã nêu.
 
@@ -100,7 +100,7 @@ Kiểu trả lời này không biến chuyện “chưa được gửi tài li�
 
 Người dùng cùng lúc phụ trách ba việc: đợt ra mắt chức năng quyết toán hội viên vào thứ Sáu tuần này, báo cáo vận hành hạn vào thứ Ba tuần sau, và việc tinh chỉnh giao diện trang quản trị không phụ thuộc bên ngoài. Sếp nói: “Người trẻ chịu khổ một chút cũng là chuyện tốt.” Người dùng muốn có một lịch làm việc hợp lý nhưng không muốn nói quá lời.
 
-![Vài việc trải ra trên bàn, và cuộc trò chuyện trở thành việc sắp thứ tự ưu tiên thay vì tranh cãi về chuyện chịu khổ.](/blog/figures/boss-yinyang-workplace-reply/schedule.webp)
+![Vài việc trải ra trên bàn, và cuộc trò chuyện trở thành việc sắp thứ tự ưu tiên thay vì tranh cãi về chuyện chịu khổ.](/blog/figures/boss-yinyang-workplace-reply/schedule.jpg)
 
 Opus đạt 82,1 điểm ở câu này, điểm cao nhất cho một câu trong cả bộ. Nó không tranh luận về giá trị của việc “chịu khổ”. Nó liệt kê ba việc theo hạn chót: quyết toán hội viên ưu tiên một, báo cáo vận hành ưu tiên hai, việc tinh chỉnh giao diện lùi lại một tuần. Nếu việc tinh chỉnh cũng có hạn cứng thì sẽ sắp xếp lại thứ tự.
 
@@ -133,7 +133,7 @@ Có thể rút gọn thành một dòng:
 
 ## Độ an toàn khi sao chép–dán cũng nên là một tiêu chí đánh giá
 
-![Đọc lại tin nhắn cuối cùng một lượt trước khi gửi.](/blog/figures/boss-yinyang-workplace-reply/before-send.webp)
+![Đọc lại tin nhắn cuối cùng một lượt trước khi gửi.](/blog/figures/boss-yinyang-workplace-reply/before-send.jpg)
 
 Một mô hình có thể phán đoán đúng tình huống mà vẫn tạo ra thứ bạn không nên gửi. Rủi ro không chỉ là sai sự việc hay sai giọng điệu. Tin nhắn có thể vẫn còn dính “bạn có thể trả lời thế này”, “lý do như sau”, một cái tên chưa được thay, một ghi chú trong ngoặc, hoặc cả một đoạn phân tích vốn chỉ dành cho người dùng đọc.
 

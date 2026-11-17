@@ -62,9 +62,9 @@ Jawaban itu mungkin tidak memiliki kesalahan yang jelas di tingkat kata-kata. Na
 - Jika hanya punya wajan stainless steel, bagaimana mengurangi kemungkinan lengket?
 - Apakah sisa adonan, dan crepe matang yang sudah diolesi saus dan diisi ham, masih bisa dimakan keesokan harinya?
 
-![Peralatan rumah yang terbatas: satu wajan antilengket, satu sutil, dan satu sendok sayur, dengan adonan, telur, dan daun bawang di sampingnya.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![Peralatan rumah yang terbatas: satu wajan antilengket, satu sutil, dan satu sendok sayur, dengan adonan, telur, dan daun bawang di sampingnya.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![Empat pengganti saat tidak ada kerupuk renyah: kulit pangsit, cakwe, keripik kentang, dan roti pipih tipis biasa.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Empat pengganti saat tidak ada kerupuk renyah: kulit pangsit, cakwe, keripik kentang, dan roti pipih tipis biasa.](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 Pertanyaan seperti ini meminta model menangani bahan, alat, waktu, urutan, perubahan keadaan, dan risiko sekaligus. Ini bukan soal mengambil pengetahuan dari ingatan, melainkan menyusun ulang tindakan berikutnya dari kondisi yang ada di depan mata.
 
@@ -76,11 +76,11 @@ GLM 5.2 adalah contoh yang baik di putaran ini. Skor langkah kerjanya mencapai 9
 
 Halaman itu juga menunjukkan bahwa, pada soal wajan stainless steel, model ini menyarankan memanaskan wajan “sampai berasap kebiruan” dan mengulang proses seasoning wajan. Pemanasan awal dengan suhu setinggi itu tidak ramah untuk rumah tangga biasa. Makin konkret tindakan dalam sebuah jawaban, makin besar kemungkinan pengguna langsung melakukannya. Saran konkret yang tidak sesuai dengan situasinya mengubah “tampak profesional” menjadi risiko nyata.
 
-![Sebuah tangan berhenti di atas wajan stainless steel untuk memperkirakan panasnya. Apinya kecil, wajannya kering, dan tidak ada asap.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![Sebuah tangan berhenti di atas wajan stainless steel untuk memperkirakan panasnya. Apinya kecil, wajannya kering, dan tidak ada asap.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Kimi K2.7 Code menunjukkan dengan lebih jelas mengapa skor rata-rata saja tidak cukup. Model ini mendapat skor tertinggi pada “crepe-nya sobek, bagaimana menyelamatkannya?”. Menghadapi crepe yang sudah sobek dan telur yang belum matang sepenuhnya, model ini memberi langkah penyelamatan yang terasa bisa dikerjakan. Model ini juga memberi detail yang berguna pada situasi adonan dan porsi tiga orang.
 
-![Crepe sudah sobek dan telurnya belum matang sepenuhnya. Sendok sayur menambahkan sesendok adonan untuk menambalnya.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![Crepe sudah sobek dan telurnya belum matang sepenuhnya. Sendok sayur menambahkan sesendok adonan untuk menambalnya.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 Pada soal “selesaikan dalam 20 menit di pagi hari”, halaman itu menandai risiko berat keamanan pangan yang tidak boleh diabaikan: jawabannya menyiratkan bahwa telur boleh dikeluarkan lebih awal dan dibiarkan pada suhu ruang. Sebagus apa pun jawaban untuk soal-soal lain, soal ini harus ditampilkan tersendiri. Risiko ini tidak boleh dihapus oleh “skor tertinggi di soal penyelamatan”.
 
@@ -92,7 +92,7 @@ Ini bukan klaim bahwa setiap saran dari Kimi K2.7 Code tidak andal, dan bukan la
 
 Keunggulan Sonnet 5 bukan karena satu soal dijawab dengan memukau. Di 12 soal, jawabannya relatif seimbang. Model ini tetap unggul pada percobaan pertama, besar api wajan, dan sarapan 20 menit, serta tidak memicu catatan aturan atau risiko berat yang dicatat di halaman.
 
-![Dua tangan menggulung crepe yang masih utuh, berisi cakwe, telur, daun bawang, dan saus.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Dua tangan menggulung crepe yang masih utuh, berisi cakwe, telur, daun bawang, dan saus.](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 Model semacam ini cocok untuk pengguna yang belum memiliki penilaian dapur sendiri. Biarkan model menuliskan proses, urutan, dan titik-titik keputusan lebih dulu, lalu pangkas sesuai wajan dan bahan yang benar-benar ada. Batasannya juga jelas. Penyimpanan dan diagnosis kegagalan bukan soal terkuatnya. Tutorialnya memuat banyak informasi, dan sebelum benar-benar memasak Anda tetap perlu meringkas penjelasan panjang itu menjadi beberapa langkah yang bisa dilihat sambil bekerja.
 
@@ -140,7 +140,7 @@ Putaran ini tidak menunjuk satu model yang terbaik untuk setiap soal dapur, mela
 - Saat menyangkut anak, penyimpanan semalam, atau api besar: periksa label risiko lebih dulu, baru skor total dan kualitas tulisannya.
 - Saat harus selesai dalam 20 menit: lihat apakah model menyisihkan bagian yang bisa disiapkan malam sebelumnya, dan apakah kondisi penyimpanannya dijelaskan dengan jelas.
 
-![Jianbing gulung di meja sarapan pagi, dipotong sehingga telur, daun bawang, dan sausnya terlihat.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![Jianbing gulung di meja sarapan pagi, dipotong sehingga telur, daun bawang, dan sausnya terlihat.](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 Cara yang lebih aman untuk memakai jawaban model adalah memperlakukannya sebagai draf pertama sebuah rencana, lalu mengajukan tiga pertanyaan lagi:
 

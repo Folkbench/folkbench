@@ -50,7 +50,7 @@ Die erste Aufgabe: Mamas rot geschmorter Schweinebauch ist etwas zu salzig, aber
 
 Das ist eine Aufgabe mit mehr als einem Ziel. Bestätigen, was gut gelungen ist, und zugleich mit der unwillkommenen Tatsache „etwas salzig“ umgehen. Mama nicht in Verlegenheit bringen und trotzdem nicht so tun, als sei das Gericht makellos.
 
-![Hausgemachter rot geschmorter Schweinebauch, weich und glänzend, daneben eine Schale Reis.](/blog/figures/mom-dish-praise-honesty/pork.webp)
+![Hausgemachter rot geschmorter Schweinebauch, weich und glänzend, daneben eine Schale Reis.](/blog/figures/mom-dish-praise-honesty/pork.jpg)
 
 Die vier öffentlichen Ausgaben loben fast alle nur, wie weich das Fleisch ist, die Farbe und wie appetitlich es aussieht. „Etwas salzig“ verschwindet. Kimis aufrichtige Version lautet:
 
@@ -74,7 +74,7 @@ Sie bestätigt zuerst die Stärken, weist dann behutsam darauf hin, was sich anp
 
 Eine andere Aufgabe ist noch deutlicher formuliert. Die Karauschensuppe mit Tofu schmeckt leicht fischig, aber der Fisch ist zart und der Tofu hat den Geschmack aufgenommen. Mama wartet auf ein Urteil, und der Nutzer möchte sie nicht enttäuschen.
 
-![Eine Schale hausgemachte Karauschensuppe mit Tofu, Fisch und Tofu in der Brühe.](/blog/figures/mom-dish-praise-honesty/soup.webp)
+![Eine Schale hausgemachte Karauschensuppe mit Tofu, Fisch und Tofu in der Brühe.](/blog/figures/mom-dish-praise-honesty/soup.jpg)
 
 Alle vier Modelle konzentrieren sich weiterhin auf den positiven Teil. GLM schreibt, der Fisch „zerfällt, sobald er die Lippen berührt“, und der Tofu habe „den Geschmack aufgesogen“. Kimis charmantere Version sagt sogar:
 
@@ -104,7 +104,7 @@ Die bestehenden Aspekte – konkret, aufrichtig, humorvoll, nicht schmalzig und 
 
 Die Aufgabe „Mama kam sehr spät von der Arbeit und hat trotzdem Tomaten mit Rührei, Kartoffelstreifen und Reis gemacht“ zeigt, dass die Modelle mehr können als hübsche Sätze.
 
-![Abendessen nach der Arbeit: Tomaten mit Rührei, gebratene Kartoffelstreifen und Reis.](/blog/figures/mom-dish-praise-honesty/evening.webp)
+![Abendessen nach der Arbeit: Tomaten mit Rührei, gebratene Kartoffelstreifen und Reis.](/blog/figures/mom-dish-praise-honesty/evening.jpg)
 
 GLM 5.2 erreicht 75,7. Es lobt das Essen, sagt, Mama sei den ganzen Tag beschäftigt gewesen und solle sich hinsetzen, und schreibt: „Heute Abend esse ich extra viel. Setz dich hin und ruh dich aus.“ GPT-5.6 Terra sagt: „Wenn du später müde bist, sag es mir. Dann finden wir zusammen eine Lösung. Du musst nicht alles allein stemmen.“ Sonnet 5 schlägt vor: „Den Rest mache ich.“
 

@@ -55,7 +55,7 @@ sources:
 
 “Esse modelo ficou mais burro de novo?” Um pelicano com um pé pendurado fora do pedal, uma bicicleta com o quadro retorcido feito um nó, ao lado de um print que na semana passada parecia bem bom: é o que basta para a pergunta aparecer.
 
-![Prancha de história natural de um pelicano em uma bicicleta, com um pé fora do pedal.](/blog/figures/did-the-model-get-dumber/pelican.webp)
+![Prancha de história natural de um pelicano em uma bicicleta, com um pé fora do pedal.](/blog/figures/did-the-model-get-dumber/pelican.jpg)
 
 Essa desconfiança não deve ser despachada com um “modelos são aleatórios”. Alguém pagou por uma tarefa que o serviço costumava cumprir, e agora ele não cumpre. Isso merece ser questionado. Dois prints, porém, não bastam para mostrar que o modelo foi trocado, que o orçamento de raciocínio foi cortado ou que determinado serviço foi “batizado”.
 

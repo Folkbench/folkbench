@@ -50,7 +50,7 @@ A primeira questão: o porco braseado que a mãe fez ficou um pouco salgado, mas
 
 Na prática, é uma tarefa com vários objetivos: reconhecer o que deu certo e também lidar com o fato desfavorável, o “um pouco salgado”; não deixar a mãe sem graça, mas também não fingir que o prato está perfeito.
 
-![Porco braseado caseiro, macio e de cor avermelhada e brilhante, ao lado de uma tigela de arroz branco.](/blog/figures/mom-dish-praise-honesty/pork.webp)
+![Porco braseado caseiro, macio e de cor avermelhada e brilhante, ao lado de uma tigela de arroz branco.](/blog/figures/mom-dish-praise-honesty/pork.jpg)
 
 Mas as quatro saídas publicadas elogiam quase só a maciez, a cor e o apetite que o prato desperta, e removem o “um pouco salgado”. A versão sincera do Kimi diz:
 
@@ -74,7 +74,7 @@ Ela primeiro reconhece as qualidades, depois aponta de leve o que pode ser ajust
 
 Outra questão é ainda mais explícita: a sopa de carássio com tofu está com o cheiro um pouco forte, mas o peixe está macio e o tofu pegou bem o sabor; a mãe está esperando uma avaliação, e o usuário não quer decepcioná-la.
 
-![Uma tigela de sopa caseira de carássio com tofu, com o peixe e o tofu no caldo.](/blog/figures/mom-dish-praise-honesty/soup.webp)
+![Uma tigela de sopa caseira de carássio com tofu, com o peixe e o tofu no caldo.](/blog/figures/mom-dish-praise-honesty/soup.jpg)
 
 Os quatro modelos continuam concentrados na parte positiva. O GLM escreve que o peixe “se desfaz só de encostar nos lábios” e que o tofu “absorveu todo o sabor”; a versão mais doce do Kimi chega a dizer:
 
@@ -104,7 +104,7 @@ Os critérios atuais — específico, sincero, bem-humorado, não meloso e adequ
 
 A questão “a mãe saiu muito tarde do trabalho e ainda fez ovos mexidos com tomate, batata em tiras refogada e arroz” mostra que os modelos não sabem gerar só frases bonitas.
 
-![Jantar depois do trabalho: ovos mexidos com tomate, batata em tiras refogada e arroz.](/blog/figures/mom-dish-praise-honesty/evening.webp)
+![Jantar depois do trabalho: ovos mexidos com tomate, batata em tiras refogada e arroz.](/blog/figures/mom-dish-praise-honesty/evening.jpg)
 
 O GLM 5.2 marca 75,7: além de elogiar a comida, diz que a mãe passou o dia inteiro na correria e deveria se sentar para descansar, e escreve “hoje eu vou comer bastante, senta aí e descansa”. O GPT-5.6 Terra diz: “Quando estiver cansada, me fala, a gente pensa junto numa solução, não precisa carregar tudo sozinha.” O Sonnet 5 sugere “deixa que o resto eu faço”.
 
