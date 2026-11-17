@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Monitor de integridad de Folkbench
@@ -137,13 +137,13 @@ Mientras los sitios convencionales solo evalúan modelos oficiales en datasets f
 1. **Medición por modelo y grupo exacto**: Evalúa cada grupo comercial por separado para que los pools estables no encubran recortes en grupos promocionales.
 2. **Cuatro rankings públicos complementarios**: **[Disponibilidad](/es/rankings)** (descarta falsos `200`, cortes de streaming y fallos de parsing), **[Estabilidad](/es/rankings/stability)** (cargas sostenidas y horas pico), **[Latencia](/es/rankings/latency)** (separa TTFT del ritmo continuo de tokens) y **[Costo por sesión](/es/rankings/cost)** (gasto real en sesiones de código).
 3. **[Monitor de integridad](/es/arena) y [Comparar relays](/es/stations/compare) abiertos**: Telemetría calibrada y comparación lado a lado sin necesidad de mantener múltiples claves oficiales propias.
-4. **Cliente open source [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Aplicación en Tauri + Rust (macOS `.dmg` y Windows `.exe`) para Claude Code, Codex, Gemini CLI, Aider, OpenCode y Kimi CLI con **vista previa de diff**, **protección de credenciales OAuth de Codex** y estimación local de consumo. *(La detección de degradación y caché permanecen en la web como mediciones continuas.)*
+4. **Cliente open source [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Aplicación en Tauri + Rust (macOS `.dmg` y Windows `.exe`) para Claude Code, Codex, Gemini CLI, Aider, OpenCode y Kimi CLI con **vista previa de diff**, **protección de credenciales OAuth de Codex** y estimación local de consumo. Ahora suma **perfiles con nombre** para cambiar todas las herramientas con un clic, **cambio rápido desde la bandeja del sistema**, un **enmascarado local de privacidad** opcional que sustituye claves API, correos, IP públicas y palabras propias por marcadores antes de enviar y los restaura en las respuestas (incluido streaming), y una **frontera de valor ajustada por degradación** activada por defecto. *(La detección de degradación y caché permanecen en la web como mediciones continuas.)*
 
 ## Cómo aplicar estas señales en la práctica
 
 1. Filtra grupos candidatos según tu carga de trabajo en [Disponibilidad](/es/rankings), [Estabilidad](/es/rankings/stability), [Latencia](/es/rankings/latency) y [Costo por sesión](/es/rankings/cost).
 2. Revisa en el [Monitor de integridad](/es/arena) la concordancia, tokens de razonamiento y huella frente a la base oficial en ventanas consecutivas.
 3. Contrasta el grupo exacto antes de recargar en [Comparar relays](/es/stations/compare).
-4. Mantén una ruta principal y otra de respaldo en [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) para cambiar en segundos tras revisar el diff de configuración.
+4. Guarda una ruta principal y otra de respaldo como perfiles en [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) para cambiar en segundos tras revisar el diff o directamente desde la bandeja del sistema.
 
 Evaluar infraestructura de IA hoy exige comprobar no solo qué modelo lidera sobre el papel, sino si cada ruta entrega exactamente lo prometido. Con sondas de actualidad, huellas de modelo y calibración oficial directa independiente, Folkbench ofrece una referencia pública verificable para elegir rutas de API con criterio.

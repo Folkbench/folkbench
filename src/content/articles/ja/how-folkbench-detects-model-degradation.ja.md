@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Folkbench モデル整合性モニター
@@ -132,13 +132,13 @@ Folkbench は [モデル整合性モニター（Integrity Monitor）](https://fo
 1. **モデル × グループ単位の正確な計測**：同一サイト内の特売枠と公式キー安定枠を混同せず、実際に契約するグループごとの実測値を公開します。
 2. **4 つの専門公開ランキング**：**[可用性](/ja/rankings)**（偽 `200` エラーやストリーム途中切断を除外）、**[安定性](/ja/rankings/stability)**（長時間・混雑時間帯の持続性）、**[応答速度](/ja/rankings/latency)**（TTFT と生成速度を分離）、**[セッション費用](/ja/rankings/cost)**（実作業 1 セッションの総コスト）。
 3. **無料公開の[整合性モニター](/ja/arena)と[中継サービス比較](/ja/stations/compare)**：自前で複数の公式キーや動的テスト基盤を維持せずとも、校正済みデータと横並び比較を利用できます。
-4. **設定適用まで繋ぐオープンソースクライアント [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**：Tauri + Rust 製（macOS `.dmg` / Windows `.exe`）で Claude Code・Codex・Gemini CLI・Aider・OpenCode・Kimi CLI などに対応し、**書き込み前の差分プレビュー**、**Codex 公式 OAuth 認証情報の自動退避・復元**、公開ルート閲覧とローカル使用量見積もりを提供します。（整合性モニターとキャッシュ計測は Web 側の継続監視機能です。）
+4. **設定適用まで繋ぐオープンソースクライアント [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**：Tauri + Rust 製（macOS `.dmg` / Windows `.exe`）で Claude Code・Codex・Gemini CLI・Aider・OpenCode・Kimi CLI などに対応し、**書き込み前の差分プレビュー**、**Codex 公式 OAuth 認証情報の自動退避・復元**、公開ルート閲覧とローカル使用量見積もりを提供します。新たに、全ツールを一括で切り替える**名前付きプロファイル**、メインウィンドウを開かずに操作できる**システムトレイからの切替**、送信前に API キー・メールアドレス・公開 IP・任意の機密語をプレースホルダーに置き換え、ストリーミングを含む応答で復元する任意の**ローカルプライバシーマスキング**、既定で**劣化を加味したコスパのパレートフロンティア**を追加しました。（整合性モニターとキャッシュ計測は Web 側の継続監視機能です。）
 
 ## 実務での活用手順
 
 1. 用途に応じて[可用性](/ja/rankings)・[安定性](/ja/rankings/stability)・[応答速度](/ja/rankings/latency)・[セッション費用](/ja/rankings/cost)から対象モデルとグループを絞り込む。
 2. [整合性モニター](/ja/arena)で対象グループの連続時間帯におけるプローブ一致率・思考トークン・モデル指紋と公式基準線の整合を確認する。
 3. 課金前に[中継サービス比較](/ja/stations/compare)で契約予定グループそのものの数値を並べて検証する。
-4. [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) に主回線と予備回線を登録しておき、指標の乖離が見られた際は差分を確認して数秒で切り替える。
+4. [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) に主回線と予備回線をプロファイルとして保存しておき、指標の乖離が見られた際は差分を確認するか、システムトレイから数秒で一括切替する。
 
 これからの API 評価に求められるのは、カタログ上のモデル性能だけでなく「選択した経路が約束どおりの能力を届けているか」の継続的な検証です。時事プローブ、モデル指紋、独立した公式直結校正を公開基盤に据えることで、Folkbench は再現可能で透明な選定基準を提供します。

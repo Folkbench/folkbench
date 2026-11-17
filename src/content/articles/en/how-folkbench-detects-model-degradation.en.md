@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Folkbench Integrity Monitor
@@ -161,6 +161,9 @@ Most benchmark sites stop at displaying tables, leaving users to edit local JSON
 
 - **Configuration diff previews**: Shows exact changes before writing local tool files while preserving unrelated custom settings.
 - **Codex credential protection**: Safely parks official OAuth credentials when switching to a third-party relay and restores them cleanly when switching back.
+- **Named profiles and tray switching**: Save the routes each tool currently uses as named profiles such as "daily" or "backup" and apply the whole set in one click; the system tray menu switches profiles or individual tool services without opening the main window.
+- **Optional local privacy masking**: When enabled, requests pass through a local loopback proxy that replaces API keys, private keys, email addresses, public IPs, and your custom sensitive words with placeholders before they leave the machine, then restores them in responses, including streamed output. Tools fall back to direct connections when Switch quits.
+- **Degradation-adjusted value frontier**: The cross-model Pareto frontier in Discover adjusts value with published integrity-monitor data by default, and frontier routes can be registered or connected directly.
 - **Public route discovery and local usage estimates**: Surfaces public route availability, status windows, and pricing inside the client alongside local session token cost estimates. *(Integrity monitoring and cache-compensation tracking remain web-platform evaluation features rather than client-integrated checks.)*
 
 ## Putting degradation signals to work
@@ -168,6 +171,6 @@ Most benchmark sites stop at displaying tables, leaving users to edit local JSON
 1. **Filter by operational priority**: Start with [Availability](/en/rankings), [Stability](/en/rankings/stability), [Latency](/en/rankings/latency), and [Session Cost](/en/rankings/cost) to shortlist specific model-and-group routes that match your workload.
 2. **Verify baseline alignment in Integrity Monitor**: Check probe agreement, reasoning tokens, and model fingerprints on the [Integrity Monitor](/en/arena) against the live official baseline—especially over consecutive windows when quality feels inconsistent.
 3. **Compare the exact tier before funding**: Use [Compare relays](/en/stations/compare) on the specific group you plan to purchase rather than extrapolating from another pool under the same provider.
-4. **Maintain rapid failover via Switch**: Store primary and backup routes in [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) so you can inspect the configuration diff and switch cleanly within seconds whenever route telemetry drifts.
+4. **Maintain rapid failover via Switch**: Save primary and backup routes as named profiles in [Folkbench Switch](https://github.com/Folkbench/folkbench/releases); whenever route telemetry drifts, inspect the configuration diff in the main window or switch the whole set from the system tray within seconds.
 
 As production workflows increasingly rely on third-party API routing, evaluation must verify not only which model leads on paper, but whether the route you pay for actually delivers it. By bringing **current-events probes**, **model fingerprints**, and **independent direct official calibration** into continuous public view, Folkbench establishes a clearer, auditable standard for choosing AI API routes.

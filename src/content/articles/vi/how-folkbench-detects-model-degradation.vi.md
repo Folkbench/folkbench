@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Giám sát toàn vẹn Folkbench (Integrity Monitor)
@@ -124,13 +124,13 @@ Phần lớn trang đánh giá hiện nay chỉ chấm trần lý thuyết trên
 1. **Đo lường theo từng mô hình và nhóm dịch vụ cụ thể**: Tách bạch nhóm khuyến mãi giá rẻ và nhóm “key chính hãng / ổn định”, không gộp chung cả tên miền vào một điểm số mơ hồ.
 2. **Bốn bảng xếp hạng công khai chuyên biệt**: **[Độ khả dụng](/vi/rankings)** (loại bỏ lỗi “200 giả” và ngắt stream), **[Độ ổn định](/vi/rankings/stability)** (tác vụ dài và giờ cao điểm), **[Độ trễ](/vi/rankings/latency)** (tách TTFT khỏi tốc độ sinh chữ) và **[Chi phí phiên](/vi/rankings/cost)** (chi phí thực tế cho một phiên làm việc).
 3. **[Giám sát toàn vẹn](/vi/arena) và [So sánh trạm](/vi/stations/compare) công khai miễn phí**: Cung cấp số liệu đã hiệu chuẩn và đối chiếu song song mà không đòi hỏi người dùng tự nuôi nhiều key gốc.
-4. **Ứng dụng mã nguồn mở [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Xây dựng bằng Tauri + Rust (macOS `.dmg`, Windows `.exe`) cho Claude Code, Codex, Gemini CLI, Aider, OpenCode, Kimi CLI với **xem trước diff cấu hình**, **bảo vệ thông tin OAuth chính hãng của Codex** và ước tính chi phí cục bộ. *(Tính năng giám sát toàn vẹn và cache thuộc nền tảng web đánh giá liên tục.)*
+4. **Ứng dụng mã nguồn mở [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Xây dựng bằng Tauri + Rust (macOS `.dmg`, Windows `.exe`) cho Claude Code, Codex, Gemini CLI, Aider, OpenCode, Kimi CLI với **xem trước diff cấu hình**, **bảo vệ thông tin OAuth chính hãng của Codex** và ước tính chi phí cục bộ. Nay bổ sung **hồ sơ đặt tên** để chuyển mọi công cụ chỉ bằng một lần bấm, **chuyển nhanh từ khay hệ thống**, **che giấu dữ liệu riêng tư cục bộ** tùy chọn thay khóa API, email, IP công khai và từ nhạy cảm tự đặt bằng ký hiệu giữ chỗ trước khi gửi rồi khôi phục trong phản hồi (kể cả streaming), cùng **biên giá trị đã điều chỉnh theo suy giảm** theo mặc định. *(Tính năng giám sát toàn vẹn và cache thuộc nền tảng web đánh giá liên tục.)*
 
 ## Áp dụng tín hiệu này trong lựa chọn thực tế
 
 1. Lọc mô hình và nhóm dịch vụ phù hợp trên [Độ khả dụng](/vi/rankings), [Độ ổn định](/vi/rankings/stability), [Độ trễ](/vi/rankings/latency) và [Chi phí phiên](/vi/rankings/cost).
 2. Kiểm tra mức độ bám sát mốc chính hãng về tỷ lệ khớp probe, token suy luận và dấu vân tay trên [Giám sát toàn vẹn](/vi/arena) qua nhiều khung thời gian liên tiếp.
 3. Đối chiếu đúng tên nhóm bạn dự định nạp tiền tại [So sánh trạm](/vi/stations/compare).
-4. Lưu sẵn tuyến chính và tuyến dự phòng trong [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) để xem trước diff và chuyển tuyến an toàn trong vài giây khi có lệch chuẩn.
+4. Lưu tuyến chính và tuyến dự phòng thành hồ sơ trong [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) để chuyển an toàn trong vài giây sau khi xem diff hoặc ngay từ khay hệ thống khi có lệch chuẩn.
 
 Đánh giá hạ tầng AI hiện nay không chỉ trả lời mô hình nào mạnh trên lý thuyết, mà còn phải kiểm chứng từng tuyến trả phí có giao đúng năng lực như cam kết hay không. Bằng việc đưa probe thời sự, dấu vân tay mô hình và hiệu chuẩn chính hãng độc lập vào giám sát công khai thường trực, Folkbench mang đến một thước đo rõ ràng và có thể kiểm chứng cho mọi người dùng API.
