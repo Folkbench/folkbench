@@ -8,6 +8,7 @@ export const NOTICE = '排序沿用主站规则，包含合作档位与运营加
 export const START = '<!-- FOLKBENCH-BOARD:START -->'
 export const END = '<!-- FOLKBENCH-BOARD:END -->'
 export const DATA_REPO = 'https://github.com/Folkbench/folkbench-data'
+export const RELAY_API_LIST_FOOTER = '<a href="https://github.com/magnus-minor/relay-api-recommend?utm_source=subsite&amp;utm_medium=footer">中转站推荐清单（GitHub）</a>'
 export const escapeHtml = (value: unknown) => String(value ?? '').replace(/[&<>"']/gu, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!)
 export const escapeMarkdown = (value: unknown) => String(value ?? '').replace(/[\\`*_{}\[\]<>|]/gu, '\\$&').replace(/[\r\n]/gu, ' ')
 export const percent = (value: number | null) => value === null ? '—' : `${(value / 100).toFixed(1)}%`
