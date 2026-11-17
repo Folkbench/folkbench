@@ -2,7 +2,7 @@ name: Daily public snapshot distribution
 on:
   schedule:
     - cron: '50 12 * * *'
-    - cron: '45 15 * * *'
+    - cron: '47 15 * * *'
   workflow_dispatch:
 permissions:
   contents: write
