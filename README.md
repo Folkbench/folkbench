@@ -222,6 +222,13 @@ Switch 在本地管理工具配置。公开目录、模型查询和服务商请�
 
 - [中转站推荐清单（GitHub）](https://github.com/magnus-minor/relay-api-recommend)
 - [中转站实时检测（用自己的 Key）](https://folkbench.com/evaluations/api-quality?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=links-check)
+- 公开快照子站（只读 [folkbench-data](https://github.com/Folkbench/folkbench-data) 归档；排序按站点规则，含合作档位与运营加权）：
+  - [AI 中转站排行](https://folkbench.github.io/relay-rank/)：按模型的每日公开快照与历史名次
+  - [中转站检测周报](https://folkbench.github.io/integrity-weekly/)：模型身份探针的每周汇总
+  - [AI 中转站对比](https://ai-relay-bench.github.io/)：同一模型在各中转站的并排对比
+  - [AI API 价格对比](https://aiapi-rank.github.io/)：中转站公开标价与官方参考价
+  - [AI 中转站大全](https://ai-zhongzhuan.github.io/)：站点目录、公开资料与新手指南
+  - [模型检测快照](https://ai-model-check.github.io/)：每日模型身份探针汇总
 
 ## 许可证
 

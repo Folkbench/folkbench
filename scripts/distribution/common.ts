@@ -4,7 +4,7 @@ import { publicDataContent, isPublicDataExport, PUBLIC_DATA_MAX_BYTES, type Publ
 
 export const sha256 = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
 export const json = (value: unknown) => JSON.stringify(value, null, 2) + '\n'
-export const NOTICE = '排序沿用主站规则，包含合作档位与运营加分。本页提供公开快照，不承诺全部为真实实测或可复算。'
+export const NOTICE = '排序沿用主站规则，包含合作档位与运营加分。本页提供公开快照，不是原始运行记录。'
 export const START = '<!-- FOLKBENCH-BOARD:START -->'
 export const END = '<!-- FOLKBENCH-BOARD:END -->'
 export const DATA_REPO = 'https://github.com/Folkbench/folkbench-data'

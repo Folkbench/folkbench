@@ -8,6 +8,7 @@ import { isoWeek, prepareWeek, publishCompletedWeek, readPublishedReports, readW
 import { buildRelaySite, buildWeeklySite } from './sites'
 import { buildSubsite } from './subsites'
 import { isSubsite } from './subsite-core'
+import { FORBIDDEN_WORDS, checkNetworkLink, isAlreadyPublished, isNetworkSite, submitIndexNow, writePublishState, type NetworkSite } from './network'
 
 const args = process.argv.slice(2); const command = args.shift()
 function option(name: string, fallback?: string): string {
@@ -20,15 +21,16 @@ async function output(name: string, value: string): Promise<void> {
   if (process.env.GITHUB_OUTPUT) await writeFile(process.env.GITHUB_OUTPUT, `${name}=${value}\n`,{flag:'a'})
   console.log(`${name}=${value}`)
 }
-async function verifySite(path: string): Promise<void> {
+async function verifySite(path: string, site?: NetworkSite): Promise<void> {
   const html:string[]=[]
   async function visit(dir:string):Promise<void>{for(const entry of await readdir(dir,{withFileTypes:true})){const child=join(dir,entry.name);if(entry.isSymbolicLink())throw new Error('distribution_symlink_rejected');if(entry.isDirectory())await visit(child);else if(entry.name.endsWith('.html'))html.push(child)}}
   await visit(path);if(!html.length)throw new Error('distribution_site_empty')
   const titles=new Set<string>();const descriptions=new Set<string>()
-  for(const file of html){const body=await readFile(file,'utf8');if(file.endsWith('404.html'))continue
+  for(const file of html){const body=await readFile(file,'utf8');if(FORBIDDEN_WORDS.some(word=>body.includes(word)))throw new Error('distribution_wording_rejected');if(file.endsWith('404.html'))continue
     const title=body.match(/<title>(.*?)<\/title>/u)?.[1];const description=body.match(/<meta name="description" content="([^"]*)"/u)?.[1]
     if(!title||!description||titles.has(title)||descriptions.has(description))throw new Error('distribution_metadata_not_unique');titles.add(title);descriptions.add(description)
     for(const match of body.matchAll(/href="([^"]+)"/gu)){const href=match[1]!.replaceAll('&amp;','&');if(href.startsWith('https://folkbench.com/')){const u=new URL(href);if(u.searchParams.get('utm_source')!=='github'||u.searchParams.get('utm_medium')!=='pages'||!u.searchParams.get('utm_campaign')||!u.searchParams.get('utm_content'))throw new Error('distribution_utm_missing')}
+      if(site&&href.startsWith('https://'))checkNetworkLink(site,href)
       if(href.startsWith('/relay-rank/')||href.startsWith('/integrity-weekly/')){const relative=href.replace(/^\/(?:relay-rank|integrity-weekly)\//u,'');const target=join(path,relative.endsWith('/')||relative===''?`${relative}index.html`:relative);await stat(target)}
       if(/(?:[?&](?:aff|ref|partner)=|\/go\/|\/outbound)/iu.test(href))throw new Error('distribution_promotional_link')
     }
@@ -55,7 +57,8 @@ async function main():Promise<void>{
     await output('changed',String(after!==before));await output('snapshot_version',snapshot.snapshot_version)
   }else if(command==='relay-site'){
     const data=resolve(option('data-root'));const snapshot=await verifyArchive(join(data,'latest'));const history=await readHistory(data)
-    await buildRelaySite(resolve(option('out')),snapshot,history);await verifySite(resolve(option('out')))
+    await buildRelaySite(resolve(option('out')),snapshot,history);await verifySite(resolve(option('out')),'relay-rank')
+    await writePublishState(resolve(option('out')),snapshot);await output('archive_date',snapshot.date)
   }else if(command==='weekly-sync'){
     const history=await readHistory(resolve(option('data-root')))
     const current=isoWeek(new Date(Date.now()+8*60*60_000).toISOString().slice(0,10))
@@ -73,9 +76,20 @@ async function main():Promise<void>{
     const withdrawn=await readWithdrawals(root)
     const live=snapshots.length&&!withdrawn.includes('current')&&!withdrawn.includes(current)?{report:prepareWeek(snapshots,current),published_at:snapshots.at(-1)!.published_at}:undefined
     await buildWeeklySite(resolve(option('out')),(await readPublishedReports(root)).filter(item=>!withdrawn.includes(item.report.week)),live)
-    await verifySite(resolve(option('out')))
+    await verifySite(resolve(option('out')),'integrity-weekly')
+    const latest=await verifyArchive(join(resolve(option('data-root')),'latest'));await writePublishState(resolve(option('out')),latest);await output('archive_date',latest.date)
   }else if(command==='verify-site'){
-    await verifySite(root)
+    const site=args.includes('--site')?option('site'):undefined;if(site!==undefined&&!isNetworkSite(site))throw new Error('distribution_site_unknown')
+    await verifySite(root,site)
+  }else if(command==='publish-check'){
+    // Automatic runs (schedule / repository_dispatch) skip when the live view already carries the latest archive.
+    const site=option('site');if(!isNetworkSite(site))throw new Error('distribution_site_unknown')
+    const snapshot=await verifyArchive(join(resolve(option('data-root')),'latest'));const state=await isAlreadyPublished(site,snapshot)
+    await output('skip',String(state.skip));await output('reason',state.reason)
+  }else if(command==='indexnow'){
+    const site=option('site');if(!isNetworkSite(site))throw new Error('distribution_site_unknown')
+    const date=option('date');if(!/^\d{4}-\d{2}-\d{2}$/u.test(date))throw new Error('distribution_date_invalid')
+    await submitIndexNow(site,resolve(option('out')),date)
   }else if(command==='verify'){
     const kind=option('kind','data')
     if(args.includes('--staged')){
