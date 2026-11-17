@@ -593,6 +593,25 @@
       "openToUpdate": "開啟用戶端更新",
       "downloadPage": "下載頁",
       "detecting": "正在偵測版本…"
+    },
+    "profiles": {
+      "button": "設定方案",
+      "title": "命名設定方案",
+      "description": "儲存目前各工具的啟用中轉站快照，一鍵切換全部工具。",
+      "empty": "尚無已儲存的設定方案。在下方輸入名稱即可儲存目前設定。",
+      "namePlaceholder": "方案名稱（如：工作、省錢）",
+      "save": "儲存",
+      "update": "以目前設定覆寫更新",
+      "rename": "重新命名方案",
+      "cancel": "取消",
+      "delete": "刪除方案",
+      "saved": "已儲存設定方案",
+      "updated": "已以目前設定更新方案",
+      "renamed": "已重新命名方案",
+      "applied": "已切換 {{count}} 個工具到此方案",
+      "appliedPartial": "已切換 {{applied}} 個工具，略過 {{skipped}} 個",
+      "noActiveServices": "請先為至少一個工具啟用服務，再儲存設定方案。",
+      "errorFailed": "無法更新設定方案，請重試。"
     }
   }
 }

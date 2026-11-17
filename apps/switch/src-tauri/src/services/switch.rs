@@ -5,7 +5,9 @@ use crate::domain::{
     ClaudeRoleModels, FetchedModel, MyService, ServiceError, ServiceProtocol,
     SwitchResult,
 };
-use crate::services::{archive, credentials, journal, preferences};
+use crate::services::{
+    archive, credentials, journal, preferences, privacy_proxy,
+};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 enum PreviousState {
@@ -358,7 +360,7 @@ fn unswitch_inner(
         .ok_or(ServiceError::NotFound)?;
 
     let provider_id = provider_key_for(config_dir, tool_id, &current_id);
-    let live = adapters::inspect(tool_id, home, Some(&provider_id))?;
+    let live = inspect_live(config_dir, tool_id, home, Some(&provider_id))?;
     let _ = archive::backfill_live_for_tool(
         config_dir,
         tool_id,
@@ -500,7 +502,7 @@ pub fn import_from_live(
         return Err(ServiceError::ApplyUnsupported);
     }
     let (base_url, api_key) =
-        super::local_import::resolve_importable(tool_id, home)?
+        super::local_import::resolve_importable(config_dir, tool_id, home)?
             .ok_or(ServiceError::InvalidInput)?;
     let normalized_base_url = base_url.trim().trim_end_matches('/');
     if let Some(existing) = archive::list_for_tool(config_dir, tool_id)?
@@ -530,7 +532,7 @@ pub fn import_status(
         return Err(ServiceError::ApplyUnsupported);
     }
     let Some((base_url, api_key)) =
-        super::local_import::resolve_importable(tool_id, home)?
+        super::local_import::resolve_importable(config_dir, tool_id, home)?
     else {
         return Ok("missing");
     };
@@ -599,7 +601,7 @@ fn resolve_previous_state(
     let inspect_key = current_id
         .as_deref()
         .map(|id| provider_key_for(config_dir, tool_id, id));
-    let live = adapters::inspect(tool_id, home, inspect_key.as_deref())?;
+    let live = inspect_live(config_dir, tool_id, home, inspect_key.as_deref())?;
     let (url, secret) = match (live.base_url, live.api_key) {
         (None, None) => {
             // Empty live config: nothing to preserve, allow the switch.
@@ -712,11 +714,46 @@ fn provider_key_for(
         .unwrap_or_else(|| service_id.to_string())
 }
 
+/// Tools that talk to the service over HTTP through a configurable base URL
+/// and can therefore be routed through the local privacy proxy. Claude
+/// Desktop already uses its own gateway and is never proxied.
+fn privacy_proxy_supported(tool_id: &str) -> bool {
+    tool_id != "claude-desktop"
+}
+
+/// The base URL the tool itself would call. Claude apply strips a trailing
+/// `/v1` because Claude Code appends `/v1/messages`; the proxy upstream must
+/// match, or requests would hit `/v1/v1/messages`.
+fn tool_upstream_base(tool_id: &str, base_url: &str) -> String {
+    if tool_id == "claude-code" {
+        adapters::anthropic_base_url(base_url)
+    } else {
+        base_url.trim().trim_end_matches('/').to_string()
+    }
+}
+
 fn apply_archived_service(
     config_dir: &Path,
     home: &Path,
     tool_id: &str,
     service_id: &str,
+) -> Result<SwitchResult, ServiceError> {
+    let through_proxy = preferences::load(config_dir).privacy.enabled;
+    apply_archived_service_via(
+        config_dir,
+        home,
+        tool_id,
+        service_id,
+        through_proxy,
+    )
+}
+
+fn apply_archived_service_via(
+    config_dir: &Path,
+    home: &Path,
+    tool_id: &str,
+    service_id: &str,
+    through_proxy: bool,
 ) -> Result<SwitchResult, ServiceError> {
     let record = archive::get_for_tool(config_dir, tool_id, service_id)?
         .ok_or(ServiceError::NotFound)?;
@@ -726,6 +763,20 @@ fn apply_archived_service(
     let key = credentials::get_for_tool(config_dir, tool_id, service_id)
         .ok_or(ServiceError::CredentialMissing)?;
     let provider_id = archive::resolve_provider_id(&record.row);
+    let effective_base = if through_proxy && privacy_proxy_supported(tool_id) {
+        let privacy = preferences::load(config_dir).privacy;
+        privacy_proxy::register_route(
+            service_id,
+            tool_id,
+            &tool_upstream_base(tool_id, record.base_url()),
+            privacy,
+        )
+        // If the proxy cannot start, keep the tool working on the direct
+        // upstream rather than pointing it at a dead local address.
+        .unwrap_or_else(|_| record.base_url().to_string())
+    } else {
+        record.base_url().to_string()
+    };
     adapters::apply(ApplyRequest {
         tool_id,
         home,
@@ -736,9 +787,66 @@ fn apply_archived_service(
         models: &record.row.models,
         claude_role_models: record.row.claude_role_models.as_ref(),
         api_protocol: record.row.api_protocol,
-        base_url: record.base_url(),
+        base_url: &effective_base,
         api_key: &key,
     })
+}
+
+/// Re-applies every active service so tool configs follow the current
+/// privacy setting (proxy URL when enabled, direct upstream when disabled).
+/// Only tools whose live config still belongs to the active service are
+/// touched; externally edited configs are left alone.
+pub fn reapply_active_for_privacy(config_dir: &Path, home: &Path) {
+    let prefs = preferences::load(config_dir);
+    privacy_proxy::update_settings(prefs.privacy.clone());
+    for (tool_id, service_id) in &prefs.current_by_tool {
+        if !privacy_proxy_supported(tool_id) {
+            continue;
+        }
+        if live_matches_service(config_dir, home, tool_id, service_id)
+            .unwrap_or(false)
+        {
+            let _ =
+                apply_archived_service(config_dir, home, tool_id, service_id);
+        }
+    }
+}
+
+/// Points proxied tools back at their direct upstream. Called when the app
+/// exits so tools keep working while Switch (and its proxy) is not running;
+/// the next launch routes them through the proxy again.
+pub fn restore_direct_for_privacy(config_dir: &Path, home: &Path) {
+    let prefs = preferences::load(config_dir);
+    if !prefs.privacy.enabled {
+        return;
+    }
+    for (tool_id, service_id) in &prefs.current_by_tool {
+        if !privacy_proxy_supported(tool_id) {
+            continue;
+        }
+        if live_matches_service(config_dir, home, tool_id, service_id)
+            .unwrap_or(false)
+        {
+            let _ = apply_archived_service_via(
+                config_dir, home, tool_id, service_id, false,
+            );
+        }
+    }
+}
+
+/// Reads the tool's live config, mapping a privacy-proxy base URL back to the
+/// real upstream of the saved service it fronts.
+fn inspect_live(
+    config_dir: &Path,
+    tool_id: &str,
+    home: &Path,
+    provider_key: Option<&str>,
+) -> Result<adapters::LiveProjection, ServiceError> {
+    let mut live = adapters::inspect(tool_id, home, provider_key)?;
+    live.base_url = live
+        .base_url
+        .map(|url| privacy_proxy::deproxy_live_url(config_dir, tool_id, url));
+    Ok(live)
 }
 
 fn live_matches_service(
@@ -752,7 +860,7 @@ fn live_matches_service(
     let key = credentials::get_for_tool(config_dir, tool_id, service_id)
         .ok_or(ServiceError::CredentialMissing)?;
     let provider_id = archive::resolve_provider_id(&record.row);
-    let live = adapters::inspect(tool_id, home, Some(&provider_id))?;
+    let live = inspect_live(config_dir, tool_id, home, Some(&provider_id))?;
     let url_matches = match live.base_url.as_deref() {
         Some(live_url)
             if tool_id == "claude-code" || tool_id == "claude-desktop" =>

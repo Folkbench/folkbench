@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Folkbench 降智监控（Integrity Monitor）
@@ -161,6 +161,9 @@ Folkbench 现已在[降智监控（Integrity Monitor）](https://folkbench.com/a
 
 - **写入前配置差异预览**：在修改本地工具配置文件之前展示清晰差异，并保留原有的其他自定义设置。
 - **Codex 官方凭据保护**：切往第三方服务商时自动暂存原有的官方 OAuth 凭据，切回官方路线时一键无损恢复。
+- **命名组合档案与托盘快速切换**：把各工具当前连接的线路保存为「日常」「备用」等组合，一键整组切换；系统托盘菜单无需打开主窗口即可切换组合或单个工具的服务。
+- **本机隐私脱敏（可选）**：开启后，请求经本机回环代理转发，发往上游前把 API Key、证书私钥、邮箱、公网 IP 与自定义敏感词替换为占位符，并在响应（含流式输出）中还原；退出 Switch 时自动恢复工具直连配置。
+- **按降智折算的性价比前沿**：发现页的跨模型帕累托前沿图默认结合公开降智监控数据折算性价比，前沿线路可直接「注册」或「接入」。
 - **公开线路浏览与本地用量估算**：可在客户端内查看公开目录中的线路可用率、状态窗口与参考价格，并在本地统计会话 Token 估算成本。
 
 *注：降智监控与缓存补偿等在线观测信息属于 Folkbench 网站端的持续评测能力，不等于桌面客户端已经本地集成的检测功能。*
@@ -172,6 +175,6 @@ Folkbench 现已在[降智监控（Integrity Monitor）](https://folkbench.com/a
 1. **按业务优先级筛选候选分组**：在[可用率榜](https://folkbench.com/rankings)、[稳定性榜](https://folkbench.com/rankings/stability)、[响应速度榜](https://folkbench.com/rankings/latency)与[会话成本榜](https://folkbench.com/rankings/cost)中，先锁定目标模型下符合稳定性与预算预期的具体服务分组。
 2. **在降智监控核对官方基线对齐度**：打开[降智监控](https://folkbench.com/arena)，对照独立官方直连基线查看该分组近期的探针一致率、思考 Token 与模型指纹；当日常体验出现异常波动时，先结合连续几个时间窗口的数据核实偏离是否持续存在。
 3. **并排核对具体分组规格**：在充值或正式接入前，通过[中转站对比](https://folkbench.com/stations/compare)确认所选分组的各项指标，避免把高价稳定分组的测试表现直接套用到特惠分组上。
-4. **借助 Switch 保持多线路容灾能力**：使用开源的 [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) 在本地同时保存主力线路与备用线路；当监控显示某条路由出现持续异常或波动时，预览配置差异即可在数秒内完成安全切换。
+4. **借助 Switch 保持多线路容灾能力**：使用开源的 [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) 把主力线路与备用线路分别保存为组合档案；当监控显示某条路由出现持续异常或波动时，在主窗口预览配置差异或直接从系统托盘整组切换，数秒内即可完成。
 
 随着越来越多工作流依赖第三方 API 路由，评测的价值已不再只是回答“哪个模型本身更强”，更在于持续验证“用户实际拿到的服务是否依然如约交付”。通过把**时事探针**、**模型指纹**与**独立官方直连校准**纳入公开常态监测，Folkbench 为 AI 服务的日常选择提供了一把清晰、可复核的公开标尺。

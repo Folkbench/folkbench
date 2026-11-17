@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Monitor Integritas Folkbench
@@ -124,13 +124,13 @@ Kebanyakan situs AI hanya menguji batas teori model pada dataset statis atau ber
 1. **Pengukuran per model dan grup spesifik**: Tidak mencampur grup promo hemat dan grup kunci resmi dalam satu nilai domain yang kabur.
 2. **Empat peringkat publik terpisah**: **[Ketersediaan](/id/rankings)** (menyaring "200 palsu" dan putus stream), **[Stabilitas](/id/rankings/stability)** (tugas panjang dan jam sibuk), **[Latensi](/id/rankings/latency)** (memisahkan TTFT dan kecepatan generasi), serta **[Biaya Sesi](/id/rankings/cost)** (perkiraan biaya kerja nyata).
 3. **[Monitor Integritas](/id/arena) & [Bandingkan Relay](/id/stations/compare) terbuka**: Telemetri terkalibrasi dan perbandingan berdampingan tanpa perlu memelihara banyak key resmi sendiri.
-4. **Klien open-source [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Aplikasi Tauri + Rust (macOS `.dmg`, Windows `.exe`) untuk Claude Code, Codex, Gemini CLI, Aider, OpenCode, dan Kimi CLI dengan **pratinjau diff**, **perlindungan kredensial OAuth Codex**, dan estimasi konsumsi lokal. *(Pemantauan integritas dan cache tetap menjadi fitur evaluasi di web.)*
+4. **Klien open-source [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Aplikasi Tauri + Rust (macOS `.dmg`, Windows `.exe`) untuk Claude Code, Codex, Gemini CLI, Aider, OpenCode, dan Kimi CLI dengan **pratinjau diff**, **perlindungan kredensial OAuth Codex**, dan estimasi konsumsi lokal. Kini tersedia **profil bernama** untuk mengganti semua alat dengan satu klik, **pergantian cepat dari baki sistem**, **penyamaran privasi lokal** opsional yang mengganti kunci API, email, IP publik, dan kata sensitif kustom dengan placeholder sebelum dikirim lalu memulihkannya di respons (termasuk streaming), serta **frontier nilai yang disesuaikan dengan degradasi** secara default. *(Pemantauan integritas dan cache tetap menjadi fitur evaluasi di web.)*
 
 ## Langkah Praktis Memanfaatkan Sinyal Ini
 
 1. Saring kandidat model dan grup di [Ketersediaan](/id/rankings), [Stabilitas](/id/rankings/stability), [Latensi](/id/rankings/latency), dan [Biaya Sesi](/id/rankings/cost).
 2. Periksa keselarasan kecocokan probe, token penalaran, dan sidik jari terhadap baseline resmi di [Monitor Integritas](/id/arena) pada beberapa jendela berturut-turut.
 3. Bandingkan grup layanan yang tepat di [Bandingkan Relay](/id/stations/compare) sebelum melakukan top-up.
-4. Simpan rute utama dan cadangan di [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) agar dapat berpindah dalam hitungan detik setelah meninjau diff konfigurasi.
+4. Simpan rute utama dan cadangan sebagai profil di [Folkbench Switch](https://github.com/Folkbench/folkbench/releases) agar dapat berpindah dalam hitungan detik setelah meninjau diff atau langsung dari baki sistem.
 
 Evaluasi infrastruktur AI kini menuntut verifikasi bukan hanya siapa yang unggul di atas kertas, melainkan apakah tiap rute benar-benar mengirimkan kapabilitas yang dijanjikan. Lewat probe berita terkini, sidik jari model, dan kalibrasi resmi independen, Folkbench menghadirkan tolok ukur publik yang jernih dan dapat diverifikasi.

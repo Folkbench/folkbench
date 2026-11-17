@@ -12,7 +12,7 @@ modelIds: []
 benchmarkSlugs: []
 relatedSlugs: [did-the-model-get-dumber, ai-api-relay-stability-guide, api-relay-reliability-checks]
 publishedAt: '2026-11-15'
-updatedAt: '2026-11-15'
+updatedAt: '2026-11-17'
 sources:
   - id: folkbench-arena
     label: Folkbench Integrity Monitor
@@ -124,13 +124,13 @@ Herkömmliche KI-Portale prüfen entweder theoretische Modellwerte auf festen Da
 1. **Messung auf Modell- und Gruppenebene**: Jede Preis- oder Routinggruppe eines Anbieters wird getrennt bewertet, statt ein ganzes Domain-Label pauschal zusammenzufassen.
 2. **Vier spezialisierte Ranglisten**: **[Verfügbarkeit](/de/rankings)** (filtert Fake-`200`-Fehler und Stream-Abbrüche), **[Stabilität](/de/rankings/stability)** (Dauerlast & Stoßzeiten), **[Latenz](/de/rankings/latency)** (TTFT getrennt von Ausgabetempo) und **[Sitzungskosten](/de/rankings/cost)** (reale Arbeitskosten statt Lock-Multiplikatoren).
 3. **Offener [Integrity Monitor](/de/arena) & [Relay-Vergleich](/de/stations/compare)**: Kalibrierte Integritätsdaten und direkter Routenvergleich ohne eigene Test-Keys.
-4. **Open-Source-Client [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Tauri-+-Rust-Desktop-App (macOS `.dmg`, Windows `.exe`) für Claude Code, Codex, Gemini CLI, Aider, OpenCode und Kimi CLI mit **Diff-Vorschau vor dem Schreiben**, **Codex-OAuth-Schutz** und lokaler Nutzungsabschätzung. *(Integritäts- und Cache-Tracking bleiben Web-Evaluationsfunktionen.)*
+4. **Open-Source-Client [Folkbench Switch](https://github.com/Folkbench/folkbench/releases)**: Tauri-+-Rust-Desktop-App (macOS `.dmg`, Windows `.exe`) für Claude Code, Codex, Gemini CLI, Aider, OpenCode und Kimi CLI mit **Diff-Vorschau vor dem Schreiben**, **Codex-OAuth-Schutz** und lokaler Nutzungsabschätzung. Neu sind **benannte Profile** für das Umschalten aller Tools mit einem Klick, ein **Schnellwechsel über das Systemtray**, eine optionale **lokale Privatsphäre-Maskierung**, die API-Schlüssel, E-Mail-Adressen, öffentliche IPs und eigene Begriffe vor dem Versand durch Platzhalter ersetzt und in Antworten (auch Streams) wiederherstellt, sowie eine standardmäßig **degradationsbereinigte Preis-Leistungs-Front**. *(Integritäts- und Cache-Tracking bleiben Web-Evaluationsfunktionen.)*
 
 ## Praktischer Einsatz im Alltag
 
 1. Wählen Sie passende Modell-und-Gruppen-Kandidaten über [Verfügbarkeit](/de/rankings), [Stabilität](/de/rankings/stability), [Latenz](/de/rankings/latency) und [Sitzungskosten](/de/rankings/cost).
 2. Prüfen Sie im [Integrity Monitor](/de/arena) die Übereinstimmung von Sonden, Reasoning-Tokens und Fingerprints mit der offiziellen Live-Baseline über mehrere Zeitfenster.
 3. Vergleichen Sie vor der Buchung exakt die gewünschte Gruppe unter [Relay-Vergleich](/de/stations/compare).
-4. Verwalten Sie Haupt- und Ersatzroute in [Folkbench Switch](https://github.com/Folkbench/folkbench/releases), um bei Abweichungen per Diff-Vorschau in Sekunden umzuschalten.
+4. Speichern Sie Haupt- und Ersatzroute als benannte Profile in [Folkbench Switch](https://github.com/Folkbench/folkbench/releases), um bei Abweichungen nach Diff-Vorschau oder direkt über das Systemtray in Sekunden umzuschalten.
 
 Moderne KI-Bewertung muss nicht nur zeigen, welches Modell auf dem Papier führt, sondern ob jede bezahlte Route diese Leistung tatsächlich ausliefert. Durch Aktualitäts-Sonden, Modell-Fingerprints und unabhängige offizielle Kalibrierung setzt Folkbench dafür einen transparenten Maßstab.

@@ -146,12 +146,13 @@
       "axisIntelligence": "Intelligence index",
       "empty": "No routes match the current filter.",
       "frontierCount": "{{frontier}} frontier picks across {{total}} routes",
-      "listTitle": "Pareto frontier",
+      "listTitle": "Pareto frontier picks",
       "modes": {
         "adjusted": "Degradation-adjusted",
         "official": "Official API",
         "relay": "Relay quotes"
       },
+      "recommended": "Recommended",
       "scoreShort": "Score"
     },
     "securityBoard": {

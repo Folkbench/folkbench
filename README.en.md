@@ -111,6 +111,9 @@ Installers and SHA256 checksums are available in [Releases](https://github.com/F
 | **Provider switching** | Save connection settings for multiple services and apply your selection to a supported tool. |
 | **Configuration previews** | Review changes before writing, preserving other custom settings. Restoration capabilities depend on the tool adapter. |
 | **Codex credential protection** | Temporarily park official OAuth credentials when switching to a third-party service and restore them when switching back. |
+| **Named profiles** | Save the routes each tool currently uses as a named profile and apply the whole set in one click. |
+| **Tray switching** | Switch profiles or individual tool services from the system tray without opening the main window. |
+| **Local privacy masking** | Optional. A local proxy replaces API keys, email addresses, public IPs and custom sensitive words with placeholders before requests leave your machine and restores them in responses; tools reconnect directly when Switch quits. |
 | **Public route discovery** | Browse routes, availability, status windows and prices from the public catalog in the client. |
 | **Local usage estimates** | Review session token usage and estimate cost using reference prices. |
 

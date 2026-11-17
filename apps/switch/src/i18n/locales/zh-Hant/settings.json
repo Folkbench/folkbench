@@ -79,7 +79,34 @@
         "description": "Folkbench Switch 這個版本不會傳送遙測資料。",
         "title": "遙測"
       },
-      "title": "隱私"
+      "title": "隱私",
+      "masking": {
+        "title": "本地隱私遮罩",
+        "statusActive": "執行中 · 127.0.0.1:{{port}}",
+        "statusReady": "已開啟",
+        "statusOff": "未開啟",
+        "enableTitle": "傳送前於本地自動遮罩金鑰與隱私資訊",
+        "enableDescription": "開啟後將啟用中的工具路由經本機代理，請求送出前將敏感內容替換為佔位符，並在回應中自動還原。",
+        "secretsTitle": "金鑰與權杖",
+        "secretsDescription": "API Key、存取權杖、JWT 與 PEM 私鑰。",
+        "personalTitle": "個人隱私資訊",
+        "personalDescription": "電子郵件與公網 IPv4 位址。",
+        "customWordsLabel": "自訂遮罩詞彙",
+        "customWordsPlaceholder": "以逗號分隔（英文至少 3 字元，中文至少 2 字）",
+        "allowlistLabel": "永不遮罩（白名單）",
+        "allowlistPlaceholder": "以逗號分隔的精確值",
+        "saveRules": "儲存詞表規則",
+        "rulesSaved": "已儲存詞表規則",
+        "tryTitle": "效果測試",
+        "tryAction": "測試遮罩",
+        "tryMatched": "已遮罩 {{count}} 項",
+        "tryNoMatch": "未命中需遮罩內容",
+        "recentTitle": "近期遮罩紀錄",
+        "totalCount": "本次工作階段已遮罩 {{count}} 項",
+        "recentEmpty": "本次工作階段尚未觸發遮罩。",
+        "errorSave": "無法儲存隱私設定，請重試。",
+        "errorPreview": "無法執行遮罩預覽。"
+      }
     },
     "title": "設定",
     "updates": {

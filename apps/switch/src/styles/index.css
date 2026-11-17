@@ -412,6 +412,10 @@ html[data-os='macos'] .switch-navigation a > span {
   flex-wrap: wrap;
 }
 .switch-segmented button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
   min-height: 2rem;
   padding: 0.375rem 0.75rem;
   border-radius: var(--radius-md);

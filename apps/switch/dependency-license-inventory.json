@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "0.1.0-beta.8",
+  "version": "0.1.0-beta.9",
   "hashes": {
-    "package.json": "526d563cb6adbfd706485508808b96b241a3d2affe5eaebe690dd9ac85308ff2",
+    "package.json": "85d0f5f8cc5fb68e61f870e70d0fef4b46172650ef5c746ef800b5c85c853e94",
     "bun.lock": "231d61a49f3f16769c2034f5e30f7fc38824d906628edc0b3bbde18cb1b1a3cd",
-    "src-tauri/Cargo.lock": "44cabd6de3188eb17fb9ab90d4215c8296a6abb8a24938cc1afb261c37645755"
+    "src-tauri/Cargo.lock": "cdd9e6d8baeee2642b69e59589eed7449c9cd4454360da20aa9ff3dca1d6f019"
   },
   "packages": [
     {
@@ -2142,6 +2142,12 @@
       "name": "tracing-core",
       "version": "0.1.36",
       "license": "MIT"
+    },
+    {
+      "ecosystem": "crates.io",
+      "name": "tray-icon",
+      "version": "0.24.2",
+      "license": "MIT OR Apache-2.0"
     },
     {
       "ecosystem": "crates.io",

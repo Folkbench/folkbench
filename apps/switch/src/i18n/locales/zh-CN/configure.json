@@ -593,6 +593,25 @@
       "openToUpdate": "打开客户端更新",
       "downloadPage": "下载页",
       "detecting": "正在检测版本…"
+    },
+    "profiles": {
+      "button": "配置方案",
+      "title": "命名配置方案",
+      "description": "保存当前各工具的启用中转站快照，一键切换全部工具。",
+      "empty": "暂无保存的配置方案。在下方输入名称即可保存当前配置。",
+      "namePlaceholder": "方案名称（如：工作、省钱）",
+      "save": "保存",
+      "update": "用当前配置覆盖更新",
+      "rename": "重命名方案",
+      "cancel": "取消",
+      "delete": "删除方案",
+      "saved": "已保存配置方案",
+      "updated": "已用当前配置更新方案",
+      "renamed": "已重命名方案",
+      "applied": "已切换 {{count}} 个工具到该方案",
+      "appliedPartial": "已切换 {{applied}} 个工具，跳过 {{skipped}} 个",
+      "noActiveServices": "请先为至少一个工具启用服务，再保存配置方案。",
+      "errorFailed": "无法更新配置方案，请重试。"
     }
   }
 }

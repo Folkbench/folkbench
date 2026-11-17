@@ -167,6 +167,31 @@ export type {
   ToolUsageSummary,
 } from '@/bridge/generated/usage'
 
+export {
+  getPrivacyStatus,
+  previewPrivacyMasking,
+  savePrivacySettings,
+} from '@/bridge/commands/privacy'
+export {
+  applyProfile,
+  deleteProfile,
+  listProfiles,
+  renameProfile,
+  saveProfile,
+} from '@/bridge/commands/profiles'
+
+export type {
+  PrivacyMaskEvent,
+  PrivacyMaskPreview,
+  PrivacySettings,
+  PrivacyStatus,
+} from '@/bridge/generated/privacy'
+export type {
+  ApplyProfileResult,
+  ProfilesSnapshot,
+  SwitchProfile,
+} from '@/bridge/generated/profiles'
+
 export type {
   ToolInstallChannel,
   ToolRuntimeActionResult,
