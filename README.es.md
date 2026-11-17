@@ -111,6 +111,9 @@ Los instaladores y archivos de verificación SHA256 están en [Releases](https:/
 | **Cambio de proveedor** | Guarda la configuración de varios servicios y aplica tu elección a una herramienta compatible. |
 | **Vista previa de cambios** | Revisa los cambios antes de escribirlos y conserva otros ajustes personalizados. La restauración depende del adaptador de cada herramienta. |
 | **Protección de credenciales de Codex** | Al cambiar a un tercero, guarda temporalmente las credenciales OAuth oficiales y las restaura al volver. |
+| **Perfiles con nombre** | Guarda las conexiones que usa cada herramienta como un perfil y aplica el conjunto con un clic. |
+| **Cambio desde la bandeja** | Cambia perfiles o el servicio de cada herramienta desde la bandeja del sistema sin abrir la ventana principal. |
+| **Enmascarado local de privacidad** | Opcional. Un proxy local sustituye claves API, correos, IP públicas y palabras sensibles propias por marcadores antes de enviar las solicitudes y los restaura en las respuestas; al cerrar Switch, las herramientas vuelven a la conexión directa. |
 | **Descubrimiento de conexiones públicas** | Consulta conexiones, disponibilidad, ventanas de estado y precios del catálogo público dentro del cliente. |
 | **Estimación de uso local** | Revisa los tokens por sesión y estima el costo con precios de referencia. |
 
