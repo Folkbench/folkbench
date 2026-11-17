@@ -7,6 +7,8 @@ pub mod connect;
 pub mod links;
 pub mod my_services;
 pub mod preferences;
+pub mod privacy;
+pub mod profiles;
 pub mod session;
 pub mod session_usage;
 pub mod share_image;

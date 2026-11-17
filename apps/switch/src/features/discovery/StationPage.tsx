@@ -5,15 +5,11 @@ import { Link, useNavigate, useParams, useSearch } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  BRIDGE_ERROR,
-  BridgeError,
-  openPublishedStationWebsite,
-} from '@/bridge'
+import { BRIDGE_ERROR, BridgeError } from '@/bridge'
 import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
 import { StatusWindow } from '@/components/status-window'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { switchToolsQueryOptions } from '@/features/catalog/queries'
 import {
   computeMultiplier,
@@ -25,13 +21,19 @@ import {
   formatStabilityScore,
   sessionCostCny,
   wilson,
-  type DisplayCurrency,
 } from '@/features/discovery/catalog'
 import {
   publicIntegrityQueryOptions,
   publishedCatalogQueryOptions,
 } from '@/features/discovery/queries'
 import { RelayCompareDialog } from '@/features/discovery/RelayCompareDialog'
+import {
+  ConnectRouteAction,
+  CurrencyToggle,
+  DiscoveryNotice,
+  RegisterRouteButton,
+  useDisplayCurrency,
+} from '@/features/discovery/route-actions'
 import {
   AnswerStrip,
   PeerStrip,
@@ -58,26 +60,11 @@ import {
 } from '@/lib/station-detail'
 import { cn } from '@/lib/utils'
 
-const CURRENCY_STORAGE_KEY = 'folkbench.currency'
-
-function readStoredCurrency(locale: string): DisplayCurrency {
-  try {
-    const raw = window.localStorage.getItem(CURRENCY_STORAGE_KEY)
-    if (raw === 'CNY' || raw === 'USD') return raw
-  } catch {
-    // Ignore storage unavailability.
-  }
-  return locale.startsWith('zh') ? 'CNY' : 'USD'
-}
-
 export function StationPage() {
   const { t, i18n } = useTranslation()
   const locale = normalizeLocale(i18n.resolvedLanguage)
   const navigate = useNavigate()
-  const [currency, setCurrency] = useState<DisplayCurrency>(() =>
-    readStoredCurrency(locale)
-  )
-  const [openingWebsite, setOpeningWebsite] = useState(false)
+  const [currency, changeCurrency] = useDisplayCurrency()
   const [websiteError, setWebsiteError] = useState(false)
   const [chartMode, setChartMode] = useState<WideChartMode>('eff')
   const [hitRatePct, setHitRatePct] = useState<number>(80)
@@ -100,15 +87,6 @@ export function StationPage() {
     publishedCatalogQueryOptions(modelId, 'availability')
   )
   const integrity = useQuery(publicIntegrityQueryOptions())
-
-  function changeCurrency(next: DisplayCurrency) {
-    setCurrency(next)
-    try {
-      window.localStorage.setItem(CURRENCY_STORAGE_KEY, next)
-    } catch {
-      // Ignore storage failures.
-    }
-  }
 
   const stations = catalog.data?.stations ?? []
   const station = stations.find(
@@ -242,41 +220,17 @@ export function StationPage() {
           {t('discovery.detail.back')}
         </Link>
 
-        <div
-          className="switch-segmented"
-          role="group"
-          aria-label={t('discovery.currency.label')}
-        >
-          {(['CNY', 'USD'] as const).map((unit) => (
-            <button
-              key={unit}
-              type="button"
-              aria-pressed={currency === unit}
-              onClick={() => changeCurrency(unit)}
-            >
-              {unit === 'CNY'
-                ? t('discovery.currency.cny')
-                : t('discovery.currency.usd')}
-            </button>
-          ))}
-        </div>
+        <CurrencyToggle value={currency} onChange={changeCurrency} />
       </div>
 
       {catalog.isPending ? (
-        <p className="rounded-xl border bg-card px-4 py-3 text-[14px] text-muted-foreground">
+        <DiscoveryNotice tone="info">
           {t('common.status.loading')}
-        </p>
+        </DiscoveryNotice>
       ) : catalog.isError ? (
-        <p
-          className="rounded-xl border bg-card px-4 py-3 text-[14px] text-destructive"
-          role="alert"
-        >
-          {error}
-        </p>
+        <DiscoveryNotice tone="error">{error}</DiscoveryNotice>
       ) : !station ? (
-        <p className="rounded-xl border bg-card px-4 py-3 text-[14px] text-muted-foreground">
-          {t('discovery.detail.notFound')}
-        </p>
+        <DiscoveryNotice>{t('discovery.detail.notFound')}</DiscoveryNotice>
       ) : (
         <>
           {/* Hero / Identity Panel */}
@@ -328,62 +282,23 @@ export function StationPage() {
                     {t('discovery.compare.button')}
                   </Button>
                 ) : null}
-                <Button
-                  type="button"
+                <RegisterRouteButton
                   variant="outline"
-                  size="sm"
-                  disabled={!station.websiteUrl || openingWebsite}
-                  onClick={async () => {
-                    setOpeningWebsite(true)
-                    setWebsiteError(false)
-                    try {
-                      await openPublishedStationWebsite({
-                        modelId,
-                        stationId,
-                        channelId,
-                        locale,
-                      })
-                    } catch {
-                      setWebsiteError(true)
-                    } finally {
-                      setOpeningWebsite(false)
-                    }
+                  target={station}
+                  label={t('discovery.detail.openWebsite')}
+                  onError={() => setWebsiteError(true)}
+                />
+                <ConnectRouteAction
+                  row={station}
+                  isEasy={isEasy}
+                  onEasyConnect={() => setEasyWizardOpen(true)}
+                  label={t('discovery.detail.continue')}
+                  returnTo={{
+                    stationId: station.stationId,
+                    channelId: station.channelId,
+                    modelId,
                   }}
-                >
-                  {t('discovery.detail.openWebsite')}
-                </Button>
-                {isEasy ? (
-                  <Button
-                    type="button"
-                    size="sm"
-                    disabled={!station.baseUrl}
-                    className="bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88 disabled:opacity-40"
-                    onClick={() => setEasyWizardOpen(true)}
-                  >
-                    {t('discovery.detail.continue')}
-                  </Button>
-                ) : (
-                  <Link
-                    to="/"
-                    search={{
-                      add: true,
-                      stationId: station.stationId,
-                      channelId: station.channelId,
-                      modelId: station.modelId,
-                      stationName: station.stationName,
-                      channelName: station.channelName,
-                      returnStationId: station.stationId,
-                      returnChannelId: station.channelId,
-                      returnModelId: modelId,
-                    }}
-                    className={cn(
-                      buttonVariants({ size: 'sm' }),
-                      'bg-brand-signal text-brand-signal-foreground hover:bg-brand-signal/88'
-                    )}
-                  >
-                    {t('discovery.detail.continue')}
-                  </Link>
-                )}
+                />
               </div>
             </div>
 

@@ -1,5 +1,3 @@
-import LinkSquare01Icon from '@hugeicons/core-free-icons/LinkSquare01Icon'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import {
@@ -11,11 +9,7 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  BRIDGE_ERROR,
-  BridgeError,
-  openPublishedStationWebsite,
-} from '@/bridge'
+import { BRIDGE_ERROR, BridgeError } from '@/bridge'
 import type {
   CatalogModel,
   PublicIntegrityMeasurement,
@@ -34,7 +28,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   compareSecurity,
   formatAvailability,
@@ -45,6 +38,11 @@ import {
   type DisplayCurrency,
 } from '@/features/discovery/catalog'
 import { publicIntegrityQueryOptions } from '@/features/discovery/queries'
+import {
+  DiscoveryLoading,
+  DiscoveryNotice,
+  RegisterRouteButton,
+} from '@/features/discovery/route-actions'
 import { normalizeLocale } from '@/i18n/config'
 import {
   deduplicateIntegrityItems,
@@ -152,9 +150,6 @@ export function IntegrityPanel({
     descending: boolean
   }>({ key: 'accuracy', descending: true })
   const [opened, setOpened] = useState<EnrichedIntegrityRow | null>(null)
-  const [openingWebsiteKey, setOpeningWebsiteKey] = useState<string | null>(
-    null
-  )
 
   const items = useMemo(
     () => deduplicateIntegrityItems(integrityQuery.data?.items ?? []),
@@ -363,24 +358,6 @@ export function IntegrityPanel({
     )
   }
 
-  async function onOpenWebsite(entry: EnrichedIntegrityRow) {
-    if (!entry.stationId || !entry.channelId) return
-    const key = `${entry.stationId}:${entry.channelId}:${entry.item.runId}`
-    setOpeningWebsiteKey(key)
-    try {
-      await openPublishedStationWebsite({
-        modelId: entry.item.modelId,
-        stationId: entry.stationId,
-        channelId: entry.channelId,
-        locale,
-      })
-    } catch {
-      // Website may not exist for catalogless integrity entries.
-    } finally {
-      setOpeningWebsiteKey(null)
-    }
-  }
-
   const errorMessage =
     integrityQuery.error instanceof BridgeError &&
     integrityQuery.error.code === BRIDGE_ERROR.desktopUnavailable
@@ -457,18 +434,9 @@ export function IntegrityPanel({
       </div>
 
       {integrityQuery.isPending ? (
-        <div className="fbd-panel space-y-2 p-4" aria-busy="true">
-          {Array.from({ length: 5 }, (_, index) => (
-            <Skeleton key={index} className="h-9 w-full" />
-          ))}
-        </div>
+        <DiscoveryLoading rowClassName="h-9" />
       ) : integrityQuery.isError && !integrityQuery.data ? (
-        <p
-          className="rounded-xl border bg-card px-4 py-3 text-[14px] text-destructive"
-          role="alert"
-        >
-          {errorMessage}
-        </p>
+        <DiscoveryNotice tone="error">{errorMessage}</DiscoveryNotice>
       ) : (
         <div className="fbd-panel">
           <div className="fbd-scrollx">
@@ -627,22 +595,15 @@ export function IntegrityPanel({
                             {entry.websiteUrl &&
                             entry.stationId &&
                             entry.channelId ? (
-                              <button
-                                type="button"
-                                className="inline-flex shrink-0 items-center rounded p-1 text-muted-foreground hover:text-brand-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
-                                aria-label={t('discovery.list.register')}
-                                disabled={
-                                  openingWebsiteKey ===
-                                  `${entry.stationId}:${entry.channelId}:${item.runId}`
-                                }
-                                onClick={() => void onOpenWebsite(entry)}
-                              >
-                                <HugeiconsIcon
-                                  icon={LinkSquare01Icon}
-                                  strokeWidth={1.8}
-                                  className="size-3.5"
-                                />
-                              </button>
+                              <RegisterRouteButton
+                                variant="icon"
+                                target={{
+                                  modelId: item.modelId,
+                                  stationId: entry.stationId,
+                                  channelId: entry.channelId,
+                                  websiteUrl: entry.websiteUrl,
+                                }}
+                              />
                             ) : null}
                           </div>
                         </td>

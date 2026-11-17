@@ -23,6 +23,17 @@ fn ensure_model(tool_id: &str, model_id: &str) -> Result<(), ServiceError> {
     Ok(())
 }
 
+/// Keeps the tray quick-switcher in sync after a successful change.
+fn refresh_tray_on_ok<T>(
+    app: &AppHandle,
+    result: Result<T, ServiceError>,
+) -> Result<T, ServiceError> {
+    if result.is_ok() {
+        services::tray_refresh(app);
+    }
+    result
+}
+
 fn user_home(app: &AppHandle) -> Result<PathBuf, ServiceError> {
     app.path()
         .home_dir()
@@ -77,7 +88,7 @@ pub fn add_my_service(
         &result,
         Some(&tool_id),
     );
-    result
+    refresh_tray_on_ok(&app, result)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -87,7 +98,10 @@ pub fn remove_my_service(
     service_id: String,
 ) -> Result<(), ServiceError> {
     let dir = config_dir(&app)?;
-    services::remove_my_service(&dir, &tool_id, &service_id)
+    refresh_tray_on_ok(
+        &app,
+        services::remove_my_service(&dir, &tool_id, &service_id),
+    )
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -108,7 +122,7 @@ pub fn update_my_service(
 ) -> Result<MyService, ServiceError> {
     ensure_model(&tool_id, &model_id)?;
     let dir = config_dir(&app)?;
-    services::update_my_service(
+    let result = services::update_my_service(
         &dir,
         &user_home(&app)?,
         &tool_id,
@@ -124,7 +138,8 @@ pub fn update_my_service(
         base_url,
         api_key,
         None,
-    )
+    );
+    refresh_tray_on_ok(&app, result)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -147,7 +162,7 @@ pub fn switch_my_service(
         &result,
         Some(&tool_id),
     );
-    result
+    refresh_tray_on_ok(&app, result)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -156,7 +171,9 @@ pub fn unswitch_my_service(
     tool_id: String,
 ) -> Result<SwitchResult, ServiceError> {
     let dir = config_dir(&app)?;
-    services::unswitch_my_service(&dir, &user_home(&app)?, &tool_id)
+    let result =
+        services::unswitch_my_service(&dir, &user_home(&app)?, &tool_id);
+    refresh_tray_on_ok(&app, result)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -165,7 +182,9 @@ pub fn rollback_my_service_switch(
     tool_id: String,
 ) -> Result<SwitchResult, ServiceError> {
     let dir = config_dir(&app)?;
-    services::rollback_my_service_switch(&dir, &user_home(&app)?, &tool_id)
+    let result =
+        services::rollback_my_service_switch(&dir, &user_home(&app)?, &tool_id);
+    refresh_tray_on_ok(&app, result)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -180,7 +199,7 @@ pub fn import_my_service_from_live(
         &result,
         Some(&tool_id),
     );
-    result
+    refresh_tray_on_ok(&app, result)
 }
 
 #[tauri::command(rename_all = "camelCase")]

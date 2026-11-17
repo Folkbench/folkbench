@@ -79,7 +79,34 @@
         "description": "Folkbench Switch 这一版不发送遥测。",
         "title": "遥测"
       },
-      "title": "隐私"
+      "title": "隐私",
+      "masking": {
+        "title": "本地隐私脱敏",
+        "statusActive": "运行中 · 127.0.0.1:{{port}}",
+        "statusReady": "已开启",
+        "statusOff": "未开启",
+        "enableTitle": "发送前在本地自动脱敏密钥与隐私信息",
+        "enableDescription": "开启后将活跃工具路由经本机代理，请求发出前将敏感内容替换为占位符，并在响应中自动还原。",
+        "secretsTitle": "密钥与令牌",
+        "secretsDescription": "API Key、访问令牌、JWT 与 PEM 私钥。",
+        "personalTitle": "个人隐私信息",
+        "personalDescription": "邮箱地址与公网 IPv4 地址。",
+        "customWordsLabel": "自定义脱敏词",
+        "customWordsPlaceholder": "逗号分隔（英文至少 3 字符，中文至少 2 字）",
+        "allowlistLabel": "永不脱敏（白名单）",
+        "allowlistPlaceholder": "逗号分隔的精确值",
+        "saveRules": "保存词表规则",
+        "rulesSaved": "已保存词表规则",
+        "tryTitle": "效果测试",
+        "tryAction": "测试脱敏",
+        "tryMatched": "已脱敏 {{count}} 项",
+        "tryNoMatch": "未命中需脱敏内容",
+        "recentTitle": "最近脱敏记录",
+        "totalCount": "本次会话已脱敏 {{count}} 项",
+        "recentEmpty": "本次会话暂未触发脱敏。",
+        "errorSave": "无法保存隐私设置，请重试。",
+        "errorPreview": "无法运行脱敏预览。"
+      }
     },
     "title": "设置",
     "updates": {

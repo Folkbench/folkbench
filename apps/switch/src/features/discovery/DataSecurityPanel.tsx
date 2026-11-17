@@ -15,8 +15,11 @@ import {
 import { DataSecurityBadge } from '@/components/DataSecurityBadge'
 import { StationAvatar } from '@/components/station-avatar'
 import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
 import { dataSecurityBoardQueryOptions } from '@/features/discovery/queries'
+import {
+  DiscoveryLoading,
+  DiscoveryNotice,
+} from '@/features/discovery/route-actions'
 import { normalizeLocale } from '@/i18n/config'
 import { cn } from '@/lib/utils'
 
@@ -146,22 +149,11 @@ export function DataSecurityPanel() {
       </div>
 
       {boardQuery.isPending ? (
-        <div className="fbd-panel space-y-2 p-4" role="status" aria-busy="true">
-          {Array.from({ length: 5 }, (_, idx) => (
-            <Skeleton key={idx} className="h-10 w-full" />
-          ))}
-        </div>
+        <DiscoveryLoading />
       ) : boardQuery.isError && !boardQuery.data ? (
-        <p
-          className="rounded-xl border bg-card px-4 py-3 text-[14px] text-destructive"
-          role="alert"
-        >
-          {errorMessage}
-        </p>
+        <DiscoveryNotice tone="error">{errorMessage}</DiscoveryNotice>
       ) : sortedRows.length === 0 ? (
-        <p className="rounded-xl border bg-card px-4 py-6 text-center text-[13px] text-muted-foreground">
-          {t('discovery.securityBoard.empty')}
-        </p>
+        <DiscoveryNotice>{t('discovery.securityBoard.empty')}</DiscoveryNotice>
       ) : (
         <div className="fbd-panel">
           <div className="fbd-scrollx">
