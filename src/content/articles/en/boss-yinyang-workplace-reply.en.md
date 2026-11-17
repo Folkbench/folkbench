@@ -70,7 +70,7 @@ GLM 5.2 is good at listing facts, gaps, and follow-up actions on the missing-mat
 
 The user is revising a plan that goes to the client on Friday and has not answered a non-urgent group message. The boss says, “You look pretty relaxed lately.”
 
-![Someone is still revising the plan while another person looks over with an easy remark.](/blog/figures/boss-yinyang-workplace-reply/relaxed.webp)
+![Someone is still revising the plan while another person looks over with an easy remark.](/blog/figures/boss-yinyang-workplace-reply/relaxed.jpg)
 
 Sol does not argue “I am not relaxed at all.” It says the writer is concentrated on the revision, the structure and the core numbers are already checked, the first version is expected at 17:00, and the priority can move if something more urgent comes in.
 
@@ -80,7 +80,7 @@ The reply first gives the concrete reason for the late answer, then uses progres
 
 In a performance conversation the boss says only, “Your attitude is fine. You are just not proactive enough.” The form says the same thing, “not proactive enough.” The next review cycle is 6 weeks.
 
-![A closed folder sits between two people in a performance conversation.](/blog/figures/boss-yinyang-workplace-reply/performance.webp)
+![A closed folder sits between two people in a performance conversation.](/blog/figures/boss-yinyang-workplace-reply/performance.jpg)
 
 Kimi does not refute it immediately, and it does not say a vague “I will try to improve.” It asks what “proactive” means here: trying a solution before escalating, or sending updates without being asked; not being active enough across teams, or not asking for new work. It then asks for the pass standard and the strong standard for the next cycle, so the judgment can land on each week or each project checkpoint.
 
@@ -90,7 +90,7 @@ That turns a personality label, which is hard to argue with, into a behavioral s
 
 The event plan is missing three things the upstream side has to confirm: the event scope, conversion data for the last 30 days, and the budget ceiling. The outline, the flow, and the general parts that do not depend on the data are done, and the material list has been sent twice. In the group chat the boss says: “Why is this plan still so empty? You have not pushed it hard enough, have you?”
 
-![The structure of the plan is on the table, several blocks are still empty, and the other folder is still closed.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.webp)
+![The structure of the plan is on the table, several blocks are still empty, and the other folder is still closed.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.jpg)
 
 GLM scores 81.4 on this question, the highest of the four. It writes what is already done, lists the three gaps, notes the earlier sends and reminders, and then gives a plan: feedback by 17:00 tomorrow, and the missing pieces filled in within two business days after the material arrives. If the formal material cannot be provided yet, a scope or a provisional value is enough to proceed on stated assumptions.
 
@@ -100,7 +100,7 @@ This kind of reply does not turn “the material was not given” into an emotio
 
 The user owns three things at once: a member-settlement launch this Friday, an operations report due next Tuesday, and a back-office style polish with no outside dependency. The boss says, “It is a good thing for young people to eat some bitterness.” The user wants a reasonable schedule and does not want to shut the conversation down.
 
-![Several pieces of work are spread on the table, and the talk becomes an order of priority rather than an argument about suffering.](/blog/figures/boss-yinyang-workplace-reply/schedule.webp)
+![Several pieces of work are spread on the table, and the talk becomes an order of priority rather than an argument about suffering.](/blog/figures/boss-yinyang-workplace-reply/schedule.jpg)
 
 Opus scores 82.1 on this question, the highest single-question score in the set. It does not argue about the value of “eating bitterness.” It lists the three jobs by deadline: member settlement first, the operations report second, and the style polish moved back one week. If the polish also has a hard date, the order gets revised.
 
@@ -133,7 +133,7 @@ It compresses into one line:
 
 ## Copy-paste safety should be an evaluation measure too
 
-![Read the final note once before it is sent.](/blog/figures/boss-yinyang-workplace-reply/before-send.webp)
+![Read the final note once before it is sent.](/blog/figures/boss-yinyang-workplace-reply/before-send.jpg)
 
 A model can judge the situation correctly and still produce something you should not send. The risk is not only a wrong fact or the wrong tone. The message may still carry “you could reply like this,” “the reason is below,” a name that was never replaced, a parenthetical note, or a whole paragraph of analysis that was meant only for the user.
 

@@ -55,7 +55,7 @@ sources:
 
 “¿Este modelo se volvió más tonto otra vez?” Un pelícano con una pata colgando fuera del pedal, una bicicleta con el cuadro retorcido como un nudo y, al lado, una captura de la semana pasada que había salido bastante bien: con eso basta para que surja la pregunta.
 
-![Lámina de historia natural de un pelícano en bicicleta, con una pata fuera del pedal.](/blog/figures/did-the-model-get-dumber/pelican.webp)
+![Lámina de historia natural de un pelícano en bicicleta, con una pata fuera del pedal.](/blog/figures/did-the-model-get-dumber/pelican.jpg)
 
 Esa sospecha no debería descartarse con un “los modelos son aleatorios”. Alguien pagó por una tarea que el servicio antes resolvía y que ahora no resuelve. Vale la pena preguntar por qué. Sin embargo, dos capturas no bastan para demostrar que cambiaron el modelo, que recortaron el presupuesto de razonamiento o que un servicio en particular está “rebajado”.
 

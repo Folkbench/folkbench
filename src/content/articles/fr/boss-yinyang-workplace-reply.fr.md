@@ -70,7 +70,7 @@ GLM 5.2 sait bien énumérer les faits, les manques et les actions de suivi sur 
 
 L’utilisateur révise une proposition à remettre au client vendredi et n’a pas répondu à un message non urgent dans le groupe. Le patron lance : « Vous avez l’air bien détendu ces temps-ci. »
 
-![Une personne est encore en train de revoir la proposition tandis qu’une autre l’observe en lâchant une remarque désinvolte.](/blog/figures/boss-yinyang-workplace-reply/relaxed.webp)
+![Une personne est encore en train de revoir la proposition tandis qu’une autre l’observe en lâchant une remarque désinvolte.](/blog/figures/boss-yinyang-workplace-reply/relaxed.jpg)
 
 Sol ne rétorque pas « je ne suis pas détendu du tout ». Il explique que la personne est concentrée sur la révision, que la structure et les chiffres clés sont déjà vérifiés, que la première version est prévue pour 17 h et que les priorités peuvent changer si quelque chose de plus urgent se présente.
 
@@ -80,7 +80,7 @@ La réponse donne d’abord la raison concrète du retard de réponse, montre en
 
 Lors d’un entretien d’évaluation, le patron dit seulement : « Votre attitude est bonne, c’est juste que vous manquez un peu d’initiative. » Le formulaire dit la même chose : « manque d’initiative ». Le prochain cycle d’évaluation dure 6 semaines.
 
-![Un dossier fermé posé entre deux personnes pendant un entretien d’évaluation.](/blog/figures/boss-yinyang-workplace-reply/performance.webp)
+![Un dossier fermé posé entre deux personnes pendant un entretien d’évaluation.](/blog/figures/boss-yinyang-workplace-reply/performance.jpg)
 
 Kimi ne conteste pas immédiatement et ne se contente pas d’un vague « je vais faire des efforts ». Il demande ce que recouvre « initiative » ici : chercher une solution avant de faire remonter le problème, ou donner des nouvelles sans qu’on les demande ; manquer d’implication dans le travail entre équipes, ou ne pas demander de nouvelles missions. Il demande ensuite le niveau attendu et le niveau d’excellence pour le prochain cycle, afin que l’évaluation puisse s’appuyer sur chaque semaine ou sur chaque jalon de projet.
 
@@ -90,7 +90,7 @@ On passe ainsi d’une étiquette de personnalité, difficile à contester, à u
 
 Il manque au plan de l’opération trois éléments que l’amont doit confirmer : le périmètre de l’opération, les données de conversion des 30 derniers jours et le plafond budgétaire. Le sommaire, le déroulé et les parties générales qui ne dépendent pas des données sont terminés, et la liste des éléments à fournir a été envoyée deux fois. Dans le groupe, le patron écrit : « Pourquoi ce plan est-il encore si vide ? Vous ne l’avez pas fait avancer assez énergiquement, non ? »
 
-![La structure du plan est posée sur la table, plusieurs blocs sont encore vides et l’autre dossier est toujours fermé.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.webp)
+![La structure du plan est posée sur la table, plusieurs blocs sont encore vides et l’autre dossier est toujours fermé.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.jpg)
 
 GLM obtient 81,4 sur cette question, le meilleur score des quatre. Il écrit ce qui est déjà fait, énumère les trois manques, rappelle les envois et relances précédents, puis propose un plan : un retour avant demain 17 h, et les éléments manquants complétés dans les deux jours ouvrés suivant leur réception. Si les éléments officiels ne peuvent pas encore être fournis, une fourchette ou une valeur provisoire suffit pour avancer sur des hypothèses explicites.
 
@@ -100,7 +100,7 @@ Ce type de réponse ne transforme pas « on ne m’a pas fourni les éléments�
 
 L’utilisateur gère trois chantiers en même temps : la mise en ligne de la facturation des abonnements ce vendredi, un rapport d’activité à rendre mardi prochain, et des retouches de style sur le back-office, sans dépendance externe. Le patron lâche : « Les jeunes, ça leur fait du bien d’en baver. » L’utilisateur veut obtenir un planning raisonnable sans fermer la discussion.
 
-![Plusieurs tâches sont étalées sur la table, et la discussion devient une question d’ordre de priorité plutôt qu’un débat sur la souffrance.](/blog/figures/boss-yinyang-workplace-reply/schedule.webp)
+![Plusieurs tâches sont étalées sur la table, et la discussion devient une question d’ordre de priorité plutôt qu’un débat sur la souffrance.](/blog/figures/boss-yinyang-workplace-reply/schedule.jpg)
 
 Opus obtient 82,1 sur cette question, le meilleur score sur une seule question de toute la série. Il ne débat pas de la valeur du fait d’« en baver ». Il classe les trois chantiers par échéance : la facturation des abonnements d’abord, le rapport d’activité ensuite, et les retouches de style repoussées d’une semaine. Si ces retouches ont elles aussi une date impérative, l’ordre est revu.
 
@@ -133,7 +133,7 @@ Le tout se résume en une ligne :
 
 ## La sécurité du copier-coller devrait aussi être un critère d’évaluation
 
-![Relire une dernière fois le message final avant de l’envoyer.](/blog/figures/boss-yinyang-workplace-reply/before-send.webp)
+![Relire une dernière fois le message final avant de l’envoyer.](/blog/figures/boss-yinyang-workplace-reply/before-send.jpg)
 
 Un modèle peut bien juger la situation et produire malgré tout un texte qu’il ne faut pas envoyer. Le risque ne tient pas seulement à un fait erroné ou à un ton inadapté. Le message peut encore contenir « vous pourriez répondre ainsi », « voici pourquoi », un nom jamais remplacé, une note entre parenthèses, voire tout un paragraphe d’analyse destiné uniquement à l’utilisateur.
 

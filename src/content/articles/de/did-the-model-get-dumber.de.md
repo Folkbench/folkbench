@@ -55,7 +55,7 @@ sources:
 
 „Ist dieses Modell schon wieder dümmer geworden?“ Ein Pelikan, dessen einer Fuß neben dem Pedal baumelt, ein Fahrrad, dessen Rahmen zu einem Knoten verdreht ist, und daneben ein Screenshot, der letzte Woche noch richtig gut aussah: Mehr braucht es nicht, damit die Frage aufkommt.
 
-![Naturkundliche Bildtafel: ein Pelikan auf einem Fahrrad, ein Fuß steht nicht auf dem Pedal.](/blog/figures/did-the-model-get-dumber/pelican.webp)
+![Naturkundliche Bildtafel: ein Pelikan auf einem Fahrrad, ein Fuß steht nicht auf dem Pedal.](/blog/figures/did-the-model-get-dumber/pelican.jpg)
 
 Dieser Verdacht sollte nicht mit „Modelle sind eben zufällig“ abgetan werden. Jemand hat für eine Aufgabe bezahlt, die der Dienst früher erledigt hat, und jetzt gelingt sie nicht mehr. Da ist Nachfragen berechtigt. Zwei Screenshots reichen allerdings nicht, um zu zeigen, dass das Modell ausgetauscht, das Reasoning-Budget gekürzt oder ein bestimmter Dienst verwässert wurde.
 

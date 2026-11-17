@@ -62,9 +62,9 @@ Sonnet 5 以 80.4 分領先，整體上更像一份可以交給新手的教學�
 - 只有不鏽鋼鍋時，怎樣降低沾鍋的機率？
 - 調多的麵糊，和已經刷醬、夾了火腿的熟餅，隔天還能不能吃？
 
-![家裡常見的有限工具：一口不沾鍋、一把鍋鏟、一支湯杓，旁邊是麵糊、雞蛋和蔥。](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![家裡常見的有限工具：一口不沾鍋、一把鍋鏟、一支湯杓，旁邊是麵糊、雞蛋和蔥。](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![沒有薄脆時桌上的四種替代品：餛飩皮、油條、洋芋片和一般薄餅。](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![沒有薄脆時桌上的四種替代品：餛飩皮、油條、洋芋片和一般薄餅。](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 這類問題要求模型同時處理食材、工具、時間、順序、狀態變化和風險。它不是把知識從記憶裡取出來，而是要根據當下的條件重新組織行動。
 
@@ -76,11 +76,11 @@ Sonnet 5 以 80.4 分領先，整體上更像一份可以交給新手的教學�
 
 但頁面同時指出，它在不鏽鋼鍋題裡建議「燒到冒青煙」，並重複養鍋。這種高溫預熱方式對一般家庭並不溫和。回答裡的動作越具體，使用者越可能直接照做；具體建議如果和使用情境不相符，就會把「看起來很專業」變成實際的風險。
 
-![手停在不鏽鋼鍋上方試溫度。火很小，鍋是乾的，沒有油煙。](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![手停在不鏽鋼鍋上方試溫度。火很小，鍋是乾的，沒有油煙。](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Kimi K2.7 Code 的情況更能說明平均分數為什麼不夠用。它在「攤破了怎麼救」一題得分最高，面對一鍋已經破掉、蛋還沒完全凝固的半成品時，給出了很有操作感的補救步驟。它在麵糊和三人份情境裡也提供了不錯的細節。
 
-![餅已經攤破，蛋還沒完全凝固，用湯杓補進一杓麵糊。](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![餅已經攤破，蛋還沒完全凝固，用湯杓補進一杓麵糊。](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 但在「早上 20 分鐘內完成」這一題裡，頁面標記了一個不容忽視的食品安全硬性風險：回答暗示雞蛋可以提前拿出來，放在室溫下。無論其他題寫得多好，這一項都應該單獨呈現，不能被「補救題得分最高」抵銷。
 
@@ -92,7 +92,7 @@ Kimi K2.7 Code 的情況更能說明平均分數為什麼不夠用。它在「�
 
 Sonnet 5 的優勢不在於某一道題特別驚豔，而是 12 道題整體比較均衡。它在第一次製作、鍋具控火和 20 分鐘早餐等情境保持領先，而且沒有觸發頁面記錄的規則提示或硬性風險。
 
-![雙手把還完整的餅捲起來，裡面是油條、蛋、蔥和醬。](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![雙手把還完整的餅捲起來，裡面是油條、蛋、蔥和醬。](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 這類模型適合還沒建立自己廚房判斷的使用者：先讓它把流程、順序和判斷節點寫出來，再依照自己手邊的鍋具和食材刪減。它的限制也很明確：保存和失敗診斷題並不是它最強的部分；教學的資訊量偏大，真正下廚前，仍然需要把長篇解釋濃縮成幾張能邊看邊做的步驟卡。
 
@@ -140,7 +140,7 @@ GPT-5.6 Terra 的首次完整教學得分達到 84.2，比例、鍋溫和基礎�
 - 涉及兒童、隔夜保存或高溫操作：先檢查風險標籤，再看總分和表達品質。
 - 要在 20 分鐘內完成：看模型有沒有安排前一晚就能準備的部分，以及它對保存條件的說明是否明確。
 
-![早上桌上的一份捲好的煎餅果子，切開後能看到蛋、蔥和醬。](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![早上桌上的一份捲好的煎餅果子，切開後能看到蛋、蔥和醬。](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 比較穩妥的使用方式，是把模型的回答當作「第一版操作方案」，再繼續追問三個問題：
 

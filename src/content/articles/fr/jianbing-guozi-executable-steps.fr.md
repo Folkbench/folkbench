@@ -62,9 +62,9 @@ Au niveau des mots, cette réponse ne comporte peut-être aucune erreur évident
 - Avec seulement une poêle en inox, comment réduire le risque que ça attache ?
 - La pâte en trop, et une crêpe cuite déjà badigeonnée de sauce et garnie de jambon, peuvent-elles encore se manger le lendemain ?
 
-![Un équipement familial limité : une poêle antiadhésive, une spatule et une louche, avec à côté la pâte, des œufs et de la ciboule.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.webp)
+![Un équipement familial limité : une poêle antiadhésive, une spatule et une louche, avec à côté la pâte, des œufs et de la ciboule.](/blog/figures/jianbing-guozi-executable-steps/kitchen-setup.jpg)
 
-![Quatre substituts quand il n’y a pas de galette croustillante : feuilles à wonton, youtiao, chips et galettes fines ordinaires.](/blog/figures/jianbing-guozi-executable-steps/substitutes.webp)
+![Quatre substituts quand il n’y a pas de galette croustillante : feuilles à wonton, youtiao, chips et galettes fines ordinaires.](/blog/figures/jianbing-guozi-executable-steps/substitutes.jpg)
 
 Ce type de question demande au modèle de gérer en même temps les ingrédients, les ustensiles, le temps, l’ordre des opérations, l’évolution de la cuisson et le risque. Il ne s’agit pas de tirer un savoir de la mémoire, mais de reconstruire l’action suivante à partir des conditions du moment.
 
@@ -76,11 +76,11 @@ GLM 5.2 en est un bon exemple dans cette série. Sa note sur les étapes atteint
 
 La page relève aussi que, sur la question de la poêle en inox, il conseille de chauffer la poêle « jusqu’à ce qu’elle dégage une fumée bleutée » et de répéter le culottage. Ce type de préchauffage à très haute température n’a rien de doux pour un foyer ordinaire. Plus l’action proposée est concrète, plus l’utilisateur risque de l’appliquer telle quelle. Un conseil concret qui ne correspond pas à la situation transforme « avoir l’air professionnel » en risque réel.
 
-![Une main s’arrête au-dessus d’une poêle en inox pour juger la chaleur. La flamme est petite, la poêle est sèche et il n’y a pas de fumée.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.webp)
+![Une main s’arrête au-dessus d’une poêle en inox pour juger la chaleur. La flamme est petite, la poêle est sèche et il n’y a pas de fumée.](/blog/figures/jianbing-guozi-executable-steps/stainless-heat.jpg)
 
 Kimi K2.7 Code montre encore plus clairement pourquoi une moyenne ne suffit pas. Il obtient la meilleure note sur « la crêpe s’est déchirée, comment la rattraper ? ». Face à une crêpe déjà déchirée et à un œuf qui n’a pas complètement pris, il propose des étapes de rattrapage qui paraissent applicables. Il apporte aussi des détails utiles sur les scènes de la pâte et des trois personnes.
 
-![La crêpe s’est déchirée et l’œuf n’a pas complètement pris. Une louche ajoute une cuillerée de pâte pour colmater.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.webp)
+![La crêpe s’est déchirée et l’œuf n’a pas complètement pris. Une louche ajoute une cuillerée de pâte pour colmater.](/blog/figures/jianbing-guozi-executable-steps/torn-crepe.jpg)
 
 Sur « tout boucler en 20 minutes le matin », la page signale un risque critique de sécurité alimentaire qu’on ne peut pas ignorer : la réponse laisse entendre que les œufs peuvent être sortis à l’avance et laissés à température ambiante. Aussi bien rédigées que soient les autres réponses, celle-ci doit être présentée à part. Elle ne doit pas être compensée par « meilleure note sur la question du rattrapage ».
 
@@ -92,7 +92,7 @@ Cela ne veut pas dire que tous les conseils de Kimi K2.7 Code sont peu fiables, 
 
 L’atout de Sonnet 5 n’est pas une réponse éblouissante. Sur les 12 questions, il est relativement équilibré. Il reste en tête sur la première tentative, le feu de la poêle et le petit-déjeuner en 20 minutes, et ne déclenche aucune remarque de règle ni aucun risque critique enregistrés sur la page.
 
-![Deux mains roulent une crêpe encore intacte, garnie de youtiao, d’œuf, de ciboule et de sauce.](/blog/figures/jianbing-guozi-executable-steps/rolling.webp)
+![Deux mains roulent une crêpe encore intacte, garnie de youtiao, d’œuf, de ciboule et de sauce.](/blog/figures/jianbing-guozi-executable-steps/rolling.jpg)
 
 Ce type de modèle convient à un utilisateur qui n’a pas encore son propre jugement en cuisine. Laissez-le d’abord écrire le déroulé, l’ordre et les points de décision, puis réduisez le tout à la poêle et aux ingrédients dont vous disposez réellement. Sa limite est claire elle aussi : la conservation et le diagnostic d’échec ne sont pas ses meilleures questions. Le tutoriel contient beaucoup d’informations, et avant de vraiment cuisiner, il faut encore condenser les longues explications en quelques étapes qu’on peut consulter tout en travaillant.
 
@@ -140,7 +140,7 @@ Elle ne désigne pas un modèle meilleur que tous sur chaque question de cuisine
 - Quand il est question d’un enfant, d’une conservation jusqu’au lendemain ou de haute température : vérifiez d’abord les étiquettes de risque, puis la note totale et la qualité de rédaction.
 - Quand il faut avoir fini en 20 minutes : voyez si le modèle prévoit une partie à préparer la veille, et s’il précise clairement les conditions de conservation.
 
-![Un jianbing roulé sur une table de petit-déjeuner, coupé pour montrer l’œuf, la ciboule et la sauce.](/blog/figures/jianbing-guozi-executable-steps/breakfast.webp)
+![Un jianbing roulé sur une table de petit-déjeuner, coupé pour montrer l’œuf, la ciboule et la sauce.](/blog/figures/jianbing-guozi-executable-steps/breakfast.jpg)
 
 Une façon plus sûre d’utiliser la réponse est de la traiter comme un premier jet de plan, puis de poser trois questions de plus :
 

@@ -56,7 +56,7 @@ export function manifestItem(entry: ArticleEntry): BlogManifestItem {
     updatedAt: `${entry.data.updatedAt}T00:00:00Z`,
     readingMinutes: readingMinutes(entry),
     canonicalUrl: absoluteUrl(localePath(locale, `/blog/${entry.data.slug}`)),
-    coverUrl: absoluteUrl(`/blog/covers/${entry.data.translationKey}.webp`),
+    coverUrl: absoluteUrl(`/blog/covers/${entry.data.translationKey}.jpg`),
     relatedSlugs: [...entry.data.relatedSlugs],
   }
 }

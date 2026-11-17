@@ -70,7 +70,7 @@ GLM 5.2 es bueno para enumerar hechos, pendientes y acciones de seguimiento en l
 
 El usuario está corrigiendo un plan que se entrega al cliente el viernes y no ha contestado un mensaje no urgente del grupo. El jefe dice: “Últimamente se te ve muy relajado”.
 
-![Alguien sigue corrigiendo el plan mientras otra persona lo mira y suelta un comentario casual.](/blog/figures/boss-yinyang-workplace-reply/relaxed.webp)
+![Alguien sigue corrigiendo el plan mientras otra persona lo mira y suelta un comentario casual.](/blog/figures/boss-yinyang-workplace-reply/relaxed.jpg)
 
 Sol no discute con un “no estoy nada relajado”. Dice que está concentrado en la corrección, que la estructura y los datos clave ya están revisados, que la primera versión estará lista a las 17:00 y que la prioridad puede cambiar si surge algo más urgente.
 
@@ -80,7 +80,7 @@ La respuesta primero da la razón concreta de la demora, luego usa el avance y l
 
 En una reunión de evaluación de desempeño, el jefe solo dice: “Tu actitud está bien, solo te falta iniciativa”. El formato de evaluación dice lo mismo: “le falta iniciativa”. El siguiente ciclo de evaluación dura 6 semanas.
 
-![Una carpeta cerrada sobre la mesa, entre dos personas, en una reunión de desempeño.](/blog/figures/boss-yinyang-workplace-reply/performance.webp)
+![Una carpeta cerrada sobre la mesa, entre dos personas, en una reunión de desempeño.](/blog/figures/boss-yinyang-workplace-reply/performance.jpg)
 
 Kimi no lo rebate de inmediato ni responde con un vago “voy a esforzarme por mejorar”. Pregunta qué significa aquí “iniciativa”: intentar una solución antes de escalar el problema, o enviar actualizaciones sin que se las pidan; no participar lo suficiente con otros equipos, o no pedir trabajo nuevo. Después pregunta cuál es el estándar para cumplir y cuál para destacar en el siguiente ciclo, para que la evaluación se pueda aterrizar en cada semana o en cada hito del proyecto.
 
@@ -90,7 +90,7 @@ Así, una etiqueta de personalidad, difícil de discutir, se convierte en un cri
 
 Al plan del evento le faltan tres cosas que el área responsable tiene que confirmar: el alcance del evento, los datos de conversión de los últimos 30 días y el tope de presupuesto. El índice, el flujo y las partes generales que no dependen de esos datos ya están listos, y la lista de materiales se envió dos veces. En el grupo, el jefe dice: “¿Por qué este plan sigue tan vacío? No le has dado suficiente seguimiento, ¿verdad?”
 
-![La estructura del plan ya está sobre la mesa, varios bloques siguen vacíos y la carpeta de la otra parte sigue cerrada.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.webp)
+![La estructura del plan ya está sobre la mesa, varios bloques siguen vacíos y la carpeta de la otra parte sigue cerrada.](/blog/figures/boss-yinyang-workplace-reply/empty-plan.jpg)
 
 GLM obtiene 81.4 en esta pregunta, la cifra más alta de los cuatro. Escribe lo que ya está hecho, enumera los tres pendientes, menciona los envíos y recordatorios anteriores y luego presenta un plan: respuesta antes de las 17:00 de mañana y los faltantes completados en dos días hábiles después de recibir el material. Si todavía no se puede entregar el material formal, basta con un alcance o un valor provisional para avanzar con supuestos explícitos.
 
@@ -100,7 +100,7 @@ Este tipo de respuesta no convierte “no me dieron el material” en una queja 
 
 El usuario tiene a su cargo tres cosas al mismo tiempo: el lanzamiento de la liquidación de membresías este viernes, un informe de operaciones que se entrega el próximo martes y un ajuste de estilos del panel de administración que no depende de nadie más. El jefe dice: “A los jóvenes les hace bien sacrificarse un poco”. El usuario quiere un calendario razonable sin cerrar la conversación.
 
-![Varios trabajos repartidos sobre la mesa; la conversación se vuelve un orden de prioridades y no una discusión sobre el sacrificio.](/blog/figures/boss-yinyang-workplace-reply/schedule.webp)
+![Varios trabajos repartidos sobre la mesa; la conversación se vuelve un orden de prioridades y no una discusión sobre el sacrificio.](/blog/figures/boss-yinyang-workplace-reply/schedule.jpg)
 
 Opus obtiene 82.1 en esta pregunta, la puntuación más alta de una sola pregunta en todo el conjunto. No discute sobre el valor del “sacrificio”. Ordena los tres trabajos por fecha límite: primero la liquidación de membresías, después el informe de operaciones, y el ajuste de estilos se pospone una semana. Si ese ajuste también tiene una fecha fija, el orden se revisa.
 
@@ -133,7 +133,7 @@ Se puede resumir en una línea:
 
 ## Que se pueda copiar y pegar sin riesgo también debería medirse
 
-![Lee una vez la nota final antes de enviarla.](/blog/figures/boss-yinyang-workplace-reply/before-send.webp)
+![Lee una vez la nota final antes de enviarla.](/blog/figures/boss-yinyang-workplace-reply/before-send.jpg)
 
 Un modelo puede evaluar bien la situación y aun así producir algo que no deberías enviar. El riesgo no está solo en un dato equivocado o en un tono inadecuado. El mensaje todavía puede incluir “podrías responder así”, “abajo te explico por qué”, un nombre que nunca se reemplazó, una nota entre paréntesis o un párrafo completo de análisis pensado solo para el usuario.
 
