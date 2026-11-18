@@ -16,11 +16,15 @@ for (const name of ['README.md', 'README.en.md', 'README.es.md']) {
     const text = await readFile(new URL(`../${name}`, import.meta.url), 'utf8')
     checkDownloads(text)
     if (name === 'README.md') {
-      assert.doesNotMatch(text, /\/go\/|\/outbound|[?&](?:aff|ref|partner)=/i)
       const links = [...text.matchAll(/https:\/\/folkbench\.com[^\s)"<>]*/g)]
       assert(links.length > 0)
       for (const [link] of links) {
         const url = new URL(link.replaceAll('&amp;', '&'))
+        // Station links go through the /go leave page, which adds the station's AFF signup link server-side.
+        if (url.pathname.startsWith('/go/')) {
+          assert.equal(url.searchParams.get('source'), 'readme')
+          continue
+        }
         assert.equal(url.searchParams.get('utm_source'), 'github')
         assert.equal(url.searchParams.get('utm_medium'), 'readme')
         assert.equal(url.searchParams.get('utm_campaign'), 'main-repo')
@@ -35,9 +39,7 @@ for (const name of ['README.md', 'README.en.md', 'README.es.md']) {
 test('all README sponsor tables contain the currently delivered sponsorships', async () => {
   for (const name of ['README.md', 'README.en.md', 'README.es.md', 'README.ja.md']) {
     const text = await readFile(new URL(`../${name}`, import.meta.url), 'utf8')
-    const pattern = name === 'README.md'
-      ? /href="https:\/\/folkbench\.com\/services\/([a-z0-9-]+)\?utm_source=github/g
-      : /href="https:\/\/folkbench\.com\/go\/([a-z0-9-]+)\?source=readme/g
+    const pattern = /href="https:\/\/folkbench\.com\/go\/([a-z0-9-]+)\?source=readme/g
     const slugs = [...new Set(Array.from(text.matchAll(pattern), (match) => match[1]))]
     assert.deepEqual(slugs, ['modelflare', 'ikuncode', 'fluxlane'], name)
   }
