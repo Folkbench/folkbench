@@ -23,6 +23,7 @@ test('available history still uses NUL-delimited component selection', () => {
   assert.deepEqual(detectAreas(base, run('apps/switch/src/home.tsx\0')), { blog: false, switch: true })
   assert.deepEqual(detectAreas(base, run('README.md\0')), { blog: true, switch: false })
   assert.deepEqual(detectAreas(base, run('scripts/ci-areas.mjs\0')), { blog: true, switch: true })
+  assert.deepEqual(detectAreas(base, run('scripts/distribution/cli.ts\0')), { blog: true, switch: false })
 })
 test('real diff failures are not swallowed when the base exists', () => {
   assert.throws(() => detectAreas(base, args => {

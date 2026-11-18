@@ -3,7 +3,8 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export function affectedAreas(paths, all = false) {
-  const shared = all || paths.some(path => /^(AGENTS\.md|package\.json|\.githooks\/|\.github\/|scripts\/)/.test(path))
+  // Only the root scripts that the client's checks also run are shared; README tests, article checks and distribution tooling belong to the blog.
+  const shared = all || paths.some(path => /^(?:AGENTS\.md|package\.json|\.githooks\/|\.github\/|scripts\/(?:check-changes|check-source-hygiene|ci-areas)(?:\.test)?\.mjs$)/.test(path))
   return {
     blog: shared || paths.some(path => !path.startsWith('apps/switch/')),
     switch: shared || paths.some(path => path.startsWith('apps/switch/')),

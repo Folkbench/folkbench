@@ -8,8 +8,13 @@ test('client changes do not force a blog build', () => {
 test('blog changes do not force a client build', () => {
   assert.deepEqual(affectedAreas(['src/content/articles/en/example.md']), { blog: true, switch: false })
 })
+test('blog-only root scripts do not force client checks', () => {
+  for (const path of ['scripts/readme-download.test.mjs', 'scripts/check-article-locales.mjs', 'scripts/distribution/cli.ts']) {
+    assert.deepEqual(affectedAreas([path]), { blog: true, switch: false })
+  }
+})
 test('shared gates and full push checks cover both components', () => {
-  for (const path of ['AGENTS.md', 'package.json', '.githooks/pre-commit', '.github/workflows/switch-ci.yml', 'scripts/check-changes.mjs']) {
+  for (const path of ['AGENTS.md', 'package.json', '.githooks/pre-commit', '.github/workflows/switch-ci.yml', 'scripts/check-changes.mjs', 'scripts/check-source-hygiene.mjs', 'scripts/ci-areas.mjs']) {
     assert.deepEqual(affectedAreas([path]), { blog: true, switch: true })
   }
   assert.deepEqual(affectedAreas([], true), { blog: true, switch: true })
