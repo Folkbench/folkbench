@@ -8,6 +8,7 @@ import { isoWeek, prepareWeek, publishCompletedWeek, readPublishedReports, readW
 import { buildRelaySite, buildWeeklySite } from './sites'
 import { buildSubsite } from './subsites'
 import { isSubsite } from './subsite-core'
+import { isCtaUrl } from './cta'
 import { FORBIDDEN_WORDS, checkNetworkLink, isAlreadyPublished, isNetworkSite, submitIndexNow, writePublishState, type NetworkSite } from './network'
 
 const args = process.argv.slice(2); const command = args.shift()
@@ -29,7 +30,7 @@ async function verifySite(path: string, site?: NetworkSite): Promise<void> {
   for(const file of html){const body=await readFile(file,'utf8');if(FORBIDDEN_WORDS.some(word=>body.includes(word)))throw new Error('distribution_wording_rejected');if(file.endsWith('404.html'))continue
     const title=body.match(/<title>(.*?)<\/title>/u)?.[1];const description=body.match(/<meta name="description" content="([^"]*)"/u)?.[1]
     if(!title||!description||titles.has(title)||descriptions.has(description))throw new Error('distribution_metadata_not_unique');titles.add(title);descriptions.add(description)
-    for(const match of body.matchAll(/href="([^"]+)"/gu)){const href=match[1]!.replaceAll('&amp;','&');if(href.startsWith('https://folkbench.com/')){const u=new URL(href);if(u.searchParams.get('utm_source')!=='github'||u.searchParams.get('utm_medium')!=='pages'||!u.searchParams.get('utm_campaign')||!u.searchParams.get('utm_content'))throw new Error('distribution_utm_missing')}
+    for(const match of body.matchAll(/href="([^"]+)"/gu)){const href=match[1]!.replaceAll('&amp;','&');if(href.startsWith('https://folkbench.com/')){const u=new URL(href);if(!isCtaUrl(site,u)&&(u.searchParams.get('utm_source')!=='github'||u.searchParams.get('utm_medium')!=='pages'||!u.searchParams.get('utm_campaign')||!u.searchParams.get('utm_content')))throw new Error('distribution_utm_missing')}
       if(site&&href.startsWith('https://'))checkNetworkLink(site,href)
       if(href.startsWith('/relay-rank/')||href.startsWith('/integrity-weekly/')){const relative=href.replace(/^\/(?:relay-rank|integrity-weekly)\//u,'');const target=join(path,relative.endsWith('/')||relative===''?`${relative}index.html`:relative);await stat(target)}
       if(/(?:[?&](?:aff|ref|partner)=|\/go\/|\/outbound)/iu.test(href))throw new Error('distribution_promotional_link')
