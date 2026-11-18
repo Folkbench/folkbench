@@ -1,45 +1,46 @@
 {
   "meta": {
     "name": "Folkbench Switch Desktop",
-    "description": "Compact, route-comparison desktop design for Folkbench Switch. System UI typography, a light lilac-gray or near-black canvas, quiet static grid, stepped surfaces, and restrained purple signals. Only sign-in uses continuous product lanes.",
+    "description": "Compact, route-comparison desktop design for Folkbench Switch on the Folkbench Console v2 language (2026-11-18): Inter at 400 / 500, a flat near-white or near-black canvas, neutral graphite hairlines, ink actions and chosen values, and the brand purple only as a line, focus ring or chart series. Only sign-in keeps its continuous product lanes and purple signals.",
     "source_references": [
       "Folkbench Switch accepted line-comparison interaction and theme review dated 2026-10-06",
-      "Folkbench Switch desktop assistant decisions ADR 0013 and ADR 0020"
+      "Folkbench Switch desktop assistant decisions ADR 0013 and ADR 0020",
+      "Folkbench Console v2 shared console language accepted 2026-11-17 and aligned 2026-11-18"
     ],
     "created_at": "2026-09-01"
   },
   "design_system": {
     "color": {
-      "palette_type": "Precision Spectrum v0.5 cool hairline / quiet pure-black semantic pair",
+      "palette_type": "Console v2 neutral graphite hairline / flat near-black semantic pair",
       "primary": {
-        "hex": "#171717",
-        "role": "Primary light-theme ink, headings, and filled primary actions"
+        "hex": "#0B0C0E",
+        "role": "Ink: headings, filled primary actions, links and chosen values (switches, checks, selected options)"
       },
       "secondary": {
-        "hex": "#F7F9FC",
-        "role": "Default light-theme application canvas behind grouped lists"
+        "hex": "#FCFCFD",
+        "role": "Default light-theme application canvas"
       },
       "accent": {
         "hex": "#533AFD",
-        "role": "Sparse action and focus signal; dark mode uses #9A92FF."
+        "role": "Brand line only: tab underline, selection rule, focus ring, chart series and the sign-in lanes; dark mode uses #9A92FF. Never a fill for buttons, links or badges."
       },
       "neutral": {
         "scale": [
           "#FFFFFF",
-          "#FAFBFD",
-          "#F7F9FC",
-          "#F1F4F8",
-          "#E3E8EE",
-          "#DAE1E9",
-          "#C5CFDB",
-          "#697386",
-          "#425466",
-          "#171717",
-          "#171918",
-          "#090A0A",
-          "#050606"
+          "#FCFCFD",
+          "#F8F8F9",
+          "#F4F4F5",
+          "#EEEEF0",
+          "#E4E4E7",
+          "#D4D4D8",
+          "#6F7278",
+          "#55585E",
+          "#0B0C0E",
+          "#151618",
+          "#0F1012",
+          "#08090A"
         ],
-        "usage": "Cool cool-gray hairlines in light, stepped pure-black surfaces in dark with inset 1px top sheen"
+        "usage": "Neutral graphite hairlines in light; stepped near-black surfaces in dark, flat without an inset top highlight"
       },
       "semantic": {
         "success": "#159570",
@@ -48,53 +49,53 @@
         "info": "#5469D4"
       },
       "surface": {
-        "background": "#F7F9FC",
+        "background": "#FCFCFD",
         "card": "#FFFFFF",
         "elevated": "#FFFFFF"
       },
-      "contrast_strategy": "Theme-resolved Precision Spectrum v0.5 semantic tokens across all pages, menus, charts, and overlays. Status uses a numeric or textual label as well as color.",
+      "contrast_strategy": "Theme-resolved Console v2 semantic tokens across all pages, menus, charts and overlays; every text role keeps at least 4.5:1. Status uses a numeric or textual label as well as color.",
       "theme_tokens": {
         "light": {
-          "background": "#F7F9FC",
-          "foreground": "#171717",
-          "chrome": "rgb(255 255 255 / 90%)",
+          "background": "#FCFCFD",
+          "foreground": "#0B0C0E",
+          "chrome": "rgb(252 252 253 / 88%)",
           "card": "#FFFFFF",
           "popover": "#FFFFFF",
-          "muted": "#F1F4F8",
-          "secondary": "#FAFBFD",
-          "muted_foreground": "#697386",
-          "border": "#DAE1E9",
-          "input": "#C5CFDB",
+          "muted": "#F4F4F5",
+          "secondary": "#F8F8F9",
+          "muted_foreground": "#6F7278",
+          "border": "#E4E4E7",
+          "input": "#D4D4D8",
           "signal": "#533AFD",
-          "signal_soft": "#F0EEFF",
+          "signal_soft": "#F4F4F5",
           "success": "#159570",
           "warning": "#C77B18",
           "error": "#D34242",
-          "primary": "#171717",
+          "primary": "#0B0C0E",
           "primary_foreground": "#FFFFFF",
-          "grid": "rgb(23 23 23 / 4%)",
-          "scrim": "rgb(14 15 14 / 36%)"
+          "grid": "none (flat canvas; sign-in lanes only)",
+          "scrim": "rgb(11 12 14 / 40%)"
         },
         "dark": {
-          "background": "#050606",
-          "foreground": "#F2F2EE",
-          "chrome": "rgb(9 10 10 / 92%)",
-          "card": "#090A0A",
-          "popover": "#121413",
-          "muted": "#101111",
-          "secondary": "#171918",
-          "muted_foreground": "#A6AAA3",
-          "border": "#202321",
-          "input": "#343835",
+          "background": "#08090A",
+          "foreground": "#F4F4F5",
+          "chrome": "rgb(8 9 10 / 88%)",
+          "card": "#0F1012",
+          "popover": "#151618",
+          "muted": "#17181B",
+          "secondary": "#0B0C0D",
+          "muted_foreground": "#8A8C93",
+          "border": "#232428",
+          "input": "#33343A",
           "signal": "#9A92FF",
-          "signal_soft": "#1B1A2B",
+          "signal_soft": "#17181B",
           "success": "#43D7A0",
           "warning": "#F4B860",
           "error": "#FF7777",
-          "primary": "#F2F2EE",
-          "primary_foreground": "#111211",
-          "grid": "rgb(255 255 255 / 4.5%)",
-          "scrim": "rgb(0 0 0 / 66%)"
+          "primary": "#F4F4F5",
+          "primary_foreground": "#0B0C0E",
+          "grid": "none (flat canvas; sign-in lanes only)",
+          "scrim": "rgb(6 7 7 / 72%)"
         }
       }
     },
@@ -186,20 +187,20 @@
       "border_radius": {
         "small": "6px",
         "medium": "8px",
-        "large": "14px",
+        "large": "12px",
         "pill": "9999px"
       },
       "border_usage": "One-pixel semantic boundaries for tables, panels, menus, and the compact header.",
       "divider_style": "Stable table rows and section gaps; no nested decorative rails."
     },
     "elevation": {
-      "shadow_style": "Very soft, low-opacity product elevation; public onboarding remains visually flat",
+      "shadow_style": "Flat: surfaces lift by colour step and a 1px line; only menus, popovers and dialogs carry the overlay shadow",
       "levels": {
         "low": "0 1px 2px rgb(24 24 24 / 5%), 0 8px 24px -20px rgb(24 24 24 / 28%)",
         "medium": "0 1px 2px rgb(24 24 24 / 7%), 0 14px 34px -24px rgb(24 24 24 / 36%)",
         "high": "var(--shadow-overlay)"
       },
-      "depth_cues": "Stepped surfaces, explicit borders, restrained shadow, active rails, and popover separation"
+      "depth_cues": "Stepped surfaces, explicit 1px borders, a 2px brand rule on the selected row or tab, and popover separation"
     },
     "iconography": {
       "style": "Monoline technical icons with consistent optical boxes",

@@ -51,6 +51,14 @@
       "continue": "Prepare connection →",
       "disclaimer": "Ranking data describes recent channel performance. It does not prove that your Key is active, has balance, or works with the selected tool. You will need your Key next. An API address on the ranking is filled in when the station published one.",
       "effectiveCost": "Effective session cost",
+      "billingValues": {
+        "conditional": "Conditional",
+        "contact_required": "Contact support",
+        "not_applicable": "Not applicable",
+        "not_verified": "Not verified",
+        "supported": "Supported",
+        "unsupported": "Not supported"
+      },
       "facts": {
         "customerService": "Support",
         "domesticInvoice": "CN invoice",
@@ -68,7 +76,7 @@
       "measuredAt": "Last measured",
       "noCacheQuote": "No cache quote",
       "notFound": "This channel is not in the published ranking for this model.",
-      "openWebsite": "Open station website ↗",
+      "openWebsite": "Open station website",
       "openWebsiteShort": "Website",
       "outputPrice": "Output / million tokens",
       "sampleSize": "Recent samples",

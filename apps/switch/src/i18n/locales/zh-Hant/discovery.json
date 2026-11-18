@@ -51,6 +51,14 @@
       "continue": "準備接入 →",
       "disclaimer": "榜單數據僅說明該管道近期表現，不代表您的 Key 已開通、餘額充足或目前工具已適配。下一步需要您的 Key。榜單提供 API 位址時會預先填入。",
       "effectiveCost": "折算工作階段成本",
+      "billingValues": {
+        "conditional": "有條件支援",
+        "contact_required": "需聯絡客服",
+        "not_applicable": "不適用",
+        "not_verified": "未核實",
+        "supported": "支援",
+        "unsupported": "不支援"
+      },
       "facts": {
         "customerService": "客服回應",
         "domesticInvoice": "國內發票",
@@ -68,7 +76,7 @@
       "measuredAt": "最近評測",
       "noCacheQuote": "未報快取價",
       "notFound": "該管道目前不在這個模型的已發布榜單中。",
-      "openWebsite": "開啟中轉站官網 ↗",
+      "openWebsite": "開啟中轉站官網",
       "openWebsiteShort": "官網",
       "outputPrice": "輸出 / 百萬 Token",
       "sampleSize": "近期樣本",
