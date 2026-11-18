@@ -42,8 +42,10 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
-  --color-brand-signal: var(--brand-signal);
-  --color-brand-signal-foreground: var(--brand-signal-foreground);
+  /* Console v2 (2026-11-18): the brand-signal utilities paint actions, links and chosen values,
+     which are ink; the purple itself (--brand-signal) is kept for lines, focus and charts. */
+  --color-brand-signal: var(--brand-action);
+  --color-brand-signal-foreground: var(--brand-action-foreground);
   --color-switch: var(--switch);
   --color-chrome: var(--chrome);
   --color-scrim: var(--scrim);
@@ -72,7 +74,7 @@
     Consolas, 'Liberation Mono', monospace;
   --track-page: -0.04em;
   --track-section: -0.02em;
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --app-header-height: 3.5rem;
   --app-workspace-width: 70rem;
   --app-page-gutter: clamp(1rem, 2.5vw, 1.75rem);
@@ -86,21 +88,21 @@
   --ease-interface: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
-  --background: #f7f9fc;
-  --foreground: #171717;
-  --chrome: rgb(255 255 255 / 90%);
+  --background: #fcfcfd;
+  --foreground: #0b0c0e;
+  --chrome: rgb(252 252 253 / 88%);
   --card: #ffffff;
   --card-foreground: var(--foreground);
   --popover: #ffffff;
   --popover-foreground: var(--foreground);
-  --primary: #171717;
+  --primary: #0b0c0e;
   --primary-foreground: #ffffff;
-  --secondary: #fafbfd;
+  --secondary: #f8f8f9;
   --secondary-foreground: var(--foreground);
-  --muted: #f1f4f8;
-  --muted-foreground: #697386;
-  --accent: #f0eeff;
-  --accent-foreground: #3c2ccf;
+  --muted: #f4f4f5;
+  --muted-foreground: #6f7278;
+  --accent: #f4f4f5;
+  --accent-foreground: #0b0c0e;
   --destructive: #d34242;
   --destructive-foreground: #ffffff;
   --success: #159570;
@@ -109,17 +111,19 @@
   --warning-foreground: #ffffff;
   --info: #5469d4;
   --info-foreground: #ffffff;
-  --border: #dae1e9;
-  --border-subtle: #e3e8ee;
-  --input: #c5cfdb;
-  --switch: #159570;
+  --border: #e4e4e7;
+  --border-subtle: #eeeef0;
+  --input: #d4d4d8;
+  --switch: var(--primary);
   --ring: #635bff;
   --surface: var(--card);
   --surface-foreground: var(--foreground);
   --brand-signal: #533afd;
   --brand-signal-foreground: #ffffff;
+  --brand-action: var(--primary);
+  --brand-action-foreground: var(--primary-foreground);
   --fb-sheen: 0 0 #0000;
-  --fb-data-security-level-0-text: #425466;
+  --fb-data-security-level-0-text: #55585e;
   --fb-data-security-level-1-text: #8d5a0c;
   --fb-data-security-level-2-text: #1d4ed8;
   --fb-data-security-level-3-text: #0e7490;
@@ -130,7 +134,7 @@
   --fb-signal-warning-border: #f0cb8a;
   --fb-signal-error-surface: #fff0f0;
   --fb-signal-error-border: #efb5b5;
-  --fb-ranking-track: #e5edf5;
+  --fb-ranking-track: #ececef;
   --fb-cost-in: #86b6ef;
   --fb-cost-out: #256abf;
   --chart-1: #533afd;
@@ -149,10 +153,9 @@
   --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
-  --canvas-grid: rgb(23 23 23 / 4%);
-  --shadow-overlay:
-    0 24px 64px -28px rgb(14 15 14 / 38%), 0 8px 20px -10px rgb(14 15 14 / 18%);
-  --scrim: rgb(14 15 14 / 36%);
+  --canvas-grid: rgb(11 12 14 / 4%);
+  --shadow-overlay: 0 1px 2px rgb(11 12 14 / 4%), 0 8px 24px rgb(11 12 14 / 8%);
+  --scrim: rgb(11 12 14 / 40%);
   --onboarding-background: #050606;
   --onboarding-foreground: #f2f2ee;
   color: var(--foreground);
@@ -172,18 +175,18 @@
     'Noto Sans TC', 'Noto Sans SC Variable', system-ui, sans-serif;
 }
 .dark {
-  --background: #050606;
-  --foreground: #f2f2ee;
-  --chrome: rgb(9 10 10 / 92%);
-  --card: #090a0a;
-  --popover: #121413;
-  --primary: #f2f2ee;
-  --primary-foreground: #111211;
-  --secondary: #171918;
-  --muted: #101111;
-  --muted-foreground: #a6aaa3;
-  --accent: #1b1a2b;
-  --accent-foreground: #f2f2ee;
+  --background: #08090a;
+  --foreground: #f4f4f5;
+  --chrome: rgb(8 9 10 / 88%);
+  --card: #0f1012;
+  --popover: #151618;
+  --primary: #f4f4f5;
+  --primary-foreground: #0b0c0e;
+  --secondary: #0b0c0d;
+  --muted: #17181b;
+  --muted-foreground: #8a8c93;
+  --accent: #17181b;
+  --accent-foreground: #f4f4f5;
   --destructive: #ff7777;
   --destructive-foreground: #111211;
   --success: #43d7a0;
@@ -192,15 +195,15 @@
   --warning-foreground: #111211;
   --info: #aab6a9;
   --info-foreground: #111211;
-  --border: #202321;
-  --border-subtle: #171a19;
-  --input: #343835;
-  --switch: #43d7a0;
-  --ring: #f2f2ee;
+  --border: #232428;
+  --border-subtle: #1a1b1e;
+  --input: #33343a;
+  --switch: var(--primary);
+  --ring: #f4f4f5;
   --brand-signal: #9a92ff;
   --brand-signal-foreground: #111211;
-  --fb-sheen: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
-  --fb-data-security-level-0-text: #a6aaa3;
+  --fb-sheen: 0 0 #0000;
+  --fb-data-security-level-0-text: #a5a7ad;
   --fb-data-security-level-1-text: #f6cc89;
   --fb-data-security-level-2-text: #93c5fd;
   --fb-data-security-level-3-text: #67e8f9;
@@ -211,7 +214,7 @@
   --fb-signal-warning-border: #785728;
   --fb-signal-error-surface: #351c24;
   --fb-signal-error-border: #7c3849;
-  --fb-ranking-track: #30322e;
+  --fb-ranking-track: #232428;
   --fb-cost-in: #1c5cab;
   --fb-cost-out: #6da7ec;
   --chart-1: #9a92ff;
@@ -223,9 +226,8 @@
   --chart-7: #5ee0b0;
   --chart-8: #c4a8ff;
   --canvas-grid: rgb(255 255 255 / 4.5%);
-  --shadow-overlay:
-    0 24px 64px -28px rgb(0 0 0 / 68%), 0 8px 20px -10px rgb(0 0 0 / 44%);
-  --scrim: rgb(0 0 0 / 66%);
+  --shadow-overlay: 0 0 0 1px #232428, 0 12px 32px rgb(0 0 0 / 50%);
+  --scrim: rgb(6 7 7 / 72%);
   color-scheme: dark;
 }
 
@@ -246,6 +248,10 @@
   :focus-visible:not([data-slot]) {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
+  }
+  /* Chosen values are ink (Console v2), never the browser's default blue. */
+  input:is([type='checkbox'], [type='radio'], [type='range']) {
+    accent-color: var(--primary);
   }
 }
 
@@ -297,7 +303,6 @@ body::-webkit-scrollbar {
   background: var(--chrome);
   -webkit-backdrop-filter: blur(18px) saturate(145%);
   backdrop-filter: blur(18px) saturate(145%);
-  box-shadow: var(--fb-sheen);
   border-bottom: 1px solid var(--border);
 }
 .switch-navigation {
@@ -309,8 +314,8 @@ body::-webkit-scrollbar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 2.25rem;
-  padding: 0 0.875rem;
+  height: 2rem;
+  padding: 0 0.75rem;
   border-radius: var(--radius-md);
   font-size: 0.8125rem;
   line-height: 1;
@@ -346,6 +351,8 @@ html[data-os='macos'] .switch-navigation a > span {
   background-size: 68px 68px;
   background-repeat: repeat;
   mask-image: linear-gradient(to bottom, black, transparent 36rem);
+  /* Console v2 (2026-11-18): the workspace canvas is flat; only sign-in keeps its lanes. */
+  display: none;
 }
 .switch-workspace {
   display: flex;
@@ -361,7 +368,7 @@ html[data-os='macos'] .switch-navigation a > span {
   padding-top: 0.5rem;
 }
 .usage-workspace {
-  padding-top: 0.75rem;
+  padding-top: 1.75rem;
 }
 .home-tool-block {
   display: flex;
@@ -456,9 +463,10 @@ html[data-os='macos'] .switch-navigation a > span {
   position: relative;
   flex: 0 0 auto;
   min-width: max-content;
-  min-height: 2.75rem;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  min-height: 1.75rem;
+  padding: 0.25rem 0.75rem;
+  line-height: 1.25rem;
+  font-size: 0.8125rem;
   text-align: center;
   transition: color var(--motion-fast);
 }
@@ -649,9 +657,10 @@ html[data-os='macos'] .switch-navigation a > span {
   height: 1.75rem;
   flex: none;
   place-items: center;
-  border-radius: 0.5rem;
-  background: color-mix(in srgb, var(--brand-signal) 12%, var(--card));
-  color: var(--brand-signal);
+  border-radius: var(--radius-md);
+  background: var(--muted);
+  color: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--border);
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -733,7 +742,7 @@ html[data-os='macos'] .switch-navigation a > span {
   transition: background-color var(--motion-fast);
 }
 .usage-tool-row[data-selected='true'] {
-  background: color-mix(in srgb, var(--brand-signal) 10%, var(--card));
+  background: var(--muted);
 }
 .usage-tool-row[data-selected='true']::before {
   content: '';
@@ -930,7 +939,7 @@ html[data-os='macos'] .switch-navigation a > span {
   background: color-mix(in srgb, var(--muted) 45%, var(--card));
 }
 .backup-switcher-row[data-current='true'] {
-  background: color-mix(in srgb, var(--brand-signal) 10%, var(--card));
+  background: color-mix(in srgb, var(--muted) 70%, var(--card));
 }
 .backup-switcher-row[data-current='true']::before {
   content: '';
@@ -943,7 +952,7 @@ html[data-os='macos'] .switch-navigation a > span {
 }
 .backup-switcher-row[data-dragging='true'] {
   z-index: 2;
-  border-color: color-mix(in srgb, var(--brand-signal) 40%, var(--border));
+  border-color: var(--input);
   background: var(--card);
   box-shadow:
     0 10px 28px color-mix(in srgb, var(--foreground) 12%, transparent),
@@ -984,8 +993,9 @@ html[data-os='macos'] .switch-navigation a > span {
   padding: 0.0625rem 0.375rem;
   font-size: 11px;
   line-height: 1.4;
-  background: color-mix(in srgb, var(--brand-signal) 14%, var(--card));
-  color: var(--brand-signal);
+  background: var(--muted);
+  color: var(--muted-foreground);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 .backup-switcher-actions {
   display: flex;
@@ -1107,6 +1117,9 @@ html[data-os='macos'] .switch-navigation a > span {
    It stays outside the light/dark token pair on purpose; pair it with the
    `dark` class so nested primitives resolve their own semantic tokens. */
 .mf-onboarding-surface {
+  /* The sign-in lanes keep the brand colour for their signals on this fixed dark surface. */
+  --brand-action: var(--brand-signal);
+  --brand-action-foreground: var(--brand-signal-foreground);
   position: relative;
   isolation: isolate;
   display: flex;
@@ -1469,10 +1482,43 @@ html[data-os='macos'] .switch-navigation a > span {
 
 .fbd-panel {
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   background: var(--card);
-  box-shadow: var(--fb-sheen);
   overflow: hidden;
+}
+/* The view tabs are a hairline row on the canvas, not a card of their own. */
+.fbd-panel:has(> div > .fbd-ptabs) {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+.fbd-panel:has(> div > .fbd-ptabs) > div:first-child {
+  padding-inline: 0;
+  border-bottom: 1px solid var(--border);
+}
+.fbd-panel:has(> div > .fbd-ptabs) > div:first-child {
+  align-items: flex-end;
+  padding-block: 0;
+}
+.fbd-panel:has(> div > .fbd-ptabs) > div:first-child > :not(.fbd-ptabs) {
+  margin-bottom: 0.25rem;
+}
+/* Controls beside the tabs are toolbar-sized so they sit on the tab line. */
+.fbd-panel:has(> div > .fbd-ptabs) .switch-segmented {
+  padding: 0.125rem;
+}
+.fbd-panel:has(> div > .fbd-ptabs) .switch-segmented button {
+  min-height: 1.625rem;
+  padding-block: 0.125rem;
+}
+.fbd-panel:has(> div > .fbd-ptabs) .fbd-ptabs {
+  gap: 1.25rem;
+  padding: 0;
+  border-bottom: 0;
+}
+.fbd-panel:has(> div > .fbd-ptabs) .fbd-tab {
+  padding-inline: 0;
 }
 .fbd-ptabs {
   display: flex;
@@ -1548,7 +1594,7 @@ table.fbd-t {
   font-weight: 500;
   text-align: left;
   padding: 0.625rem 0.75rem;
-  background: var(--muted);
+  background: var(--card);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
@@ -1605,7 +1651,7 @@ th[aria-sort] .fbd-sortbtn {
 .fbd-sorticon[data-state='asc'] .fbd-sorticon-up,
 .fbd-sorticon[data-state='desc'] .fbd-sorticon-down {
   opacity: 1;
-  color: var(--brand-signal);
+  color: var(--foreground);
 }
 
 .fbd-hbar {
@@ -1624,18 +1670,7 @@ th[aria-sort] .fbd-sortbtn {
   bottom: 0;
   border-radius: 2px;
 }
-.fbd-hfill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--card) 26%, transparent),
-    transparent 80%
-  );
-  pointer-events: none;
-}
+/* Bars are flat fills; the earlier gloss overlay is retired (Console v2). */
 .fbd-whisk {
   position: absolute;
   top: 50%;

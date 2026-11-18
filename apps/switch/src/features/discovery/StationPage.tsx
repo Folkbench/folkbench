@@ -62,6 +62,17 @@ import { cn } from '@/lib/utils'
 
 export function StationPage() {
   const { t, i18n } = useTranslation()
+  // Invoice and refund arrive as option codes; show the localized label, and an unknown code as-is.
+  const billingLabels: Record<string, string> = {
+    conditional: t('discovery.detail.billingValues.conditional'),
+    contact_required: t('discovery.detail.billingValues.contact_required'),
+    not_applicable: t('discovery.detail.billingValues.not_applicable'),
+    not_verified: t('discovery.detail.billingValues.not_verified'),
+    supported: t('discovery.detail.billingValues.supported'),
+    unsupported: t('discovery.detail.billingValues.unsupported'),
+  }
+  const billingValue = (value: string | null | undefined) =>
+    value ? (billingLabels[value] ?? value) : '—'
   const locale = normalizeLocale(i18n.resolvedLanguage)
   const navigate = useNavigate()
   const [currency, changeCurrency] = useDisplayCurrency()
@@ -529,7 +540,7 @@ export function StationPage() {
                       step={5}
                       value={hitRatePct}
                       onChange={(e) => setHitRatePct(Number(e.target.value))}
-                      className="h-1.5 w-28 accent-[var(--brand-signal)]"
+                      className="h-1.5 w-28 accent-[var(--brand-action)]"
                     />
                     <span className="w-9 font-medium text-foreground tabular-nums">
                       {hitRatePct}%
@@ -726,7 +737,7 @@ export function StationPage() {
                     {t('discovery.detail.facts.domesticInvoice')}
                   </span>
                   <span className="text-right">
-                    {profile?.billing.domesticInvoice ?? '—'}
+                    {billingValue(profile?.billing.domesticInvoice)}
                   </span>
                 </div>
                 <div className="flex justify-between gap-4 px-4 py-2.5">
@@ -734,7 +745,7 @@ export function StationPage() {
                     {t('discovery.detail.facts.overseasInvoice')}
                   </span>
                   <span className="text-right">
-                    {profile?.billing.overseasInvoice ?? '—'}
+                    {billingValue(profile?.billing.overseasInvoice)}
                   </span>
                 </div>
                 <div className="flex justify-between gap-4 px-4 py-2.5">
@@ -742,7 +753,7 @@ export function StationPage() {
                     {t('discovery.detail.facts.refund')}
                   </span>
                   <span className="text-right">
-                    {profile?.billing.refund ?? '—'}
+                    {billingValue(profile?.billing.refund)}
                   </span>
                 </div>
               </div>

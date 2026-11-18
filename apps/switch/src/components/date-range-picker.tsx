@@ -158,7 +158,7 @@ function DateRangeField({
             <Button
               variant="outline"
               id="usage-date"
-              className="h-11 justify-start px-3 font-normal"
+              className="h-9 justify-start px-3 font-normal"
             />
           }
         >

@@ -51,6 +51,14 @@
       "continue": "准备接入 →",
       "disclaimer": "榜单数据只说明该渠道近期表现，不代表你的 Key 已开通、余额充足或当前工具已适配。下一步需要你的 Key。榜单提供了 API 地址时会预先填上。",
       "effectiveCost": "折算会话成本",
+      "billingValues": {
+        "conditional": "有条件支持",
+        "contact_required": "需联系客服",
+        "not_applicable": "不适用",
+        "not_verified": "未核实",
+        "supported": "支持",
+        "unsupported": "不支持"
+      },
       "facts": {
         "customerService": "客服响应",
         "domesticInvoice": "国内发票",
@@ -68,7 +76,7 @@
       "measuredAt": "最近评测",
       "noCacheQuote": "未报缓存价",
       "notFound": "该渠道目前不在这个模型的已发布榜单中。",
-      "openWebsite": "打开站点官网 ↗",
+      "openWebsite": "打开站点官网",
       "openWebsiteShort": "官网",
       "outputPrice": "输出 / 百万 Token",
       "sampleSize": "近期样本",
