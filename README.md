@@ -58,6 +58,7 @@ Folkbench 帮你挑线路、配好客户端，不是自建代理教程。
 - **Claude Code 中转站：** 先看 [Claude 中转站测评](https://folkbench.com/claude-zhongzhuanzhan-ceping?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=tool-claude-ceping)，对比可用率、首字延迟和会话成本。
 - **Codex 中转站：** 先看 [GPT / Codex 中转站测评](https://folkbench.com/gpt-codex-zhongzhuanzhan-ceping?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=tool-codex-ceping)。
 - **一键切换配置：** 选好线路后，用 [Folkbench Switch](https://folkbench.com/switch?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=tool-switch) 在 Claude Code、Codex 和 Gemini CLI 之间切换中转站配置。
+- **中转站横向对比：** 想把几家中转站放在一起看，用 [Folkbench 中转站对比](https://folkbench.com/stations/compare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=tool-compare) 并排比较。排序按站点规则展示，包含合作档位和运营加权。
 
 ### 中转站排行榜
 
@@ -235,6 +236,7 @@ Switch 在本地管理工具配置。公开目录、模型查询和服务商请�
 - [中转站实时检测（用自己的 Key）](https://folkbench.com/evaluations/api-quality?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=links-check)
 - [Claude 中转站测评](https://folkbench.com/claude-zhongzhuanzhan-ceping?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=links-claude-ceping)
 - [GPT / Codex 中转站测评](https://folkbench.com/gpt-codex-zhongzhuanzhan-ceping?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=links-codex-ceping)
+- [中转站对比](https://folkbench.com/stations/compare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=links-compare)
 - 公开快照子站（只读 [folkbench-data](https://github.com/Folkbench/folkbench-data) 归档；排序按站点规则，含合作档位与运营加权）：
   - [AI 中转站排行](https://folkbench.github.io/relay-rank/)：按模型的每日公开快照与历史名次
   - [中转站检测周报](https://folkbench.github.io/integrity-weekly/)：模型身份探针的每周汇总
