@@ -5,7 +5,9 @@ on:
     paths:
       - 'apps/switch/**'
       - '.github/workflows/switch-*.yml'
-      - 'scripts/**'
+      - 'scripts/check-changes.mjs'
+      - 'scripts/check-source-hygiene.mjs'
+      - 'scripts/ci-areas.mjs'
       - 'package.json'
       - 'bun.lock'
       - 'docs/switch/CHANGELOG.md'
