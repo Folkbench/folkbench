@@ -135,7 +135,7 @@ test('paid presets remain available without rankings and do not inherit unrelate
     new URL('src/features/home/relay-presets.json', root), 'utf8'
   ))
   const offline = easyPresetStations(presets, [])
-  assert.deepEqual(offline.map((row) => row.stationName), ['Modelflare', 'IKunCode', '智流 FluxLane'])
+  assert.deepEqual(offline.map((row) => row.stationName), ['Modelflare', 'IKunCode', '智流 FluxLane', 'Sidrune AI'])
   assert.ok(offline.every((row) => row.baseUrl.startsWith('https://')))
   assert.ok(offline.every((row) => !row.channelId && !row.modelId))
   const withOtherStation = easyPresetStations(presets, [

@@ -41,7 +41,7 @@ test('all README sponsor tables contain the currently delivered sponsorships', a
     const text = await readFile(new URL(`../${name}`, import.meta.url), 'utf8')
     const pattern = /href="https:\/\/folkbench\.com\/go\/([a-z0-9-]+)\?source=readme/g
     const slugs = [...new Set(Array.from(text.matchAll(pattern), (match) => match[1]))]
-    assert.deepEqual(slugs, ['modelflare', 'ikuncode', 'fluxlane'], name)
+    assert.deepEqual(slugs, ['modelflare', 'ikuncode', 'fluxlane', 'merchant-955eb49b-34a'], name)
   }
 })
 

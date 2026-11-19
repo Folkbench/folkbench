@@ -1259,6 +1259,7 @@ mod tests {
             ("merchant-a3165bb8-847", "modelflare"),
             ("merchant-b8db6d82-ed2", "ikuncode"),
             ("merchant-7281389a-354", "fluxlane"),
+            ("merchant-955eb49b-34a", "merchant-955eb49b-34a"),
         ] {
             assert_eq!(
                 resolve_preset_relay_website(station_id).unwrap(),
