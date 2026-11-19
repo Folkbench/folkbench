@@ -1,5 +1,14 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.10 — Beta
+
+- 预设线路新增 Sidrune AI：简易模式、添加向导和专业模式均可直接选择，注册链接经过 Folkbench 跳出页。
+- 发现页站点详情的发票与退款信息显示为本地化文字，并统一客户端设计令牌。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.9 — Beta
 
 - 跨模型帕累托性价比前沿图默认启用「降智折算」推荐视图，前沿列表直接提供「注册 ↗」与「接入」快捷操作，并统一发现服务各视图的线路接入与货币切换交互。

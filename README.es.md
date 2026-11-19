@@ -41,6 +41,10 @@ Estas estaciones apoyan las mediciones continuas de Folkbench. [Hazte patrocinad
 <td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>
 <td><a href="https://folkbench.com/go/fluxlane?source=readme_es"><b>智流 FluxLane</b></a><br>智流 FluxLane tiene muchos modelos y rutas, tanto internacionales como de China, y la forma de conexión es uniforme: compatible directamente con el SDK de OpenAI. Además de esa cobertura, la plataforma incluye enrutado, uso, coste y latencia, así que encaja con desarrolladores y equipos que se quedan. Para compras de empresas y universidades tiene una ventaja clara: puede emitir factura, contrato y orden de compra.</td>
 </tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/merchant-955eb49b-34a?source=readme_es"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/sidrune-dark.png"><img src="docs/images/sponsors/sidrune-light.png" alt="Sidrune AI" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/merchant-955eb49b-34a?source=readme_es"><b>Sidrune AI</b></a><br>Claude Max con ~85 % de descuento para Claude Code, además de 13 rutas más de la API de Claude. Pago por uso; emite facturas y acepta transferencias bancarias de empresa.</td>
+</tr>
 </table>
 
 ---

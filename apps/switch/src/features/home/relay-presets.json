@@ -16,5 +16,11 @@
     "stationName": "智流 FluxLane",
     "slug": "fluxlane",
     "baseUrl": "https://api.fluxlane.cn"
+  },
+  {
+    "stationId": "merchant-955eb49b-34a",
+    "stationName": "Sidrune AI",
+    "slug": "merchant-955eb49b-34a",
+    "baseUrl": "https://cn.sidrune.ai/v1"
   }
 ]

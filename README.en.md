@@ -41,6 +41,10 @@ These relays support Folkbench's ongoing benchmarks. [Become a sponsor →](http
 <td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" alt="智流 FluxLane" width="180"></picture></a></td>
 <td><a href="https://folkbench.com/go/fluxlane?source=readme_en"><b>FluxLane (智流)</b></a><br>An AI API gateway for developers and teams: full-capability, stable access to global models, supporting GPT, Claude, Gemini, DeepSeek, GLM, and other mainstream models as well as major global model-vendor protocols. The platform provides policy-based routing and multi-route failover, making long-term integration and cost accounting easier for teams in China. For enterprise and university procurement in China, it can sign contracts, accept wire transfers, and provide invoices, purchase orders, and related materials (subject to commercial confirmation). Publishes model capability evaluation reports, with multipliers as low as 0.1×, and new registrants receive a $2 trial credit.</td>
 </tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/merchant-955eb49b-34a?source=readme_en"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/sidrune-dark.png"><img src="docs/images/sponsors/sidrune-light.png" alt="Sidrune AI" width="180"></picture></a></td>
+<td><a href="https://folkbench.com/go/merchant-955eb49b-34a?source=readme_en"><b>Sidrune AI</b></a><br>Claude Max at ~85% off for Claude Code, plus 13 more Claude API routes. Pay as you go; invoices and business bank transfers supported.</td>
+</tr>
 </table>
 
 ---

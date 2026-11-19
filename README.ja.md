@@ -31,6 +31,10 @@
 <td width="200" align="center"><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/fluxlane-dark.png"><img src="docs/images/sponsors/fluxlane-light.png" width="180" alt="FluxLane（智流）"></picture></a></td>
 <td><a href="https://folkbench.com/go/fluxlane?source=readme_ja"><b>FluxLane（智流）</b></a><br>国内外の多様なモデルを網羅し、OpenAI SDK と完全互換。ルーティング、利用量、コスト、遅延を一元管理でき、企業や教育機関向けの請求書・契約書対応が強みです。</td>
 </tr>
+<tr>
+<td width="200" align="center"><a href="https://folkbench.com/go/merchant-955eb49b-34a?source=readme_ja"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/sidrune-dark.png"><img src="docs/images/sponsors/sidrune-light.png" width="180" alt="Sidrune AI"></picture></a></td>
+<td><a href="https://folkbench.com/go/merchant-955eb49b-34a?source=readme_ja"><b>Sidrune AI</b></a><br>Claude Code 向けの Claude Max を約 85% オフで提供。ほかに Claude API ルートが 13 本あります。従量課金で、請求書の発行と法人振込に対応しています。</td>
+</tr>
 </table>
 
 ---
