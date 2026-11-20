@@ -53,7 +53,7 @@ The site also supports several payment methods, which can be checked directly on
 
 Oriented toward domestic business users and multi-channel access. The minimum top-up is low at ¥5, any amount can be invoiced, and support is available through online customer service and Enterprise WeChat. The current profile still lists Claude stability as an area for improvement and has no recent user-experience data; it is most relevant for users who value invoicing and low-cost trials, with the target channel checked first.
 
-<h3><a href="https://cbapi.ai/sign-up?ref=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">Cloudbridge</a></h3>
+<h3><a href="https://cbapi.ai/sign-up?aff=XVuJ&utm_source=folkbench&utm_medium=referral&utm_campaign=folkbench-blog-readme" target="_blank" rel="noopener noreferrer">Cloudbridge</a></h3>
 
 Its main features are multi-channel access, an overseas site, multilingual support, and USD billing, with a $1 minimum top-up and published coverage for GPT, Claude, Grok, DeepSeek, and other models. Folkbench currently marks it as a newly opened site, so reliability and response speed need more data; it is useful for comparing overseas settlement and domestic-model pricing, while stability should be verified separately.
 
