@@ -1,6 +1,5 @@
 name: Folkbench RU README
 # Раз в сутки обновляет только блок ru-catalog в README.ru.md из публичного снимка ru.folkbench.com.
-# Выключено, пока в настройках репозитория не задана переменная RU_README_ENABLED=true.
 # Коммит идёт через обычные hooks репозитория — так же, как в daily-public-snapshot.yml.
 on:
   schedule:
@@ -13,7 +12,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   update:
-    if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main' && vars.RU_README_ENABLED == 'true'
+    if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
     timeout-minutes: 40
     steps:
