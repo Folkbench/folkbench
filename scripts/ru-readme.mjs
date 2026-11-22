@@ -55,7 +55,7 @@ function validate(catalog) {
   };
   expect(catalog !== null && typeof catalog === "object", "снимок не объект");
   if (problems.length > 0) return problems;
-  expect(catalog.schema_version === "1", `неизвестная версия схемы ${JSON.stringify(catalog.schema_version)}`);
+  expect(catalog.schema_version === "3", `неизвестная версия схемы ${JSON.stringify(catalog.schema_version)}`);
   expect(isString(catalog.snapshot_id) && /^[0-9a-f]{16}$/.test(catalog.snapshot_id), "snapshot_id");
   expect(isNullableString(catalog.measured_at), "measured_at");
   expect(isString(catalog.node) && catalog.node.length <= 40, "node");
@@ -66,14 +66,15 @@ function validate(catalog) {
     expect(isString(provider?.id) && /^[a-z0-9][a-z0-9-]{0,63}$/.test(provider.id), `${at}.id`);
     expect(isString(provider?.name) && provider.name.length <= 60, `${at}.name`);
     expect(isSiteUrl(provider?.detail_url), `${at}.detail_url`);
-    expect(typeof provider?.is_affiliated === "boolean", `${at}.is_affiliated`);
-    expect(provider?.protocol === "anthropic" || provider?.protocol === "openai", `${at}.protocol`);
     expect(isString(provider?.verified_at) && /^\d{4}-\d{2}-\d{2}$/.test(provider.verified_at), `${at}.verified_at`);
     expect(Array.isArray(provider?.payment_methods_verified) && provider.payment_methods_verified.every(isString), `${at}.payment_methods_verified`);
     expect(Array.isArray(provider?.routes) && provider.routes.length > 0, `${at}.routes`);
     for (const [j, route] of (Array.isArray(provider?.routes) ? provider.routes : []).entries()) {
       const r = `${at}.routes[${j}]`;
       expect(isString(route?.model_id) && route.model_id.length <= 128, `${r}.model_id`);
+      const protocols = route?.protocols;
+      expect(Array.isArray(protocols) && protocols.length > 0 && new Set(protocols).size === protocols.length
+        && protocols.every((protocol) => isString(protocol) && Object.hasOwn(PROTOCOL, protocol)), `${r}.protocols`);
       expect(isSiteUrl(route?.model_url), `${r}.model_url`);
       expect(isNullableString(route?.price_ref), `${r}.price_ref`);
       const m = route?.measurement;
@@ -112,7 +113,12 @@ function formatUtc(iso) {
   return `${pad(date.getUTCDate())}.${pad(date.getUTCMonth() + 1)}.${date.getUTCFullYear()}, ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())} UTC`;
 }
 
-const PROTOCOL = { anthropic: "Anthropic Messages", openai: "OpenAI Chat Completions" };
+const PROTOCOL = {
+  anthropic: "Anthropic Messages",
+  openai: "OpenAI Chat Completions",
+  "openai-responses": "OpenAI Responses",
+  google: "Gemini GenerateContent",
+};
 
 function render(catalog) {
   const lines = [];
@@ -124,14 +130,14 @@ function render(catalog) {
     "| --- | --- | --- | ---: | ---: | --- | --- | --- |",
   );
   for (const provider of catalog.providers) {
-    const name = `[${cell(provider.name)}](${withUtm(provider.detail_url)})${provider.is_affiliated ? " · аффилирован" : ""}`;
+    const name = `[${cell(provider.name)}](${withUtm(provider.detail_url)})`;
     const payments = provider.payment_methods_verified.length === 0 ? "не проверено" : provider.payment_methods_verified.map(cell).join(", ");
     for (const route of provider.routes) {
       const m = route.measurement;
       const availability = m.attempts === 0 || m.availability_pct === null ? "нет данных" : `${narrow(oneDecimal.format(m.availability_pct))}${NNBSP}% (${narrow(int.format(m.attempts))} ${plural(m.attempts, "попытка", "попытки", "попыток")})`;
       const ttft = m.ttft_p50_ms === null ? "—" : `${narrow(int.format(m.ttft_p50_ms))}${NNBSP}мс`;
       lines.push(
-        `| ${name} | [\`${route.model_id.replace(/`/g, "")}\`](${withUtm(route.model_url)}) | ${PROTOCOL[provider.protocol]} | ${availability} | ${ttft} | ${route.price_ref === null ? "не проверена" : cell(route.price_ref)} | ${payments} | ${formatDate(provider.verified_at)} |`,
+        `| ${name} | [\`${route.model_id.replace(/`/g, "")}\`](${withUtm(route.model_url)}) | ${route.protocols.map((protocol) => PROTOCOL[protocol]).join(" / ")} | ${availability} | ${ttft} | ${route.price_ref === null ? "не проверена" : cell(route.price_ref)} | ${payments} | ${formatDate(provider.verified_at)} |`,
       );
     }
   }
