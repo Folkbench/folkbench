@@ -88,14 +88,15 @@ export async function verifySubsite(root:string,site:Subsite,snapshot:PublicData
   await visit(root)
   const forbidden=FORBIDDEN_WORDS
   const titles=new Set<string>(),descriptions=new Set<string>(),urls=new Set<string>()
-  for(const path of htmlFiles){const body=await readFile(path,'utf8');if(forbidden.some(word=>body.includes(word)))throw new Error('subsite_wording_rejected');if(path.endsWith('/404.html'))continue
+  const rootPosix=resolve(root).replaceAll('\\','/')
+  for(const path of htmlFiles){const body=await readFile(path,'utf8');if(forbidden.some(word=>body.includes(word)))throw new Error('subsite_wording_rejected');if(path.replaceAll('\\','/').endsWith('/404.html'))continue
     if(!body.includes('lang="zh-CN"')||!body.includes(SUBSITE_NOTICE)||!body.includes(snapshot.snapshot_version)||!body.includes(snapshot.published_at))throw new Error('subsite_provenance_missing')
     const title=body.match(/<title>(.*?)<\/title>/u)?.[1],description=body.match(/name="description" content="([^"]*)"/u)?.[1],canonical=body.match(/rel="canonical" href="([^"]*)"/u)?.[1]
     if(!title||!description||titles.has(title)||descriptions.has(description)||!canonical?.startsWith(origin+'/'))throw new Error('subsite_metadata_invalid')
     titles.add(title);descriptions.add(description);urls.add(canonical)
     for(const match of body.matchAll(/(?:href|src)="([^"]+)"/gu)){
       const href=match[1]!.replaceAll('&amp;','&')
-      if(href.startsWith('/')){const url=new URL(href,origin);if(url.origin!==origin)throw new Error('subsite_external_relative_link');const target=resolve(root,'.'+url.pathname+(url.pathname.endsWith('/')?'index.html':''));if(!target.startsWith(resolve(root)+'/'))throw new Error('subsite_link_escape');await readFile(target)}
+      if(href.startsWith('/')){const url=new URL(href,origin);if(url.origin!==origin)throw new Error('subsite_external_relative_link');const target=resolve(root,'.'+url.pathname+(url.pathname.endsWith('/')?'index.html':''));if(!target.replaceAll('\\','/').startsWith(rootPosix+'/'))throw new Error('subsite_link_escape');await readFile(target)}
       if(href.startsWith('https://folkbench.com')){const url=new URL(href);if(url.origin!=='https://folkbench.com'||url.searchParams.get('utm_source')!==site||!((url.searchParams.get('utm_medium')==='pages'&&url.searchParams.get('utm_campaign')==='subsite'&&url.searchParams.get('utm_content'))||isCtaUrl(site,url)))throw new Error('subsite_attribution_invalid')}
       if(href.startsWith('https://'))checkNetworkLink(site,href)
       if(/[?&](?:aff|ref|partner)=|\/go\/|\/outbound/iu.test(href))throw new Error('subsite_link_rejected')
