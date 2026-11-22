@@ -1,0 +1,38 @@
+name: "Folkbench RU: исправление"
+description: Неверные или устаревшие сведения о сервисе на ru.folkbench.com
+title: "[RU] Исправление: "
+labels: [ru-site, ru-correction]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Не публикуйте API-ключи, пароли, платёжные данные или личные документы.**
+        Этот шаблон — только для русскоязычного сайта ru.folkbench.com. Данные хранятся в базе сайта: администратор вносит исправление после проверки источника.
+        Результаты замеров по запросу не меняются: если замер ошибочен, мы исправляем причину, а не цифру.
+  - type: input
+    id: page
+    attributes:
+      label: Страница на ru.folkbench.com
+      placeholder: https://ru.folkbench.com/providers/...
+    validations:
+      required: true
+  - type: input
+    id: field
+    attributes:
+      label: Какое поле неверно
+      placeholder: Цена, способ оплаты, model ID…
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Предлагаемое значение
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Публичный источник и дата проверки
+      description: Ссылка на страницу тарифа или документацию и дата, когда вы её проверили.
+    validations:
+      required: true

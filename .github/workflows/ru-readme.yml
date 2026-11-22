@@ -1,0 +1,48 @@
+name: Folkbench RU README
+# Раз в сутки обновляет только блок ru-catalog в README.ru.md из публичного снимка ru.folkbench.com.
+# Выключено, пока в настройках репозитория не задана переменная RU_README_ENABLED=true.
+# Коммит идёт через обычные hooks репозитория — так же, как в daily-public-snapshot.yml.
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: ru-readme
+  cancel-in-progress: false
+jobs:
+  update:
+    if: github.repository == 'Folkbench/folkbench' && github.ref == 'refs/heads/main' && vars.RU_README_ENABLED == 'true'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.3.14
+      - name: Prepare normal Git hooks
+        run: |
+          git config core.hooksPath .githooks
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Update only the ru-catalog marker block
+        id: readme
+        run: bun scripts/ru-readme.mjs
+      - name: Prepare existing public-repository hook dependencies
+        if: steps.readme.outputs.changed == 'true'
+        run: |
+          bun install --frozen-lockfile
+          touch apps/switch/.folkbench-switch-development-host
+          bun install --cwd apps/switch --frozen-lockfile
+      - name: Commit and push README.ru.md through existing hooks
+        if: steps.readme.outputs.changed == 'true'
+        env:
+          SNAPSHOT_ID: ${{ steps.readme.outputs.snapshot_id }}
+        run: |
+          test "$(git config --get core.hooksPath)" = .githooks
+          git add README.ru.md
+          git commit -m "数据：更新俄语站目录（快照 ${SNAPSHOT_ID}）"
+          git push origin HEAD:main

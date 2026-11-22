@@ -10,7 +10,7 @@
 
 **[ランキングを見る](https://folkbench.com/ja/rankings?utm_source=github&utm_campaign=readme_ja)** · **[モデル整合性](https://folkbench.com/ja/arena?utm_source=github&utm_campaign=readme_ja)** · **[Switch をダウンロード](https://github.com/Folkbench/folkbench/releases)**
 
-[简体中文](README.md) · [English](README.en.md) · [Español](README.es.md)
+[简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 </div>
 

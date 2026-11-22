@@ -10,7 +10,7 @@
 
 **[View rankings](https://folkbench.com/en/rankings?utm_source=github&utm_campaign=readme_en)** · **[Integrity monitor](https://folkbench.com/en/arena?utm_source=github&utm_campaign=readme_en)** · **[Download Switch](https://github.com/Folkbench/folkbench/releases)**
 
-[简体中文](README.md) · [日本語](README.ja.md) · [Español](README.es.md)
+[简体中文](README.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Русский](README.ru.md)
 
 </div>
 

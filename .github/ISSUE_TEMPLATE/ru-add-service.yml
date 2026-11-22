@@ -1,0 +1,71 @@
+name: "Folkbench RU: предложить сервис"
+description: Бесплатная заявка на добавление API-сервиса в каталог ru.folkbench.com
+title: "[RU] Сервис: "
+labels: [ru-site, ru-submission]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Не публикуйте API-ключи, пароли, платёжные данные или личные документы.** Issues открыты всем.
+        Этот шаблон — только для русскоязычного сайта [ru.folkbench.com](https://ru.folkbench.com/submit/). Для заявки ключ не нужен.
+        Размещение бесплатное и не влияет на порядок в таблицах: он зависит только от замеров. Подача заявки не означает размещение — сведения проверяет администратор.
+        Без GitHub можно написать на reply@folkbench.com или в Telegram [@mmmagnus98](https://t.me/mmmagnus98).
+  - type: input
+    id: name
+    attributes:
+      label: Название сервиса
+    validations:
+      required: true
+  - type: textarea
+    id: site
+    attributes:
+      label: Официальный сайт и документация
+      description: Ссылки на сайт и публичную документацию API.
+    validations:
+      required: true
+  - type: textarea
+    id: models
+    attributes:
+      label: Модели и протоколы
+      description: Base URL API, протокол (Anthropic Messages или OpenAI Chat Completions — «совместимый» не подходит) и точные model ID. Ссылка на источник.
+    validations:
+      required: true
+  - type: textarea
+    id: pricing
+    attributes:
+      label: Тарифы и единицы оплаты
+      description: Ссылка на страницу цен, валюта и единица (за 1 млн токенов, за запрос, подписка). Если цены видны только после входа — так и напишите.
+  - type: textarea
+    id: payments
+    attributes:
+      label: Способы оплаты и ограничения
+      description: Какие способы есть и для каких стран или карт. Реквизиты не присылайте.
+  - type: textarea
+    id: language
+    attributes:
+      label: Русский интерфейс / поддержка
+      description: Отдельно про интерфейс и про поддержку, с подтверждением.
+  - type: input
+    id: contact
+    attributes:
+      label: Контакт для проверки
+      description: Необязательно. Только публичный рабочий канал; личные контакты сюда не пишите.
+  - type: dropdown
+    id: relation
+    attributes:
+      label: Связь с сервисом
+      options:
+        - Владелец или сотрудник
+        - Реселлер / партнёр
+        - Пользователь
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Подтверждение
+      options:
+        - label: Эти сведения можно опубликовать, и в заявке нет ключей, паролей и личных данных.
+          required: true
+        - label: Я понимаю, что размещение бесплатное и не гарантирует место в таблице.
+          required: true

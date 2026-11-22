@@ -10,7 +10,7 @@
 
 **[Ver rankings](https://folkbench.com/es/rankings?utm_source=github&utm_campaign=readme_es)** · **[Integridad del modelo](https://folkbench.com/es/arena?utm_source=github&utm_campaign=readme_es)** · **[Descargar Switch](https://github.com/Folkbench/folkbench/releases)**
 
-[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
+[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [Русский](README.ru.md)
 
 </div>
 
