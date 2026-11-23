@@ -5,6 +5,7 @@ import { writeSnapshotBadge } from './snapshot-badge'
 import type { PublicDataExport } from './contract.generated'
 import { ctaBanner, injectCta, isCtaUrl, CTA_CSS } from './cta'
 import { FORBIDDEN_WORDS, checkNetworkLink, networkFooter, writeIndexNowKey, writePublishState } from './network'
+import { assertSubsitePages } from './source-fidelity'
 export { hasPrice, modelRecord, rankingModels, rowsForModel } from './network'
 
 export const SUBSITE_NOTICE = '排序沿用主站规则，包含合作档位与运营加分。'
@@ -64,6 +65,7 @@ export function renderSubsitePage(site: Subsite, snapshot: PublicDataExport, pag
 }
 export async function writeSubsite(root: string, site: Subsite, snapshot: PublicDataExport, pages: SubsitePage[]): Promise<void> {
   validateSnapshot(snapshot)
+  assertSubsitePages(site, snapshot, pages)
   await mkdir(root,{recursive:true})
   if ((await readdir(root)).length) throw new Error('subsite_output_must_be_empty')
   const seen=new Set<string>()

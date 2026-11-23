@@ -28,11 +28,15 @@ export function prepareWeek(history: PublicDataExport[], week: string): WeeklyRe
   if (!/^\d{4}-W(?:0[1-9]|[1-4]\d|5[0-3])$/u.test(week)) throw new Error('distribution_week_invalid')
   const snapshots = history.filter(snapshot => isoWeek(snapshot.date) === week).sort((a, b) => a.date.localeCompare(b.date))
   if (!snapshots.length) throw new Error('distribution_week_has_no_snapshots')
+  const observationKey = (row: PublicDataIntegrity) => `${row.run_id}|${row.measured_at ?? 'undated'}`
+  const expected = new Set<string>()
+  for (const snapshot of snapshots) for (const row of snapshot.integrity) expected.add(observationKey(row))
   const results = new Map<string, PublicDataIntegrity>()
   // These are observed PUBLIC summaries, never a count of executions during this week.
   // When a summary is revised, the last observation within the week wins.
-  for (const snapshot of snapshots) for (const row of snapshot.integrity) results.set(`${row.run_id}|${row.measured_at ?? 'undated'}`, row)
+  for (const snapshot of snapshots) for (const row of snapshot.integrity) results.set(observationKey(row), row)
   const rows = [...results.values()].sort((a, b) => `${a.model_id}|${a.station_slug}|${a.measured_at}|${a.run_id}`.localeCompare(`${b.model_id}|${b.station_slug}|${b.measured_at}|${b.run_id}`))
+  if (rows.length !== expected.size || [...expected].some(key => !rows.some(row => observationKey(row) === key))) throw new Error('distribution_week_rows_dropped')
   return { schema_version: '1.0', week, title: `探针公开快照周报 · ${week}`, sources: snapshots.map(({ date, snapshot_version }) => ({ date, snapshot_version })), results: rows, stations: new Set(rows.map(row => row.station_slug)).size, models: new Set(rows.map(row => row.model_id)).size, agree: rows.reduce((n, row) => n + row.agree, 0), total: rows.reduce((n, row) => n + row.total, 0) }
 }
 export function weeklyMarkdown(report: WeeklyReport): string {
