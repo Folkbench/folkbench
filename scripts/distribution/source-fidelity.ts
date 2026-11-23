@@ -88,7 +88,8 @@ export function assertSubsiteSource(site: Subsite, snapshot: PublicDataExport, p
     assertSequence('price-stations', listed, priceStations(snapshot))
     for (const id of priceModels(snapshot)) {
       const expected = rowsForModel(snapshot, id).filter(hasPrice).map(row => row.station_slug)
-      assertCovers(`prices:${id}`, serviceSlugs(page(pages, `/prices/${encodeURIComponent(id)}/`, id).body), expected)
+      const current = page(pages, `/prices/${encodeURIComponent(id)}/`, id).body.split('<h2>近 7 日已有价格快照</h2>')[0] ?? ''
+      assertCovers(`prices:${id}`, serviceSlugs(current), expected)
     }
   } else {
     const home = page(pages, '/', 'probe-home').body
