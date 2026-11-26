@@ -1,26 +1,32 @@
 [
   {
-    "stationId": "merchant-a3165bb8-847",
-    "stationName": "Modelflare",
-    "slug": "modelflare",
-    "baseUrl": "https://modelflare.dev/v1"
+    "stationId":  "merchant-a3165bb8-847",
+    "stationName":  "Modelflare",
+    "slug":  "modelflare",
+    "baseUrl":  "https://modelflare.dev/v1"
   },
   {
-    "stationId": "merchant-b8db6d82-ed2",
-    "stationName": "IKunCode",
-    "slug": "ikuncode",
-    "baseUrl": "https://api.ikuncode.ai/v1"
+    "stationId":  "merchant-b8db6d82-ed2",
+    "stationName":  "IKunCode",
+    "slug":  "ikuncode",
+    "baseUrl":  "https://api.ikuncode.ai/v1"
   },
   {
-    "stationId": "merchant-7281389a-354",
-    "stationName": "智流 FluxLane",
-    "slug": "fluxlane",
-    "baseUrl": "https://api.fluxlane.cn"
+    "stationId":  "merchant-7281389a-354",
+    "stationName":  "智流 FluxLane",
+    "slug":  "fluxlane",
+    "baseUrl":  "https://api.fluxlane.cn"
   },
   {
-    "stationId": "merchant-955eb49b-34a",
-    "stationName": "Sidrune AI",
-    "slug": "merchant-955eb49b-34a",
-    "baseUrl": "https://cn.sidrune.ai/v1"
+    "stationId":  "merchant-955eb49b-34a",
+    "stationName":  "Sidrune AI",
+    "slug":  "merchant-955eb49b-34a",
+    "baseUrl":  "https://cn.sidrune.ai/v1"
+  },
+  {
+    "stationId":  "apitokens-market",
+    "stationName":  "APITokens Market",
+    "slug":  "apitokens-market",
+    "baseUrl":  "https://v1.apitokens.market/v1"
   }
 ]
