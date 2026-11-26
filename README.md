@@ -70,95 +70,98 @@ Folkbench 帮你挑线路、配好客户端，不是自建代理教程。
 ## 今日公开快照
 
 <!-- FOLKBENCH-BOARD:START -->
-> 归档日期：2026-11-25 · 发布：2026-11-25 20:30:47（北京时间）· 快照：`public-03ac8fb6ff74f38786191514ee11d8e63a1daf990c12dfe1b148afec86f65a33`
+> 归档日期：2026-11-26 · 发布：2026-11-26 20:30:12（北京时间）· 快照：`public-11746bc346e14b021793baaa246cf4b5cce7d03625d00bd3cc82c9eba7ae6347`
 > 排序沿用主站规则，包含合作档位与运营加分。本页提供公开快照，不是原始运行记录。
 
 | 模型 | # | 中转站 | 综合 | 可用率 | 稳定性 | 输入 / 输出价 | 样本 |
 | :-- | :-: | :-- | --: | --: | --: | :-- | --: |
-| Claude Fable 5.1 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-fable-5-1-r1) | 100.0% | 98.9% | 96.6% | ¥1.99 / 1M / ¥9.96 / 1M | 177 |
-| claude-fable-5-1 | 2 | [破晓](https://folkbench.com/services/merchant-4cf2b788-920?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-fable-5-1-r2) | 92.2% | 100.0% | 91.2% | ¥14.50 / 1M / ¥72.50 / 1M | 47 |
-| Claude Fable 5.1 | 3 | [Apiporter](https://folkbench.com/services/apiporter?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-fable-5-1-r3) | 84.5% | 89.4% | 74.2% | ¥20.00 / 1M / ¥100.00 / 1M | 47 |
+| Claude Fable 5.1 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-fable-5-1-r1) | 100.0% | 98.3% | 96.0% | ¥1.99 / 1M / ¥9.96 / 1M | 180 |
+| claude-fable-5-1 | 2 | [破晓](https://folkbench.com/services/merchant-4cf2b788-920?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-fable-5-1-r2) | 91.0% | 100.0% | 89.7% | ¥14.50 / 1M / ¥72.50 / 1M | 48 |
+| Claude Fable 5.1 | 3 | [Apiporter](https://folkbench.com/services/apiporter?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-fable-5-1-r3) | 85.4% | 95.7% | 83.3% | ¥20.00 / 1M / ¥100.00 / 1M | 47 |
 | | | [完整 Claude Fable 5.1 榜单 →](https://folkbench.com/rankings/claude-fable-5-1?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-fable-5-1-more) | | | | | |
-| claude-haiku-5-5 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-haiku-5-5-r1) | 100.0% | 97.8% | 95.1% | ¥0.17 / 1M / ¥0.83 / 1M | 139 |
-| claude-haiku-5-5 | 2 | [Sidrune AI](https://folkbench.com/services/merchant-955eb49b-34a?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-haiku-5-5-r2) | 91.9% | 100.0% | 91.9% | ¥0.10 / 1M / ¥0.50 / 1M | 47 |
+| claude-haiku-5-5 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-haiku-5-5-r1) | 100.0% | 97.6% | 95.3% | ¥0.17 / 1M / ¥0.83 / 1M | 168 |
+| claude-haiku-5-5 | 2 | [Sidrune AI](https://folkbench.com/services/merchant-955eb49b-34a?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-haiku-5-5-r2) | 91.9% | 100.0% | 91.7% | ¥0.10 / 1M / ¥0.50 / 1M | 48 |
+| claude-haiku-5-5 | 3 | [open7x](https://folkbench.com/services/merchant-b03836a6-3ec?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-haiku-5-5-r3) | — | 100.0% | — | $0.10 / 1M / $0.50 / 1M | 7 |
 | | | [完整 claude-haiku-5-5 榜单 →](https://folkbench.com/rankings/claude-haiku-5-5?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-haiku-5-5-more) | | | | | |
-| Claude Opus 5 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-r1) | 100.0% | 98.5% | 95.9% | ¥1.00 / 1M / ¥4.98 / 1M | 194 |
+| Claude Opus 5 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-r1) | 100.0% | 97.9% | 94.7% | ¥1.00 / 1M / ¥4.98 / 1M | 140 |
 | | | [完整 Claude Opus 5 榜单 →](https://folkbench.com/rankings/claude-opus-5?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-more) | | | | | |
-| Claude Opus 5.5 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-5-r1) | 100.0% | 98.2% | 95.7% | ¥0.80 / 1M / ¥3.98 / 1M | 162 |
-| Claude Opus 5.5 | 2 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-5-r2) | 95.7% | 100.0% | 83.2% | ¥4.00 / 1M / ¥20.00 / 1M | 47 |
-| Claude Opus 5.5 | 3 | [智流 FluxLane](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-5-r3) | 94.6% | 95.7% | 80.0% | ¥4.80 / 1M / ¥24.00 / 1M | 47 |
+| Claude Opus 5.5 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-5-r1) | 100.0% | 98.5% | 95.8% | ¥0.80 / 1M / ¥3.98 / 1M | 137 |
+| Claude Opus 5.5 | 2 | [智流 FluxLane](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-5-r2) | 94.2% | 93.8% | 78.2% | ¥4.80 / 1M / ¥24.00 / 1M | 48 |
+| Claude Opus 5.5 | 3 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-5-r3) | 94.1% | 77.3% | 49.4% | ¥4.00 / 1M / ¥20.00 / 1M | 44 |
 | | | [完整 Claude Opus 5.5 榜单 →](https://folkbench.com/rankings/claude-opus-5-5?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-opus-5-5-more) | | | | | |
-| DeepSeek V4.1 Flash | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-deepseek-v4-1-flash-r1) | 100.0% | 97.5% | 94.7% | ¥1.20 / 1M / ¥4.80 / 1M | 157 |
-| DeepSeek V4.1 Flash | 2 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-deepseek-v4-1-flash-r2) | 95.7% | 95.7% | 76.9% | — / — | 47 |
-| deepseek-v4.1-flash | 3 | [aicode](https://folkbench.com/services/merchant-2b1bbef9-885?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-deepseek-v4-1-flash-r3) | 95.1% | 93.6% | 78.0% | ¥0.18 / 1M / ¥0.72 / 1M | 47 |
+| claude-sonnet-5-5 | 1 | [open7x](https://folkbench.com/services/merchant-b03836a6-3ec?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-sonnet-5-5-r1) | — | 100.0% | — | $0.60 / 1M / $3.00 / 1M | 6 |
+| | | [完整 claude-sonnet-5-5 榜单 →](https://folkbench.com/rankings/claude-sonnet-5-5?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-claude-sonnet-5-5-more) | | | | | |
+| DeepSeek V4.1 Flash | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-deepseek-v4-1-flash-r1) | 100.0% | 99.0% | 96.7% | ¥1.20 / 1M / ¥4.80 / 1M | 194 |
+| deepseek-v4.1-flash | 2 | [aicode](https://folkbench.com/services/merchant-2b1bbef9-885?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-deepseek-v4-1-flash-r2) | 95.1% | 100.0% | 84.8% | ¥0.18 / 1M / ¥0.72 / 1M | 48 |
+| DeepSeek V4.1 Flash | 3 | [智流 FluxLane](https://folkbench.com/services/fluxlane?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-deepseek-v4-1-flash-r3) | 94.2% | 89.6% | 77.5% | ¥0.90 / 1M / ¥3.60 / 1M | 48 |
 | | | [完整 DeepSeek V4.1 Flash 榜单 →](https://folkbench.com/rankings/deepseek-v4-1-flash?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-deepseek-v4-1-flash-more) | | | | | |
-| Gemini 3.8 Flash | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gemini-3-8-flash-r1) | 100.0% | 98.2% | 94.9% | ¥1.49 / 1M / ¥7.47 / 1M | 111 |
+| Gemini 3.8 Flash | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gemini-3-8-flash-r1) | 100.0% | 97.0% | 93.4% | ¥1.49 / 1M / ¥7.47 / 1M | 101 |
 | | | [完整 Gemini 3.8 Flash 榜单 →](https://folkbench.com/rankings/gemini-3-8-flash?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gemini-3-8-flash-more) | | | | | |
-| GLM 5.3 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-glm-5-3-r1) | 100.0% | 98.6% | 95.5% | ¥4.00 / 1M / ¥14.00 / 1M | 143 |
-| GLM 5.3 | 2 | [CheapAI](https://folkbench.com/services/cheapai?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-glm-5-3-r2) | 91.9% | 100.0% | 88.7% | ¥0.80 / 1M / ¥2.80 / 1M | 47 |
+| GLM 5.3 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-glm-5-3-r1) | 100.0% | 98.4% | 95.7% | ¥4.00 / 1M / ¥14.00 / 1M | 184 |
+| GLM 5.3 | 2 | [CheapAI](https://folkbench.com/services/cheapai?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-glm-5-3-r2) | 91.8% | 95.8% | 77.4% | ¥0.80 / 1M / ¥2.80 / 1M | 48 |
 | | | [完整 GLM 5.3 榜单 →](https://folkbench.com/rankings/glm-5-3?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-glm-5-3-more) | | | | | |
-| GPT 5.6 Terra | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-5-6-terra-r1) | 100.0% | 97.1% | 94.5% | ¥0.20 / 1M / ¥1.20 / 1M | 175 |
+| GPT 5.6 Terra | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-5-6-terra-r1) | 100.0% | 97.7% | 94.8% | ¥0.20 / 1M / ¥1.20 / 1M | 170 |
 | | | [完整 GPT 5.6 Terra 榜单 →](https://folkbench.com/rankings/gpt-5-6-terra?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-5-6-terra-more) | | | | | |
-| GPT 6.1 Sol | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-sol-r1) | 100.0% | 97.6% | 94.4% | ¥0.20 / 1M / ¥1.00 / 1M | 164 |
-| gpt-6.1-sol | 2 | [Zashmodel](https://folkbench.com/services/merchant-5cf7678f-611?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-sol-r2) | 97.9% | 95.7% | 70.7% | — / — | 47 |
-| gpt-6.1-sol | 3 | [CheapAI](https://folkbench.com/services/cheapai?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-sol-r3) | 91.9% | 95.7% | 67.2% | ¥0.12 / 1M / ¥0.60 / 1M | 47 |
+| GPT 6.1 Sol | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-sol-r1) | 100.0% | 98.4% | 95.7% | ¥0.20 / 1M / ¥1.00 / 1M | 189 |
+| gpt-6.1-sol | 2 | [Zashmodel](https://folkbench.com/services/merchant-5cf7678f-611?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-sol-r2) | 97.2% | 97.9% | 73.5% | — / — | 48 |
+| gpt-6.1-sol | 3 | [Sidrune AI](https://folkbench.com/services/merchant-955eb49b-34a?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-sol-r3) | 91.9% | 97.9% | 77.7% | ¥0.20 / 1M / ¥1.00 / 1M | 48 |
 | | | [完整 GPT 6.1 Sol 榜单 →](https://folkbench.com/rankings/gpt-6-1-sol?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-sol-more) | | | | | |
-| GPT-6.1 Terra | 1 | [CheapAI](https://folkbench.com/services/cheapai?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-terra-r1) | 91.9% | 95.7% | 66.3% | ¥0.06 / 1M / ¥0.30 / 1M | 47 |
+| GPT-6.1 Terra | 1 | [CheapAI](https://folkbench.com/services/cheapai?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-terra-r1) | 91.8% | 91.7% | 66.8% | ¥0.06 / 1M / ¥0.30 / 1M | 48 |
 | | | [完整 GPT-6.1 Terra 榜单 →](https://folkbench.com/rankings/gpt-6-1-terra?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-1-terra-more) | | | | | |
-| GPT-6.2 Astra | 1 | [破晓](https://folkbench.com/services/merchant-4cf2b788-920?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-astra-r1) | 92.2% | 100.0% | 75.0% | ¥0.40 / 1M / ¥2.00 / 1M | 47 |
-| GPT-6.2 Astra | 2 | [CheapRouter](https://folkbench.com/services/cheaprouter?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-astra-r2) | 90.7% | 100.0% | 82.3% | ¥1.20 / 1M / ¥6.00 / 1M | 47 |
+| GPT-6.2 Astra | 1 | [CheapRouter](https://folkbench.com/services/cheaprouter?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-astra-r1) | 91.0% | 100.0% | 83.0% | ¥1.20 / 1M / ¥6.00 / 1M | 48 |
+| GPT-6.2 Astra | 2 | [破晓](https://folkbench.com/services/merchant-4cf2b788-920?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-astra-r2) | 91.0% | 91.7% | 61.8% | ¥0.40 / 1M / ¥2.00 / 1M | 48 |
 | | | [完整 GPT-6.2 Astra 榜单 →](https://folkbench.com/rankings/gpt-6-2-astra?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-astra-more) | | | | | |
-| GPT-6.2 Sol | 1 | [aicode](https://folkbench.com/services/merchant-2b1bbef9-885?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-r1) | 95.1% | 100.0% | 86.2% | ¥0.56 / 1M / ¥2.80 / 1M | 47 |
-| GPT-6.2 Sol | 2 | [破晓](https://folkbench.com/services/merchant-4cf2b788-920?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-r2) | 92.2% | 97.9% | 70.1% | ¥0.10 / 1M / ¥0.50 / 1M | 47 |
-| GPT-6.2 Sol | 3 | [CheapRouter](https://folkbench.com/services/cheaprouter?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-r3) | 90.7% | 100.0% | 76.5% | ¥0.30 / 1M / ¥1.50 / 1M | 47 |
-| | | [完整 GPT-6.2 Sol 榜单 →](https://folkbench.com/rankings/gpt-6-2-sol?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-more) | | | | | |
-| GPT 6 Astra | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-astra-r1) | 100.0% | 98.2% | 95.7% | ¥1.00 / 1M / ¥4.98 / 1M | 167 |
-| gpt-6-astra | 2 | [Zashmodel](https://folkbench.com/services/merchant-5cf7678f-611?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-astra-r2) | 97.9% | 100.0% | 84.7% | — / — | 47 |
-| GPT 6 Astra | 3 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-astra-r3) | 95.7% | 100.0% | 82.8% | ¥7.00 / 1M / ¥35.00 / 1M | 47 |
+| gpt-6.2-sol | 1 | [aicode](https://folkbench.com/services/merchant-2b1bbef9-885?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-r1) | 95.1% | 100.0% | — | ¥0.18 / 1M / ¥1.80 / 1M | 8 |
+| GPT-6.2 Sol | 2 | [CheapRouter](https://folkbench.com/services/cheaprouter?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-r2) | 91.0% | 97.9% | 74.7% | ¥0.30 / 1M / ¥1.50 / 1M | 48 |
+| GPT-6.2 Sol | 3 | [破晓](https://folkbench.com/services/merchant-4cf2b788-920?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-r3) | 91.0% | 100.0% | 76.3% | ¥0.10 / 1M / ¥0.50 / 1M | 48 |
+| | | [完整 gpt-6.2-sol 榜单 →](https://folkbench.com/rankings/gpt-6-2-sol?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-2-sol-more) | | | | | |
+| GPT 6 Astra | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-astra-r1) | 100.0% | 98.6% | 95.8% | ¥1.00 / 1M / ¥4.98 / 1M | 145 |
+| gpt-6-astra | 2 | [Zashmodel](https://folkbench.com/services/merchant-5cf7678f-611?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-astra-r2) | 97.2% | 91.7% | 76.3% | — / — | 48 |
+| GPT 6 Astra | 3 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-astra-r3) | 94.1% | 93.2% | 67.4% | ¥7.00 / 1M / ¥35.00 / 1M | 44 |
 | | | [完整 GPT 6 Astra 榜单 →](https://folkbench.com/rankings/gpt-6-astra?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-gpt-6-astra-more) | | | | | |
-| Grok 4.6 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-6-r1) | 100.0% | 98.0% | 95.0% | ¥0.13 / 1M / ¥0.40 / 1M | 148 |
-| Grok 4.6 | 2 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-6-r2) | 95.7% | 100.0% | 89.0% | ¥0.60 / 1M / ¥1.80 / 1M | 46 |
+| Grok 4.6 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-6-r1) | 100.0% | 98.1% | 95.3% | ¥0.13 / 1M / ¥0.40 / 1M | 157 |
+| Grok 4.6 | 2 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-6-r2) | 94.1% | 100.0% | 88.0% | ¥0.60 / 1M / ¥1.80 / 1M | 44 |
 | | | [完整 Grok 4.6 榜单 →](https://folkbench.com/rankings/grok-4-6?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-6-more) | | | | | |
-| Grok 4.7 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-7-r1) | 100.0% | 97.3% | 93.8% | ¥1.46 / 1M / ¥4.38 / 1M | 112 |
-| grok-4.7 | 2 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-7-r2) | 95.7% | 100.0% | 80.3% | ¥0.60 / 1M / ¥1.80 / 1M | 47 |
+| Grok 4.7 | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-7-r1) | 100.0% | 97.2% | 94.3% | ¥1.46 / 1M / ¥4.38 / 1M | 145 |
+| grok-4.7 | 2 | [IKunCode](https://folkbench.com/services/ikuncode?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-7-r2) | 94.1% | 100.0% | 78.4% | ¥0.60 / 1M / ¥1.80 / 1M | 44 |
 | | | [完整 Grok 4.7 榜单 →](https://folkbench.com/rankings/grok-4-7?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-grok-4-7-more) | | | | | |
-| Qwen 3.8 Max | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-qwen3-8-max-r1) | 100.0% | 99.0% | 96.5% | ¥9.60 / 1M / ¥28.80 / 1M | 195 |
+| Qwen 3.8 Max | 1 | [Modelflare](https://folkbench.com/services/modelflare?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-qwen3-8-max-r1) | 100.0% | 98.2% | 95.5% | ¥9.60 / 1M / ¥28.80 / 1M | 170 |
 | | | [完整 Qwen 3.8 Max 榜单 →](https://folkbench.com/rankings/qwen3-8-max?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-qwen3-8-max-more) | | | | | |
 
 <details open><summary>各模型的来源窗口与版本</summary>
 
 | 模型 | 来源窗口 | 方法版本 | 来源快照 | 发布时间（北京时间） |
 | :-- | :-- | :-- | :-- | :-- |
-| claude-fable-5-1 | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-b3d6edce-1795608154232 | 2026-11-25 20:02:34 |
+| claude-fable-5-1 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-e82140d5-1795694423237 | 2026-11-26 20:00:23 |
 | claude-fable-5-2 | catalog-only catalog cefc20a130bf8043 | folkbench-connectivity-v1 | rel-a3f26eaf-1795543480471 | 2026-11-25 02:04:40 |
-| claude-haiku-5-5 | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-1bd35960-1795608157523 | 2026-11-25 20:02:37 |
-| claude-opus-5 | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-4513440d-1795608160809 | 2026-11-25 20:02:40 |
-| claude-opus-5-5 | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-401476b0-1795608163038 | 2026-11-25 20:02:43 |
-| claude-sonnet-5-5 | 24h ending 2026-11-25 02:30:00 catalog fda7c003e5ef58cd（北京时间） | folkbench-connectivity-v1 | rel-6233c051-1795543488418 | 2026-11-25 02:04:48 |
-| deepseek-v4-1-flash | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-c97371e2-1795608166403 | 2026-11-25 20:02:46 |
-| gemini-3-8-flash | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-7e97b737-1795608189125 | 2026-11-25 20:03:09 |
+| claude-haiku-5-5 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-5d54ac67-1795694426148 | 2026-11-26 20:00:26 |
+| claude-opus-5 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-2fe8b1be-1795694428428 | 2026-11-26 20:00:28 |
+| claude-opus-5-5 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-dbd80724-1795694431490 | 2026-11-26 20:00:31 |
+| claude-sonnet-5-5 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-6233c051-1795543488418 | 2026-11-25 02:04:48 |
+| deepseek-v4-1-flash | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-bdbc452b-1795694435690 | 2026-11-26 20:00:35 |
+| gemini-3-8-flash | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-2e00bcdf-1795694458694 | 2026-11-26 20:00:58 |
 | gemini-4-argon | catalog-only catalog 84044a2bde41e27d | folkbench-connectivity-v1 | rel-bcc2a6b4-1795543511157 | 2026-11-25 02:05:11 |
 | gemini-4-carbon | catalog-only catalog 47f4c3d79232be37 | folkbench-connectivity-v1 | rel-ad12f1a5-1795543513168 | 2026-11-25 02:05:13 |
-| gemini-4-hydrogen | catalog-only catalog 83b0b4d2a498b8f9 | folkbench-connectivity-v1 | rel-75c36cfc-1795543516180 | 2026-11-25 02:05:16 |
-| gemini-4-neon | catalog-only catalog d384bc44865920ff | folkbench-connectivity-v1 | rel-583a86c7-1795543518108 | 2026-11-25 02:05:18 |
-| glm-5-3 | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-429323b4-1795608168609 | 2026-11-25 20:02:48 |
-| gpt-5-6-terra | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-557ad88f-1795608170878 | 2026-11-25 20:02:50 |
-| gpt-6-1-sol | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-909d08d3-1795608180134 | 2026-11-25 20:03:00 |
-| gpt-6-1-terra | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-9c3b43da-1795608182344 | 2026-11-25 20:03:02 |
-| gpt-6-2-astra | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-c9d6bdd9-1795608184627 | 2026-11-25 20:03:04 |
-| gpt-6-2-sol | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-a38eb4a9-1795608186839 | 2026-11-25 20:03:06 |
-| gpt-6-astra | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-15d27e6e-1795608173200 | 2026-11-25 20:02:53 |
-| grok-4-6 | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-5a8c5261-1795608194380 | 2026-11-25 20:03:14 |
-| grok-4-7 | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-c003ea48-1795608197531 | 2026-11-25 20:03:17 |
+| gemini-4-hydrogen | catalog-only catalog 2927de52fd886783 | folkbench-connectivity-v1 | rel-556dd0fc-1795629869055 | 2026-11-26 02:04:29 |
+| gemini-4-neon | catalog-only catalog 2b7c41b88d08605c | folkbench-connectivity-v1 | rel-adf672b8-1795629871139 | 2026-11-26 02:04:31 |
+| glm-5-3 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-75b3693a-1795694438015 | 2026-11-26 20:00:38 |
+| gpt-5-6-terra | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-18bf4910-1795694440368 | 2026-11-26 20:00:40 |
+| gpt-6-1-sol | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-553c9fd8-1795694447586 | 2026-11-26 20:00:47 |
+| gpt-6-1-terra | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-1a8caf3f-1795694451346 | 2026-11-26 20:00:51 |
+| gpt-6-2-astra | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-8e35dfe6-1795694453831 | 2026-11-26 20:00:53 |
+| gpt-6-2-sol | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-16a6b5c6-1795694456304 | 2026-11-26 20:00:56 |
+| gpt-6-astra | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-c466fbd8-1795694442793 | 2026-11-26 20:00:42 |
+| grok-4-6 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-ad7a463c-1795694463733 | 2026-11-26 20:01:03 |
+| grok-4-7 | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-79a4bf3c-1795694466031 | 2026-11-26 20:01:06 |
 | kimi-k3-1-pro | catalog-only catalog 172005db9e7472e9 | folkbench-connectivity-v1 | rel-4609039e-1795456996647 | 2026-11-24 02:03:16 |
-| qwen3-8-max | 2026-11-24 21:00:00/2026-11-25 21:00:00（北京时间） | folkbench-connectivity-v1 | rel-e295cbb5-1795608200421 | 2026-11-25 20:03:20 |
-| qwen4-max | catalog-only catalog 0888667390fa4a6c | folkbench-connectivity-v1 | rel-20acca05-1795457000527 | 2026-11-24 02:03:20 |
+| qwen3-8-max | 2026-11-25 20:30:00/2026-11-26 20:30:00（北京时间） | folkbench-connectivity-v1 | rel-3ab477c5-1795694470316 | 2026-11-26 20:01:10 |
+| qwen4-max | catalog-only catalog ebc5382f8abe9fee | folkbench-connectivity-v1 | rel-8b87a7e6-1795629880435 | 2026-11-26 02:04:40 |
 
 </details>
 
-**探针汇总：快照收录 299 条探针结果，覆盖 17 家站点。** 汇总一致率：22755/29073（78.3%）。[查看公开结果 →](https://folkbench.com/arena?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-integrity)
+**探针汇总：快照收录 297 条探针结果，覆盖 18 家站点。** 汇总一致率：18968/25054（75.7%）。[查看公开结果 →](https://folkbench.com/arena?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-integrity)
 
-[下载对应日期的公开快照](https://github.com/Folkbench/folkbench-data/tree/main/daily/2026/11/25) · [方法说明](https://folkbench.com/methodology?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-method) · [提交纠错](https://folkbench.com/corrections?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-corrections)
+[下载对应日期的公开快照](https://github.com/Folkbench/folkbench-data/tree/main/daily/2026/11/26) · [方法说明](https://folkbench.com/methodology?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-method) · [提交纠错](https://folkbench.com/corrections?utm_source=github&utm_medium=readme&utm_campaign=main-repo&utm_content=daily-board-corrections)
 <!-- FOLKBENCH-BOARD:END -->
 
 ---
