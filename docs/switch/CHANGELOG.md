@@ -1,5 +1,13 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.11 — Beta
+
+- 预设线路调整：简易模式、添加向导和专业模式的预设线路不再包含 IKunCode。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.10 — Beta
 
 - 预设线路新增 Sidrune AI：简易模式、添加向导和专业模式均可直接选择，注册链接经过 Folkbench 跳出页。

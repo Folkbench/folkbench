@@ -1257,7 +1257,6 @@ mod tests {
     fn preset_registration_uses_reviewed_folkbench_outbound_pages() {
         for (station_id, slug) in [
             ("merchant-a3165bb8-847", "modelflare"),
-            ("merchant-b8db6d82-ed2", "ikuncode"),
             ("merchant-7281389a-354", "fluxlane"),
             ("merchant-955eb49b-34a", "merchant-955eb49b-34a"),
         ] {
@@ -1267,6 +1266,7 @@ mod tests {
             );
         }
         for rejected in [
+            "merchant-b8db6d82-ed2",
             "merchant-92f59e23-338",
             "merchant-a61e0410-474",
             "https://example.com",

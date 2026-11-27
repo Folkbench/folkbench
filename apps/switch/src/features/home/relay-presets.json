@@ -6,12 +6,6 @@
     "baseUrl": "https://modelflare.dev/v1"
   },
   {
-    "stationId": "merchant-b8db6d82-ed2",
-    "stationName": "IKunCode",
-    "slug": "ikuncode",
-    "baseUrl": "https://api.ikuncode.ai/v1"
-  },
-  {
     "stationId": "merchant-7281389a-354",
     "stationName": "智流 FluxLane",
     "slug": "fluxlane",

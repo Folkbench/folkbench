@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "0.1.0-beta.10",
+  "version": "0.1.0-beta.11",
   "hashes": {
-    "package.json": "0235e82a859e5fa23fae4719d11bcfb7d7716856fd1f35c316060e4d565811c3",
+    "package.json": "afba0c3784a07117741da198e4783fe14e11686402238f2ae4b80ce83055fde9",
     "bun.lock": "231d61a49f3f16769c2034f5e30f7fc38824d906628edc0b3bbde18cb1b1a3cd",
-    "src-tauri/Cargo.lock": "c5287dcab5813d19821ea6e5d4b56b8892a705739e6bd3aea8931eec4c5caf2d"
+    "src-tauri/Cargo.lock": "39868bc6b2bff1d957ddee17aa8ace77f5bc7034a8279fce8d1b8982b67197a9"
   },
   "packages": [
     {
