@@ -1,5 +1,13 @@
 # Folkbench Switch 更新记录
 
+## 0.1.0-beta.12 — Beta
+
+- 预设线路改为从 Folkbench 读取：简易模式、添加向导和专业模式的预设随 Folkbench 更新，不再需要升级客户端；离线时沿用 7 天内的上一份清单。
+
+提供 macOS Apple Silicon、macOS Intel 与 Windows x64 安装包。macOS 以 Developer ID 签名和 Apple 公证为发布要求；Windows 暂未配置 Authenticode 签名。
+
+此版本为 Beta，尚非 Stable。
+
 ## 0.1.0-beta.11 — Beta
 
 - 预设线路调整：简易模式、添加向导和专业模式的预设线路不再包含 IKunCode。

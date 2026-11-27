@@ -3,6 +3,7 @@ import { queryOptions } from '@tanstack/react-query'
 import {
   getDataSecurityBoard,
   getOfficialProviderStatus,
+  getPresetRelays,
   getPublicIntegrity,
   listPublishedStations,
 } from '@/bridge/commands/catalog'
@@ -26,6 +27,17 @@ export function publishedCatalogQueryOptions(
     staleTime: 60_000,
     // Keep the last published response available when returning to Discovery.
     // Stale rows render immediately while a fresh copy is requested.
+    gcTime: 24 * 60 * 60_000,
+  })
+}
+
+/** Preset relays (Folkbench ADR-0072). Rust falls back to its own 7-day
+ * cache, so an empty list means none are known, not a failed request. */
+export function presetRelaysQueryOptions() {
+  return queryOptions({
+    queryKey: ['preset-relays'],
+    queryFn: () => getPresetRelays(),
+    staleTime: 5 * 60_000,
     gcTime: 24 * 60 * 60_000,
   })
 }

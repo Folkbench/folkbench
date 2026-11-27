@@ -7,6 +7,7 @@ export {
 export {
   getDataSecurityBoard,
   getOfficialProviderStatus,
+  getPresetRelays,
   getPublicIntegrity,
   listPublishedStations,
   openDataSecurityStationWebsite,
@@ -94,6 +95,8 @@ export type {
   OfficialProviderStatus,
   OfficialProviderStatusCatalog,
   OfficialTokenPrice,
+  PresetRelay,
+  PresetRelayCatalog,
   PublicIntegrityCatalog,
   PublicIntegrityMeasurement,
   PublishedCatalog,

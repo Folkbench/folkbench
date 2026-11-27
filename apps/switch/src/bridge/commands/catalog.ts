@@ -1,6 +1,7 @@
 import type {
   DataSecurityBoardCatalog,
   OfficialProviderStatusCatalog,
+  PresetRelayCatalog,
   PublicIntegrityCatalog,
   PublishedCatalog,
 } from '@/bridge/generated/catalog'
@@ -55,7 +56,12 @@ export async function openDataSecurityStationWebsite(input: {
   return invokeCommand<void>('open_data_security_station_website', input)
 }
 
-/** Rust resolves the reviewed preset to its Folkbench outbound page. */
+/** Preset relays from Folkbench, or the copy Rust cached within 7 days. */
+export async function getPresetRelays(): Promise<PresetRelayCatalog> {
+  return invokeCommand<PresetRelayCatalog>('get_preset_relays')
+}
+
+/** Rust resolves a current preset to its Folkbench `/go` page. */
 export async function openPresetRelayWebsite(stationId: string): Promise<void> {
   return invokeCommand<void>('open_preset_relay_website', { stationId })
 }

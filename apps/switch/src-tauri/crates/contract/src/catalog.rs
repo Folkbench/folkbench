@@ -289,6 +289,33 @@ pub struct PublishedCatalog {
     pub stations: Vec<PublishedStation>,
 }
 
+/// One preset relay read from Folkbench `/api/public/switch/presets`.
+///
+/// Membership follows the station's paid preset benefit on Folkbench, so the
+/// list changes without a client release (Folkbench ADR-0072).
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-bindings", ts(export, export_to = "catalog.ts"))]
+#[serde(rename_all = "camelCase")]
+pub struct PresetRelay {
+    pub station_id: String,
+    pub station_name: String,
+    /// Public slug; registration opens `https://folkbench.com/go/<slug>`.
+    pub slug: String,
+    /// Published API base, validated like the rankings' `baseUrl`.
+    pub base_url: String,
+}
+
+/// Preset relays for easy mode, the add wizard and the pro picker. Empty when
+/// the list cannot be read and no copy from the last 7 days is cached.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-bindings", ts(export, export_to = "catalog.ts"))]
+#[serde(rename_all = "camelCase")]
+pub struct PresetRelayCatalog {
+    pub items: Vec<PresetRelay>,
+}
+
 /// Client mode used when probing route integrity.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[cfg_attr(feature = "generate-bindings", derive(ts_rs::TS))]

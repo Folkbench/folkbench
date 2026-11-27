@@ -5,11 +5,11 @@ use crate::domain::{
     IntegrityCacheSummary, IntegrityClientMode, IntegrityPeerAgreement,
     IntegrityTokenRange, InvoiceStatus, ModelRiskLevel,
     OfficialProviderHealthState, OfficialProviderStatus,
-    OfficialProviderStatusCatalog, OfficialTokenPrice, PublicIntegrityCatalog,
-    PublicIntegrityMeasurement, PublishedCatalog, PublishedDataSecurity,
-    PublishedPrice, PublishedStation, PublishedStationBilling,
-    PublishedStationProfile, PublishedStationRecharge, PublishedStationSupport,
-    PublishedStatusState, RouteType,
+    OfficialProviderStatusCatalog, OfficialTokenPrice, PresetRelay,
+    PresetRelayCatalog, PublicIntegrityCatalog, PublicIntegrityMeasurement,
+    PublishedCatalog, PublishedDataSecurity, PublishedPrice, PublishedStation,
+    PublishedStationBilling, PublishedStationProfile, PublishedStationRecharge,
+    PublishedStationSupport, PublishedStatusState, RouteType,
 };
 
 const FOLKBENCH_PUBLIC_ORIGIN: &str = "https://folkbench.com";
@@ -1027,39 +1027,154 @@ pub fn resolve_published_station_website(
     build_station_outbound_url(FOLKBENCH_PUBLIC_ORIGIN, row, &target, locale)
 }
 
-#[derive(serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct PresetRelayLink {
-    station_id: String,
-    slug: String,
+const PRESET_RELAYS_PATH: &str = "/api/public/switch/presets";
+const PRESET_CACHE_FILE: &str = "preset-relays.json";
+const PRESET_CACHE_MAX_AGE_SECS: u64 = 7 * 24 * 60 * 60;
+const PRESET_LIMIT: usize = 50;
+
+fn preset_slug_ok(slug: &str) -> bool {
+    !slug.is_empty()
+        && slug.len() <= 63
+        && !slug.starts_with('-')
+        && slug.bytes().all(|byte| {
+            byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-'
+        })
 }
 
-/// The bundled, manually reviewed preset list owns membership and the slug.
-/// The WebView supplies only an ID; registration always uses the Folkbench
-/// confirmation page, including its current reviewed affiliate destination.
-pub fn resolve_preset_relay_website(
+fn preset_relay_ok(item: &PresetRelay) -> bool {
+    !item.station_id.is_empty()
+        && item.station_id.len() <= 128
+        && !item.station_name.trim().is_empty()
+        && item.station_name.chars().count() <= 200
+        && preset_slug_ok(&item.slug)
+        && published_api_base(&item.base_url).is_some()
+}
+
+/// Parses `/api/public/switch/presets` (Folkbench ADR-0072). Rows that fail
+/// validation are dropped, never repaired; an unknown schema is rejected.
+pub fn parse_preset_relays_json(
+    body: &str,
+) -> Result<Vec<PresetRelay>, CatalogError> {
+    let value: serde_json::Value = serde_json::from_str(body)
+        .map_err(|_| CatalogError::InvalidResponse)?;
+    if value
+        .get("schemaVersion")
+        .and_then(serde_json::Value::as_u64)
+        != Some(1)
+    {
+        return Err(CatalogError::InvalidResponse);
+    }
+    let rows = value
+        .get("items")
+        .and_then(serde_json::Value::as_array)
+        .ok_or(CatalogError::InvalidResponse)?;
+    let mut items: Vec<PresetRelay> = Vec::new();
+    for row in rows.iter().take(PRESET_LIMIT) {
+        let item = PresetRelay {
+            station_id: string_field(row, "stationId").unwrap_or_default(),
+            station_name: string_field(row, "stationName").unwrap_or_default(),
+            slug: string_field(row, "slug").unwrap_or_default(),
+            base_url: string_field(row, "baseUrl").unwrap_or_default(),
+        };
+        let duplicate = items
+            .iter()
+            .any(|known| known.station_id == item.station_id);
+        if preset_relay_ok(&item) && !duplicate {
+            items.push(item);
+        }
+    }
+    Ok(items)
+}
+
+#[derive(serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct PresetRelayCache {
+    fetched_at_secs: u64,
+    items: Vec<PresetRelay>,
+}
+
+fn unix_now_secs() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|elapsed| elapsed.as_secs())
+        .unwrap_or(0)
+}
+
+/// The cache is local state, not trusted input: it is re-validated and
+/// ignored once older than 7 days or dated in the future.
+fn cached_preset_relays(
+    cache_dir: &std::path::Path,
+    now_secs: u64,
+) -> Option<Vec<PresetRelay>> {
+    let bytes = std::fs::read(cache_dir.join(PRESET_CACHE_FILE)).ok()?;
+    let cache: PresetRelayCache = serde_json::from_slice(&bytes).ok()?;
+    let age = now_secs.checked_sub(cache.fetched_at_secs)?;
+    if age > PRESET_CACHE_MAX_AGE_SECS {
+        return None;
+    }
+    Some(cache.items.into_iter().filter(preset_relay_ok).collect())
+}
+
+/// A fresh list is cached and returned. When the request fails, a copy from
+/// the last 7 days stands in; otherwise there are no presets. There is no
+/// list built into the client.
+fn settle_preset_relays(
+    fetched: Result<Vec<PresetRelay>, CatalogError>,
+    cache_dir: &std::path::Path,
+    now_secs: u64,
+) -> PresetRelayCatalog {
+    match fetched {
+        Ok(items) => {
+            let cache = PresetRelayCache {
+                fetched_at_secs: now_secs,
+                items: items.clone(),
+            };
+            // A failed cache write only costs the offline fallback.
+            let _ = crate::services::atomic::write_json_atomically(
+                cache_dir,
+                PRESET_CACHE_FILE,
+                &cache,
+            );
+            PresetRelayCatalog { items }
+        }
+        Err(_) => PresetRelayCatalog {
+            items: cached_preset_relays(cache_dir, now_secs)
+                .unwrap_or_default(),
+        },
+    }
+}
+
+pub fn load_preset_relays(cache_dir: &std::path::Path) -> PresetRelayCatalog {
+    let fetched =
+        fetch_url(&format!("{FOLKBENCH_PUBLIC_ORIGIN}{PRESET_RELAYS_PATH}"))
+            .and_then(|body| parse_preset_relays_json(&body));
+    settle_preset_relays(fetched, cache_dir, unix_now_secs())
+}
+
+fn preset_relay_website(
+    items: &[PresetRelay],
     station_id: &str,
 ) -> Result<String, CatalogError> {
-    let presets: Vec<PresetRelayLink> = serde_json::from_str(include_str!(
-        "../../../src/features/home/relay-presets.json"
-    ))
-    .map_err(|_| CatalogError::InvalidResponse)?;
-    let preset = presets
+    let preset = items
         .iter()
         .find(|preset| preset.station_id == station_id)
         .ok_or(CatalogError::WebsiteUnavailable)?;
-    if preset.slug.is_empty()
-        || preset.slug.len() > 160
-        || !preset.slug.bytes().all(|byte| {
-            byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-'
-        })
-    {
+    if !preset_slug_ok(&preset.slug) {
         return Err(CatalogError::InvalidResponse);
     }
     Ok(format!(
         "{FOLKBENCH_PUBLIC_ORIGIN}/go/{}?source=switch",
         preset.slug
     ))
+}
+
+/// The current preset list owns membership and the slug. The WebView supplies
+/// only an ID; registration always goes through Folkbench `/go/<slug>`.
+pub fn resolve_preset_relay_website(
+    cache_dir: &std::path::Path,
+    station_id: &str,
+) -> Result<String, CatalogError> {
+    preset_relay_website(&load_preset_relays(cache_dir).items, station_id)
 }
 
 fn parse_board_answer(raw: Option<&str>) -> Option<DataSecurityBoardAnswer> {
@@ -1253,31 +1368,122 @@ mod tests {
     const FIXTURE: &str =
         include_str!("../../tests/fixtures/public-rankings-ready.json");
 
+    const PRESETS: &str = r#"{
+      "schemaVersion": 1,
+      "generatedAt": "2026-11-27T18:00:00.000Z",
+      "items": [
+        { "stationId": "merchant-a3165bb8-847", "slug": "modelflare", "stationName": "Modelflare", "baseUrl": "https://modelflare.dev/v1" },
+        { "stationId": "merchant-7281389a-354", "slug": "fluxlane", "stationName": "智流 FluxLane", "baseUrl": "https://api.fluxlane.cn" },
+        { "stationId": "merchant-955eb49b-34a", "slug": "merchant-955eb49b-34a", "stationName": "Sidrune AI", "baseUrl": "https://cn.sidrune.ai/v1" },
+        { "stationId": "plain-http", "slug": "plain-http", "stationName": "Plain HTTP", "baseUrl": "http://relay.example.com/v1" },
+        { "stationId": "bad-slug", "slug": "../modelflare", "stationName": "Bad slug", "baseUrl": "https://relay.example.com/v1" },
+        { "stationId": "merchant-a3165bb8-847", "slug": "copy", "stationName": "Copy", "baseUrl": "https://copy.example.com/v1" }
+      ]
+    }"#;
+
+    fn preset_temp_dir() -> std::path::PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "fb-presets-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&path).unwrap();
+        path
+    }
+
     #[test]
-    fn preset_registration_uses_reviewed_folkbench_outbound_pages() {
+    fn preset_list_keeps_only_valid_unique_rows() {
+        let items = parse_preset_relays_json(PRESETS).unwrap();
+        let ids: Vec<&str> =
+            items.iter().map(|item| item.station_id.as_str()).collect();
+        assert_eq!(
+            ids,
+            [
+                "merchant-a3165bb8-847",
+                "merchant-7281389a-354",
+                "merchant-955eb49b-34a"
+            ]
+        );
+        assert_eq!(items[1].station_name, "智流 FluxLane");
+        assert_eq!(items[1].base_url, "https://api.fluxlane.cn");
+        assert_eq!(
+            parse_preset_relays_json(r#"{"schemaVersion":2,"items":[]}"#),
+            Err(CatalogError::InvalidResponse)
+        );
+        assert_eq!(
+            parse_preset_relays_json("not json"),
+            Err(CatalogError::InvalidResponse)
+        );
+    }
+
+    #[test]
+    fn preset_registration_uses_folkbench_go_pages_of_listed_presets() {
+        let items = parse_preset_relays_json(PRESETS).unwrap();
         for (station_id, slug) in [
             ("merchant-a3165bb8-847", "modelflare"),
             ("merchant-7281389a-354", "fluxlane"),
             ("merchant-955eb49b-34a", "merchant-955eb49b-34a"),
         ] {
             assert_eq!(
-                resolve_preset_relay_website(station_id).unwrap(),
+                preset_relay_website(&items, station_id).unwrap(),
                 format!("https://folkbench.com/go/{slug}?source=switch")
             );
         }
         for rejected in [
             "merchant-b8db6d82-ed2",
-            "merchant-92f59e23-338",
-            "merchant-a61e0410-474",
+            "bad-slug",
             "https://example.com",
             "../modelflare",
             "",
         ] {
             assert_eq!(
-                resolve_preset_relay_website(rejected),
+                preset_relay_website(&items, rejected),
                 Err(CatalogError::WebsiteUnavailable)
             );
         }
+    }
+
+    #[test]
+    fn preset_cache_stands_in_for_seven_days_only() {
+        let dir = preset_temp_dir();
+        let items = parse_preset_relays_json(PRESETS).unwrap();
+        let day = 24 * 60 * 60;
+        let offline = || Err(CatalogError::Unavailable);
+        let fresh = settle_preset_relays(Ok(items.clone()), &dir, 100 * day);
+        assert_eq!(fresh.items, items);
+        assert_eq!(
+            settle_preset_relays(offline(), &dir, 107 * day).items,
+            items
+        );
+        assert!(
+            settle_preset_relays(offline(), &dir, 107 * day + 1)
+                .items
+                .is_empty()
+        );
+        assert!(
+            settle_preset_relays(offline(), &dir, 99 * day)
+                .items
+                .is_empty()
+        );
+        // A newer empty list replaces the cache, so a lapsed preset does not
+        // come back while offline.
+        settle_preset_relays(Ok(Vec::new()), &dir, 108 * day);
+        assert!(
+            settle_preset_relays(offline(), &dir, 108 * day)
+                .items
+                .is_empty()
+        );
+        let empty = preset_temp_dir();
+        assert!(
+            settle_preset_relays(offline(), &empty, day)
+                .items
+                .is_empty()
+        );
+        let _ = std::fs::remove_dir_all(dir);
+        let _ = std::fs::remove_dir_all(empty);
     }
 
     #[test]

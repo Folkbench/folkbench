@@ -130,10 +130,13 @@ test('easy discovery keeps connectable stations, deduplicates by best rank and s
   assert.deepEqual(uniqueEasyStations([]), [])
 })
 
-test('paid presets remain available without rankings and do not inherit unrelated discovery stations', async () => {
-  const presets = JSON.parse(await readFile(
-    new URL('src/features/home/relay-presets.json', root), 'utf8'
-  ))
+test('paid presets remain available without rankings and do not inherit unrelated discovery stations', () => {
+  // Shape of Folkbench /api/public/switch/presets (ADR-0072), as published on 2026-11-27.
+  const presets = [
+    { stationId: 'merchant-a3165bb8-847', stationName: 'Modelflare', slug: 'modelflare', baseUrl: 'https://modelflare.dev/v1' },
+    { stationId: 'merchant-7281389a-354', stationName: '智流 FluxLane', slug: 'fluxlane', baseUrl: 'https://api.fluxlane.cn' },
+    { stationId: 'merchant-955eb49b-34a', stationName: 'Sidrune AI', slug: 'merchant-955eb49b-34a', baseUrl: 'https://cn.sidrune.ai/v1' },
+  ]
   const offline = easyPresetStations(presets, [])
   assert.deepEqual(offline.map((row) => row.stationName), ['Modelflare', '智流 FluxLane', 'Sidrune AI'])
   assert.ok(offline.every((row) => row.baseUrl.startsWith('https://')))

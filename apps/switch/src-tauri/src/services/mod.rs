@@ -34,7 +34,7 @@ pub use balance::query as query_service_balance;
 pub use bootstrap::bootstrap_state;
 pub use catalog::{
     fetch_data_security_board, fetch_official_provider_status,
-    fetch_public_integrity, list_published_stations,
+    fetch_public_integrity, list_published_stations, load_preset_relays,
     resolve_data_security_station_website, resolve_preset_relay_website,
     resolve_published_station_website,
 };

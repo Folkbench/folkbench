@@ -51,7 +51,7 @@ import {
   normalizeEasyToolId,
   type EasyStationChoice,
 } from './easy-model'
-import relayPresets from './relay-presets.json'
+import { usePresetRelays } from './use-preset-relays'
 
 export type EasyWizardStep = Step
 type Step = 'tool' | 'station' | 'credentials'
@@ -148,6 +148,7 @@ export function EasyAddWizard({
   onOpenChange: (open: boolean) => void
 }) {
   const { t, i18n } = useTranslation()
+  const relayPresets = usePresetRelays()
   const locale = normalizeLocale(i18n.resolvedLanguage)
   const writable = tools.filter(
     (tool) => tool.switchEffect !== 'notImplemented'
@@ -221,7 +222,7 @@ export function EasyAddWizard({
   const catalogStations = catalog.data?.stations ?? []
   const stations = useMemo(
     () => easyPresetStations(relayPresets, catalogStations),
-    [catalogStations]
+    [relayPresets, catalogStations]
   )
 
   function resolveDataSecurity(row: EasyStationChoice) {

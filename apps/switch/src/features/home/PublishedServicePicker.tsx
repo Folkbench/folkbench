@@ -15,7 +15,7 @@ import {
   matchStationByBaseUrl,
   type EasyStationChoice,
 } from './easy-model'
-import relayPresets from './relay-presets.json'
+import { usePresetRelays } from './use-preset-relays'
 
 export function PublishedServicePicker({
   onSelect,
@@ -24,6 +24,7 @@ export function PublishedServicePicker({
 }) {
   const { t } = useTranslation()
   const [openingWebsite, setOpeningWebsite] = useState(false)
+  const relayPresets = usePresetRelays()
   const catalog = useQuery(
     publishedCatalogQueryOptions(DEFAULT_PUBLIC_MODEL_ID, 'availability')
   )

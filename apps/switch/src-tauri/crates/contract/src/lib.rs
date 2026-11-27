@@ -28,11 +28,11 @@ pub use catalog::{
     IntegrityCacheSummary, IntegrityClientMode, IntegrityPeerAgreement,
     IntegrityTokenRange, InvoiceStatus, ModelRiskLevel,
     OfficialProviderHealthState, OfficialProviderStatus,
-    OfficialProviderStatusCatalog, OfficialTokenPrice, PublicIntegrityCatalog,
-    PublicIntegrityMeasurement, PublishedCatalog, PublishedDataSecurity,
-    PublishedPrice, PublishedStation, PublishedStationBilling,
-    PublishedStationProfile, PublishedStationRecharge, PublishedStationSupport,
-    PublishedStatusState, RouteType,
+    OfficialProviderStatusCatalog, OfficialTokenPrice, PresetRelay,
+    PresetRelayCatalog, PublicIntegrityCatalog, PublicIntegrityMeasurement,
+    PublishedCatalog, PublishedDataSecurity, PublishedPrice, PublishedStation,
+    PublishedStationBilling, PublishedStationProfile, PublishedStationRecharge,
+    PublishedStationSupport, PublishedStatusState, RouteType,
 };
 pub use connect::{ConnectNotice, ConnectPreview, ConnectPublicStatus};
 pub use links::{ExternalLink, ExternalLinkError};

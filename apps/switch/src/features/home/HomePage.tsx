@@ -153,7 +153,7 @@ import {
   matchStationByBaseUrl,
   type EasyStationChoice,
 } from './easy-model'
-import relayPresets from './relay-presets.json'
+import { usePresetRelays } from './use-preset-relays'
 import type { UsageWindow } from '@/lib/usage'
 import { EasyHomePage } from './EasyHomePage'
 import {
@@ -544,6 +544,7 @@ export function HomePage() {
 
 function ProHomePage() {
   const { t, i18n } = useTranslation()
+  const relayPresets = usePresetRelays()
   const navigate = useNavigate()
   const tools = useQuery(switchToolsQueryOptions)
   const preferences = useQuery(preferencesQueryOptions)

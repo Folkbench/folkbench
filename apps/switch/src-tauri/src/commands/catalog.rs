@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use crate::domain::{
     CatalogError, DataSecurityBoardCatalog, OfficialProviderStatusCatalog,
-    PublicIntegrityCatalog, PublishedCatalog,
+    PresetRelayCatalog, PublicIntegrityCatalog, PublishedCatalog,
 };
 use crate::services;
 use tauri::{AppHandle, Manager};
@@ -84,12 +84,30 @@ pub fn open_data_security_station_website(
         .map_err(|_| CatalogError::WebsiteUnavailable)
 }
 
+/// Preset relays from Folkbench, or the copy cached within 7 days.
 #[tauri::command(rename_all = "camelCase")]
-pub fn open_preset_relay_website(
+pub async fn get_preset_relays(
+    app: AppHandle,
+) -> Result<PresetRelayCatalog, CatalogError> {
+    let directory = cache_dir(&app)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        services::load_preset_relays(&directory)
+    })
+    .await
+    .map_err(|_| CatalogError::Unavailable)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+pub async fn open_preset_relay_website(
     app: AppHandle,
     station_id: String,
 ) -> Result<(), CatalogError> {
-    let website = services::resolve_preset_relay_website(&station_id)?;
+    let directory = cache_dir(&app)?;
+    let website = tauri::async_runtime::spawn_blocking(move || {
+        services::resolve_preset_relay_website(&directory, &station_id)
+    })
+    .await
+    .map_err(|_| CatalogError::Unavailable)??;
     app.opener()
         .open_url(website, None::<&str>)
         .map_err(|_| CatalogError::WebsiteUnavailable)

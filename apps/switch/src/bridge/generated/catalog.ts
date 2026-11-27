@@ -108,6 +108,28 @@ export type OfficialProviderStatusCatalog = { origin: string, modelId: string | 
 export type OfficialTokenPrice = { currency: string, unit: string, input: string | null, output: string | null, cacheRead: string | null, cacheWrite: string | null, sourceLabel: string, sourceUrl: string, verifiedAt: string, };
 
 /**
+ * One preset relay read from Folkbench `/api/public/switch/presets`.
+ *
+ * Membership follows the station's paid preset benefit on Folkbench, so the
+ * list changes without a client release (Folkbench ADR-0072).
+ */
+export type PresetRelay = { stationId: string, stationName: string,
+/**
+ * Public slug; registration opens `https://folkbench.com/go/<slug>`.
+ */
+slug: string,
+/**
+ * Published API base, validated like the rankings' `baseUrl`.
+ */
+baseUrl: string, };
+
+/**
+ * Preset relays for easy mode, the add wizard and the pro picker. Empty when
+ * the list cannot be read and no copy from the last 7 days is cached.
+ */
+export type PresetRelayCatalog = { items: Array<PresetRelay>, };
+
+/**
  * Public degradation monitor snapshot from `/api/public/integrity`.
  */
 export type PublicIntegrityCatalog = { origin: string, generatedAt: string, items: Array<PublicIntegrityMeasurement>, };

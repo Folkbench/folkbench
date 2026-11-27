@@ -123,6 +123,7 @@ pub fn run() {
             commands::catalog::get_official_provider_status,
             commands::catalog::open_published_station_website,
             commands::catalog::open_data_security_station_website,
+            commands::catalog::get_preset_relays,
             commands::catalog::open_preset_relay_website,
             commands::catalog::resolve_catalog_asset,
             commands::my_services::add_my_service,

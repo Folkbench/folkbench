@@ -97,7 +97,7 @@ import {
   normalizeEasyToolId,
   uniqueEasyStations,
 } from './easy-model'
-import relayPresets from './relay-presets.json'
+import { usePresetRelays } from './use-preset-relays'
 import { launchToolWithoutFolder } from './WorkFolderDialog'
 import {
   openToolDesktopApp,
@@ -362,6 +362,7 @@ function EasyTool({
 }) {
   const { t } = useTranslation()
   const cliLabel = easyCliLabel(tool.displayName)
+  const relayPresets = usePresetRelays()
   const navigate = useNavigate()
   const search = useSearch({ from: '/console/' })
   const prefs = useQuery(preferencesQueryOptions)
